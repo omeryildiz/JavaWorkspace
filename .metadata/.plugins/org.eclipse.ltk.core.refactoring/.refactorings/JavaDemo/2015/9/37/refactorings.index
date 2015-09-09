@@ -35,3 +35,11 @@
 1441788909201	Encapsulate field 'name'
 1441788919451	Encapsulate field 'surname'
 1441789854560	Encapsulate field 'age'
+1441796781877	Delete element
+1441797050683	Encapsulate field 'id'
+1441797054600	Encapsulate field 'name'
+1441797058269	Encapsulate field 'age'
+1441797282485	Delete element
+1441797287864	Delete elements
+1441797318262	Delete element
+1441797386553	Rename type 'Spor'
