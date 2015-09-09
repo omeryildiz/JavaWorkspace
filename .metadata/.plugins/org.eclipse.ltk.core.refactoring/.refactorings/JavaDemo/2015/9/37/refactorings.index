@@ -31,3 +31,7 @@
 1441785081143	Encapsulate field 'no'
 1441785888710	Rename type 'Menager'
 1441785922553	Rename type 'GeneralMenager'
+1441788824101	Delete element
+1441788909201	Encapsulate field 'name'
+1441788919451	Encapsulate field 'surname'
+1441789854560	Encapsulate field 'age'
