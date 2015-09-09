@@ -3,18 +3,15 @@ package tr.gov.tubitak.dokuzeylul;
 public class Pencere {
 	private static int id = 0;
 	private String type;
-	private static Pencere instance = Pencere.getInstance("default");
-
-	// bu þekilde new ile çaðýrmayý engellemiþ olduk, pencereden yeni bir obje
-	// oluþturmamak için private yaptýk constructoru
+	//bu þekilde new ile çaðýrmayý engellemiþ olduk, pencereden yeni bir obje oluþturmamak için private yaptýk constructoru
 	private Pencere() {
-		id++;
-	}
 
-	// static metodlarý overwrite edemeyiz
+	}
+	//static metodlarý overwrite edemeyiz
 	public static Pencere getInstance(String type) {
 		Pencere pencere = new Pencere();
 		pencere.type = type;
+		setId(getId() + 1);
 		return pencere;
 	}
 
@@ -23,13 +20,13 @@ public class Pencere {
 	public String getType() {
 		return type;
 	}
-
 	public static int getId() {
 		return id;
 	}
 
-	// public void setType(String type) {
-	// this.type = type;
-	// }
+
+//	public void setType(String type) {
+//		this.type = type;
+//	}
 
 }

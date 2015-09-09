@@ -3,7 +3,6 @@ package tr.gov.tubitak.dokuzeylul;
 public class Pencere {
 	private static int id = 0;
 	private String type;
-	private static Pencere instance = Pencere.getInstance("default");
 
 	// bu þekilde new ile çaðýrmayý engellemiþ olduk, pencereden yeni bir obje
 	// oluþturmamak için private yaptýk constructoru
@@ -26,6 +25,10 @@ public class Pencere {
 
 	public static int getId() {
 		return id;
+	}
+	
+	public static void main(String[] args) {
+		Pencere pencere = new Pencere();
 	}
 
 	// public void setType(String type) {
