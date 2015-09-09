@@ -1,20 +1,2 @@
-INDEX VERSION 1.127+D:\workspace\.metadata\.plugins\org.eclipse.jdt.core
-3877166606.index
-1452809140.index
-2834586320.index
-3631687342.index
-3459119011.index
-2789436643.index
-3842437098.index
-3746364749.index
-4033382249.index
-358021294.index
-2539332239.index
-441507836.index
-1369071813.index
+INDEX VERSION 1.127+D:\egitim\JavaWorkspace\.metadata\.plugins\org.eclipse.jdt.core
 3387826203.index
-275553950.index
-2305715661.index
-4112994055.index
-3130224310.index
-974284231.index

@@ -1,0 +1,8 @@
+package tr.gov.tubitak.dokuzeylul;
+
+public class StaticSample {
+	public static void main(String[] args) {
+		
+	}
+
+}
