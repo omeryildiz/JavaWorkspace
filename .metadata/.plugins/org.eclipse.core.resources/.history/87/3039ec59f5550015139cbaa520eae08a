@@ -1,0 +1,21 @@
+package tr.gov.tubitak.sekizeylul;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+
+public class CollectionFrameworkSamples {
+	public static void main(String[] args) {
+		ArrayList deneme = new ArrayList();
+		deneme.add("ömer yýldýz");
+		deneme.add("þakir");
+		deneme.add("sami");
+		deneme.add("kadir bolat");
+		Collections.sort(deneme);
+		for(Object o : deneme)
+		{
+			System.out.println(o);
+		}
+		
+	}
+}

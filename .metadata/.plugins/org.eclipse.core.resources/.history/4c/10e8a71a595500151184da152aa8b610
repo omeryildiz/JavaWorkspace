@@ -1,0 +1,9 @@
+package tr.gov.tubitak;
+
+public class Member {
+	private String name;
+	private String surname;
+	public Address address;
+	public PhoneBook phoneBook;
+
+}

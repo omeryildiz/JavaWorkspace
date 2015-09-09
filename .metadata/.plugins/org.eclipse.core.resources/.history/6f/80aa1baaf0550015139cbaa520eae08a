@@ -1,0 +1,24 @@
+package tr.gov.tubitak.sekizeylul;
+
+import tr.gov.tubitak.demo.School;
+
+public class ArraySample {
+	public String getName(int id,String[][] arrayString){
+		String result;
+		result = arrayString[id][0];
+		return result;
+	}
+	public static void main(String[] args) {
+		String[] stringArray = new String[3];
+		stringArray[0] = "omer yildiz";
+		stringArray[1] = "ahmet yildiz";
+		
+		School school = new School();
+		
+		School[] schools = new School[3];
+		
+		System.out.println(""+stringArray[1]);
+		
+	}
+
+}

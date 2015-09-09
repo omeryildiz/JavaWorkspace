@@ -1,0 +1,12 @@
+public class HelloWorld {
+	int age = 25;
+	String name = "Ömer YILDIZ";
+	static Integer myAge = 25;
+	public static void main(String[] args) {
+		Integer abc = myAge;
+		abc = 27;
+		System.out.println(abc);
+		System.out.println(myAge);
+		System.out.println("Ömer YILDIZ!");
+	}
+}

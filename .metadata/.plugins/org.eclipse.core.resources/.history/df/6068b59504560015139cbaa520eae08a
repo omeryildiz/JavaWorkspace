@@ -1,0 +1,12 @@
+package tr.gov.tubitak.demo;
+
+public class StringTryOut {
+
+	public static void main(String[] args) {
+		String name = "Ömer YILDIZ";
+		System.out.println(name.substring(0,name.lastIndexOf(' ')));
+		System.out.println(name.toUpperCase());
+
+	}
+
+}

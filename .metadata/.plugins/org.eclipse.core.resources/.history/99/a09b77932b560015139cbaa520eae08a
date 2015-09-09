@@ -1,0 +1,88 @@
+package tr.gov.tubitak.demo;
+
+//araba sýnýfý oluþtur 4 farklý eriþime sahip metod ve deðiþkenleri tanýmlayýn
+//Bu sýnýfý
+public class Car {
+	private String name;
+	private int year;
+	private String whichKilometer;
+	protected Boolean usedOrUnused;
+	public String everyoneCanChangeThis;
+	private Tyre tyre;
+	private Engine engine;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public String getWhichKilometer() {
+		return whichKilometer;
+	}
+
+	public void setWhichKilometer(String whichKilometer) {
+		this.whichKilometer = whichKilometer;
+	}
+
+	public Boolean getUsedOrUnused() {
+		return usedOrUnused;
+	}
+
+	public void setUsedOrUnused(Boolean usedOrUnused) {
+		this.usedOrUnused = usedOrUnused;
+	}
+	
+
+	public class Engine{
+		private String type;
+		private String volume;
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
+
+		public String getVolume() {
+			return volume;
+		}
+
+		public void setVolume(String volume) {
+			this.volume = volume;
+		}
+	}
+	
+	public class Tyre{
+		private String Brand;
+		private int depth;
+
+		public String getBrand() {
+			return Brand;
+		}
+
+		public void setBrand(String brand) {
+			Brand = brand;
+		}
+
+		public int getDepth() {
+			return depth;
+		}
+
+		public void setDepth(int depth) {
+			this.depth = depth;
+		}
+	}
+
+}

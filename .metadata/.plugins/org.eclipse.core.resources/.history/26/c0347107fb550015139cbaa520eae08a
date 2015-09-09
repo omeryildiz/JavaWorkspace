@@ -1,0 +1,10 @@
+package tr.gov.tubitak.sekizeylul;
+
+public class UsingSet {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

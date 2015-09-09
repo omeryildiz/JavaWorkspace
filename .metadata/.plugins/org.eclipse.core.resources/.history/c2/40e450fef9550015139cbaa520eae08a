@@ -1,0 +1,58 @@
+package tr.gov.tubitak.sekizeylul;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+
+public class CollectionFrameworkSamples {
+	public static String cizgiCek(){
+		String result;
+		result = "__________________________";
+		
+		return result;
+	}
+	
+	public static void main(String[] args) {
+		ArrayList deneme = new ArrayList();
+		deneme.add("ömer yýldýz");
+		deneme.add("þakir");
+		deneme.add("sami");
+		deneme.add("kadir bolat");
+		deneme.add(3, new String("AHMET YILDIZ"));
+		
+		ArrayList numbers = new ArrayList();
+		
+		for (int i = 10; i > 0; i--) {
+			numbers.add(i);
+		}
+		
+////		Collections.sort(deneme);
+//		for(Object o : deneme)
+//		{
+//			System.out.println(o);
+//		}
+////		listeyi dolaþýrken silmek için iterator uygundur
+//		Iterator it = deneme.iterator();
+//		while(it.hasNext())
+//		{
+//			Object obj = it.next();
+//			System.out.println(obj);
+//		}
+		
+		for(Object o : numbers)
+		{
+			System.out.println(o);
+		}
+//		listeyi dolaþýrken silmek için iterator uygundur
+		Iterator it = numbers.iterator();
+		
+		cizgiCek();
+		while(it.hasNext())
+		{
+			Object obj = it.next();
+			System.out.println(obj);
+		}
+		
+	}
+}

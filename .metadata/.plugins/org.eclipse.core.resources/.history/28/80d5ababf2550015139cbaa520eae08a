@@ -1,0 +1,10 @@
+package tr.gov.tubitak.sekizeylul;
+
+import java.util.ArrayList;
+import java.util.Dictionary;
+
+public class CollectionFrameworkSamples {
+	public static void main(String[] args) {
+		ArrayList deneme = new ArrayList();
+	}
+}

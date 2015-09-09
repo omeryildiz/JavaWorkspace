@@ -1,0 +1,24 @@
+package tr.gov.tubitak.demo;
+
+public class School {
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public School() {
+		System.out.println("Okul nesnesi oluþturuldu.");
+
+	}
+
+	public School(String schoolName) {
+		name = schoolName;
+		System.out.println(name+"adýnda nesne oluþturuldu");
+	}
+
+}

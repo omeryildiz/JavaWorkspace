@@ -1,0 +1,29 @@
+package tr.gov.tubitak.demo;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DateTimeProcess {
+	public static void main(String[] args) {
+		Date date = new Date();
+		System.out.println(date);
+		System.out.println(date.getTime());
+		//Aþaðýda sonuç 1 veya -1 þeklinde dönecektir.
+		System.out.println(date.compareTo(new Date(123421)));
+		
+		DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+		
+		System.out.println(df.format(date));
+		
+		//date elde etmek için 
+		try {
+			Date aDate = df.parse("27-10-1988");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+}

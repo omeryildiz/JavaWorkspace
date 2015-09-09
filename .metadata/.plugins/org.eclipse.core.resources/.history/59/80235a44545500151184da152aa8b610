@@ -1,0 +1,8 @@
+package tr.gov.tubitak;
+
+public class HelloWorld {
+	public static void main(String[] args){
+		System.out.println("Merhaba!");
+	}
+
+}

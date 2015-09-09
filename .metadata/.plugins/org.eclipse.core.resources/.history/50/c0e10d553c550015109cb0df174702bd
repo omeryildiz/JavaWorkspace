@@ -1,0 +1,15 @@
+
+public class Definitions {
+
+	public static void main(String[] args) {
+		int age = 24;
+		Integer myAge = 27;
+		long longClassicalAge = 100_000_000;
+		String myName = "Ömer YILDIZ";
+		
+		
+		
+
+	}
+
+}

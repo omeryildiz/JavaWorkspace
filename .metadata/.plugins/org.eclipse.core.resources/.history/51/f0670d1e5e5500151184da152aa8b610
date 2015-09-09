@@ -1,0 +1,35 @@
+package tr.gov.tubitak.demo;
+
+public class Student {
+	private String name;
+	private int age;
+	public School school;
+	public void setName(String stringName)
+	{
+		name = stringName;
+	}
+	public String getName()
+	{
+		return name;
+	}
+	public void setAge(int intAge)
+	{
+		age = intAge;
+	}
+	public int getAge()
+	{
+		return age;
+	}
+	public void doHomework(int counter){
+		for (int i = 0; i < counter; i++) {
+			System.out.println(name+" ödevini yapýyor.");
+		}
+		
+	}
+	
+	public Boolean isAdult()
+	{
+		return (age >= 18 ? true : false); 
+	}
+
+}

@@ -1,0 +1,10 @@
+package tr.gov.tubitak.demo;
+
+public class StringTryOut {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

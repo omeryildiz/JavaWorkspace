@@ -1,0 +1,32 @@
+package tr.gov.tubitak.demo;
+
+import java.util.List;
+
+public class Car {
+public String name;
+public String year;
+public Tyre tyre;
+public HeadLight headlight;
+
+public class Tyre{
+	public String brand;
+	public int depth;
+	
+	public Tyre(Car car, String brand, int depth)
+	{
+		this.brand = brand;
+		this.depth = depth;
+
+	}
+	
+}
+
+public class HeadLight{
+	public String type;
+	
+	public HeadLight()
+	{
+		
+	}
+}
+}

@@ -1,0 +1,20 @@
+package tr.gov.tubitak.demo;
+
+import java.util.List;
+
+public class Car {
+public String name;
+public String year;
+public List<Tyre> tyre;
+public List<HeadLight> headlight;
+
+public class Tyre{
+	public String brand;
+	public int depth;
+	
+}
+
+public class HeadLight{
+	public String type;
+}
+}

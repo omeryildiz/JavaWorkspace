@@ -1,0 +1,7 @@
+package tr.gov.tubitak;
+
+public class City {
+	private String name;
+	
+
+}

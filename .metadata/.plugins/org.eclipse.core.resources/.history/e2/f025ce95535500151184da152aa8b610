@@ -1,0 +1,23 @@
+
+public class CalculateScore {
+	public static void main(String[] args) {
+		int scoreF = 59;
+		int scoreD = 69;
+		int scoreC = 79;
+		int scoreB = 89;
+		int scoreA = 100;
+		int score;
+		score = 35;
+		if(score >= scoreB)
+			System.out.println("A aldýnýz");
+		else if(score >= scoreC)
+			System.out.println("B aldýnýz");
+		else if(score >= scoreD)
+			System.out.println("C aldýnýz");
+		else if(score >= scoreF)
+			System.out.println("F aldýnýz");
+		else
+			System.out.println("F aldýnýz");
+	}
+
+}

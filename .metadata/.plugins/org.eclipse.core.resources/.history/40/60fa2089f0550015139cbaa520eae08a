@@ -1,0 +1,11 @@
+package tr.gov.tubitak.sekizeylul;
+
+public class ArraySample2 {
+	public static void main(String[] args) {
+		String[][] ogrenciVeNotlari= new String[][]{{"ömer yýldýz","a"},{"ahmet yildiz","a"},{"esma yildiz","c"},{"mehmet güngör","d"}};
+		
+	}
+	
+	
+
+}

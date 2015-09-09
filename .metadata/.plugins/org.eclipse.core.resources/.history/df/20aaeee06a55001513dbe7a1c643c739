@@ -1,0 +1,14 @@
+package tr.gov.tubitak.demo;
+
+public class App {
+	public static void main(String[] args) {
+		System.out.println("merhaba dünya!");
+		System.out.println("omer");
+		System.out.println();
+		System.out.println("merhaba");
+		System.out.println("kýsaltmalar önemli");
+		System.out.println("merhaba");
+
+	}
+
+}

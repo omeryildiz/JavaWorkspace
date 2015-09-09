@@ -1,0 +1,14 @@
+package tr.gov.tubitak.sekizeylul;
+
+public class ArraySample {
+	public static void main(String[] args) {
+		Integer[] integerArray = new Integer[5];
+		String[] stringArray = new String[3];
+		stringArray[0] = "omer yildiz";
+		stringArray[1] = "ahmet yildiz";
+		
+		System.out.println(""+stringArray[1]);
+		
+	}
+
+}

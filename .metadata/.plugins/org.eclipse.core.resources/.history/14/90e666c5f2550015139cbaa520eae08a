@@ -1,0 +1,14 @@
+package tr.gov.tubitak.sekizeylul;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+public class CollectionFrameworkSamples {
+	public static void main(String[] args) {
+		ArrayList deneme = new ArrayList();
+		deneme.add("ömer yýldýz");
+		deneme.add(new Date());
+		
+		System.out.println(deneme.get(5));
+	}
+}

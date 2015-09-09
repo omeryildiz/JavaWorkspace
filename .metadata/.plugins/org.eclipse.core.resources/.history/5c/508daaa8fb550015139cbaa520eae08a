@@ -1,0 +1,16 @@
+package tr.gov.tubitak.sekizeylul;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class UsingMap {
+
+	public static void main(String[] args) {
+		Map<String, String> myMap = new HashMap<>();
+		myMap.put("342", "ömer");
+		myMap.put("343", "sami");
+		myMap.put("344", "mehmet");
+		myMap.put("345", "hediye");
+	}
+
+}
