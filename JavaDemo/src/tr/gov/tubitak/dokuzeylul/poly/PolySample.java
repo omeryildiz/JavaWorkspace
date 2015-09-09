@@ -19,12 +19,24 @@ public class PolySample {
 		altigen = kare;
 
 		kenarSayisiYaz(altigen);
+		printInfo(new Kare());
 		
 		
 	}
 	
 	static void kenarSayisiYaz(Cokgen cokgen) {
 		cokgen.printKenarSayisi();
+	}
+	
+	static void printInfo(Cokgen cokgen) {
+		if (cokgen instanceof Kare) {
+			System.out.println(((Kare) cokgen).getKenarSayisi());
+		}else if (cokgen instanceof Ucgen) {
+			((Ucgen) cokgen).printKenarSayisi();
+		}else{
+			cokgen.printKenarSayisi();
+		}
+
 	}
 
 }
