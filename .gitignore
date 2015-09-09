@@ -2,6 +2,7 @@
 Thumbs.db
 ehthumbs.db
 .metadata
+.metadata/.mylyn
 
 # Folder config file
 Desktop.ini
