@@ -1,6 +1,7 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+.metadata
 
 # Folder config file
 Desktop.ini
@@ -13,6 +14,7 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+*.zip
 
 # Windows shortcuts
 *.lnk
@@ -41,3 +43,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.zip
+*.snap
+*.xml
+*.zip

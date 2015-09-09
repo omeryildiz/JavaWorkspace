@@ -20,3 +20,14 @@
 1441717739323	Encapsulate field 'usedOrUnused'
 1441777937435	Encapsulate field 'type'
 1441778614918	Encapsulate field 'id'
+1441781802211	Delete element
+1441783725850	Delete element
+1441783786906	Move compilation unit
+1441783876667	Move compilation unit
+1441784009857	Move compilation unit
+1441784035616	Encapsulate field 'type'
+1441785045717	Encapsulate field 'name'
+1441785062026	Encapsulate field 'surname'
+1441785081143	Encapsulate field 'no'
+1441785888710	Rename type 'Menager'
+1441785922553	Rename type 'GeneralMenager'
