@@ -49,3 +49,8 @@ Temporary Items
 *.xml
 *.zip
 *.xmi
+*.index
+.metadata/.plugins/org.eclipse.core.resources/.projects/JavaDemo/.markers.snap
+*.snap
+.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
+*.xmi

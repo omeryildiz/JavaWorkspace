@@ -1,6 +1,7 @@
 package tr.gov.tubitak.demo;
 
-import tr.gov.tubitak.sekizeylul.CollectionFrameworkSamples;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 public class StringTryOut {
 	
@@ -59,5 +60,7 @@ public class StringTryOut {
 		
 
 	}
+	
+
 
 }
