@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.lang.Throwable"/>
-<fullyQualifiedTypeName name="java.io.InputStream"/>
 <fullyQualifiedTypeName name="java.io.BufferedInputStream"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.io.FileReader"/>
@@ -9,12 +7,9 @@
 <fullyQualifiedTypeName name="java.io.Serializable"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.demo.Student"/>
 <fullyQualifiedTypeName name="java.io.ObjectOutputStream"/>
-<fullyQualifiedTypeName name="java.io.FileOutputStream"/>
 <fullyQualifiedTypeName name="java.io.ObjectInputStream"/>
 <fullyQualifiedTypeName name="java.lang.Long"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.sekizeylul.CollectionFrameworkSamples"/>
-<fullyQualifiedTypeName name="java.util.Scanner"/>
-<fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.OgranciDaoJdbcImpl"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.OgrenciDao"/>
 <fullyQualifiedTypeName name="com.mysql.jdbc.Connection"/>
@@ -60,4 +55,9 @@
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.thread.DatePrinterRunnable"/>
 <fullyQualifiedTypeName name="java.lang.Thread"/>
+<fullyQualifiedTypeName name="tr.gov.tubitak.protobuf.CatProto"/>
+<fullyQualifiedTypeName name="tr.gov.tubitak.protobuf.CatProto.Cat"/>
+<fullyQualifiedTypeName name="java.io.FileOutputStream"/>
+<fullyQualifiedTypeName name="java.io.FileInputStream"/>
+<fullyQualifiedTypeName name="java.util.Scanner"/>
 </qualifiedTypeNameHistroy>

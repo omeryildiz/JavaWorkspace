@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="C:\Program Files\MySQL\Connector.J 5.1" key="org.eclipse.jdt.ui.lastextjar"/>
+	<item value="C:\Users\Administrator\Downloads" key="org.eclipse.jdt.ui.lastextjar"/>
 	<item value="filter_imports;" key="filters_last_used"/>
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
 		<item value="false" key="updateQualifiedNames"/>
@@ -95,6 +95,9 @@
 		<item value="true" key="showtypes"/>
 	</section>
 	<section name="RenameInformationPopup">
+	</section>
+	<section name="ClasspathContainerSelectionPage">
+		<item value="0" key="index"/>
 	</section>
 	<section name="quick_assist_proposal_size">
 	</section>

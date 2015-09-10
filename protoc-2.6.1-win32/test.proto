@@ -1,0 +1,6 @@
+option java_outer_classname="CatProto";
+ 
+message Cat {
+  optional int32 age = 1;
+  optional string name = 2;
+}
