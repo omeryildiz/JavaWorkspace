@@ -31,11 +31,11 @@ public class ReflectionSample {
 
 		Constructor constructor = clazz.getConstructor();
 		Object obj = constructor.newInstance();
-		Method setIdMethod = clazz.getMethod("setAd", String.class);
+		Method setIdMethod = clazz.getMethod("setName", String.class);
 		setIdMethod.invoke(obj, "omer");
 		System.out.println(obj);
 		
-		Method getAdMethod = clazz.getMethod("getAd");
+		Method getAdMethod = clazz.getMethod("getName");
 	 	System.out.println(getAdMethod.invoke(obj));
 	 	System.out.println(obj);
 		
