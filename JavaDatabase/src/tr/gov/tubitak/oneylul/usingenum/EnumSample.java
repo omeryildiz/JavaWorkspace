@@ -3,10 +3,14 @@ package tr.gov.tubitak.oneylul.usingenum;
 public class EnumSample {
 	
 	public static void main(String[] args) {
-		System.out.println(convertTurkish("m"));
+		System.out.println(convertTurkish(Gender.female));
+		
+		for (DayOfWeek day : DayOfWeek.values()) {
+			System.out.println(day.getTurkish()+" "+day.name());
+		}
 	}
 	
-	static String convertTurkish(String str) {
+	static String convertTurkish(Gender gender) {
 		//str null gelirse null pointer exception alabiliriz bu nedenle 
 //		if(str.equals("m")) {
 //			return "Erkek";
@@ -15,7 +19,7 @@ public class EnumSample {
 //			return "Bayan";
 //		}
 		
-		if("m".equals(str)) {
+		if(Gender.male == gender) {
 			return "Erkek";
 		}
 		else {
