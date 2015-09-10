@@ -3,6 +3,7 @@ package tr.gov.tubitak.oneylul.lambda;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class Java8Example {
 	public static void main(String[] args) {
@@ -33,6 +34,28 @@ public class Java8Example {
 
 		// java8 ile gelen özellik
 		Collections.sort(list, (arg0, arg1) -> arg0 < arg1 ? -1 : 1);
+		
+		////////////////////////////////////////////////////
+		List<String> list1 = Arrays.asList("mehmet","kemal","ömer","sami");
+		//java8 ile gelen foreach consumer özelliði
+		list1.forEach(p -> System.out.println(p));
+		Collections.sort(list1,Java8Example::compare);
+		for (String string : list1) {
+			System.out.println(string);
+		}
+		
+		List<Asker> askerler = Arrays.asList(new Asker("birol"),new Asker("omer"),new Asker("kemal"));
+		//askerler.forEach(p->p.name = "ezildi");
+		askerler.forEach(p -> System.out.println(p.name));
+		//stream bize liste üzerinde filtreleme deðiþiklik vs. iþlemleri yapmamýzý saðlýyor
+		askerler.stream().filter(p->p.name.equals("omer")).forEach(p->System.out.println(p.name));
+		askerler.stream().filter(p->p.name.equals("omer")).map(p->new Asker( p.name +" degistirildi")).forEach(p->System.out.println(p.name));
+		
+		
+	}
+	
+	static int compare(String s1, String s2) {
+		return s1.compareTo(s2);
 	}
 
 	static <T> void printList(List<T> list, TestClosure<T> tester) {
@@ -58,4 +81,12 @@ class TestClosureImpl implements TestClosure<Integer> {
 		return candidate > 10;
 	}
 
+}
+
+class Asker {
+	public String name;
+	public Asker(String name) {
+		// TODO Auto-generated constructor stub
+		this.name = name;
+	}
 }
