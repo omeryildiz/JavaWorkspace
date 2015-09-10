@@ -98,8 +98,8 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 		con.close();
 
 	}
-	
-	static void closeDbItems(ResultSet rs , PreparedStatement stmt, Connection con) {
+
+	static void closeDbItems(ResultSet rs, PreparedStatement stmt, Connection con) {
 		try {
 			rs.close();
 		} catch (Exception e2) {
@@ -116,10 +116,25 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 			// TODO: handle exception
 		}
 	}
-	
+
+	// java 1.7 ile gelen özellik try catch
+	static void closeWithTryCatch() {
+		try (ResultSet rs = null; PreparedStatement stmt = null; Connection con = null) {
+			while (rs.next()) {
+				Ogrenci ogrenci = new Ogrenci();
+				ogrenci.setId(rs.getInt("ID"));
+				ogrenci.setName(rs.getString("AD"));
+				ogrenci.setKayitTarihi(rs.getDate("KAYIT_TARIHI"));
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	static void closableDbItems(AutoCloseable... cloesables) {
-		for(AutoCloseable closeable : cloesables)
-		{
+		for (AutoCloseable closeable : cloesables) {
 			try {
 				closeable.close();
 			} catch (Exception e) {
@@ -127,7 +142,6 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 			}
 		}
 	}
-	
 
 	@Override
 	public List<Ogrenci> getAll() {
@@ -165,9 +179,9 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 				// TODO: handle exception
 			}
 		}
-		//aþaðýdaki iki türlü de kapatma iþlemini metod içine taþýyabiliriz
-		//closableDbItems(rs,stmt,con);
-		//closeDbItems(rs, stmt, con);
+		// aþaðýdaki iki türlü de kapatma iþlemini metod içine taþýyabiliriz
+		// closableDbItems(rs,stmt,con);
+		// closeDbItems(rs, stmt, con);
 
 		return result;
 	}
