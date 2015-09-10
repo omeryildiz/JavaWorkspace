@@ -19,6 +19,17 @@ public class GenericSample {
 		System.out.println(pair2);
 		
 		System.out.println(getValue(Arrays.asList(1,2,3), 2));
+		
+		//List<Number> şeklinde olduğunda hata verir fakat 
+		//Aşağıdaki gibi bir tanım kullanılabilir number'dan türeyen Integer aşağıdaki gibi atanabilir.
+		List<? extends Number> numberlist = new ArrayList<Integer>();
+		//bunlara eleman ekleyemiyoruz
+		for (Number number : numberlist) {
+			System.out.println(number);
+		}
+		List<? super Integer> intList = new ArrayList<Integer>();
+		intList.add(3);
+		
 	}
 
 	static <T> T getValue(List<T> list, int index) {
