@@ -10,7 +10,10 @@ public class ThreadSample {
 		 Thread reverseThread =  new Thread(new ReverseCounterRunnable()); 
 		 reverseThread.start();
 		 
-		 new Thread(new DatePrinterRunnable()).start();
+		 DatePrinterRunnable datePrinterRunnable = new DatePrinterRunnable();
+		 new Thread(datePrinterRunnable).start();
+		 datePrinterRunnable.stop();
+		 
 
 		 
 		try {
@@ -47,7 +50,7 @@ class CounterThread extends Thread {
 }
 
 class ReverseCounterRunnable implements Runnable{
-
+	
 	@Override
 	public void run() {
 		for (int i = 100; i > 0; i--) {
@@ -62,11 +65,13 @@ class ReverseCounterRunnable implements Runnable{
 		
 	}
 	
+
+	
 	
 }
 
 class DatePrinterRunnable implements Runnable {
-
+	private volatile boolean canRun = true;
 	@Override
 	public void run() {
 		while(true) {
@@ -79,6 +84,9 @@ class DatePrinterRunnable implements Runnable {
 			}
 		}
 		
+	}
+	public void stop() {
+		canRun = false;
 	}
 	
 }
