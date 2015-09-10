@@ -5,10 +5,11 @@ import java.util.List;
 public class DbSample {
 	public static void main(String[] args) throws Exception {
 		OgrenciDao dao = new OgrenciDaoJdbcImpl();
-		// dao.insert(2, "omer");
-		// printList(dao.getAll());
-		Ogrenci x = dao.find(1);
-		System.out.println(x);
+		//transaction için kullanýlan metod
+		 dao.insertWithCommit(2, "omer");
+		 printList(dao.getAll());
+		//Ogrenci x = dao.find(1);
+		//System.out.println(x);
 		//
 		// dao.update(1, "kamil");
 		// printList(dao.getAll());

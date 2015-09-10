@@ -12,5 +12,7 @@ public interface OgrenciDao {
 	List<Ogrenci> getAll() throws Exception;
 
 	Ogrenci find(int id) throws Exception;
+	//transaction örneði
+	public void insertWithCommit(int id, String ad) throws Exception;
 
 }

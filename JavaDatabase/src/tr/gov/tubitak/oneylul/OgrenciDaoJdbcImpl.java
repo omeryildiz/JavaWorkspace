@@ -39,6 +39,32 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 		System.out.println("insert iþlemi baþarýlý");
 
 	}
+	//transaction örneði 
+	public void insertWithCommit(int id, String ad) throws Exception {
+		Connection con = getConnection();
+		con.setAutoCommit(false);
+		PreparedStatement stmt = (PreparedStatement) con.prepareStatement("insert into ogrenci values(?,?,?)");
+		stmt.setInt(1, id);
+		stmt.setString(2, ad);
+		stmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+		try {
+			stmt.executeUpdate();
+			con.commit();
+			System.out.println("insert iþlemi baþarýlý");
+		} catch (Exception e) {
+			con.rollback();
+			System.out.println("Hata oluþtu mesaj: "+ e.getMessage());
+		}
+		
+		// statement.executeUpdate("INSERT INTO `testdb`.`ogrenci` (`ID`, `AD`,
+		// `KAYIT_TARIHI`) VALUES ('" + id + "', '"
+		// + ad + "', '2000-10-23')");
+
+		stmt.close();
+		con.close();
+		
+
+	}
 
 	@Override
 	public void update(int id, String ad) throws Exception {
