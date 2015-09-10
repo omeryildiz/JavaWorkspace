@@ -39,7 +39,8 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 		System.out.println("insert iþlemi baþarýlý");
 
 	}
-	//transaction örneði 
+
+	// transaction örneði
 	public void insertWithCommit(int id, String ad) throws Exception {
 		Connection con = getConnection();
 		con.setAutoCommit(false);
@@ -53,16 +54,15 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 			System.out.println("insert iþlemi baþarýlý");
 		} catch (Exception e) {
 			con.rollback();
-			System.out.println("Hata oluþtu mesaj: "+ e.getMessage());
+			System.out.println("Hata oluþtu mesaj: " + e.getMessage());
 		}
-		
+
 		// statement.executeUpdate("INSERT INTO `testdb`.`ogrenci` (`ID`, `AD`,
 		// `KAYIT_TARIHI`) VALUES ('" + id + "', '"
 		// + ad + "', '2000-10-23')");
 
 		stmt.close();
 		con.close();
-		
 
 	}
 
@@ -98,25 +98,77 @@ public class OgrenciDaoJdbcImpl implements OgrenciDao {
 		con.close();
 
 	}
+	
+	static void closeDbItems(ResultSet rs , PreparedStatement stmt, Connection con) {
+		try {
+			rs.close();
+		} catch (Exception e2) {
+			// TODO: handle exception
+		}
+		try {
+			stmt.close();
+		} catch (Exception e2) {
+			// TODO: handle exception
+		}
+		try {
+			con.close();
+		} catch (Exception e2) {
+			// TODO: handle exception
+		}
+	}
+	
+	static void closableDbItems(AutoCloseable... cloesables) {
+		for(AutoCloseable closeable : cloesables)
+		{
+			try {
+				closeable.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 
 	@Override
-	public List<Ogrenci> getAll() throws Exception {
+	public List<Ogrenci> getAll() {
 		List<Ogrenci> result = new ArrayList<Ogrenci>();
 		Connection con = getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = (PreparedStatement) con.prepareStatement("select * from ogrenci");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				Ogrenci ogrenci = new Ogrenci();
+				ogrenci.setId(rs.getInt("ID"));
+				ogrenci.setName(rs.getString("AD"));
+				ogrenci.setKayitTarihi(rs.getDate("KAYIT_TARIHI"));
+				result.add(ogrenci);
 
-		PreparedStatement stmt = (PreparedStatement) con.prepareStatement("select * from ogrenci");
-		ResultSet rs = stmt.executeQuery();
-		while (rs.next()) {
-			Ogrenci ogrenci = new Ogrenci();
-			ogrenci.setId(rs.getInt("ID"));
-			ogrenci.setName(rs.getString("AD"));
-			ogrenci.setKayitTarihi(rs.getDate("KAYIT_TARIHI"));
-			result.add(ogrenci);
-
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			try {
+				stmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			try {
+				con.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 		}
-		rs.close();
-		stmt.close();
-		con.close();
+		//aþaðýdaki iki türlü de kapatma iþlemini metod içine taþýyabiliriz
+		//closableDbItems(rs,stmt,con);
+		//closeDbItems(rs, stmt, con);
+
 		return result;
 	}
 

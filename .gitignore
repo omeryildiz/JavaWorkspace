@@ -54,3 +54,4 @@ Temporary Items
 *.snap
 .metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources
 *.xmi
+*.zip

@@ -9,7 +9,8 @@ public interface OgrenciDao {
 
 	void delete(int id) throws Exception;
 
-	List<Ogrenci> getAll() throws Exception;
+	//List<Ogrenci> getAll() throws Exception;
+	List<Ogrenci> getAll();
 
 	Ogrenci find(int id) throws Exception;
 	//transaction örneði
