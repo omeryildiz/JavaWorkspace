@@ -2,6 +2,7 @@ package tr.gov.tubitak.oneylul.lambda;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
@@ -50,8 +51,24 @@ public class Java8Example {
 		//stream bize liste üzerinde filtreleme deðiþiklik vs. iþlemleri yapmamýzý saðlýyor
 		askerler.stream().filter(p->p.name.equals("omer")).forEach(p->System.out.println(p.name));
 		askerler.stream().filter(p->p.name.equals("omer")).map(p->new Asker( p.name +" degistirildi")).forEach(p->System.out.println(p.name));
+		TestInterface.getDate();
 		
+	}
+	
+	interface TestInterface<T> {
+		String getName();
 		
+		static Date getDate() {
+			return new Date();
+		}
+		
+		default String getType() {
+			return "";
+		}
+		
+		default Integer getInteger() {
+			return 1;
+		}
 	}
 	
 	static int compare(String s1, String s2) {
