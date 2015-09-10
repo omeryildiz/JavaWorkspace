@@ -2,6 +2,7 @@ package tr.gov.tubitak.demo;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.Scanner;
 
 import tr.gov.tubitak.sekizeylul.CollectionFrameworkSamples;
 

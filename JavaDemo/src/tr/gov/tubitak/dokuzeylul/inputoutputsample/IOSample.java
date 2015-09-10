@@ -10,8 +10,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-
-import tr.gov.tubitak.dokuzeylul.inputoutputsample.*;;
+import java.util.Scanner;;
 
 public class IOSample {
 	
@@ -60,6 +59,18 @@ public class IOSample {
 			System.out.print((char) data);
 		}
 		in.close();
+		long bitis = System.currentTimeMillis();
+		System.out.println("gecen sure = "+ (bitis-baslangic));
+	}
+	static void dosyaOkuWithScanner() throws Exception{
+		long baslangic =System.currentTimeMillis();
+		Scanner sc = new Scanner(new FileInputStream(file));
+		while(sc.hasNextLine())
+		{
+			String line = sc.nextLine();
+			System.out.println(line);
+			
+		}
 		long bitis = System.currentTimeMillis();
 		System.out.println("gecen sure = "+ (bitis-baslangic));
 	}
