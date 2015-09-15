@@ -1,7 +1,0 @@
-package tr.gov.tubitak.demo;
-
-public class Student {
-	String name;
-	int age;
-
-}

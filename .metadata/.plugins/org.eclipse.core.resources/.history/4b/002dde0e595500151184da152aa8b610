@@ -1,6 +1,0 @@
-package tr.gov.tubitak;
-
-public class PhoneBook {
-	private String phone;
-
-}
