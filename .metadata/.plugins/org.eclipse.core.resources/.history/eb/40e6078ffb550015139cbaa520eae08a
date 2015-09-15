@@ -1,9 +1,0 @@
-package tr.gov.tubitak.sekizeylul;
-
-public class UsingMap {
-
-	public static void main(String[] args) {
-
-	}
-
-}

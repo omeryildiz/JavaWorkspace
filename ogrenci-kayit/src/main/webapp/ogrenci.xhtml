@@ -35,12 +35,16 @@
 
 -->
 	<div class="container">
-	<div class="row">
-		<div class="col-md-12 text-center"><h1>İlkel Yöntemlerle</h1></div>
-	</div>
-	<div class="row">
-		<div class="col-md-12 text-center"><h2>Öğrenci Kaydı</h2></div>
-	</div>
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h1>İlkel Yöntemlerle</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h2>Öğrenci Kaydı</h2>
+			</div>
+		</div>
 		<h:form>
 			<div class="row">
 				<div class="col-md-1">Id</div>
@@ -55,13 +59,15 @@
 						value="#{studentBean.student.name}" />
 				</div>
 			</div>
-						<div class="row">
+			<div class="row">
 				<div class="col-md-1">Seçenek</div>
 				<div class="col-md-4">
-				<h:selectOneMenu class="form-control" value="#{studentBean.student.city}">
-				<f:selectItems value="#{studentBean.cities}" var="a" itemValue="#{a}"/>
-				</h:selectOneMenu>
-				
+					<h:selectOneMenu class="form-control"
+						value="#{studentBean.student.city}">
+						<f:selectItems value="#{studentBean.cities}" var="a"
+							itemValue="#{a}" />
+					</h:selectOneMenu>
+
 				</div>
 			</div>
 			<div class="row">
@@ -72,57 +78,75 @@
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-md-1">Doğum Tarihi</div>
 				<div class="col-md-4">
-					<h:commandButton class="btn btn-default" value="Kaydet"
-						action="#{studentBean.saveStudent}"
-						rendered="#{studentBean.student.name == null}"></h:commandButton>
-				</div>
-				<div class="col-md-4">
-					<h:commandButton class="btn btn-default" value="Düzenle"
-						action="#{studentBean.updateStudent}"
-						rendered="#{studentBean.student.name != null}"></h:commandButton>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-10">
-				<h:form>
-		<h:dataTable class="table" value="#{studentBean.students}" var="o">
-			<h:column>
-				<h:commandButton class="btn btn-danger"
-					action="#{studentBean.removeStudent(o)}" value="Sil" />
-			</h:column>
-			<h:column>
-				<h:commandButton class="btn btn-default"
-					action="#{studentBean.selectStudent(o)}" value="Seç" />
-			</h:column>
-			<h:column>
-				<!-- column header -->
-				<f:facet name="header">Ogrenci Id</f:facet>
-				<!-- row record -->
-				<h:outputText value="#{o.id}"></h:outputText>
+					<h:inputText class="form-control"
+						value="#{studentBean.student.date}">
+						<f:convertDateTime pattern="dd.MM.yyyy" />
+					</h:inputText>
 
-			</h:column>
-
-			<h:column>
-				<f:facet name="header">Öğrenci İsim</f:facet>
-				<h:outputText value="#{o.name}"></h:outputText>
-			</h:column>
-
-			<h:column>
-				<f:facet name="header">Yaş</f:facet>
-				<h:outputText value="#{o.age}"></h:outputText>
-			</h:column>
-			<h:column>
-				<f:facet name="header">Şehir</f:facet>
-				<h:outputText value="#{o.city}"></h:outputText>
-			</h:column>
-		</h:dataTable>
-	</h:form>
 				</div>
-			</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<h:commandButton class="btn btn-default" value="Kaydet"
+							action="#{studentBean.saveStudent}"
+							rendered="#{studentBean.student.name == null}"></h:commandButton>
+					</div>
+					<div class="col-md-4">
+						<h:commandButton class="btn btn-default" value="Düzenle"
+							action="#{studentBean.updateStudent}"
+							rendered="#{studentBean.student.name != null}"></h:commandButton>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-10">
+						<h:form>
+							<h:dataTable class="table" value="#{studentBean.students}"
+								var="o">
+								<h:column>
+									<h:commandButton class="btn btn-danger"
+										action="#{studentBean.removeStudent(o)}" value="Sil" />
+								</h:column>
+								<h:column>
+									<h:commandButton class="btn btn-default"
+										action="#{studentBean.selectStudent(o)}" value="Seç" />
+								</h:column>
+								<h:column>
+									<!-- column header -->
+									<f:facet name="header">Ogrenci Id</f:facet>
+									<!-- row record -->
+									<h:outputText value="#{o.id}"></h:outputText>
+
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">Öğrenci İsim</f:facet>
+									<h:outputText value="#{o.name}"></h:outputText>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">Yaş</f:facet>
+									<h:outputText value="#{o.age}"></h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Şehir</f:facet>
+									<h:outputText value="#{o.city}"></h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Tarihin Günü</f:facet>
+								<h:outputText value="#{o.date}">
+									<f:convertDateTime type="date" pattern="EEEE" />
+								</h:outputText>
+								</h:column>
+								
+							</h:dataTable>
+						</h:form>
+					</div>
+				</div>
 		</h:form>
-			
-		
+
+
 	</div>
 
 

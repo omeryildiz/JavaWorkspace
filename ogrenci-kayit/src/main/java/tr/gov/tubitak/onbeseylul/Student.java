@@ -1,10 +1,13 @@
 package tr.gov.tubitak.onbeseylul;
 
+import java.util.Date;
+
 public class Student {
 	private Integer id;
 	private String name;
 	private Integer age;
 	private String city;
+	private Date date;
 
 
 
@@ -38,6 +41,14 @@ public class Student {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 
