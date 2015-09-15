@@ -1,8 +1,0 @@
-package tr.gov.tubitak.sekizeylul;
-
-public class ArraySample {
-	public static void main(String[] args) {
-		Integer[] i = new Integer(5);
-	}
-
-}

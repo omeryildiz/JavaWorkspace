@@ -21,14 +21,6 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-<<<<<<< HEAD
-			<name>org.jboss.tools.jst.web.kb.kbbuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-=======
->>>>>>> 6e4447cbc84d6715b59c9746f18d610d3063bce2
 			<name>org.eclipse.m2e.core.maven2Builder</name>
 			<arguments>
 			</arguments>
@@ -46,10 +38,5 @@
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
-<<<<<<< HEAD
-		<nature>org.jboss.tools.jst.web.kb.kbnature</nature>
-		<nature>org.jboss.tools.jsf.jsfnature</nature>
-=======
->>>>>>> 6e4447cbc84d6715b59c9746f18d610d3063bce2
 	</natures>
 </projectDescription>
