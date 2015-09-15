@@ -1,7 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<typeInfoHistroy>
-<typeInfo handle="=JavaDemo/D:\/java\/jdk1.8.0_60\/jre\/lib\/rt.jar&lt;java.io(Serializable.class[Serializable" modifiers="1537" timestamp="1441527726000"/>
-<typeInfo handle="=JavaDemo/D:\/java\/jdk1.8.0_60\/jre\/lib\/rt.jar&lt;java.lang(Runnable.class[Runnable" modifiers="1537" timestamp="1441527726000"/>
-<typeInfo handle="=JavaDemo/src&lt;tr.gov.tubitak.dokuzeylul.interfacesample{TestDao.java[TestDao" modifiers="513" timestamp="1441797334915"/>
-<typeInfo handle="=JavaDemo/D:\/java\/jdk1.8.0_60\/jre\/lib\/rt.jar&lt;java.lang(Exception.class[Exception" modifiers="33" timestamp="1441527726000"/>
-</typeInfoHistroy>
+<typeInfoHistroy/>

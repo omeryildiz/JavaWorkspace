@@ -477,14 +477,14 @@ Array.prototype.sort = function(funct){return [];};
 Array.prototype.splice = function(start, deletecount, items){return [];};
 /**
   * function unshift(items)
-  * @param {Object} values
-  * @returns {Number}
+  * @param {Array} start
+  * @returns {Array}
   * @memberOf   Array
   * @see     Array
   * @since   Standard ECMA-262 3rd. Edition 
   * @since   Level 2 Document Object Model Core Definition.   
  */  
-Array.prototype.unshift = function(values){return 1;};
+Array.prototype.unshift = function(start){return [];};
 
 /**
   * Object Function()

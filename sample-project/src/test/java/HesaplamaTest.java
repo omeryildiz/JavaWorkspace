@@ -12,6 +12,7 @@ public void toplamaTest() {
 	Assert.assertEquals(6,	 sonuc);
 
 }
+<<<<<<< HEAD
 
 @Test
 public void toplamaTest2() {
@@ -21,4 +22,6 @@ public void toplamaTest2() {
 
 }
 
+=======
+>>>>>>> 6e4447cbc84d6715b59c9746f18d610d3063bce2
 }

@@ -8,11 +8,14 @@
 </head>
 <body>
 Merhaba Dünya
+<<<<<<< HEAD
 <%
 for (int i = 0 ; i < 10 ; i++) 
 {
 	out.println("Merhaba dünya\n");
 }
 %>
+=======
+>>>>>>> 6e4447cbc84d6715b59c9746f18d610d3063bce2
 </body>
 </html>

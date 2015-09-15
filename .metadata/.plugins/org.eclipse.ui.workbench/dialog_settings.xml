@@ -10,18 +10,23 @@
 		<item value="true" key="internalFilter"/>
 	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="250" key="dialogHeight"/>
-		<item value="350" key="dialogWidth"/>
+		<item value="525" key="dialogHeight"/>
+		<item value="1025" key="dialogWidth"/>
 		<list key="textEntries">
+			<item value="1"/>
 		</list>
 		<list key="orderedElements">
+			<item value="org.eclipse.wst.server.ui.ServersView"/>
 		</list>
 		<list key="orderedProviders">
+			<item value="org.eclipse.e4.ui.parts"/>
 		</list>
 		<list key="textArray">
+			<item value="server"/>
 		</list>
 	</section>
 	<section name="NewWizardAction">
+<<<<<<< HEAD
 		<item value="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
 			<item value="org.eclipse.ui.Basic"/>
@@ -32,6 +37,13 @@
 			<item value="org.eclipse.datatools.sql"/>
 			<item value="org.eclipse.wst.web.ui"/>
 			<item value="org.eclipse.jst.ws.ui.new"/>
+=======
+		<item value="org.jboss.tools.jst.web.ui.wizards.newfile.NewXHTMLWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.jboss.tools.jst.web"/>
+>>>>>>> 6e4447cbc84d6715b59c9746f18d610d3063bce2
 		</list>
+	</section>
+	<section name="ImportExportAction">
 	</section>
 </section>
