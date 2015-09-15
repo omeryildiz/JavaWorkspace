@@ -1541,3 +1541,67 @@ Caused by: java.lang.NullPointerException
 
 !ENTRY org.eclipse.m2e.logback.appender 2 0 2015-09-15 09:25:42.275
 !MESSAGE Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+
+!ENTRY org.eclipse.core.resources 4 2 2015-09-15 09:29:25.737
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.core.resources".
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.wst.common.componentcore.internal.resources.VirtualFolder.getFirstTaggedResource(VirtualFolder.java:185)
+	at org.jboss.tools.common.web.WebUtils.getDefaultDeploymentDescriptorFolder(WebUtils.java:323)
+	at org.jboss.tools.common.web.WebUtils.getWebRootFolders(WebUtils.java:110)
+	at org.jboss.tools.common.web.WebUtils.getWebInfPaths(WebUtils.java:42)
+	at org.jboss.tools.common.model.project.ProjectHome.getWebInfPath(ProjectHome.java:108)
+	at org.jboss.tools.common.model.project.ProjectHome.getLocation(ProjectHome.java:84)
+	at org.jboss.tools.common.model.project.ModelNature.createProject(ModelNature.java:108)
+	at org.jboss.tools.common.model.project.ModelNature.setProject(ModelNature.java:64)
+	at org.eclipse.core.internal.resources.NatureManager.createNature(NatureManager.java:237)
+	at org.eclipse.core.internal.resources.Project.getNature(Project.java:412)
+	at org.jboss.tools.common.model.util.EclipseResourceUtil.getModelNature(EclipseResourceUtil.java:264)
+	at org.jboss.tools.jst.web.model.helpers.InnerModelHelper.createXModel(InnerModelHelper.java:37)
+	at org.jboss.tools.jst.web.kb.internal.scanner.ClassPathMonitor.init(ClassPathMonitor.java:60)
+	at org.jboss.tools.jst.web.kb.internal.KbProject.setProject(KbProject.java:202)
+	at org.eclipse.core.internal.resources.NatureManager.createNature(NatureManager.java:237)
+	at org.eclipse.core.internal.resources.Project.getNature(Project.java:412)
+	at org.jboss.tools.jst.web.kb.KbProjectFactory.getKbProject(KbProjectFactory.java:71)
+	at org.jboss.tools.jst.web.kb.WebKbPlugin$1.saving(WebKbPlugin.java:79)
+	at org.eclipse.core.internal.resources.SaveManager.executeLifecycle(SaveManager.java:387)
+	at org.eclipse.core.internal.resources.SaveManager$1.run(SaveManager.java:196)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.resources.SaveManager.broadcastLifecycle(SaveManager.java:199)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1184)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1163)
+	at org.eclipse.core.internal.resources.DelayedSnapshotJob.run(DelayedSnapshotJob.java:52)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.resources 2 2 2015-09-15 09:29:26.130
+!MESSAGE Save operation warnings.
+!SUBENTRY 1 org.eclipse.core.resources 2 566 2015-09-15 09:29:26.130
+!MESSAGE Problems occurred during save.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.wst.common.componentcore.internal.resources.VirtualFolder.getFirstTaggedResource(VirtualFolder.java:185)
+	at org.jboss.tools.common.web.WebUtils.getDefaultDeploymentDescriptorFolder(WebUtils.java:323)
+	at org.jboss.tools.common.web.WebUtils.getWebRootFolders(WebUtils.java:110)
+	at org.jboss.tools.common.web.WebUtils.getWebInfPaths(WebUtils.java:42)
+	at org.jboss.tools.common.model.project.ProjectHome.getWebInfPath(ProjectHome.java:108)
+	at org.jboss.tools.common.model.project.ProjectHome.getLocation(ProjectHome.java:84)
+	at org.jboss.tools.common.model.project.ModelNature.createProject(ModelNature.java:108)
+	at org.jboss.tools.common.model.project.ModelNature.setProject(ModelNature.java:64)
+	at org.eclipse.core.internal.resources.NatureManager.createNature(NatureManager.java:237)
+	at org.eclipse.core.internal.resources.Project.getNature(Project.java:412)
+	at org.jboss.tools.common.model.util.EclipseResourceUtil.getModelNature(EclipseResourceUtil.java:264)
+	at org.jboss.tools.jst.web.model.helpers.InnerModelHelper.createXModel(InnerModelHelper.java:37)
+	at org.jboss.tools.jst.web.kb.internal.scanner.ClassPathMonitor.init(ClassPathMonitor.java:60)
+	at org.jboss.tools.jst.web.kb.internal.KbProject.setProject(KbProject.java:202)
+	at org.eclipse.core.internal.resources.NatureManager.createNature(NatureManager.java:237)
+	at org.eclipse.core.internal.resources.Project.getNature(Project.java:412)
+	at org.jboss.tools.jst.web.kb.KbProjectFactory.getKbProject(KbProjectFactory.java:71)
+	at org.jboss.tools.jst.web.kb.WebKbPlugin$1.saving(WebKbPlugin.java:79)
+	at org.eclipse.core.internal.resources.SaveManager.executeLifecycle(SaveManager.java:387)
+	at org.eclipse.core.internal.resources.SaveManager$1.run(SaveManager.java:196)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:42)
+	at org.eclipse.core.internal.resources.SaveManager.broadcastLifecycle(SaveManager.java:199)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1184)
+	at org.eclipse.core.internal.resources.SaveManager.save(SaveManager.java:1163)
+	at org.eclipse.core.internal.resources.DelayedSnapshotJob.run(DelayedSnapshotJob.java:52)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
