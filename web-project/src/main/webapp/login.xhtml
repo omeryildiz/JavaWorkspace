@@ -7,10 +7,15 @@
 	<body>
 	#{userLoginBean.mesaj}
 	<h:form>
-	Kullanici adi : <h:inputText value="#{userLoginBean.username}" />
-	sifre : <h:inputText value="#{userLoginBean.password}" />
+	Kullanici adi : <h:inputText value="#{userLoginBean.username}" /> <h:message for="username" />
+	sifre : <h:inputText value="#{userLoginBean.password}" /> <h:message for="password" />
 	<h:commandButton action="#{userLoginBean.login()}" value="Giriş Yap" />
-
+	Sifremi hatirla <h:selectBooleanCheckbox value="#{userLoginBean.beniHatirla()}" />
+	<h:selectManyCheckbox value="#{userLoginBean.secilenIlgiAlanlari}">
+		<f:selectItem itemValue="Bilgisayar"/>
+		<f:selectItem itemValue="Resim"/>
+		<f:selectItem itemValue="Müzik"/>
+	</h:selectManyCheckbox>
 	</h:form>
 	
 	</body>

@@ -6,9 +6,22 @@ import javax.faces.bean.RequestScoped;
 @ManagedBean
 @RequestScoped
 public class UserLoginBean {
+	private String[] secilenIlgiAlanlari;
 	private String username;
 	private String password;
 	private String mesaj;
+	
+	public void yazdir(String[] secilenIlgiAlanari) 
+	{
+		for (String string : secilenIlgiAlanari) {
+			System.out.println(string);
+		}
+	}
+	
+	public boolean beniHatirla() 
+	{
+		return true;
+	}
 	
 	public boolean login() {
 		if(username.equals("admin") && password.equals("123456")){
@@ -43,6 +56,14 @@ public class UserLoginBean {
 
 	public void setMesaj(String mesaj) {
 		this.mesaj = mesaj;
+	}
+
+	public String[] getSecilenIlgiAlanlari() {
+		return secilenIlgiAlanlari;
+	}
+
+	public void setSecilenIlgiAlanlari(String[] secilenIlgiAlanlari) {
+		this.secilenIlgiAlanlari = secilenIlgiAlanlari;
 	}
 
 }
