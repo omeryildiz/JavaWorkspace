@@ -1,0 +1,29 @@
+	<!-- 
+	<h:form>
+		Id: <h:inputText class="form-control"
+			value="#{studentBean.student.id}" />
+		<br />
+		Name: <h:inputText class="form-control"
+			value="#{studentBean.student.name}" />
+		<br />
+		Age: <h:inputText class="form-control"
+			value="#{studentBean.student.age}" />
+		<br />
+		<h:commandButton class="btn btn-default" value="Kaydet"
+			action="#{studentBean.saveStudent}"
+			rendered="#{studentBean.student.name == null}"></h:commandButton>
+		<h:commandButton class="btn btn-default" value="Düzenle"
+			action="#{studentBean.updateStudent}"
+			rendered="#{studentBean.student.name != null}"></h:commandButton>
+	</h:form>
+ -->
+
+
+
+ postConstruct
+
+
+ apache commons io -> uri bir folder diğer bir folder'a kopyalamak bu yardımıcı kütüphaneler
+
+ http://www.jgroups.org/index.html -> replikasyon işleri için örnekler var bir uygulamadan yazdığını diğer uygulamadan da görebiliyorsun.
+ 

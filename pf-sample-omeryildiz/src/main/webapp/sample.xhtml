@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<h:head></h:head>
+<body>
+	<h:form>
+		<p:panelGrid columns="2">
+			<f:facet name="header">
+			Kayit Ekranı
+		</f:facet>
+			<h:outputText value="Id" />
+			<p:inputText value="#{studentBean.student.id}" />
+			<h:outputText value="Name" />
+			<p:inputText value="#{studentBean.student.name}" />
+			<h:outputText value="Surname" />
+			<p:inputText value="#{studentBean.student.surname}" />
+			<h:outputText value="Date" />
+			<p:calendar value="#{studentBean.student.date}"></p:calendar>
+
+			<p:commandButton update="@form" value="Create"
+				action="#{studentBean.create()}"
+				rendered="#{studentBean.student.name == null}"></p:commandButton>
+			<p:commandButton update="@form" value="Update"
+				action="#{studentBean.update()}"
+				rendered="#{studentBean.student.name != null}"></p:commandButton>
+
+		</p:panelGrid>
+
+		<p:dataTable value="#{studentBean.students}" var="s">
+			<p:column>
+				<p:commandButton update="@form" value="delete"
+					action="#{studentBean.delete(s)}"></p:commandButton>
+			</p:column>
+			<p:column>
+				<p:commandButton update="@form" value="select"
+					action="#{studentBean.select(s)}"></p:commandButton>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Id</f:facet>
+				<h:outputText value="#{s.id}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">Name</f:facet>
+				<h:outputText value="#{s.name}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">Surname</f:facet>
+				<h:outputText value="#{s.surname}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">Date</f:facet>
+				<h:outputText value="#{s.date}">
+					<f:convertDateTime pattern="dd.MM.yyyy" />
+				</h:outputText>
+
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+
+</body>
+</html>

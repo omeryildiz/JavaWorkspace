@@ -45,7 +45,7 @@
 				<h2>Öğrenci Kaydı</h2>
 			</div>
 		</div>
-		<h:form>
+		<h:form id="logform">
 			<div class="row">
 				<div class="col-md-1">Id</div>
 				<div class="col-md-4">
@@ -56,7 +56,9 @@
 				<div class="col-md-1">Name</div>
 				<div class="col-md-4">
 					<h:inputText class="form-control"
-						value="#{studentBean.student.name}" />
+						value="#{studentBean.student.name}">
+						<f:ajax render=":listeform" event="keyup"></f:ajax>
+						</h:inputText>
 				</div>
 			</div>
 			<div class="row">
@@ -91,26 +93,35 @@
 					<div class="col-md-4">
 						<h:commandButton class="btn btn-default" value="Kaydet"
 							action="#{studentBean.saveStudent}"
-							rendered="#{studentBean.student.name == null}"></h:commandButton>
+							rendered="#{studentBean.student.name == null}">
+							<f:ajax execute="@form" render="@form :listeform"></f:ajax>
+							</h:commandButton>
 					</div>
 					<div class="col-md-4">
 						<h:commandButton class="btn btn-default" value="Düzenle"
 							action="#{studentBean.updateStudent}"
-							rendered="#{studentBean.student.name != null}"></h:commandButton>
+							rendered="#{studentBean.student.name != null}">
+							<f:ajax execute="@form" render="@form :listeform"></f:ajax>
+							</h:commandButton>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-10">
-						<h:form>
+						<h:form id="listeform">
 							<h:dataTable class="table" value="#{studentBean.students}"
 								var="o">
 								<h:column>
 									<h:commandButton class="btn btn-danger"
-										action="#{studentBean.removeStudent(o)}" value="Sil" />
+										action="#{studentBean.removeStudent(o)}" value="Sil" >
+										<f:ajax execute="@form" render="@form :listeform"></f:ajax>
+										</h:commandButton>
 								</h:column>
 								<h:column>
 									<h:commandButton class="btn btn-default"
-										action="#{studentBean.selectStudent(o)}" value="Seç" />
+										action="#{studentBean.selectStudent(o)}" value="Seç" > 
+										<!-- form dediğinde bulunduğu formu update eder -->
+										<f:ajax execute="@form" render="@form :logform"></f:ajax>
+										</h:commandButton>
 								</h:column>
 								<h:column>
 									<!-- column header -->
