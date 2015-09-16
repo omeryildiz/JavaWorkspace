@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<body>
+		<h:messages />
+		<h:form>
+			Stok Sayisi : #{productBean.productStock()}
+			<h:panelGrid columns="2">
+				Ürün Adı : <h:inputText value="#{productBean.product.name}" required="true" rendered="true"/>
+				Marka : 
+						<h:selectOneMenu value="#{productBean.product.brand}">
+							<f:selectItem itemValue="Samsung" />
+							<f:selectItem itemValue="HTC" />
+							<f:selectItem itemValue="Apple" />
+							<f:selectItems value="#{productBean.brandList}" var="brand" itemValue="#{brand}"/>
+						</h:selectOneMenu>
+				Fiyat : <h:inputText value="#{productBean.product.price}" />
+				
+				<h:commandButton value="Kaydet" action="#{productBean.save()}" rendered="#{productBean.product.name == null}"/>
+				<h:commandButton value="Düzenle" action="#{productBean.update()}" rendered="#{productBean.product.name != null}"/>
+			</h:panelGrid> 
+		</h:form>
+		
+		<h:form>
+			<h:dataTable value="#{productBean.productList}" var="prod" width="600px">
+			
+				<f:facet name="header">Ürün Listesi</f:facet>
+			
+				<h:column>
+					<f:facet name="header">Sil</f:facet>
+					<h:commandLink action="#{productBean.remove(prod)}" value="Sil" />
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">Seç</f:facet>
+					<h:commandLink action="#{productBean.select(prod)}" value="Sec" />
+				</h:column>
+			
+				<h:column>
+					<f:facet name="header">Ad</f:facet>
+					#{prod.name}
+				</h:column>
+			
+				<h:column>
+					<f:facet name="header">Marka</f:facet>
+					#{prod.brand} 
+				</h:column>
+			
+				<h:column>
+					<f:facet name="header">Fiyat</f:facet>
+					#{prod.price}
+				</h:column>
+			
+			</h:dataTable>
+		</h:form>
+		
+	</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+	<body>
+		<h:messages />
+		<h:form>
+			<h:panelGrid columns="2">
+				Ad : <h:inputText value="#{studentWebBean.student.name}" />
+				Soyad : <h:inputText value="#{studentWebBean.student.lastname}" />
+				Yas : <h:inputText value="#{studentWebBean.student.age}" />
+				Dogum Tarihi : 	<h:inputText value="#{studentWebBean.student.birthday}">
+									<f:convertDateTime pattern="dd.MM.yyyy"/>
+								</h:inputText>
+				
+				Burs : <h:inputText value="#{studentWebBean.student.scholarship}" />
+				
+				
+				<h:commandButton action="#{studentWebBean.save()}" value="Kaydet" />
+			</h:panelGrid>
+		</h:form>
+		
+		<h:dataTable width="600px" value="#{studentWebBean.studentList}" var="st">
+			<h:column>
+				<f:facet name="header">Ad</f:facet>
+				#{st.name}
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Soyad</f:facet>
+				#{st.lastname}
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Yas</f:facet>
+				#{st.age}
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Doğum Tarihi</f:facet>
+				
+				<h:outputText value="#{st.birthday}">
+					<f:convertDateTime pattern="dd.MM.yyyy"/>
+				</h:outputText>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Toplam Burs</f:facet>
+				<h:outputText value="#{st.scholarship}" >
+					<f:convertNumber pattern="#,###.00"/>
+				</h:outputText>
+			</h:column>
+			
+		
+		</h:dataTable>
+		
+		
+		
+		
+		
+	</body>
+</html>
+
+

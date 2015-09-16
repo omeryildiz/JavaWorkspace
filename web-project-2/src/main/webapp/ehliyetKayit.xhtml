@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<body>
+	
+		<h:messages />
+		<h:form>
+			Ad : <h:inputText value="#{ehliyetKayitBean.ad}" required="true"/> <br />
+			Soyad : <h:inputText value="#{ehliyetKayitBean.soyad}" /> <br />
+			Yas : <h:inputText value="#{ehliyetKayitBean.yas}" /> <br />
+		
+			<h:commandButton value="Kaydet" action="#{ehliyetKayitBean.kaydet()}" 
+			binding="#{ehliyetKayitBean.butonunKendisi}" />
+		</h:form>
+		
+		<br /><br />
+		#{ehliyetKayitBean.mesaj}
+		<br />
+		
+		Ad : #{ehliyetKayitBean.ad} <br />
+		Soyad : #{ehliyetKayitBean.soyad} <br />
+		Ad : #{ehliyetKayitBean.yas} <br />
+		
+	</body>
+</html>

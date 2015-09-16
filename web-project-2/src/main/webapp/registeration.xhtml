@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:form>
+		Ad : <h:inputText  /> <br />
+		Soyad : <h:inputText  /> <br />
+		Dogum Tarihi : 
+			<h:selectOneMenu >
+				<f:selectItem itemValue="Ankara"/>
+				<f:selectItem itemValue="Istanbul"/>
+				<f:selectItem itemValue="Izmir"/>
+			</h:selectOneMenu>
+		
+		<br />
+		Ilgi Alanlari : 
+			<h:selectManyCheckbox value="#{registrationBean.secilenIlgiAlanlari}" layout="pageDirection">
+				<f:selectItem itemValue="Elektronik"/>
+				<f:selectItem itemValue="Bilgisayar"/>
+				<f:selectItem itemValue="Kitap"/>
+				<f:selectItems value="#{registrationBean.ilgiAlaniListesi}"  />
+			</h:selectManyCheckbox>
+
+		 <br />
+		 <br />
+		 
+		 <h:commandButton value="Kaydet" action="#{registrationBean.kaydet()}" />
+		 
+		 
+	</h:form>
+</html>

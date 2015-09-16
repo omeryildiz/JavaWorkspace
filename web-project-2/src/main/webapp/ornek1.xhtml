@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<f:metadata>
+	<f:viewParam name="sayi" value="#{ornekBean.sayi}" required="true">
+		<f:validateLongRange minimum="100" />
+	</f:viewParam>
+</f:metadata>
+	<body>
+		<h:messages />
+		<h:form>
+			Sayi Degeri : <h:inputText value="#{ornekBean.sayi}" />
+			<br />
+			<h:commandButton action="#{ornekBean.kaydet()}" value="Kaydet" />
+		</h:form>
+	</body>
+</html>

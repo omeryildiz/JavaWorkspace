@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<body>
+	
+		<a href="admin.xhtml">Admin Sayfasi</a>
+		
+		
+		<br />
+		<br />
+		<br />
+	
+		<h:messages />
+		#{userLoginBean.mesaj}
+		<h:form id="loginForm" >
+			Kullanici Adi : <h:inputText value="#{userLoginBean.username}" id="username" required="true"/>  <h:message for="username"/> <br />
+			Sifre : <h:inputSecret value="#{userLoginBean.password}" id="password" required="true"/> <h:message for="password"/> <br />
+			Sifremi hatirla : <h:selectBooleanCheckbox value="#{userLoginBean.beniHatirla}" />
+			
+			<br />
+			
+			<h:commandButton value="Giriş Yap" action="#{userLoginBean.login()}" id="loginButton"/>
+		
+		</h:form>
+	</body>
+</html>

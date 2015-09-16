@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<body>
+		<h:messages />
+		<h:form>
+			<h:panelGrid columns="2">
+				Ürün Adı : <h:inputText value="#{productTwoBean.product.name}" required="true" rendered="true"/>
+				Marka : 
+						<h:selectOneMenu value="#{productTwoBean.product.brand}">
+							<f:selectItem itemValue="Samsung" />
+							<f:selectItem itemValue="HTC" />
+							<f:selectItem itemValue="Apple" />
+							<f:selectItems value="#{productTwoBean.brandList}" var="brand" itemValue="#{brand}"/>
+						</h:selectOneMenu>
+				Fiyat : <h:inputText value="#{productTwoBean.product.price}" />
+				
+				<h:commandButton value="Kaydet" action="#{productTwoBean.save()}" rendered="#{productTwoBean.product.name == null}"/>
+				<h:commandButton value="Düzenle" action="#{productTwoBean.update()}" rendered="#{productTwoBean.product.name != null}"/>
+			</h:panelGrid> 
+		</h:form>
+		
+		
+	</body>
+</html>
