@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body> 
+	<h:form id="updateform">
+	<h:panelGrid>
+	İsim:<p:inputText value="#{productBean.product.name}" />
+	Marka:<p:inputText value="#{productBean.product.brand}" />
+	Fiyat:<p:inputText value="#{productBean.product.price}" />
+	
+	<h:commandButton action="#{productBean.save()}" value="Kaydet" update="@form :listform" rendered="#{productBean.product.id == null}" />
+	<h:commandButton action="#{productBean.update()}" value="Düzenle" update="@form :listform" rendered="#{productBean.product.id != null}" />
+	</h:panelGrid>
+	</h:form>
+	
+	<h:form id="listform">
+	<p:dataTable value="#{productBean.productList}" var="pr">
+	<p:column><p:commandLink action="#{productBean.remove(pr)}" update="@form"><h:outputText value="Sil" /></p:commandLink></p:column>
+	<p:column><p:commandLink action="#{productBean.select(pr)}" update=":updateform"><h:outputText value="Seç" /></p:commandLink></p:column>
+	<p:column headerText="Id">#{pr.id}</p:column>
+	<p:column headerText="Name">#{pr.name}</p:column>
+	<p:column headerText="Brand">#{pr.brand}</p:column>
+	<p:column headerText="Price">#{pr.price}</p:column>
+	</p:dataTable>
+	</h:form>
+
+</body> 
+</html>

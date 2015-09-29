@@ -8,8 +8,8 @@
 #define Calculator_H
 
 #include <thrift/TDispatchProcessor.h>
-#include "tutorial_types.h"
-#include "SharedService.h"
+#include <tutorial_types.h>
+#include <SharedService.h>
 
 namespace tutorial {
 
