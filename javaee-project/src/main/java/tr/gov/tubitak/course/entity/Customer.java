@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 
@@ -19,6 +20,9 @@ public class Customer implements Serializable {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address customerAddress = new Address();
+	
+	@ManyToOne
+	private Country country;
 
 	public Long getId() {
 		return id;
@@ -50,6 +54,14 @@ public class Customer implements Serializable {
 
 	public void setCustomerAddress(Address customerAddress) {
 		this.customerAddress = customerAddress;
+	}
+
+	public Country getCountry() {
+		return country;
+	}
+
+	public void setCountry(Country country) {
+		this.country = country;
 	}
 
 }

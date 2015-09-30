@@ -13,6 +13,10 @@
 	Soyisim:<p:inputText value="#{customerBean.customer.surname}" />
 	Adres:<p:inputText value="#{customerBean.customer.customerAddress.text}" />
 	Şehir:<p:inputText value="#{customerBean.customer.customerAddress.city}" />
+	Ülke: <p:selectOneMenu id="country" value="#{customerBean.customer.country}" style="width:150px">
+                <f:selectItem value="#{customerBean.countryList}" itemLabel="Select Country" var="faculty" itemValue="#{faculty}" />
+                <f:converter converterId="entityConverter" />
+           </p:selectOneMenu>
 
 	
 	<h:commandButton action="#{customerBean.save()}" value="Kaydet" update="@form :listform" rendered="#{customerBean.customer.id == null}" />
