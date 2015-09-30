@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body> 
+	<h:form id="updateform">
+	<h:panelGrid>
+	İsim:<p:inputText value="#{customerBean.customer.name}" />
+	Soyisim:<p:inputText value="#{customerBean.customer.surname}" />
+	Adres:<p:inputText value="#{customerBean.customer.customerAddress.text}" />
+	Şehir:<p:inputText value="#{customerBean.customer.customerAddress.city}" />
+
+	
+	<h:commandButton action="#{customerBean.save()}" value="Kaydet" update="@form :listform" rendered="#{customerBean.customer.id == null}" />
+	<h:commandButton action="#{customerBean.update()}" value="Düzenle" update="@form :listform" rendered="#{customerBean.customer.id != null}" />
+	</h:panelGrid>
+	</h:form>
+	
+	<h:form id="listform">
+	<p:dataTable value="#{customerBean.customerList}" var="cs">
+	<p:column><p:commandLink action="#{customerBean.remove(cs)}" update="@form"><h:outputText value="Sil" /></p:commandLink></p:column>
+	<p:column><p:commandLink action="#{customerBean.select(cs)}" update=":updateform"><h:outputText value="Seç" /></p:commandLink></p:column>
+	<p:column headerText="Id">#{cs.id}</p:column>
+	<p:column headerText="Name">#{cs.name}</p:column>
+	<p:column headerText="Surname">#{cs.surname}</p:column>
+	<p:column headerText="Address">#{cs.customerAddress.text}</p:column>
+	<p:column headerText="City">#{cs.customerAddress.city}</p:column>
+	</p:dataTable>
+	</h:form>
+
+</body> 
+</html>
