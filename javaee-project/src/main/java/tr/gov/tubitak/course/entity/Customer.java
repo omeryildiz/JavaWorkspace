@@ -1,11 +1,14 @@
 package tr.gov.tubitak.course.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
@@ -23,6 +26,9 @@ public class Customer implements Serializable {
 	
 	@ManyToOne
 	private Country country;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Product> products;
 
 	public Long getId() {
 		return id;
@@ -62,6 +68,14 @@ public class Customer implements Serializable {
 
 	public void setCountry(Country country) {
 		this.country = country;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
 
 }

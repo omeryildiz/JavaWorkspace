@@ -1,10 +1,12 @@
 package tr.gov.tubitak.course.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Product implements Serializable {
@@ -14,6 +16,9 @@ public class Product implements Serializable {
 	private String name;
 	private String brand;
 	private float price;
+	
+	@ManyToMany(mappedBy = "products")
+	private List<Customer> customers;
 
 	public Long getId() {
 		return id;
@@ -45,6 +50,14 @@ public class Product implements Serializable {
 
 	public void setPrice(float price) {
 		this.price = price;
+	}
+
+	public List<Customer> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(List<Customer> customers) {
+		this.customers = customers;
 	}
 
 }

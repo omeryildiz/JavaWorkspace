@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -13,9 +14,11 @@ import javax.transaction.UserTransaction;
 
 import tr.gov.tubitak.course.entity.Country;
 import tr.gov.tubitak.course.entity.Customer;
+import tr.gov.tubitak.course.entity.Product;
 
 @Named
 @SessionScoped
+@Stateful
 public class CustomerBean implements Serializable {
 	private Customer customer = new Customer();
 
@@ -23,7 +26,7 @@ public class CustomerBean implements Serializable {
 	EntityManager entityManager;
 	private List<Customer> customerList;
 	private List<Country> countryList;
-
+	private List<Product> productList;
 	// @Inject
 	// UserTransaction utx;
 
@@ -31,11 +34,11 @@ public class CustomerBean implements Serializable {
 	public void init() {
 		loadCustomerList();
 		this.setCountryList(entityManager.createQuery("from Country").getResultList());
+		this.setProductList(entityManager.createQuery("from Product").getResultList());
 	}
 
 	private void loadCustomerList() {
 		this.setCountryList(entityManager.createQuery("from Customer").getResultList());
-
 	}
 
 	// @PostConstruct
@@ -101,6 +104,14 @@ public class CustomerBean implements Serializable {
 
 	public void setCountryList(List<Country> countryList) {
 		this.countryList = countryList;
+	}
+
+	public List<Product> getProductList() {
+		return productList;
+	}
+
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
 
 }
