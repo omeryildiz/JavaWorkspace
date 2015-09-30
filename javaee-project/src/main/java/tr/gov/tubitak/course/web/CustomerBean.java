@@ -6,11 +6,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
 
 import tr.gov.tubitak.course.entity.Country;
 import tr.gov.tubitak.course.entity.Customer;
@@ -20,6 +18,7 @@ import tr.gov.tubitak.course.entity.Product;
 @SessionScoped
 @Stateful
 public class CustomerBean implements Serializable {
+	
 	private Customer customer = new Customer();
 
 	@PersistenceContext
@@ -38,7 +37,7 @@ public class CustomerBean implements Serializable {
 	}
 
 	private void loadCustomerList() {
-		this.setCountryList(entityManager.createQuery("from Customer").getResultList());
+		this.setCustomerList(entityManager.createQuery("from Customer").getResultList());
 	}
 
 	// @PostConstruct
@@ -54,7 +53,8 @@ public class CustomerBean implements Serializable {
 		// updateList();
 		loadCustomerList();
 		this.customer = new Customer();
-		System.out.println("Kayit yapildi");
+		System.out.println("Kayit yapildi ");
+		System.out.println("liste boyutu : " + customerList.size());
 
 	}
 
