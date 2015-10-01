@@ -1,0 +1,48 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<r:modalPanel id="currencyAlertPopup" height="160" width="400" zindex="100"
+		resizeable="false">
+		<f:facet name="header">
+			<s:fragment>
+				<h:graphicImage url="/img/warning.gif" />
+				<h:outputText value="#{messages['selectbox.currencyAlertPopup.Caption']}" />
+			</s:fragment>
+		</f:facet>
+
+		<h:form>
+			<f:facet name="controls">
+				<a:commandLink action="#{currencyAlertBean.setFirstTimeToFalse()}"
+					style="cursor:pointer" onclick="Richfaces.hideModalPanel('currencyAlertPopup')">
+					<h:graphicImage value="/img/exit.gif" />
+				</a:commandLink>
+			</f:facet>
+	
+			<h:outputText value="#{messages['selectbox.currencyAlertPopup.DefineRates']}"  
+				style="font-size:15px;"/>
+	
+			<r:spacer height="50px"/>
+			
+			<div style="padding-left:50px">
+	
+	            <s:button view="/general/currencyRate.xhtml" propagation="begin"
+	            	styleClass="button" value="#{messages['general.label.yes']}" 
+	            	action="#{currencyAlertBean.setFirstTimeToFalse()}"/>
+	            
+				<a:commandButton id="popClose" action="#{currencyAlertBean.setFirstTimeToFalse()}" 
+					oncomplete="Richfaces.hideModalPanel('currencyAlertPopup')"
+					value="#{messages['general.label.no']}" styleClass="button" />
+			</div>
+
+		</h:form>		
+	
+	</r:modalPanel>
+
+</ui:composition>

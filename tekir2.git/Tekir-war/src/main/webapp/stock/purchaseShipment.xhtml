@@ -1,0 +1,420 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="stock"/>
+            <ui:param name="curpage" value="stocknew"/>
+            <ui:param name="curitem" value="purchaseShipment"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/stockFront.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Stock']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/stock/purchaseShipmentBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PurchaseShipmentBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/stock/purchaseShipment.xhtml">
+                <h:outputText value="#{messages['module.caption.PurchaseShipment']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{purchaseShipmentHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['purchaseShipment.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PurchaseShipment']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        <ui:include src="/stock/productSelectPopup.xhtml" />
+        
+        <r:modalPanel id="orderSelect" minHeight="500" minWidth="450" 
+                       height="500" width="520" zindex="100">
+            <f:facet name="header">
+                <s:fragment>
+                    <h:graphicImage url="/img/lorry.gif" /> 
+                    <h:outputText value="#{messages['order.caption.OrderSelect']}" />
+                </s:fragment>
+            </f:facet>
+            <f:facet name="controls">
+                <h:graphicImage value="/img/exit.gif" style="cursor:pointer" onclick="Richfaces.hideModalPanel('orderSelect')" />
+            </f:facet>
+            
+            <a:include viewId="/finance/purchaseOrderSelect.xhtml" />
+            
+            <div class="actionButtons">
+                <input id="popClose" class="button" type="button" onclick="Richfaces.hideModalPanel('orderSelect')" value="#{messages['general.button.Close']}"/>
+            </div>
+        </r:modalPanel>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/lorry.gif" alt="#{messages['purchaseShipment.img.Form']}"/> 
+                        <h:outputText value="#{messages['purchaseShipment.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <s:fragment rendered="#{not empty purchaseShipment.invoice}">
+                    <h:outputText value="#{messages['shipment.hint.InvoiceBinding']} #{messages['shipment.hint.InvoiceSerial']} : " styleClass="hint" />
+                    <s:link view="/finance/purchaseInvoice.xhtml" propagation="none" rendered="#{not purchaseShipment.invoice.shipmentInvoice}">
+                        <f:param name="eid" value="#{purchaseShipment.invoice.id}"/>
+                        <h:outputText value=" #{purchaseShipment.invoice.serial} - #{purchaseShipment.invoice.reference}" />
+                    </s:link>
+                    <s:link view="/finance/purchaseShipmentInvoice.xhtml" propagation="none" rendered="#{purchaseShipment.invoice.shipmentInvoice}">
+                        <f:param name="it" value="1"/>
+                        <f:param name="eid" value="#{purchaseShipment.invoice.id}"/>
+                        <h:outputText value=" #{purchaseShipment.invoice.serial} - #{purchaseShipment.invoice.reference}" />
+                    </s:link>
+                </s:fragment>
+                
+                <h:panelGrid columns="2">
+                    <s:fragment>
+                    	<table>
+                    		<tr>
+                    			<td>
+				                    <s:div>
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Serial']}" accesskey="Q"/></ui:define>
+				                            <h:inputText value="#{purchaseShipment.serial}" styleClass="middle" 
+				                            	required="true" accesskey="Q" 
+				                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+				                        </s:decorate>
+				                        
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Reference']}"/></ui:define>
+				                            <h:inputText value="#{purchaseShipment.reference}" styleClass="middle" required="false"/>
+				                        </s:decorate>
+				                        <a:region renderRegionOnly="true">
+				                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Contact']}"/></ui:define>
+				                            <h:inputText id="contact" value="#{purchaseShipment.contact}" styleClass="middle" required="true">
+				                                <f:converter converterId="contactCaptionConverter"/>
+				                                <a:support event="onblur" requestDelay="500" reRender="contact"/>
+				                            </h:inputText>
+				                            
+				                            <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+				                                <h:graphicImage url="/img/selectBox.gif" /> 
+				                            </a>
+				                            
+				                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+												suggestionAction="#{contactSuggestion.suggestProvider}" var="citem"
+												fetchValue="#{citem.caption}">
+												<ui:include src="/contact/contactSuggestionView.xhtml" />
+											</r:suggestionbox>
+				                        </s:decorate>
+				                        </a:region>
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Warehouse']}"/></ui:define>
+				                            <h:selectOneMenu value="#{purchaseShipment.warehouse}" styleClass="middle" required="true">
+				                                <s:convertEntity />
+				                                <s:selectItems value="#{generalSuggestion.warehouseList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+				                            </h:selectOneMenu> 
+				                        </s:decorate>
+				                        
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['general.label.Deliverer']}"/></ui:define>
+				                            <h:inputText value="#{purchaseShipment.deliverer}" styleClass="middle" />
+				                        </s:decorate>
+				                        
+				                    </s:div>
+                    			</td>
+                    			<td>
+				                    <s:div>
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Code']}"/></ui:define>
+				                            <h:inputText value="#{purchaseShipment.code}" styleClass="middle" />
+				                        </s:decorate>
+				                        
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Date']}"/></ui:define>
+				                            <r:calendar value="#{purchaseShipment.date}" enableManualInput="true"
+				                                        datePattern="#{messages['general.format.Date']}"
+				                                        required="true"/>
+				                        </s:decorate>
+				                        
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['general.label.Time']}"/></ui:define>
+				                            <h:inputText value="#{purchaseShipment.time}" required="true">
+				                            	<s:convertDateTime  pattern="#{messages['general.format.Time']}" />
+											</h:inputText>
+				                        </s:decorate>
+				                        
+				                        <s:decorate template="/layout/edit.xhtml">
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Status']}"/></ui:define>
+				                            <h:selectBooleanCheckbox id="active" value="#{purchaseShipment.active}" styleClass="checkbox" />
+				                            <h:outputLabel value="#{messages['purchaseShipment.label.Active']}" for="active" styleClass="checkboxLabel" />
+				                        </s:decorate>
+				                        
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label"><h:outputText value="#{messages['general.label.Recepient']}"/></ui:define>
+				                            <h:inputText value="#{purchaseShipment.recepient}" styleClass="middle" />
+				                        </s:decorate>
+				                    </s:div>
+								</td>
+							</tr>
+							<tr>	
+								<td>
+				                    <s:div>
+				                        <s:decorate template="/layout/edit.xhtml">
+				                            <ui:define name="label"><h:outputText value="#{messages['purchaseShipment.label.Info']}"/></ui:define>
+				                            <h:inputText value="#{purchaseShipment.info}" style="width:490px;"/>
+				                        </s:decorate>
+				                    </s:div>
+				                </td>
+				          	</tr>	
+				  		</table>             
+    	            </s:fragment>
+					<s:div style="width:350px;">
+                    <r:dataTable id="orders"
+                                 var="item"
+                                 value="#{purchaseShipment.orderLinks}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="3">
+                                    <h:outputText value="#{messages['module.caption.PurchaseOrderBrowse']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <a:commandLink reRender="orderSelectList" oncomplete="Richfaces.showModalPanel('orderSelect')"
+                                    	action="#{purchaseShipmentHome.buildOrderNotes()}" ajaxSingle="true">
+                                        <h:graphicImage url="/img/add.gif" title="#{messages['order.button.NewOrderLine']}"/> 
+                                    </a:commandLink>
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                  
+                        <r:column>
+                            <h:outputText value="#{item.orderNote.serial}"/>
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="#{item.orderNote.reference}"/>
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="#{item.orderNote.date}"/>
+                        </r:column>
+                        <r:column styleClass="actionColumn">
+                            <a:commandLink reRender="orders,its" action="#{purchaseShipmentHome.removeOrderNote(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" /> 
+                            </a:commandLink>
+                        </r:column>
+                  
+                    </r:dataTable>
+                </s:div>                
+	                
+					                    
+                </h:panelGrid>
+                
+                <r:jQuery name="hede" timing="onJScall" query="get()" />
+                
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                <a:region>
+                    <r:dataTable id="its" 
+                                 var="item"
+                                 value="#{purchaseShipment.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="8">
+                                    <h:outputText value="#{messages['purchaseShipment.caption.Details']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{purchaseShipmentHome.createNewLine()}" accesskey="N" oncomplete="focusLastRow(); setMasks();">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+                                
+                                <r:column breakBefore="true" styleClass="codeField">
+                                    <h:outputText value="#{messages['purchaseShipment.label.LineCode']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseShipment.label.Product']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseShipment.label.LineInfo']}" />
+                                </r:column>
+                                <r:column styleClass="moneyField">
+                                    <h:outputText value="#{messages['purchaseShipment.label.Quantity']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseShipment.label.Unit']}" />
+                                </r:column>
+                                <r:column styleClass="moneyField">
+                                    <h:outputText value="#{messages['purchaseShipment.label.UnitPrice']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseShipment.label.Amount']}" />
+                                </r:column>
+                                <r:column style="width:60px;">
+                                    <h:outputText value="#{messages['purchaseShipment.label.Currency']}" />
+                                </r:column>
+                                <r:column style="width:16px;">
+                                    <h:outputText value="" />
+                                </r:column>
+                            </r:columnGroup>
+                            
+                        </f:facet>
+                        <r:column style="width:50px;" rendered="#{item.product.productType or item.product eq null}">
+                            <h:inputText  id="code" value="#{item.lineCode}" styleClass="codeField utdff" />
+                        </r:column>
+                        <r:column style="width:200px;" rendered="#{item.product.productType or item.product eq null}">
+                            
+                            <h:inputText id="product" value="#{item.product}" style="width:160px;" requried="true">
+                                <f:converter converterId="productCaptionConverter"/>
+                                <a:support event="onblur" actionListener="#{purchaseShipmentHome.selectProduct(rowKey)}" reRender="unit" ajaxSingle="true"/>
+                            </h:inputText>
+                            <a href="javascript:productSelectPopup( 'form:its:#{rowKey}:product' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            <r:suggestionbox id="productSuggest" for="product" rules="all"  ajaxSingle="true" suggestionAction="#{stockSuggestion.suggestIsProduct}" var="it" fetchValue="#{it.caption}"
+                                             eventsQueue="productSuggestion" reRender="unit" selfRendered="true">
+                                <h:column>
+                                    <h:outputText value="#{it.code}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.name}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.unit}"/>
+                                </h:column>
+                                
+                                <a:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+                            </r:suggestionbox>
+                            
+                            <ui:remove>
+                                <a href="javascript:Richfaces.showModalPanel('mp')">?</a>
+                            </ui:remove>                            
+                        </r:column>
+                        
+                        <r:column rendered="#{item.product.productType or item.product eq null}">
+                            <s:decorate>    
+                                <h:inputText  value="#{item.info}" styleClass="middle" />
+                            </s:decorate>
+                        </r:column>
+                        <r:column rendered="#{item.product.productType or item.product eq null}">
+                            
+                            <h:inputText  id="quantity" value="#{item.quantity.value}" styleClass="amountField" onblur="calcAmount(#{rowKey});" 
+                            	alt="decimal" converter="doubleConverter" />
+                            
+                        </r:column>
+                        <r:column rendered="#{item.product.productType or item.product eq null}">
+                            
+                            <h:outputText id="unit" value="#{item.product.unit}" />
+                        </r:column>
+                        
+                        <r:column rendered="#{item.product.productType or item.product eq null}">
+                            
+                            <h:inputText  id="unitPrice" value="#{item.unitPrice.value}" styleClass="amountField" onblur="calcAmount(#{rowKey});" 
+                            	alt="decimal"  converter="bigDecimalConverter" />
+                            
+                        </r:column>
+                        
+                        <r:column rendered="#{item.product.productType or item.product eq null}">
+                            
+                            <h:inputText  id="amount" value="#{item.amount.value}" styleClass="amountField" onblur="calcPrice(#{rowKey});" 
+                            	alt="decimal" converter="bigDecimalConverter" />
+                            
+                        </r:column>
+                        
+                        <r:column style="width:60px;" rendered="#{item.product.productType or item.product eq null}">
+                            <s:decorate>
+                                <h:selectOneMenu value="#{item.amount.currency}" styleClass="ccyField">
+                                    <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                                </h:selectOneMenu> 
+                            </s:decorate>
+                        </r:column>
+                        
+                        
+                        <r:column styleClass="actionColumn" rendered="#{item.product.productType or item.product eq null}">
+                            <a:commandLink reRender="its" action="#{purchaseShipmentHome.deleteLine(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" /> 
+                            </a:commandLink>
+                        </r:column>
+                        
+                        
+                        <f:facet name="footer">
+                            <ui:remove>
+                                <r:dataTable id="totals"
+                                             var="item"
+                                             value="#{dekont.totals}" 
+                                             style="float:right; width: 30%;"
+                                             onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                             onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                                    
+                                    <r:column style="text-align:right;">
+                                        <f:facet name="header">
+                                            <h:outputText value="Toplamlar" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.value} #{item.currency}"/>
+                                    </r:column>
+                                </r:dataTable>
+                            </ui:remove>
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </a:region>
+                
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{purchaseShipmentHome.save()}"
+                                 rendered="#{empty purchaseShipment.invoice}"
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{purchaseShipmentHome.delete()}"
+                          rendered="#{not empty purchaseShipment.id and empty purchaseShipment.invoice}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{purchaseShipmentHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

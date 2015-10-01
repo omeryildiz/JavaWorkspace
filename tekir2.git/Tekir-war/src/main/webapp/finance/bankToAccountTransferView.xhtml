@@ -1,0 +1,209 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+     <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewTransfer"/>
+            <ui:param name="cursubitem" value="bankToAccountTransfer"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/bankToAccountTransferBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.BankToAccountTransferBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/bankToAccountTransfer.xhtml">
+                <h:outputText value="#{messages['module.caption.BankToAccountTransfer']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/finance/bankToAccountTransfer.xhtml" action="#{bankToAccountTransferHome.createNew()}" rendered="#{s:hasPermission('bankToAccountTransfer', 'insert')}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['bankToAccountTransfer.action.Add']}" />
+            </s:link>
+        </div>
+
+    </ui:define>
+
+    
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.BankToAccountTransfer']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+
+        <h:form id="form" >
+
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['bankToAccountTransfer.img.Form']}"/>
+                        <h:outputText value="#{messages['bankToAccountTransfer.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+                 <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+
+                <h:panelGrid columns="3">
+
+
+					 <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:outputText value="#{bankToAccountTransfer.serial}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Reference']}"/></ui:define>
+                            <h:outputText value="#{bankToAccountTransfer.reference}" styleClass="middle"/>
+                        </s:decorate>
+
+                    </s:div>
+
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Code']}"/></ui:define>
+                            <h:outputText value="#{bankToAccountTransfer.code}" styleClass="middle" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Date']}"/></ui:define>
+                            <h:outputText value="#{bankToAccountTransfer.date}"
+                                        datePattern="#{messages['general.format.Date']}">
+                                            <s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+                            </h:outputText>
+                        </s:decorate>
+
+                    </s:div>
+
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Info']}"/></ui:define>
+                            <h:outputText value="#{bankToAccountTransfer.info}" styleClass="exlarge" />
+                        </s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.FollowUp']}"/></ui:define>
+                            <h:outputText value="#{bankToAccountTransfer.workBunch.caption}" />
+                        </s:decorate>
+
+                    </s:div>
+
+					<s:div>
+
+						<h2><h:outputText value="#{messages['general.label.payer']}" /></h2>
+
+                           <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToAccountTransfer.label.Bank']}"/>
+                                </ui:define>
+                                <h:outputText id="bankBox"
+                                                 value="#{bankToAccountTransfer.bank.name}" styleClass="middle">
+                                    <s:convertEntity/>
+                                </h:outputText>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToAccountTransfer.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:outputText id="bankBranchBox"
+                                                 value="#{bankToAccountTransfer.bankBranch.name}" styleClass="middle">
+                                    <s:convertEntity/>
+                                </h:outputText>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToAccountTransfer.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:outputText id="bankAccountBox"
+                                                 value="#{bankToAccountTransfer.bankAccount.accountNo} - #{bankToAccountTransfer.bankAccount.currency}" styleClass="middle">
+                                    <s:convertEntity/>
+                                </h:outputText>
+                                <br />
+                                <h:outputText id="bankAccountIban"
+                                                 value="#{bankToAccountTransfer.bankAccount.iban}" styleClass="large" rendered="#{bankToAccountTransfer.bankAccount.iban ne null}">    
+                                </h:outputText>                                
+                            </s:decorate>
+
+
+					</s:div>
+
+					<s:div>
+                    	<h2><h:outputText value="#{messages['general.label.receiver']}" /></h2>
+
+							
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToAccountTransfer.label.Account']}"/>
+                                </ui:define>
+                                <h:outputText id="bankAccountBox"
+                                                 value="#{bankToAccountTransfer.account.code} - #{bankToAccountTransfer.account.name} " styleClass="middle">
+                                    <s:convertEntity/>
+                                </h:outputText>
+                            </s:decorate>
+
+
+
+					</s:div>
+					<s:div>
+                    	<h2><h:outputText value="#{messages['general.label.AmountAndCost']}" /></h2>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Amount']}"/></ui:define>
+                            <h:outputText value="#{bankToAccountTransfer.amount.value}" styleClass="amountField" required="true"
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="bankAccountCurrency" value="#{bankToAccountTransfer.bankAccount.currency }" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Cost']}"/></ui:define>
+                            <h:outputText id="cost" value="#{bankToAccountTransfer.cost.value}" styleClass="amountField"
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();">
+                            </h:outputText>
+                            <h:outputText value=" " />
+                            <h:outputText id="costCurrency" value="#{bankToAccountTransfer.bankAccount.currency }" />
+                        </s:decorate>
+					</s:div>
+
+				</h:panelGrid>
+
+            </r:panel>
+
+            <div class="actionButtons">
+
+<ui:remove>
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{bankToAccountTransferHome.print()}" styleClass="button" />
+</ui:remove>
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{bankToAccountTransferHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{bankToAccountTransferHome.close()}" styleClass="button" />
+			</div>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

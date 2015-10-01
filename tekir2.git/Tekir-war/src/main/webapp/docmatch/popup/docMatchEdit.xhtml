@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://ut.com/jsf/comps">
+
+	<s:div id="messageDiv">
+		<ui:include src="/layout/messages.xhtml" />
+	</s:div>
+
+	<s:div id="docMatchSelectPopupDiv">
+		<ui:include src="/docmatch/popup/docMatchSelectPopup.xhtml" />
+	</s:div>
+	
+	<h:form id="selectform">
+		<a:region>
+			<r:dataTable id="matches" 
+				styleClass="detailTable" 
+				var="item"
+				value="#{currentHome.selectedItemMatches}" 
+				rowKeyVar="rowKey" 
+				rows="10"
+				onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+				<f:facet name="header">
+					<r:columnGroup>
+						<r:column>
+							<h:outputText value="#{messages['docmatch.label.MatchDate']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.Serial']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.DocumentType']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.Amount']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.Currency']}" />
+						</r:column>
+						<r:column>
+							<a:commandLink action="#{docMatchBrowse.setFilterModel(currentHome.openMatchPopup(rowKey))}"
+								ajaxSingle="true" reRender="docMatchSelectPopupDiv"
+								oncomplete="Richfaces.showModalPanel('docMatchSelectPopup');setMasks();">
+								<h:graphicImage url="/img/add.gif" title="#{messages['docmatch.label.AddNewMatch']}"/>
+							</a:commandLink>
+						</r:column>
+					</r:columnGroup>
+
+				</f:facet>
+				<r:column styleClass="serialField">
+					<h:outputText value="#{item.matchDate}">
+						<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+					</h:outputText>
+				</r:column>
+
+				<r:column styleClass="serialField">
+					<h:outputText value="#{item.matchedDocumentSerial}" />
+				</r:column>
+
+				<r:column>
+					<h:outputText value="#{messages[ut:concat('general.value.DocumentType.',item.matchedDocumentType)]}" />
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.amount.value}" alt="decimal" converter="bigDecimalConverter">
+						<a:support event="onblur" reRender="remainingMatch" status="commonAjaxStatus"/>
+					</h:inputText>
+				</r:column>
+
+				<r:column>
+					<h:outputText value="#{item.amount.currency}" />
+				</r:column>
+				<r:column>
+					<a:commandLink action="#{currentHome.deleteMatchLine(rowKey)}"
+						ajaxSingle="true" reRender="matches"
+						oncomplete="setMasks();" >
+						<h:graphicImage url="/img/delete.gif" title="#{messageS['docmatch.label.DeleteMatch']}"/>
+					</a:commandLink>
+				</r:column>
+
+				<f:facet name="footer">
+					<r:columnGroup>
+						<r:column colspan="3">
+							<h:outputText value="#{messages['general.label.RemainingMatchAmount']}"/>
+						</r:column>
+						<r:column style="float:right">
+							<s:div id="remainingMatch">
+								<h:outputText value="#{currentHome.remainingMatchTotal}" alt="decimal" 
+									converter="bigDecimalConverter"/>
+							</s:div>
+						</r:column>
+						<r:column>
+							<h:outputText value="#{currentHome.selectedItem.amount.currency}" />
+						</r:column>
+						<r:column />
+					</r:columnGroup>
+				</f:facet>
+			</r:dataTable>
+			<r:datascroller for="browseList" renderIfSinglePage="false" />
+			<div>
+			</div>
+
+		</a:region>
+
+        <div class="actionButtons">
+            <div style="margin-top:20px;">
+                <a:commandLink onclick="Richfaces.hideModalPanel('docMatchEditPopup')"
+                	styleClass="button" value="#{messages['general.button.Ok']}">
+                </a:commandLink>
+            </div>
+        </div>
+
+	</h:form>
+
+</ui:composition>

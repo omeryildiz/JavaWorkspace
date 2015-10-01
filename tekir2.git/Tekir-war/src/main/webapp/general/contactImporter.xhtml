@@ -1,0 +1,83 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="general" />
+			<ui:param name="curpage" value="currencyRate" />
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="toolbar">
+		<div class="pathgroup"><s:link view="/general/general.xhtml"
+			propagation="none">
+			<h:outputText value="#{messages['module.caption.General']}" />
+		</s:link> <h:outputText value=" » " /> <s:link
+			view="/general/contactImporter.xhtml" >
+			<h:outputText value="#{messages['module.caption.ContactImporter']}" />
+		</s:link></div>
+
+	</ui:define>
+
+	<ui:define name="body">
+
+		<h1><h:outputText value="#{messages['module.caption.ContactImporter']}" /></h1>
+	
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+			
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/shield.gif"
+							alt="#{messages['contact.img.Form']}" />
+						<h:outputText value="#{messages['module.caption.ContactImporter']}" />
+					</s:fragment>
+				</f:facet>
+			
+				<h:panelGrid columns="1">
+		
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contactImporter.label.selectCSVFile']}" />
+						</ui:define>
+	
+						<r:fileUpload
+							fileUploadListener="#{contactImportBean.fileUploadListener}"
+							addControlLabel="#{messages['Ekle']}"
+							clearAllControlLabel="#{messages['Hepsini Temizle']}"
+							clearControlLabel="#{messages['Temizle']}"
+							stopEntryControlLabel="#{messages['Durdur']}"
+							uploadControlLabel="#{messages['Yükle']}"
+							doneLabel="#{messages['Tamam']}" immediateUpload="true"
+							maxFilesQuantity="1" acceptedTypes="csv" >
+						</r:fileUpload>
+					</s:decorate>
+	
+					<s:div>
+		                <h:commandButton id="save" value="#{messages['general.button.Save']}"
+		                	action="#{contactImportBean.save()}" styleClass="button"/>
+		
+						<s:button id="done" view="/contact/contactBrowse.xhtml"
+							value="#{messages['general.button.Close']}" styleClass="button" 
+							propagation="end"/>
+					</s:div>
+				</h:panelGrid>
+
+			</r:panel>
+
+		</h:form>
+
+	</ui:define>
+	
+</ui:composition>

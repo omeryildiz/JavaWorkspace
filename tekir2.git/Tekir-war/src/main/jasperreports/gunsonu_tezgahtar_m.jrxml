@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gunsonu_tezgahtar_m" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/home/volkan/projeler/svn/tekir/tekir/view/jasper/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pWare" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pCode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pBDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date("1900/01/01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pEDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date("2100/01/01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pUser" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pClerk" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pOrgLevel" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pAccount" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pWorkBunchId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pProductLabel" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select count(id) as FATSAYI
+from FINANCE_TXN  txn
+where( txn.TXN_DATE >= $P{pBDate} and txn.TXN_DATE  <= $P{pEDate} )]]>
+	</queryString>
+	<field name="FATSAYI" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="36" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText" x="191" y="5" width="412" height="30"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="14" isBold="true" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[SATICI PERFORMANS RAPORU]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField" x="709" y="19" width="60" height="14"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="3" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-3" positionType="Float" x="0" y="0" width="772" height="2" isPrintWhenDetailOverflows="true"/>
+				<subreportParameter name="pClerk">
+					<subreportParameterExpression><![CDATA[$P{pClerk}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pBDate">
+					<subreportParameterExpression><![CDATA[$P{pBDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pOrgLevel">
+					<subreportParameterExpression><![CDATA[$P{pOrgLevel}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pWorkBunchId">
+					<subreportParameterExpression><![CDATA[$P{pWorkBunchId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pAccount">
+					<subreportParameterExpression><![CDATA[$P{pAccount}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pEDate">
+					<subreportParameterExpression><![CDATA[$P{pEDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pCode">
+					<subreportParameterExpression><![CDATA[$P{pCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pWare">
+					<subreportParameterExpression><![CDATA[$P{pWare}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pUser">
+					<subreportParameterExpression><![CDATA[$P{pUser}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "gunsonu_durum_tezgahtar_satissip_s10.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="3" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-4" positionType="Float" x="0" y="0" width="772" height="2" isPrintWhenDetailOverflows="true"/>
+				<subreportParameter name="pClerk">
+					<subreportParameterExpression><![CDATA[$P{pClerk}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pBDate">
+					<subreportParameterExpression><![CDATA[$P{pBDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pOrgLevel">
+					<subreportParameterExpression><![CDATA[$P{pOrgLevel}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pWorkBunchId">
+					<subreportParameterExpression><![CDATA[$P{pWorkBunchId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pAccount">
+					<subreportParameterExpression><![CDATA[$P{pAccount}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pEDate">
+					<subreportParameterExpression><![CDATA[$P{pEDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pCode">
+					<subreportParameterExpression><![CDATA[$P{pCode}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pWare">
+					<subreportParameterExpression><![CDATA[$P{pWare}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pUser">
+					<subreportParameterExpression><![CDATA[$P{pUser}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "gunsonu_durum_tezgahtariade_s8.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" isPrintRepeatedValues="false" x="345" y="4" width="61" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Sayfa " + $V{PAGE_NUMBER} + " / "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="406" y="4" width="36" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Lucida Sans" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1254" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line" x="0" y="1" width="782" height="1" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="0" y="4" width="159" height="13" forecolor="#666666"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="7" isBold="true" isItalic="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pProductLabel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="8" splitType="Stretch"/>
+	</summary>
+</jasperReport>

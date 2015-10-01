@@ -1,0 +1,145 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="department"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+                <s:link view="/general/general.xhtml" propagation="none">
+                    <h:outputText value="#{messages['module.caption.General']}"/>
+                </s:link>
+                <h:outputText value=" » "/>
+                <s:link view="/general/department.xhtml">
+                    <h:outputText value="#{messages['module.caption.Department']}"/>
+                </s:link>
+            </div>
+            
+            <div class="toolgroup-left">
+                <s:link action="#{departmentHome.createNew()}">
+                    <h:graphicImage url="/img/add.gif" /> 
+                    <h:outputText value="#{messages['department.action.Add']}" />
+                </s:link>
+            </div>
+            
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Department']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{departmentList}" 
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['department.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{departmentHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code} - #{cty.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{departmentHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['department.hint.EmptyList']}" rendered="#{departmentList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/house.gif" alt="#{messages['department.img.World']}"/> 
+                            <h:outputText value="#{messages['department.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['department.label.code']}"/></ui:define>
+                            <h:inputText value="#{department.code}" styleClass="small" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['department.label.name']}"/></ui:define>
+                            <h:inputText value="#{department.name}" styleClass="small" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['department.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{department.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['department.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['department.label.info']}"/></ui:define>
+                            <h:inputTextarea value="#{department.info}" styleClass="exlarge" rows="4"/>
+                        </s:decorate>
+                        
+                    </h:panelGrid>
+                    
+                    
+                    <div class="actionButtons">
+                        <h:commandButton id="saveAndNew" 
+                                         value="#{messages['general.button.SaveAndNew']}" 
+                                         action="#{departmentHome.saveAndNew()}"
+                                         styleClass="button"/>  
+                        
+                        <h:commandButton id="save" 
+                                         value="#{messages['general.button.Save']}" 
+                                         action="#{departmentHome.save()}"
+                                         styleClass="button"/>  
+                        
+                        
+                        <s:button id="delete" 
+                                  value="#{messages['general.button.Delete']}" 
+                                  action="#{departmentHome.delete()}"
+                                  rendered="#{not empty department.id}"
+                                  onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                                  styleClass="button"/>
+                        
+                        <s:button id="done" 
+                                  value="#{messages['general.button.Close']}"
+                                  action="#{departmentHome.close()}"
+                                  styleClass="button"/>
+                        
+                    </div>
+                    
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

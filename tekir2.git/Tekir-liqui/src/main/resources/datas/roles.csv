@@ -1,0 +1,9 @@
+ID,NAME,INFO
+1,ADMIN,Sistem Yöneticisi
+2,SYSOP,Parametre Yöneticisi
+3,OPERATOR,Uygulama Kullanıcısı
+4,REGMAN,Bölge Yöneticisi
+5,REGOPER,Bölge Kullanıcısı
+6,BRANCHMAN,Şube Yöneticisi
+7,BRANCHOPER,Şube Kullanıcısı
+8,BRCLERK,Şube Reyon Yetkilisi

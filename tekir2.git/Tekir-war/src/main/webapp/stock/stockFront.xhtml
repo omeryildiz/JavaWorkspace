@@ -1,0 +1,209 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	template="/layout/template.xhtml">
+
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="stock" />
+			<ui:param name="curpage" value="stockFront" />
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h1><h:outputText value="#{messages['stockPage.caption.Module']}" /></h1>
+		<p><h:outputText value="#{messages['stockPage.desc.Module']}" /></p>
+		<h:panelGrid columns="2">
+			<s:fragment>
+
+				<h2><h:outputText
+					value="#{messages['stockPage.caption.Shipment']}" /></h2>
+				<p><h:outputText value="#{messages['stockPage.desc.Shipment']}" /></p>
+				<ul>
+					<li><s:link view="/stock/purchaseShipmentBrowse.xhtml">
+						<h:graphicImage url="/img/lorry.gif"
+							alt="#{messages['country.img.CurrencyRate']}" />
+						<h:outputText
+							value="#{messages['module.caption.PurchaseShipmentBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/stock/saleShipmentBrowse.xhtml">
+						<h:graphicImage url="/img/lorry.gif"
+							alt="#{messages['country.img.CurrencyRate']}" />
+						<h:outputText
+							value="#{messages['module.caption.SaleShipmentBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/stock/productTransferBrowse.xhtml">
+						<h:graphicImage url="/img/lorry.gif"
+							alt="#{messages['city.img.World']}" />
+						<h:outputText
+							value="#{messages['module.caption.ProductTransferBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/stock/productVirementBrowse.xhtml">
+						<h:graphicImage url="/img/lorry.gif"
+							alt="#{messages['city.img.World']}" />
+						<h:outputText
+							value="#{messages['module.caption.ProductVirementBrowse']}" />
+					</s:link></li>
+				</ul>
+
+				<ui:remove>
+					<s:div>
+						<h2><h:outputText
+							value="#{messages['cardsPage.caption.Product']}" /></h2>
+						<p><h:outputText value="#{messages['cardsPage.desc.Product']}" /></p>
+						<div>
+						<ul>
+							<li><s:link view="/stock/productBrowse.xhtml">
+								<h:graphicImage url="/img/package.gif"
+									alt="#{messages['product.img.Icon']}" />
+								<h:outputText
+									value="#{messages['module.caption.ProductBrowse']}" />
+							</s:link></li>
+							<li><s:link view="/stock/productCategory.xhtml"
+								propagation="begin">
+								<h:graphicImage url="/img/folder.gif"
+									alt="#{messages['currency.img.CurrencyPair']}" />
+								<h:outputText
+									value="#{messages['module.caption.ProductCategory']}" />
+							</s:link></li>
+						</ul>
+						<ul>
+							<li><s:link action="#{productHome.createNew()}">
+								<h:graphicImage url="/img/add.gif" />
+								<h:outputText value="#{messages['product.action.Add']}" />
+							</s:link></li>
+						</ul>
+						</div>
+					</s:div>
+
+					<s:div>
+						<h2><h:outputText
+							value="#{messages['stockPage.caption.Reports']}" /></h2>
+						<p><h:outputText value="#{messages['stockPage.desc.Reports']}" /></p>
+						<ul>
+							<li><s:link view="/report/productStatusReport.xhtml">
+								<h:graphicImage url="/img/chart_pie.gif"
+									alt="#{messages['currency.img.Currency']}" />
+								<h:outputText
+									value="#{messages['module.caption.ProductStatusReport']}" />
+							</s:link></li>
+							<li><s:link view="/stock/productTxnReport.xhtml">
+								<h:graphicImage url="/img/report.gif"
+									alt="#{messages['currency.img.Currency']}" />
+								<h:outputText
+									value="#{messages['module.caption.ProductTxnReport']}" />
+							</s:link></li>
+						</ul>
+					</s:div>
+				</ui:remove>
+			</s:fragment>
+
+			<s:div>
+
+				<h2><h:outputText value="İşlemler" /></h2>
+				<p><h:outputText value="#{messages['stockPage.desc.Actions']}" /></p>
+				<ul>
+					<li><s:link view="/stock/purchaseShipment.xhtml">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['purchaseShipment.action.Add']}" />
+					</s:link></li>
+					<li><s:link view="/stock/saleShipment.xhtml">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['saleShipment.action.Add']}" />
+					</s:link></li>
+					<li><s:link view="/stock/productTransfer.xhtml">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['productTransfer.action.Add']}" />
+					</s:link></li>
+					<li><s:link view="/stock/productVirement.xhtml">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['productVirement.action.Add']}" />
+					</s:link></li>
+				</ul>
+
+				<p><h:outputText
+					value="#{messages['stockPage.desc.InvoiceActions']}" /></p>
+					
+					
+				<ul>
+					<li><s:link view="/finance/purchaseInvoice.xhtml">
+						<f:param name="it" value="0" />
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['purchaseInvoice.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/saleInvoice.xhtml">
+						<f:param name="it" value="0" />
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['saleInvoice.action.Add']}" />
+					</s:link></li>
+				</ul>
+				
+
+			</s:div>
+
+			<s:fragment>
+
+				<h2><h:outputText
+					value="#{messages['stockPage.caption.Order']}" /></h2>
+				<p><h:outputText value="#{messages['stockPage.desc.Order']}" /></p>
+				<ul>
+					<li><s:link view="/stock/purchaseOrderBrowse.xhtml">
+						<h:graphicImage url="/img/lorry.gif"
+							alt="#{messages['country.img.CurrencyRate']}" />
+						<h:outputText
+							value="#{messages['module.caption.PurchaseOrderBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/stock/saleOrderBrowse.xhtml">
+						<h:graphicImage url="/img/lorry.gif"
+							alt="#{messages['country.img.CurrencyRate']}" />
+						<h:outputText
+							value="#{messages['module.caption.SaleOrderBrowse']}" />
+					</s:link></li>
+				</ul>
+
+			</s:fragment>
+
+			<s:div>
+
+				<h2><h:outputText value="İşlemler" /></h2>
+				<p><h:outputText
+					value="#{messages['stockPage.desc.OrderActions']}" /></p>
+				<ul>
+
+					<li><s:link view="/stock/purchaseOrder.xhtml">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['purchaseOrder.action.Add']}" />
+					</s:link></li>
+					<li><s:link view="/stock/saleOrder.xhtml">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['saleOrder.action.Add']}" />
+					</s:link></li>
+
+				</ul>
+
+			</s:div>
+
+			
+			
+		</h:panelGrid>
+
+	</ui:define>
+</ui:composition>

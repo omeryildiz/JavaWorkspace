@@ -1,0 +1,270 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="accountReport"/>
+            <ui:param name="curitem" value="accountStatusReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/report/accountStatusReport.xhtml">
+                <h:outputText value="#{messages['module.caption.AccountStatusReport']}" rendered="#{s:hasPermission('accountStatusReport', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/report/accountTxnReport.xhtml" propagationBegin="true" rendered="#{s:hasPermission('accountTxnReport', 'select')}">
+                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.AccountTxnReport']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    
+    <ui:define name="rightBar">
+    </ui:define>
+    
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.AccountStatusReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        
+        <h:form id="form" >
+            
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountStatusReport.label.Account']}" /></ui:define>
+                            <h:selectOneMenu value="#{accountStatusReport.account}" styleClass="middle" >
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.accountList}" var="acc" label="#{acc.code}" 
+                                noSelectionLabel="#{messages['general.value.All']}" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                    </s:fragment>
+
+                    <s:fragment>
+	                       <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.DocumentType']}" /></ui:define>
+	                            <h:selectOneMenu value="#{accountStatusReport.documentType}" styleClass="middle">
+	                                <s:convertEnum />
+	                                <s:enumItem enumValue="Unknown" label="#{messages['general.value.All']}"/>
+	                                <s:enumItem enumValue="Payment" label="#{messages['general.value.DocumentType.Payment']}"/>
+	                                <s:enumItem enumValue="Collection" label="#{messages['general.value.DocumentType.Collection']}"/>
+	                                <s:enumItem enumValue="FundTransfer" label="#{messages['general.value.DocumentType.FundTransfer']}"/>
+	                                <s:enumItem enumValue="BankToAccountTransfer" label="#{messages['general.value.DocumentType.BankToAccountTransfer']}"/>
+	                                <s:enumItem enumValue="AccountToBankTransfer" label="#{messages['general.value.DocumentType.AccountToBankTransfer']}"/>
+	                                <s:enumItem enumValue="ChequeAccountPaymentPayroll" label="#{messages['general.value.DocumentType.ChequeAccountPaymentPayroll']}"/>
+	                                <s:enumItem enumValue="ChequeAccountCollectionPayroll" label="#{messages['general.value.DocumentType.ChequeAccountCollectionPayroll']}"/>
+	                                <s:enumItem enumValue="PromissoryAccountPaymentPayroll" label="#{messages['general.value.DocumentType.PromissoryAccountPaymentPayroll']}"/>
+	                                <s:enumItem enumValue="PromissoryAccountCollectionPayroll" label="#{messages['general.value.DocumentType.PromissoryAccountCollectionPayroll']}"/>
+	                                <s:enumItem enumValue="AccountCreditNote" label="#{messages['general.value.DocumentType.AccountCreditNote']}"/>
+	                            </h:selectOneMenu> 
+	                        </s:decorate>
+	                        
+		                    <s:decorate template="/layout/edit.xhtml">
+		                            <ui:define name="label"><h:outputText value="#{messages['accountStatusReport.label.Code']}" /></ui:define>
+		                            <h:inputText value="#{accountStatusReport.code}" styleClass="middle"/>
+		                    </s:decorate>
+		                    
+		                    <a:region id="regFollowUp">
+		                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+		                            <ui:define name="label">
+		                            	<h:outputText value="#{messages['saleInvoice.label.followUp']}"/>
+		                            </ui:define>
+		
+		                            <h:inputText id="followUpTxt" value="#{accountStatusReport.workBunch}" styleClass="middle" 
+		                            	style="float:left" converter="workBunchCaptionConverter"/>
+		                            
+		                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+		                                <h:graphicImage url="/img/selectBox.gif" /> 
+		                            </a>
+		                            
+		                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+										suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+										fetchValue="#{fitem.caption}">
+										<h:column>
+											<h:outputText value="#{fitem.code}" />
+										</h:column>
+										<h:column>
+											<h:outputText value="#{fitem.name}"/>
+											<h:outputText value=" "/>
+											<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+										</h:column>
+									</r:suggestionbox>
+								</s:decorate>
+							</a:region>
+		                    
+		                    
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountStatusReport.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{accountStatusReport.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountStatusReport.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{accountStatusReport.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Advance']}" />
+							</ui:define>
+							<h:selectOneMenu id="processType" value="#{accountStatusReport.processType}" styleClass="middle">
+								<f:selectItem itemLabel="#{messages['general.value.All']}" />
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Normal']}" itemValue="Normal"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Advance']}" itemValue="Advance"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.AdvanceReturn']}" itemValue="AdvanceReturn"/>
+							</h:selectOneMenu>
+						</s:decorate>
+                        
+                    </s:fragment>
+
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <h:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{accountStatusReport.executeReport()}"
+                                     styleClass="button"
+                                     />  
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{accountStatusReport.pdf()}"
+                                     rendered="#{s:hasPermission('accountStatusReport', 'pdf')}"
+                                     styleClass="button"/>
+                                     
+                    <h:commandButton id="xls" 
+                   					 rendered="#{s:hasPermission('accountStatusReport', 'xls')}" 
+                                     value="#{messages['general.label.XLS']}" 
+                                     action="#{accountStatusReport.xls()}"
+                                     styleClass="button"/>                                         
+                    
+                </s:div>
+            </r:panel>
+            
+            
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:0px;">
+                    <h:panelGrid columns="2" >
+                        <r:dataTable id="browseList" 
+                                     var="rowItem"
+                                     value="#{accountStatusReport.resultList}" 
+                                     onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                     onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                            <f:facet name="header">
+                                <h:panelGroup>
+                                    <h:outputText value="#{messages['accountStatusReport.caption.AccountList']}"/>
+                                </h:panelGroup>
+                            </f:facet>
+                            
+                            
+                            <r:column >
+                                <f:facet name="header"><h:outputText value="#{messages['accountStatusReport.label.Account']}" /></f:facet>
+                                <h:outputText value="#{rowItem['accountCode']} - #{rowItem['accountName']}"/>
+                            </r:column>
+                            <r:column >
+                                <f:facet name="header"><h:outputText value="#{messages['accountStatusReport.label.Currency']}" /></f:facet>
+                                <h:outputText value="#{rowItem['currency']}"/>
+                            </r:column>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['accountStatusReport.label.Amount']}" /></f:facet>
+                                <h:outputText value="#{rowItem['amount']}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>
+                            </r:column>
+                        </r:dataTable>
+                        
+                        <r:dataTable id="sumList" 
+                                     var="rowItem"
+                                     value="#{accountStatusReport.summaryList}" 
+                                     onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                     onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                            <f:facet name="header">
+                                <h:panelGroup>
+                                    <h:outputText value="#{messages['accountStatusReport.caption.CurrencyList']}"/>
+                                </h:panelGroup>
+                            </f:facet>
+                            
+                            
+                            <r:column >
+                                <f:facet name="header"><h:outputText value="#{messages['accountStatusReport.label.Currency']}" /></f:facet>
+                                <h:outputText value="#{rowItem['currency']}"/>
+                            </r:column>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['accountStatusReport.label.Amount']}" /></f:facet>
+                                <h:outputText value="#{rowItem['amount']}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>
+                            </r:column>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['accountStatusReport.label.Rate']}" /></f:facet>
+                                <h:outputText value="#{rowItem['rate']}">
+                                    <f:convertNumber pattern="#.0000" />
+                                </h:outputText>
+                            </r:column>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['accountStatusReport.label.LocalAmount']}" /></f:facet>
+                                <h:outputText value="#{rowItem['localAmount']}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>
+                            </r:column>
+                            
+                            <f:facet name="footer">
+                                <r:columnGroup >
+                                    <r:column colspan="3" style="background-color:#E0E0E0;font-weight:bold;">
+                                        <h:outputText value="#{messages['general.label.GrandTotal']}" />
+                                    </r:column>
+                                    <r:column styleClass="numberColumn" style="background-color:#E0E0E0;font-weight:bold;">
+                                        <h:outputText value="#{accountStatusReport.grandTotal}">
+                                            <f:convertNumber pattern="#,##0.00" />
+                                        </h:outputText>
+                                    </r:column>
+                                </r:columnGroup>
+                            </f:facet>
+                        </r:dataTable>
+                    </h:panelGrid>
+                </s:div>
+                
+                <ui:remove>
+                    <r:panel id="msg" rendered="#{empty financeTxnReport.entityList}" styleClass="message">
+                        <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                    </r:panel>
+                </ui:remove>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

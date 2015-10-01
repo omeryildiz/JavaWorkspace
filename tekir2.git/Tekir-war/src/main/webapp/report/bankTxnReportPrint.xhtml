@@ -1,0 +1,106 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+    
+    
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.BankTxnReport']}" /></h1>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        
+        <r:dataTable id="browseList" 
+                     var="rowItem"
+                     value="#{bankTxnReport.resultList}">
+            <f:facet name="header">
+                <h:panelGroup>
+                    <h:outputText value="#{messages['general.label.Results']}"/>
+                </h:panelGroup>
+            </f:facet>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.DocumentType']}" /></f:facet>
+                <h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,rowItem.documentType)]}"/>
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Bank']}" /></f:facet>
+                <h:outputText value="#{rowItem.bankAccount.bankBranch.bank.name}" />
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.BankBranch']}" /></f:facet>
+                <h:outputText value="#{rowItem.bankAccount.bankBranch.name}" />
+                
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.BankAccount']}" /></f:facet>
+                <h:outputText value="#{rowItem.bankAccount.name}" />
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Serial']}" /></f:facet>
+                <h:outputText value="#{rowItem.serial}" />
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Reference']}" /></f:facet>
+                <h:outputText value="#{rowItem.reference}" />
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Date']}" /></f:facet>
+                <h:outputText value="#{rowItem.date}">
+                    <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                </h:outputText>
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Code']}" /></f:facet>
+                <h:outputText value="#{rowItem.code}" />
+            </r:column>
+            
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Info']}" /></f:facet>
+                <h:outputText value="#{rowItem.info}" />
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Action']}" /></f:facet>
+                <h:outputText value="#{messages[ut:concat( 'general.value.bankActionShort.' , rowItem.action )]}"/>
+            </r:column>
+            
+            <r:column styleClass="numberColumn">
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Amount']}" /></f:facet>
+                <h:outputText value="#{rowItem.amount.value}" >
+                    <f:convertNumber pattern="#,###.00" />
+                </h:outputText>
+            </r:column>
+            
+            <r:column styleClass="numberColumn">
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.Currency']}" /></f:facet>
+                <h:outputText value="#{rowItem.amount.currency}" />
+            </r:column>
+            
+            <r:column styleClass="numberColumn">
+                <f:facet name="header"><h:outputText value="#{messages['bankTxnReport.label.LocalAmount']}" /></f:facet>
+                <h:outputText value="#{rowItem.amount.localAmount}" >
+                    <f:convertNumber pattern="#,###.00" />
+                </h:outputText>
+            </r:column>
+            
+        </r:dataTable>
+        
+        
+    </ui:define> 
+</ui:composition>

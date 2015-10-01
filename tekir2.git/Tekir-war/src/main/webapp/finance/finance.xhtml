@@ -1,0 +1,613 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	template="/layout/template.xhtml">
+
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="finance" />
+			<ui:param name="curpage" value="finance" />
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h1><h:outputText
+			value="#{messages['financePage.caption.Module']}" /></h1>
+		<p><h:outputText value="#{messages['financePage.desc.Module']}" /></p>
+		<h:panelGrid columns="2">
+			<s:div>
+				<h2><h:outputText
+					value="#{messages['financePage.caption.FinanceTxn']}" /></h2>
+				<p><h:outputText
+					value="#{messages['financePage.desc.FinanceTxn']}" /></p>
+
+				<div>
+				<ul>
+					<li><s:link view="/finance/collectionBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.CollectionBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/finance/paymentBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText value="#{messages['module.caption.PaymentBrowse']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					<li><s:link
+						view="/finance/debitCreditNoteCollectionBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.DebitCreditNoteCollectionBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/finance/debitCreditNotePaymentBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.DebitCreditNotePaymentBrowse']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					<li><s:link view="/finance/debitCreditVirementBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.DebitCreditVirementBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/finance/fundTransferBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.FundTransferBrowse']}" />
+					</s:link></li>
+					
+				</ul>
+				</div>
+				<p><h:outputText
+					value="#{messages['Fatura Listeleri']}" /></p>
+				<div>
+				<ul>
+					<li><s:link view="/finance/purchaseInvoiceBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/script_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PurchaseInvoiceBrowse']}" />
+					</s:link></li>
+					<li><s:link view="/finance/saleInvoiceBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/script_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.SaleInvoiceBrowse']}" />
+					</s:link></li>
+				</ul>
+				</div>
+				
+								
+				<p><h:outputText value="#{messages['financePage.caption.PaymentTools']}" /></p>
+				
+				<div>
+				<ul>
+					<li><s:link view="/finance/chequeStubBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins.gif" />
+						<h:outputText value="#{messages['module.caption.ChequeStubBrowse']}" />
+					</s:link></li>
+										
+					<li><s:link view="/finance/chequeBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins.gif" />
+						<h:outputText value="#{messages['module.caption.ChequeBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryBrowse.xhtml" propagation="none">
+						<h:graphicImage url="/img/coins.gif" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryBrowse']}" />
+					</s:link></li>
+				</ul>
+				</div>
+				
+				<div>
+				<ul>
+				
+					<li><s:link view="/finance/chequeFromContactPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ChequeFromContactPayrollBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/chequeToContactPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ChequeToContactPayrollBrowse']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					
+					<li><s:link view="/finance/chequeToBankAssurancePayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ChequeToBankAssurancePayrollBrowse']}" />
+					</s:link></li>
+
+					<li><s:link view="/finance/chequeToBankPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ChequeToBankPayrollBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/chequeCollectedAtBankPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ChequeCollectionAtBankPayrollBrowse']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					
+					<li><s:link view="/finance/chequeToAccountCollectionPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ChequeToAccountCollectionPayrollBrowse']}" />
+					</s:link></li>
+				
+					<li><s:link view="/finance/chequeToAccountPaymentPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ChequeToAccountPaymentPayrollBrowse']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					<li><s:link view="/finance/promissoryFromContactPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryFromContactPayrollBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryToContactPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryToContactPayrollBrowse']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					<li><s:link view="/finance/promissoryToBankAssurancePayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryToBankAssurancePayrollBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryToBankPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryToBankPayrollBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryCollectedAtBankPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryCollectionAtBankPayrollBrowse']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					
+					<li><s:link view="/finance/promissoryToAccountCollectionPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryToAccountCollectionPayrollBrowse']}" />
+					</s:link></li>
+				
+					<li><s:link view="/finance/promissoryToAccountPaymentPayrollBrowse.xhtml">
+						<h:graphicImage url="/img/coins_delete.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.PromissoryToAccountPaymentPayrollBrowse']}" />
+					</s:link></li>
+
+				</ul>
+				</div>
+				
+				
+				<p><h:outputText value="#{messages['financePage.caption.MoneyTransferLists']}" /></p>
+				
+				<div>
+				<ul>
+					<li><s:link view="/finance/bankToContactTransferBrowse.xhtml"
+						propagationBegin="true">
+						<h:graphicImage url="/img/arrow_switch.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.BankToContactTransferBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/contactToBankTransferBrowse.xhtml"
+						propagationBegin="true">
+						<h:graphicImage url="/img/arrow_switch.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.ContactToBankTransferBrowse']}" />
+					</s:link></li>
+
+					<li><s:link view="/finance/bankToBankTransferBrowse.xhtml">
+						<h:graphicImage url="/img/arrow_switch.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.BankToBankTransferBrowse']}" />
+					</s:link></li>
+
+					<li><s:link view="/finance/bankToAccountTransferBrowse.xhtml">
+						<h:graphicImage url="/img/arrow_switch.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.BankToAccountTransferBrowse']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/accountToBankTransferBrowse.xhtml">
+						<h:graphicImage url="/img/arrow_switch.gif"
+							alt="#{messages['currency.img.Currency']}" />
+						<h:outputText
+							value="#{messages['module.caption.AccountToBankTransferBrowse']}" />
+					</s:link></li>
+					
+				</ul>
+				</div>
+				
+				
+				<ui:remove>
+					<h2><h:outputText
+						value="#{messages['financePage.caption.Reports']}" /></h2>
+					<p><h:outputText
+						value="#{messages['financePage.desc.Reports']}" /></p>
+					<div>
+					<ul>
+						<li><s:link view="/report/contactStatusReport.xhtml"
+							propagationBegin="true">
+							<h:graphicImage url="/img/chart_pie.gif"
+								alt="#{messages['currency.img.Currency']}" />
+							<h:outputText
+								value="#{messages['module.caption.ContactStatusReport']}" />
+						</s:link></li>
+						<li><s:link view="/finance/financeTxnReport.xhtml">
+							<h:graphicImage url="/img/report.gif"
+								alt="#{messages['currency.img.Currency']}" />
+							<h:outputText
+								value="#{messages['module.caption.FinanceTxnReport']}" />
+						</s:link></li>
+					</ul>
+					<ul>
+						<li><s:link view="/report/accountStatusReport.xhtml"
+							propagationBegin="true">
+							<h:graphicImage url="/img/chart_pie.gif"
+								alt="#{messages['currency.img.Currency']}" />
+							<h:outputText
+								value="#{messages['module.caption.AccountStatusReport']}" />
+						</s:link></li>
+						<li><s:link view="/report/accountTxnReport.xhtml"
+							propagationBegin="true">
+							<h:graphicImage url="/img/report.gif"
+								alt="#{messages['currency.img.Currency']}" />
+							<h:outputText
+								value="#{messages['module.caption.AccountTxnReport']}" />
+						</s:link></li>
+					</ul>
+					</div>
+				</ui:remove>
+			</s:div>
+			<s:div>
+				<h2><h:outputText
+					value="#{messages['financePage.caption.Actions']}" /></h2>
+
+				<p><h:outputText value="#{messages['financePage.desc.Actions']}" /></p>
+				<div>
+				<ul>
+					<li><s:link view="/finance/collection.xhtml" propagation="none">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['collection.action.Add']}" />
+					</s:link></li>
+
+					<li><s:link view="/finance/payment.xhtml" propagation="none">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['payment.action.Add']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					<li><s:link view="/finance/debitCreditNoteCollection.xhtml" propagation="none">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText
+							value="#{messages['debitCreditNoteCollection.action.Add']}" />
+					</s:link></li>
+
+					<li><s:link view="/finance/debitCreditNotePayment.xhtml" propagation="none">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText
+							value="#{messages['debitCreditNotePayment.action.Add']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					<li><s:link view="/finance/debitCreditVirement.xhtml" propagation="none">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText
+							value="#{messages['debitCreditVirement.action.Add']}" />
+					</s:link></li>
+					<li><s:link view="/finance/fundTransfer.xhtml" propagation="none">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['fundTransfer.action.Add']}" />
+					</s:link></li>
+				</ul>
+				</div>
+
+				<p><h:outputText
+					value="#{messages['financePage.desc.InvoiceActions']}" /></p>
+				<div>
+				<ul>
+					<li><s:link view="/finance/purchaseInvoice.xhtml" propagation="none">
+						<f:param name="it" value="0" />
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['purchaseInvoice.action.Add']}" />
+					</s:link></li>
+
+					<li><s:link view="/finance/purchaseShipmentInvoice.xhtml" propagation="none">
+						<f:param name="it" value="1" />
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText
+							value="#{messages['purchaseInvoice.action.AddShipmentInvoice']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					<li><s:link view="/finance/saleInvoice.xhtml" propagation="none">
+						<f:param name="it" value="0" />
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['saleInvoice.action.Add']}" />
+					</s:link></li>
+					<li><s:link view="/finance/saleShipmentInvoice.xhtml" propagation="none">
+						<f:param name="it" value="1" />
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText
+							value="#{messages['saleInvoice.action.AddShipmentInvoice']}" />
+					</s:link></li>
+				</ul>
+				</div>
+
+				<p><h:outputText value="#{messages['financePage.caption.PaymentProcesses']}" /></p>
+				<div>
+				<ul>
+
+					<li><s:link view="/finance/chequeStub.xhtml" propagation="none">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeStub.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/chequeFromContactPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeFromContactPayroll.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/chequeToContactPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeToContactPayroll.action.Add']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+				
+					<li><s:link view="/finance/chequeToBankAssurancePayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeToBankAssurancePayroll.action.Add']}" />
+					</s:link></li>
+										
+					<li><s:link view="/finance/chequeToBankPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeToBankPayroll.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/chequeCollectedAtBankPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeCollectedAtBankPayroll.action.Add']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+				
+					<li><s:link view="/finance/chequeToAccountCollectionPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeToAccountCollectionPayroll.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/chequeToAccountPaymentPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['chequeToAccountPaymentPayroll.action.Add']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+				
+					<li><s:link view="/finance/chequeChangeStatus.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/edit1.gif" />
+						<h:outputText value="#{messages['module.caption.ChequeChangeStatus']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/chequeChangeLastStatus.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/edit1.gif" />
+						<h:outputText value="#{messages['module.caption.ChequeChangeLastStatus']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+				
+					<li><s:link view="/finance/promissoryFromContactPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['promissoryFromContactPayroll.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryToContactPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['promissoryToContactPayroll.action.Add']}" />
+					</s:link></li>
+				</ul>
+				<ul>
+					
+					<li><s:link view="/finance/promissoryToBankAssurancePayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['promissoryToBankAssurancePayroll.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryToBankPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['promissoryToBankPayroll.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryCollectedAtBankPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['promissoryCollectedAtBankPayroll.action.Add']}" />
+					</s:link></li>
+					
+				</ul>
+				<ul>
+					
+					<li><s:link view="/finance/promissoryToAccountCollectionPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['promissoryToAccountCollectionPayroll.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryToAccountPaymentPayroll.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['promissoryToAccountPaymentPayroll.action.Add']}" />
+					</s:link></li>
+					
+				</ul>
+				
+				<ul>
+					
+					<li><s:link view="/finance/promissoryChangeStatus.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/edit1.gif" />
+						<h:outputText value="#{messages['module.caption.PromissoryChangeStatus']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/promissoryChangeLastStatus.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/edit1.gif" />
+						<h:outputText value="#{messages['module.caption.PromissoryChangeLastStatus']}" />
+					</s:link></li>
+
+				</ul>
+				</div>
+				
+				<p><h:outputText value="#{messages['financePage.caption.MoneyTransferProcesses']}" /></p>
+				<div>
+				<ul>
+
+					<li><s:link view="/finance/bankToContactTransfer.xhtml" propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['bankToContactTransfer.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/contactToBankTransfer.xhtml" propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['contactToBankTransfer.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/bankToBankTransfer.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['bankToBankTransfer.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/bankToAccountTransfer.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['bankToAccountTransfer.action.Add']}" />
+					</s:link></li>
+					
+					<li><s:link view="/finance/accountToBankTransfer.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['accountToBankTransfer.action.Add']}" />
+					</s:link></li>
+					
+					<ui:remove>
+					<li><s:link view="/finance/portfolioToPortfolioTransfer.xhtml"
+						propagation="begin">
+						<f:param name="eid" value="0" />
+						<h:graphicImage url="/img/add.gif" />
+						<h:outputText value="#{messages['portfolioToPortfolioTransfer.action.Add']}" />
+					</s:link></li>
+					</ui:remove>
+
+				</ul>
+				</div>
+			</s:div>
+		</h:panelGrid>
+
+
+	</ui:define>
+</ui:composition>

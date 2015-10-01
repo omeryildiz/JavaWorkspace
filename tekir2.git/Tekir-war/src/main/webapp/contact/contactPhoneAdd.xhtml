@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="popupForm">
+
+		<s:div id="popupMessages">
+		    <h:messages  globalOnly="false"  styleClass="message"/>
+		</s:div>
+
+		<a:region>
+			<h:panelGrid columns="1">
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['contactAddress.label.UsageType']}" />
+					</ui:define>
+					<h:selectOneMenu value="#{contactHome.selectedPhone.usageType}" required="true" 
+						styleClass="middle">
+						<f:selectItem itemValue="immobilePhone" itemLabel="#{messages['contactPhone.label.ImmobilePhone']}"/>
+						<f:selectItem itemValue="gsmPhone" itemLabel="#{messages['contactPhone.label.GsmPhone']}"/>
+						<f:selectItem itemValue="vehiclePhone" itemLabel="#{messages['contactPhone.label.VehiclePhone']}"/>
+						<f:selectItem itemValue="callerPhone" itemLabel="#{messages['contactPhone.label.CallerPhone']}"/>
+						<f:selectItem itemValue="faxPhone" itemLabel="#{messages['contactPhone.label.FaxPhone']}"/>
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['contactPhone.label.PhoneType']}" />
+					</ui:define>
+					<h:selectOneMenu value="#{contactHome.selectedPhone.phoneType}" required="true"
+						styleClass="middle">
+						<f:selectItem itemValue="homePhone" itemLabel="#{messages['contactPhone.label.HomePhone']}"/>
+						<f:selectItem itemValue="workPhone" itemLabel="#{messages['contactPhone.label.WorkPhone']}"/>
+						<f:selectItem itemValue="otherPhone" itemLabel="#{messages['contactPhone.label.OtherPhone']}"/>
+						<f:selectItem itemValue="relatedPhone" itemLabel="#{messages['contactPhone.label.RelatedPhone']}"/>
+					</h:selectOneMenu>
+				</s:decorate>
+
+	            <s:decorate template="/layout/edit.xhtml">
+	                <ui:define name="label"><h:outputText value="#{messages['contactPhone.label.FullPhoneNumber']}"/></ui:define>
+					<h:inputText value="#{contactHome.selectedPhone.phone.countryCode}" 
+						style="width:30px;" alt="phone_area"/>
+					<h:outputText value="-" style="padding-left:5px;padding-right:5px;"/>
+					<h:inputText value="#{contactHome.selectedPhone.phone.fullNumber}" 
+						styleClass="phone" style="width:122px"/>
+	            </s:decorate>
+	
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['contact.label.Info']}" />
+					</ui:define>					
+					<h:inputTextarea value="#{contactHome.selectedPhone.info}"
+						rows="3" style="width:300px"/>
+				</s:decorate>
+                
+                <s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Status']}" />
+					</ui:define>
+					<h:selectBooleanCheckbox id="active" value="#{contactHome.selectedPhone.activePhone}"
+						styleClass="checkbox" />
+					<h:outputLabel value="#{messages['general.label.Active']}"
+						for="active" styleClass="checkboxLabel" />
+				</s:decorate>
+
+			</h:panelGrid>
+
+	
+			<div class="actionButtons">
+				<a:commandButton action="#{contactHome.addToPhoneList()}" 
+					styleClass="button" value="#{messages['general.label.Add']}" 
+					reRender="phones,popupMessages" rendered="#{not contactHome.isEdit}"
+					oncomplete="setMasks();if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('contactPhoneAddPopup');" />
+	
+				<a:commandButton action="#{contactHome.endPhoneEdit()}" reRender="phones" 
+					value="#{messages['general.button.Ok']}"
+					oncomplete="setMasks();if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('contactPhoneAddPopup');"
+					styleClass="button" rendered="#{contactHome.isEdit}" /> 
+				
+				<a:commandButton value="#{messages['general.button.Cancel']}"
+					oncomplete="Richfaces.hideModalPanel('contactPhoneAddPopup');"
+					styleClass="button" ajaxSingle="true" />
+			
+			</div>
+		</a:region>
+	</h:form>
+
+</ui:composition>

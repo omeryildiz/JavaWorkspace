@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ut="http://utech.com/jsf/comps"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+	<s:div styleClass="subheader">
+		<ui:remove>
+			<s:div rendered="#{identity.loggedIn}" style="float:right">
+				<ul>
+					<li><s:link action="#{identity.logout}">
+						<h:outputText value="#{messages['general.button.Logout']}" />
+					</s:link></li>
+				</ul>
+			</s:div>
+		</ui:remove>
+
+		<s:div rendered="#{identity.loggedIn}">
+
+			<ul class="megamenu">
+
+				<li><s:link view="/base/home.xhtml" propagation="none">
+					<h:graphicImage url="/img/home.png" />
+					<ui:remove>
+						<h:outputText value="#{messages['menu.main.Home']}" />
+					</ui:remove>
+				</s:link></li>
+				<s:fragment rendered="#{s:hasPermission('base_general', 'definitions')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.GeneralSettings']}" /> </a> <ui:include
+						src="/menu/generalSettingsMegaMenu.xhtml" /></li>
+				</s:fragment>
+				<s:fragment rendered="#{s:hasPermission('base_general', 'purchase')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.PurchaseOperation']}" /> </a> <ui:include
+						src="/menu/purchaseOperationMegaMenu.xhtml" /></li>
+				</s:fragment>
+				<s:fragment rendered="#{s:hasPermission('base_general', 'sale')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.SaleOperation']}" /> </a> <ui:include
+						src="/menu/saleOperationMegaMenu.xhtml" /></li>
+				</s:fragment>
+				<s:fragment rendered="#{s:hasPermission('base_general', 'stock')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.Stock']}" /> </a> <ui:include
+						src="/menu/stockMegaMenu.xhtml" /></li>
+				</s:fragment>
+				<s:fragment rendered="#{s:hasPermission('base_general', 'account/bank')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.AccountBank']}" /> </a> <ui:include
+						src="/menu/accountBankMegaMenu.xhtml" /></li>
+				</s:fragment>
+				<s:fragment rendered="#{s:hasPermission('base_general', 'cheque/promissory')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.ChequePromissory']}" /> </a> <ui:include
+						src="/menu/chequePromissoryMegaMenu.xhtml" /></li>
+				</s:fragment>
+				<s:fragment rendered="#{s:hasPermission('base_general', 'reports')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.Report']}" /> </a> <ui:include
+						src="/menu/reportMegaMenu.xhtml" /></li>
+				</s:fragment>
+
+				<s:fragment rendered="#{s:hasPermission('base_general', 'admin')}">
+					<li><a href="#"> <h:outputText
+						value="#{messages['menu.main.Admin']}" /> </a> <ui:include
+						src="/menu/adminMegaMenu.xhtml">
+
+					</ui:include></li>
+				</s:fragment>
+
+				<li class="mm-right"><a href="javascript:void(0)">#{messages['menu.main.Options']}</a>
+				<div style="width: auto;">
+				<ul id="list-content">
+					<ut:browseMenuItem view="/base/home.xhtml"
+						text="#{messages['module.caption.About']}" img="/img/home.png" />
+					<li><s:link styleClass="sf-not-with-ul"
+						view="/help/help.xhtml" propagation="none" target="HelpWinId"
+						onclick="openHelp();">
+						<f:param name="topic" value="index.xhtml" />
+						<h:graphicImage url="/img/help.gif" />
+						<h:outputText value="#{messages['module.caption.Help']}" />
+					</s:link></li>
+
+					<ut:paramMenuItem view="/general/quickLaunchList.xhtml"
+						text="#{messages['module.caption.QuickLaunchList']}"
+						img="/img/info.gif" />
+					<li>
+					<hr />
+					</li>
+					<ut:paramMenuItem view="/admin/passwordEditor.xhtml"
+						text="#{messages['module.caption.PasswordEditor']}"
+						img="/img/home.png" />
+					<li>
+					<hr />
+					</li>
+					<li><s:link action="#{identity.logout}">
+						<h:graphicImage url="/img/exit.gif" />
+						<h:outputText value="#{messages['general.button.Logout']}" />
+					</s:link></li>
+
+				</ul>
+				</div>
+				</li>
+
+				<li class="mm-right"><h:form
+					style="margin-top:5px; margin-right: 2px;">
+					<h:inputText id="quickLink" value="#{quickLaunchHome.key}"
+						title="#{messages['quickLaunch.title.Hint']}" style="width:80px;" />
+				</h:form></li>
+			</ul>
+
+		</s:div>
+	</s:div>
+
+</ui:composition>

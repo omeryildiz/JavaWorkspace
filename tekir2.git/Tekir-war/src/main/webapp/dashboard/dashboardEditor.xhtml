@@ -1,0 +1,182 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="home" />
+            <ui:param name="curpage" value="home" />
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <script type="text/javascript">
+            function selectLayout( inx ){
+                jQuery("#form\\:layout\\:layout_index").val(inx);
+            }
+        </script>
+
+
+        <h:form id="tabForm" style="float: right">
+            <h:selectOneMenu value="#{dashboardEditor.tabIndex}" >
+                <f:selectItems value="#{dashboardEditor.tabMenu}" />
+                <a:support ajaxSingle="true" event="onchange" reRender="form, tabForm"/>
+            </h:selectOneMenu>
+        </h:form>
+        <h1><h:outputText value="#{messages['module.caption.Dashboard']}"/></h1>
+
+        <ui:include src="/layout/messages.xhtml" />
+
+
+
+        <h:form id="form">
+            <h:panelGrid columns="1">
+                <s:decorate id="tabName" template="/layout/edit.xhtml">
+                    <ui:define name="label">#{messages['dashboard.label.TabName']}</ui:define>
+                    <h:inputText value="#{dashboardEditor.selectedTab.name}" />
+                </s:decorate>
+                <s:decorate id="layout" template="/layout/edit.xhtml">
+                    <ui:define name="label">#{messages['dashboard.label.TabLayout']}</ui:define>
+                    <h:inputHidden value="#{dashboardEditor.selectedTab.layoutIndex}" id="layout_index" />
+                    <h:panelGrid columns="4">
+                        <h:panelGrid columns="1">
+                            <s:fragment>
+                                <input type="radio" id="layout_1" name="layout" onclick="selectLayout(1)"/>
+                                <h:graphicImage url="/img/dashboard/tl_1.png" />
+                            </s:fragment>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <s:fragment>
+                                <input type="radio" id="layout_2" name="layout" onclick="selectLayout(2)"/>
+                                <h:graphicImage url="/img/dashboard/tl_2.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_3" name="layout" onclick="selectLayout(3)"/>
+                                <h:graphicImage url="/img/dashboard/tl_3.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_4" name="layout" onclick="selectLayout(4)"/>
+                                <h:graphicImage url="/img/dashboard/tl_4.png" />
+                            </s:fragment>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <s:fragment>
+                                <input type="radio" id="layout_5" name="layout" onclick="selectLayout(5)"/>
+                                <h:graphicImage url="/img/dashboard/tl_5.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_6" name="layout" onclick="selectLayout(6)"/>
+                                <h:graphicImage url="/img/dashboard/tl_6.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_7" name="layout" onclick="selectLayout(7)"/>
+                                <h:graphicImage url="/img/dashboard/tl_7.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_8" name="layout" onclick="selectLayout(8)"/>
+                                <h:graphicImage url="/img/dashboard/tl_8.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_9" name="layout" onclick="selectLayout(9)"/>
+                                <h:graphicImage url="/img/dashboard/tl_9.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_10" name="layout" onclick="selectLayout(10)"/>
+                                <h:graphicImage url="/img/dashboard/tl_10.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_11" name="layout" onclick="selectLayout(11)"/>
+                                <h:graphicImage url="/img/dashboard/tl_11.png" />
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_12" name="layout" onclick="selectLayout(12)"/>
+                                <h:graphicImage url="/img/dashboard/tl_12.png" />
+                            </s:fragment>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <s:fragment>
+                                <input type="radio" id="layout_13" name="layout" onclick="selectLayout(13)"/>
+                                <h:graphicImage url="/img/dashboard/tl_13.png" />
+
+                            </s:fragment>
+                            <ui:remove>
+                                <s:fragment>
+                                    <input type="radio" id="layout_14" name="layout" onclick="selectLayout(14)"/>
+                                    <h:graphicImage url="/img/dashboard/tl_14.png" />
+
+                                </s:fragment>
+                                <s:fragment>
+                                    <input type="radio" id="layout_15" name="layout" onclick="selectLayout(15)"/>
+                                    <h:graphicImage url="/img/dashboard/tl_15.png" />
+
+                                </s:fragment>
+                            </ui:remove>
+                            <s:fragment>
+                                <input type="radio" id="layout_16" name="layout" onclick="selectLayout(16)"/>
+                                <h:graphicImage url="/img/dashboard/tl_16.png" />
+
+                            </s:fragment>
+                            <s:fragment>
+                                <input type="radio" id="layout_17" name="layout" onclick="selectLayout(17)"/>
+                                <h:graphicImage url="/img/dashboard/tl_17.png" />
+
+                            </s:fragment>
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml">
+                    <r:listShuttle sourceValue="#{dashboardEditor.availDashlets}"
+                                   targetValue="#{dashboardEditor.selectedTab.dashlets}"
+                                   var="item"
+                                   listsHeight="150" sourceListWidth="130" targetListWidth="130"
+                                   sourceCaptionLabel="#{messages['listShuttle.label.SourceCaptionLabel']}"
+                                   targetCaptionLabel="#{messages['listShuttle.label.TargetCaptionLabel']}"
+                                   removeControlLabel="#{messages['listShuttle.label.RemoveControlLabel']}"
+                                   removeAllControlLabel="#{messages['listShuttle.label.RemoveAllControlLabel']}"
+                                   copyControlLabel="#{messages['listShuttle.label.CopyControlLabel']}"
+                                   copyAllControlLabel="#{messages['listShuttle.label.CopyAllControlLabel']}"
+                                   converter="dashletShuttleConverter"
+                                   >
+                        <r:column width="18">
+                            <h:graphicImage value="/img/dashlets/#{item}.png" rendered="#{dashletRegistery.hasCapability( item, 'hasIcon' )}"/>
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="#{messages[ut:concat( 'dashlet.caption.' ,item )]}"></h:outputText>
+                        </r:column>
+                    </r:listShuttle>
+                </s:decorate>
+            </h:panelGrid>
+            <div class="actionButtons">
+                <h:commandButton id="save"
+                                 value="#{messages['general.button.Ok']}"
+                                 action="#{dashboardEditor.save()}" styleClass="button"
+                                 />
+                <h:commandButton id="delete"
+                                 value="#{messages['general.button.Delete']}"
+                                 action="#{dashboardEditor.deleteTab()}" styleClass="button"
+                                 rendered="#{dashboardEditor.tabIndex ne 0}"
+                                 />
+                <s:button id="close" propagation="none"
+                                 value="#{messages['general.button.Close']}"
+                                 view="/base/home.xhtml" styleClass="button"
+                                 />
+            </div>
+        </h:form>
+
+        <script type="text/javascript">
+            inx = jQuery("#form\\:layout\\:layout_index").val();
+            jQuery("#layout_" + inx ).attr("checked", true);
+        </script>
+
+    </ui:define>
+</ui:composition>

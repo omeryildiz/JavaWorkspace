@@ -1,0 +1,19 @@
+<ul xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+    
+    <li class="#{curpage eq 'user' ? 'current' : '' }">
+        <s:link styleClass="sf-not-with-ul" view="/admin/user.xhtml" propagation="begin">
+            <h:outputText value=" #{messages['module.caption.User']}"/>
+        </s:link>
+    </li>
+    <li class="#{curpage eq 'sysprop' ? 'current' : '' }">
+        <s:link styleClass="sf-not-with-ul" view="/admin/systemProperties.xhtml" propagation="begin">
+            <h:outputText value=" #{messages['module.caption.SystemProperties']}"/>
+        </s:link>
+    </li>
+    
+</ul>

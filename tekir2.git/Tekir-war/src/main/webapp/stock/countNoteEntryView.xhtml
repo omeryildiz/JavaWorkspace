@@ -1,0 +1,176 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="toolbar">
+		<div class="pathgroup">
+			<s:link view="/finance/countNoteEntryBrowse.xhtml" propagation="none">
+				<h:outputText value="#{messages['module.caption.CountNoteEntryBrowse']}" />
+			</s:link>
+		</div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<h1><h:outputText value="#{messages['module.caption.CountNoteEntryView']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif" alt="#{messages['countNoteEntry.img.Form']}" />
+						<h:outputText value="#{messages['countNoteEntry.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Serial']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.serial ? messages['general.value.None'] : countNote.serial}"/>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Reference']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.reference ? messages['general.value.None'] : countNote.reference}"/>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Code']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.code ? messages['general.value.None'] : countNote.code}"/>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Info']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.info ? messages['general.value.None'] : countNote.info}"/>
+						</s:decorate>
+					</s:fragment>
+
+					<s:fragment>
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Date']}"/>
+							</ui:define>
+							<h:outputText value="#{messages['general.value.None']}" rendered="#{countNote.date eq null}" />
+							<h:outputText value="#{countNote.date}">
+								<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+							</h:outputText>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Warehouse']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.warehouse.code ? messages['general.value.None'] : countNote.warehouse.code}"/>
+						</s:decorate>
+					</s:fragment>
+				</h:panelGrid>
+
+				<r:dataTable id="its" var="item" value="#{countNote.items}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0"
+					rows="40">
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column>
+								<h:outputText value="#{messages['countNote.label.Enumerator']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Info']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Barcode']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Product']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Quantity']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Price']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Currency']}" />
+							</r:column>
+						</r:columnGroup>
+					</f:facet>
+
+					<r:column style="width:100px;border:0">
+						<h:outputText value="#{item.user.fullName}" />
+					</r:column>
+					<r:column style="width:150px;border:0">
+						<h:outputText value="#{item.info}" />
+					</r:column>
+					<r:column style="width:100px;border:0">
+						<h:outputText value="#{item.barcode}" />
+					</r:column>
+					<r:column style="border:0">
+						<h:outputText value="#{item.product.caption}" />
+					</r:column>
+
+                    <r:column style="width:150px; border:0" styleClass="amountField">
+                        <h:outputText id="quantity" value="#{item.quantity}"
+			              styleClass="amountField" />
+                    </r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.price.value}" styleClass="amountField" 
+							alt="decimal" converter="bigDecimalConverter">
+						</h:outputText>
+					</r:column>
+
+					<r:column style="width:41px; border:0">
+						<h:outputText value="#{item.price.currency}" styleClass="ccyField" />
+					</r:column>
+
+                    <f:facet name="footer">
+                        <r:datascroller for="its" renderIfSinglePage="false"/>          
+                    </f:facet>
+				</r:dataTable>
+			</r:panel>
+
+			<div class="actionButtons">
+				<s:button value="#{messages['countNote.label.GoToCompare']}"
+					view="/stock/countNoteCompare.xhtml" styleClass="button" 
+					rendered="#{s:hasPermission('countNote', 'makeUpTheDifference')}" propagation="begin">
+					<f:param name="eid" value="#{countNote.id}"/>
+				</s:button>
+
+				<s:button id="quickEdit" value="#{messages['countNote.button.ContinueQuickCounting']}"
+					action="#{countNoteHome.edit()}" styleClass="button" 
+					rendered="#{countNote.status ne 'Finished'}" view="/stock/countNoteQuickEntry.xhtml"/>
+					
+				<s:button id="edit" value="#{messages['countNote.button.ContinueCounting']}"
+					action="#{countNoteHome.edit()}" styleClass="button" 
+					rendered="#{countNote.status ne 'Finished'}"/>
+
+				<s:button id="done" value="#{messages['general.button.Close']}"
+					action="#{countNoteHome.close()}" styleClass="button" />
+			</div>
+
+		</h:form>
+    </ui:define>
+
+</ui:composition>

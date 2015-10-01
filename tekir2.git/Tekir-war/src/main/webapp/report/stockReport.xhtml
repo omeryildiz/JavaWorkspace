@@ -1,0 +1,239 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="exports"/>
+            <ui:param name="curitem" value="stockReport"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/report/stockReport.xhtml">
+                <h:outputText value="#{messages['module.caption.StockReport']}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+
+    <ui:define name="rightBar">
+        <s:link view="/report/stockReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/report/stockReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+
+
+    <ui:define name="body">
+
+
+
+        <h1><h:outputText value="#{messages['module.caption.StockReport']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                <h:panelGrid columns="2">
+
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Code']}" /></ui:define>
+                            <h:inputText value="#{productBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Barcode']}" /></ui:define>
+                            <h:inputText value="#{productBrowse.filterModel.barcode}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Name']}" /></ui:define>
+                            <h:inputText value="#{productBrowse.filterModel.name}" styleClass="middle"/>
+                        </s:decorate>
+                    </s:div>
+
+                    <s:div>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['product.label.ProductGroup']}"/>
+                            </ui:define>
+
+                            <h:selectOneMenu value="#{productBrowse.filterModel.group}"
+                                             styleClass="middle">
+                                <s:selectItems value="#{generalSuggestion.productGroupList}"
+                                    var="item" label="#{item.code} - #{item.name}"
+                                    noSelectionLabel="#{messages['general.value.None']}"
+                                    hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                    	<s:decorate template="/layout/edit.xhtml" styleClass="hidden" >
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.ProductType']}" /></ui:define>
+                            <h:selectOneMenu value="#{productBrowse.filterModel.productType}" styleClass="middle">
+                                <s:convertEnum />
+                                <s:enumItem enumValue="Product"
+                                    label="#{messages['product.productType.Product']}" />
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Category']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{productBrowse.filterModel.category}"
+                                             styleClass="middle">
+                                <s:selectItems value="#{stockSuggestion.productCategoryList}"
+                                        var="item" label="#{item.code}"
+                                        noSelectionLabel="#{messages['general.value.All']}"
+                                        hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                    </s:div>
+
+
+
+
+
+                </h:panelGrid>
+
+                <div class="actionButtons">
+                    <a:commandButton id="search"
+                                     value="#{messages['general.button.Search']}"
+                                     action="#{productBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+
+                    <h:commandButton id="xls"
+                                     value="#{messages['general.label.XLS']}"
+                                     action="#{productBrowse.stockXls()}"
+                                     styleClass="button"/>
+
+                </div>
+            </r:panel>
+
+            <a:outputPanel id="results" >
+
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList"
+                                 var="item"
+                                 value="#{productBrowse.entityList}"
+                                 rows="20"
+                                 rendered="#{not empty productBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Code']}"/></f:facet>
+                            <s:link view="/stock/product.xhtml" rendered="#{item.productType eq 'Product'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.code}"/>
+                            </s:link>
+                            <s:link view="/contact/service.xhtml" rendered="#{item.productType eq 'Service'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.code}"/>
+                            </s:link>
+                            <s:link view="/stock/expense.xhtml" rendered="#{item.productType eq 'Expense'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.code}"/>
+                            </s:link>
+                            <s:link view="/stock/discount.xhtml" rendered="#{item.productType eq 'Discount'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.code}"/>
+                            </s:link>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Name']}" /></f:facet>
+                            <s:link view="/stock/product.xhtml" rendered="#{item.productType eq 'Product'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.name}"/>
+                            </s:link>
+                            <s:link view="/contact/service.xhtml" rendered="#{item.productType eq 'Service'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.name}"/>
+                            </s:link>
+                            <s:link view="/stock/expense.xhtml" rendered="#{item.productType eq 'Expense'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.name}"/>
+                            </s:link>
+                            <s:link view="/stock/discount.xhtml" rendered="#{item.productType eq 'Discount'}" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.name}"/>
+                            </s:link>
+                        </r:column>
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Category']}" /></f:facet>
+                            <h:outputText value="#{item.category.code}"/>
+                        </r:column>
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.ProductGroup']}" /></f:facet>
+                            <h:outputText value="#{item.group.code} - #{item.group.name}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Info']}" /></f:facet>
+                            <h:outputText value="#{item.info}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode1']}" /></f:facet>
+                            <h:outputText value="#{item.barcode1}"/>
+                        </r:column>
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode2']}" /></f:facet>
+                            <h:outputText value="#{item.barcode2}"/>
+                        </r:column>
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode3']}" /></f:facet>
+                            <h:outputText value="#{item.barcode3}"/>
+                        </r:column>
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Unit']}" /></f:facet>
+                            <h:outputText value="#{item.unit}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />
+                        </f:facet>
+
+                    </r:dataTable>
+                </s:div>
+
+                <r:panel id="msg" rendered="#{empty productBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel >
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

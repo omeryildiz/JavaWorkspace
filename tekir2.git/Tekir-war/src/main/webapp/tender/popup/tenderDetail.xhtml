@@ -1,0 +1,564 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="tenderDetForm">
+		
+	    <h:messages globalOnly="false" styleClass="message"/>
+	
+		<a:region>
+
+		<s:div style="overflow: auto;height:400px;">
+		
+		<r:panel>
+			<f:facet name="header">
+                <s:div>
+                    <s:div style="float:right;">
+                        <a:commandLink reRender="detailPanel"
+                        	action="#{tenderHome.calculateSelectedDetail()}" accesskey="C" 
+                        	oncomplete="setMasks();">
+                            <h:graphicImage url="/img/reload.gif" /> 
+                            <h:outputText value="#{messages['general.button.Calculate']}" />
+                        </a:commandLink>
+                    </s:div>
+					<h:graphicImage url="/img/house.gif" alt="#{messages['bankAccount.img.World']}" />
+                    <h:outputText value="#{messages['tenderDetail.caption.Form']}" />
+                </s:div>
+			</f:facet>
+			
+			<h:panelGrid id="detailPanel" columns="2" >
+			    
+			    <h:outputText value="#{messages['purchaseOrder.label.LineCode']} :" 
+				    styleClass="boldFont"/>
+			    
+				<s:decorate template="/layout/inlineedit.xhtml">
+                    <h:inputText id="code" value="#{tenderHome.selectedDetail.lineCode}" 
+                    	styleClass="codeField" />
+				</s:decorate>
+
+			    <h:outputText value="#{messages['purchaseOrder.label.Product']} :" 
+			    	styleClass="boldFont"/>
+
+				<s:decorate template="/layout/inlineedit.xhtml">
+                       <h:inputText id="product" value="#{tenderHome.selectedDetail.product}" style="width:160px;" requried="true">
+                           <f:converter converterId="productCaptionConverter"/>
+                           <a:support event="onblur" actionListener="#{tenderHome.selectProduct()}" 
+                           	reRender="unit,discountList,expenseList" ajaxSingle="true" oncomplete="setMasks();" 
+                           	status="commonAjaxStatus"/>
+                       </h:inputText>
+
+                       <a href="javascript:productSelectPopup( '#{r:clientId('product')}' )">
+                           <h:graphicImage url="/img/selectBox.gif" /> 
+                       </a>
+
+                       <r:suggestionbox id="productSuggest" for="product" rules="all" ajaxSingle="true" 
+                       	suggestionAction="#{stockSuggestion.suggestProduct}" var="it" fetchValue="#{it.caption}"
+                           eventsQueue="productSuggestion" reRender="unit" selfRendered="true">
+                           <h:column>
+                               <h:outputText value="#{it.code}"/>
+                           </h:column>
+                           <h:column>
+                               <h:outputText value="#{it.name}"/>
+                           </h:column>
+                           <h:column>
+                               <h:outputText value="#{it.unit}"/>
+                           </h:column>
+                           
+                           <a:ajaxListener type="org.ajax4jsf.ajax.ForceRender"/>
+                       </r:suggestionbox>
+				</s:decorate>
+
+
+				<h:outputText value="#{messages['purchaseOrder.label.Quantity']} :" 
+					styleClass="boldFont"/>
+
+				<s:decorate template="/layout/inlineedit.xhtml">
+                       <h:inputText id="tenderQuantity" value="#{tenderHome.selectedDetail.quantity.value}" 
+	                  	styleClass="quantityField" 
+	                  	onblur="calcAmountOfTenderItem('#{r:clientId('tenderQuantity')}', '#{r:clientId('tenderAmount')}', '#{r:clientId('tenderUnitPrice')}');"
+	                  	alt="decimal" converter="doubleConverter" /> 
+	                <r:spacer width="5"/>
+                       <h:outputText id="unit" value="#{tenderHome.selectedDetail.product.unit}" />
+				</s:decorate>					
+
+								
+               	<h:outputText value="#{messages['purchaseOrder.label.UnitPrice']} :" 
+               		styleClass="boldFont"/>
+	
+				<s:decorate id="priceDec" template="/layout/inlineedit.xhtml">
+                    <h:inputText id="tenderUnitPrice" value="#{tenderHome.selectedDetail.unitPrice.value}" 
+                       	styleClass="amountField" onblur="calcAmountOfTenderItem();"
+                       	alt="decimal" converter="bigDecimalConverter" />
+				</s:decorate>					
+
+
+                <h:outputText value="#{messages['purchaseOrder.label.Amount']} :" 
+                	styleClass="boldFont"/>
+
+				<s:decorate template="/layout/inlineedit.xhtml">
+                    <h:inputText id="tenderAmount" value="#{tenderHome.selectedDetail.amount.value}" 
+                    	styleClass="amountField" onblur="calcPrice(#{rowKey});"
+                    	alt="decimal" converter="bigDecimalConverter" />
+                    
+                    <r:spacer width="5"/>	
+                    
+				    <h:selectOneMenu value="#{tenderHome.selectedDetail.amount.currency}" styleClass="ccyField">
+                        <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" 
+                        	label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" 
+                        	hideNoSelectionLabel="true"/>
+                        <a:support event="onchange" action="#{tenderHome.refreshCurrencyRate()}" 
+							oncomplete="setMasks();" status="commonAjaxStatus" />	
+                    </h:selectOneMenu> 
+				</s:decorate>					
+
+
+				<h:outputText value="#{messages['tenderDetail.label.Discounts']}" styleClass="boldFont"/>
+
+                <r:dataTable id="discountList" 
+                                var="disc"
+                                value="#{tenderHome.selectedChildList}" 
+                                rowKeyVar="rowKey">
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="İndirim Türü" />
+							</r:column>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Tutar/Oran"/>
+							</r:column>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Açıklama"/>
+							</r:column>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="İndirim Tutarı"/>
+							</r:column>
+							<r:column style="width:40px;">
+		                        <a:commandLink action="#{tenderHome.createNewItemDiscount()}"
+							   	    reRender="discountOrExpensePopup" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('tenderDiscountOrExpensePopup');setMasks()">
+									<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+							    </a:commandLink>
+							</r:column>
+						</r:columnGroup>
+					</f:facet>
+					
+					<r:column rendered="#{disc.productType eq 'Discount'}">
+						<h:outputText value="Satır" 
+							rendered="#{disc.productType eq 'Discount'}"/>
+						<h:outputText value="Belge" 
+							rendered="#{disc.productType eq 'DocumentDiscount'}"/>
+					</r:column>
+
+					<r:column rendered="#{disc.productType eq 'Discount'}">
+						<h:outputText value="#{messages['tenderDetail.label.Rate']}" 
+							rendered="#{disc.discount.percentage}"/>
+						<h:outputText value="#{messages['tenderDetail.label.Amount']}" 
+							rendered="#{not disc.discount.percentage}"/>
+					</r:column>
+
+					<r:column rendered="#{disc.productType eq 'Discount'}">
+						<h:outputText value="#{disc.info}" />
+					</r:column>
+	
+					<r:column rendered="#{disc.productType eq 'Discount'}">
+						<s:span rendered="#{disc.discount.percentage}">
+							<h:outputText value="%" />
+							<h:outputText value="#{disc.discount.rate}" alt="decimal" 
+								converter="bigDecimalConverter" styleClass="amountField"/>
+							( <h:outputText value="#{disc.discount.value}" alt="decimal" 
+									converter="bigDecimalConverter" styleClass="amountField"/> )
+						</s:span>
+
+						<h:outputText value="#{disc.discount.value}" 
+							rendered="#{not disc.discount.percentage}" alt="decimal" 
+							converter="bigDecimalConverter" styleClass="amountField"/>
+					</r:column>
+
+                    <r:column rendered="#{disc.productType eq 'Discount'}">
+                        <a:commandLink action="#{tenderHome.editDiscountOrExpenseItem(rowKey)}" 
+                        	reRender="discountOrExpensePopup" status="commonAjaxStatus"
+                        	oncomplete="Richfaces.showModalPanel('tenderDiscountOrExpensePopup');setMasks();">
+                            <h:graphicImage url="/img/edit.gif" /> 
+                        </a:commandLink>
+                        <a:commandLink reRender="discountList,expenseList" action="#{tenderHome.deleteDiscountOrExpenseLine(rowKey)}" 
+                        	status="commonAjaxStatus">
+                            <h:graphicImage url="/img/delete.gif" /> 
+                        </a:commandLink>
+                    </r:column>    
+
+				</r:dataTable>
+
+
+				<h:outputText value="#{messages['purchaseOrder.label.LineInfo']} :" 
+					styleClass="boldFont"/>
+
+				<s:decorate template="/layout/inlineedit.xhtml">
+					<h:inputTextarea value="#{tenderHome.selectedDetail.info}" styleClass="exlarge" 
+						rows="2"/>
+				</s:decorate>
+
+
+				<h:outputText value="#{messages['tenderDetail.label.OTVTax']}" styleClass="boldFont" 
+					rendered="#{tenderHome.selectedDetail.getOTVTaxEmbeddable().localAmount ne 0}"/>
+
+				<s:span rendered="#{tenderHome.selectedDetail.getOTVTaxEmbeddable().localAmount ne 0}">
+					<h:inputText value="#{tenderHome.selectedDetail.getOTVTaxEmbeddable().value}"
+						styleClass="amountField" disabled="true" alt="decimal"
+						converter="bigDecimalConverter"/>
+					
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />	
+				</s:span>
+
+
+                <h:outputText value="#{messages['tenderDetail.label.SubTotal']}" 
+                	styleClass="boldFont"/>
+
+                <s:span>
+	                <h:inputText value="#{tenderHome.selectedDetail.taxExcludedTotal.value}" 
+	                	styleClass="amountField" disabled="true" converter="bigDecimalConverter"
+	                	alt="decimal"/>
+					
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+                </s:span>
+
+										
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax1 ne null}" styleClass="boldFont">
+					<h:outputText value="#{tenderHome.selectedDetail.product.sellTax1.code} " 
+						rendered="#{tenderHome.selectedDetail.tax1.localAmount ne 0}"/>
+
+					<h:outputText value="#{messages['tenderDetail.label.Included']}" rendered="#{tenderHome.selectedDetail.product.tax1Included}"/>
+					<h:outputText value="#{messages['tenderDetail.label.Excluded']}" rendered="#{not tenderHome.selectedDetail.product.tax1Included}"/>
+				</s:span>				
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax1 ne null}">
+					<h:inputText value="#{tenderHome.selectedDetail.tax1.value}"  
+						styleClass="amountField" disabled="true" converter="bigDecimalConverter"
+						alt="decimal"/>
+					
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>
+
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax2 ne null}" styleClass="boldFont">
+					<h:outputText value="#{tenderHome.selectedDetail.product.sellTax2.code} " 
+						rendered="#{tenderHome.selectedDetail.tax2.localAmount ne 0}"/>
+
+					<h:outputText value="#{messages['tenderDetail.label.Included']}" rendered="#{tenderHome.selectedDetail.product.tax2Included}"/>
+					<h:outputText value="#{messages['tenderDetail.label.Excluded']}" rendered="#{not tenderHome.selectedDetail.product.tax2Included}"/>
+				</s:span>
+
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax2 ne null}">
+					<h:inputText value="#{tenderHome.selectedDetail.tax2.value}"  
+						styleClass="amountField" disabled="true" converter="bigDecimalConverter"
+						alt="decimal"/>
+						
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>
+
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax3 ne null}" styleClass="boldFont">
+					<h:outputText value="#{tenderHome.selectedDetail.product.sellTax3.code} " 
+						rendered="#{tenderHome.selectedDetail.tax3.localAmount ne 0}"/>
+
+					<h:outputText value="#{messages['tenderDetail.label.Included']}" rendered="#{tenderHome.selectedDetail.product.tax3Included}"/>
+					<h:outputText value="#{messages['tenderDetail.label.Excluded']}" rendered="#{not tenderHome.selectedDetail.product.tax3Included}"/>
+				</s:span>
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax3 ne null}">
+					<h:inputText value="#{tenderHome.selectedDetail.tax3.value}" 
+						styleClass="amountField" disabled="true" converter="bigDecimalConverter"
+						alt="decimal"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>
+
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax4 ne null}" styleClass="boldFont" >
+					<h:outputText value="#{tenderHome.selectedDetail.product.sellTax4.code} " 
+						rendered="#{tenderHome.selectedDetail.tax4.localAmount ne 0}"/>
+
+					<h:outputText value="#{messages['tenderDetail.label.Included']}" rendered="#{tenderHome.selectedDetail.product.tax4Included}"/>
+					<h:outputText value="#{messages['tenderDetail.label.Excluded']}" rendered="#{not tenderHome.selectedDetail.product.tax4Included}"/>
+				</s:span>
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax4 ne null}">
+					<h:inputText value="#{tenderHome.selectedDetail.tax4.value}" 
+						styleClass="amountField" disabled="true" converter="bigDecimalConverter"
+						alt="decimal"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>
+
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax5 ne null}" styleClass="boldFont">
+					<h:outputText value="#{tenderHome.selectedDetail.product.sellTax5.code} :" 
+						rendered="#{tenderHome.selectedDetail.tax5.localAmount ne 0}"/>
+
+					<h:outputText value="#{messages['tenderDetail.label.Included']}" rendered="#{tenderHome.selectedDetail.product.tax5Included}"/>
+					<h:outputText value="#{messages['tenderDetail.label.Excluded']}" rendered="#{not tenderHome.selectedDetail.product.tax5Included}"/>
+				</s:span>
+
+				<s:span rendered="#{tenderHome.selectedDetail.product.sellTax5 ne null}">
+					<h:inputText value="#{tenderHome.selectedDetail.tax5.value}" 
+						styleClass="amountField" disabled="true" converter="bigDecimalConverter"
+						alt="decimal"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>
+				
+				
+                <h:outputText value="#{messages['tenderDetail.label.TaxTotal']}" 
+                	styleClass="boldFont"/>
+
+				<s:span>
+	                <h:inputText value="#{tenderHome.selectedDetail.taxTotalAmount.value}" 
+	                	styleClass="amountField" disabled="true" alt="decimal"
+	                	converter="bigDecimalConverter"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>                	
+
+
+				<s:span rendered="#{tenderHome.selectedDetail.tenderDiscount.localAmount ne 0}">
+					<h:outputText value="#{messages['tenderDetail.label.TenderDiscount']}" styleClass="boldFont"/>
+				</s:span>
+
+				<s:span rendered="#{tenderHome.selectedDetail.tenderDiscount.localAmount ne 0}">
+	                <h:inputText value="#{tenderHome.selectedDetail.tenderDiscount.value}" 
+	                	styleClass="amountField" disabled="true"
+	                	alt="decimal" converter="bigDecimalConverter"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>
+
+
+				<s:span rendered="#{tenderHome.selectedDetail.tenderExpense.localAmount ne 0}">
+					<h:outputText value="#{messages['tenderDetail.label.TenderExpense']}" styleClass="boldFont"/>
+				</s:span>
+
+				<s:span rendered="#{tenderHome.selectedDetail.tenderExpense.localAmount ne 0}">
+	                <h:inputText value="#{tenderHome.selectedDetail.tenderExpense.value}" 
+	                	styleClass="amountField" disabled="true"
+	                	alt="decimal" converter="bigDecimalConverter"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>
+
+
+                <h:outputText value="#{messages['tenderDetail.label.GrandTotal']}" 
+                	styleClass="boldFont"/>
+
+				<s:span>
+	                <h:inputText value="#{tenderHome.selectedDetail.totalAmount.value}" 
+	                	styleClass="amountField" disabled="true"
+	                	alt="decimal" converter="bigDecimalConverter"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>                	
+
+                <h:outputText value="#{messages['tenderDetail.label.GrandTotal']}" 
+                	styleClass="boldFont"/>
+
+				<s:span>
+	                <h:inputText value="#{tenderHome.selectedDetail.grandTotal.value}" 
+	                	styleClass="amountField" disabled="true"
+	                	alt="decimal" converter="bigDecimalConverter"/>
+
+					<r:spacer width="5"/>
+					
+					<h:outputText value="#{tenderHome.selectedDetail.amount.currency}" />
+				</s:span>                	
+								
+				<h:outputText value="#{messages['tenderDetail.label.Expenses']}" styleClass="boldFont"/>
+
+                <r:dataTable id="expenseList" 
+                                var="exp"
+                                value="#{tenderHome.selectedChildList}" 
+                                rowKeyVar="rowKey">
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Masraf Türü" />
+							</r:column>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Tutar/Oran"/>
+							</r:column>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Masraf Tutarı"/>
+							</r:column>
+							<r:column style="width:40px;">
+		                        <a:commandLink action="#{tenderHome.createNewItemExpense()}"
+							   	    reRender="discountOrExpensePopup" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('tenderDiscountOrExpensePopup');setMasks()">
+									<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+							    </a:commandLink>
+							</r:column>
+						</r:columnGroup>
+					</f:facet>
+					
+					<r:column rendered="#{exp.productType eq 'Expense'}">
+						<h:outputText value="Satır" 
+							rendered="#{exp.productType eq 'Expense'}"/>
+						<h:outputText value="Belge" 
+							rendered="#{exp.productType eq 'DocumentExpense'}"/>
+					</r:column>
+
+					<r:column rendered="#{exp.productType eq 'Expense'}">
+						<h:outputText value="#{messages['tenderDetail.label.Rate']}" 
+							rendered="#{exp.expense.percentage}"/>
+						<h:outputText value="#{messages['tenderDetail.label.Amount']}" 
+							rendered="#{not exp.expense.percentage}"/>
+					</r:column>
+	
+					<r:column rendered="#{exp.productType eq 'Expense'}">
+						<s:span rendered="#{exp.expense.percentage}">
+							<h:outputText value="%" />
+							<h:outputText value="#{exp.expense.rate}" alt="decimal" 
+								converter="bigDecimalConverter" styleClass="amountField"/>
+							( <h:outputText value="#{exp.expense.value}" alt="decimal" 
+									converter="bigDecimalConverter" styleClass="amountField"/> )
+						</s:span>
+						
+						<h:outputText value="#{exp.expense.value}" 
+							rendered="#{not exp.expense.percentage}" alt="decimal" 
+							converter="bigDecimalConverter" styleClass="amountField"/>
+					</r:column>
+
+                    <r:column rendered="#{exp.productType eq 'Expense'}">
+                        <a:commandLink action="#{tenderHome.editDiscountOrExpenseItem(rowKey)}" 
+                        	reRender="discountOrExpensePopup" status="commonAjaxStatus"
+                        	oncomplete="Richfaces.showModalPanel('tenderDiscountOrExpensePopup');setMasks();">
+                            <h:graphicImage url="/img/edit.gif" /> 
+                        </a:commandLink>
+                        <a:commandLink reRender="expenseList,discountList" action="#{tenderHome.deleteDiscountOrExpenseLine(rowKey)}" 
+                        	status="commonAjaxStatus">
+                            <h:graphicImage url="/img/delete.gif" /> 
+                        </a:commandLink>
+                    </r:column>    
+
+				</r:dataTable>
+
+				<h:outputText value="#{messages['tenderDetail.label.Fees']}" styleClass="boldFont"/>
+
+                <r:dataTable id="feeList" 
+                                var="fee"
+                                value="#{tenderHome.selectedChildList}" 
+                                rowKeyVar="rowKey">
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Harç Türü" />
+							</r:column>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Tutar/Oran"/>
+							</r:column>
+							<r:column style="text-align:left;font-size:9px;">
+								<h:outputText value="Harç Tutarı"/>
+							</r:column>
+							<r:column style="width:40px;">
+		                        <a:commandLink action="#{tenderHome.createNewItemFee()}"
+							   	    reRender="discountOrExpensePopup" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('tenderDiscountOrExpensePopup');setMasks()">
+									<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+							    </a:commandLink>
+							</r:column>
+						</r:columnGroup>
+					</f:facet>
+					
+					<r:column rendered="#{fee.productType eq 'Fee'}">
+						<h:outputText value="Satır" 
+							rendered="#{fee.productType eq 'Fee'}"/>
+						<h:outputText value="Belge" 
+							rendered="#{fee.productType eq 'DocumentFee'}"/>
+					</r:column>
+
+					<r:column rendered="#{fee.productType eq 'Fee'}">
+						<h:outputText value="#{messages['tenderDetail.label.Rate']}" 
+							rendered="#{fee.fee.percentage}"/>
+						<h:outputText value="#{messages['tenderDetail.label.Amount']}" 
+							rendered="#{not fee.fee.percentage}"/>
+					</r:column>
+	
+					<r:column rendered="#{fee.productType eq 'Fee'}">
+						<s:span rendered="#{fee.fee.percentage}">
+							<h:outputText value="%" />
+							<h:outputText value="#{fee.fee.rate}" alt="decimal" 
+								converter="bigDecimalConverter" styleClass="amountField"/>
+							( <h:outputText value="#{fee.fee.value}" alt="decimal" 
+									converter="bigDecimalConverter" styleClass="amountField"/> )
+						</s:span>
+						
+						<h:outputText value="#{fee.fee.value}" 
+							rendered="#{not fee.fee.percentage}" alt="decimal" 
+							converter="bigDecimalConverter" styleClass="amountField"/>
+					</r:column>
+
+                    <r:column rendered="#{fee.productType eq 'Fee'}">
+                        <a:commandLink action="#{tenderHome.editDiscountOrExpenseItem(rowKey)}" 
+                        	reRender="discountOrExpensePopup" status="commonAjaxStatus"
+                        	oncomplete="Richfaces.showModalPanel('tenderDiscountOrExpensePopup');setMasks();">
+                            <h:graphicImage url="/img/edit.gif" /> 
+                        </a:commandLink>
+                        <a:commandLink reRender="feeList,expenseList,discountList" action="#{tenderHome.deleteDiscountOrExpenseLine(rowKey)}" 
+                        	status="commonAjaxStatus">
+                            <h:graphicImage url="/img/delete.gif" /> 
+                        </a:commandLink>
+                    </r:column>    
+
+				</r:dataTable>
+
+			</h:panelGrid>
+
+			<div class="actionButtons">
+				<a:commandButton action="#{tenderHome.addToItems()}" 
+					styleClass="button" value="#{messages['general.label.Add']}" 
+					reRender="its,ccyRates" rendered="#{not tenderHome.isEdit}"
+					oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('tenderDetailPopup');setMasks();" />
+	
+				<a:commandButton action="#{tenderHome.endDetailEdit()}" reRender="its" 
+					value="#{messages['general.button.Ok']}"
+					oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('tenderDetailPopup');setMasks();"
+					styleClass="button" rendered="#{tenderHome.isEdit}" /> 
+				
+				<a:commandButton value="#{messages['general.button.Cancel']}"
+					oncomplete="Richfaces.hideModalPanel('tenderDetailPopup');"
+					styleClass="button" ajaxSingle="true" />
+			
+			</div>
+
+		</r:panel>
+		
+		</s:div>	
+		
+		</a:region>
+		
+	</h:form>
+
+</ui:composition>

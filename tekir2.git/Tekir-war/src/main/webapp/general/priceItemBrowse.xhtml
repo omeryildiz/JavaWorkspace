@@ -1,0 +1,257 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="priceItemBrowse"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/priceItemBrowse.xhtml" rendered="#{s:hasPermission('priceItem', 'select')}">
+                <h:outputText value="#{messages['module.caption.PriceItemBrowse']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/general/salePriceItem.xhtml" rendered="#{s:hasPermission('salePriceItem', 'insert')}">
+                <f:param name="eid" value="0"/>
+                <f:param name="actionType" value="Sale"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['salePriceItem.action.Add']}" />
+            </s:link>
+            
+            <s:link view="/general/purchasePriceItem.xhtml" rendered="#{s:hasPermission('purchasePriceItem', 'insert')}" >
+                <f:param name="eid" value="0"/>
+                <f:param name="actionType" value="Purchase"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['purchasePriceItem.action.Add']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/general/priceItemBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/general/priceItemBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PriceItemBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+   		<s:div id="copyPopup">
+			<ui:include src="/general/copyProductPopup.xhtml" />
+		</s:div>
+
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:panelGrid columns="2">
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Code']}" />
+                            </ui:define>
+                            <h:inputText value="#{priceItemBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['general.label.PriceList']}"/>
+                            </ui:define>
+                            <h:selectOneMenu id="priceList"
+                                             value="#{priceItemBrowse.filterModel.priceList}"
+                                             styleClass="middle">
+                                <s:convertEntity/>
+                                <s:selectItems value="#{generalSuggestion.priceListList}"
+                                               var="item"
+                                               label="#{item.code} - #{item.listName}"
+                                               noSelectionLabel="#{messages['general.value.All']}"
+                                               hideNoSelectionLabel="false" />
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['product.label.ProductGroup']}"/>
+                            </ui:define>
+                            
+                            <h:selectOneMenu value="#{priceItemBrowse.filterModel.group}" 
+                                             styleClass="middle">
+                                <s:selectItems value="#{generalSuggestion.productGroupList}" 
+                                    var="item" label="#{item.code} - #{item.name}"
+                                    noSelectionLabel="#{messages['general.value.All']}"
+                                    hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                    </s:fragment>
+
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.StartDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{priceItemBrowse.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.EndDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{priceItemBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.PurchaseOrSale']}" />
+                            </ui:define>
+							<h:selectOneMenu value="#{priceItemBrowse.filterModel.action}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>                                
+								<f:selectItem itemValue="Purchase" itemLabel="#{messages['general.label.Purchase']}"/>                                
+								<f:selectItem itemValue="Sale" itemLabel="#{messages['general.label.Sale']}"/>                                
+                            </h:selectOneMenu>
+                        </s:decorate>
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{priceItemBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="prItem"
+                                 value="#{priceItemBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty priceItemBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column styleClass="codeField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.DefaultItem']}" />
+                            </f:facet>
+                            <h:selectBooleanCheckbox value="#{prItem.defaultItem}" disabled="true"/>
+                        </r:column>
+
+                        <r:column styleClass="codeField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.Code']}" />
+                            </f:facet>
+                            <s:link view="/general/purchasePriceItem.xhtml" propagation="begin"
+                            	rendered="#{prItem.action eq 'Purchase'}">
+                                <f:param name="eid" value="#{prItem.id}"/>
+                                <h:outputText value="#{prItem.code}"/>
+                            </s:link>
+                            <s:link view="/general/salePriceItem.xhtml" propagation="begin"
+                            	rendered="#{prItem.action eq 'Sale'}">
+                                <f:param name="eid" value="#{prItem.id}"/>
+                                <h:outputText value="#{prItem.code}"/>
+                            </s:link>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.PriceList']}" />
+                            </f:facet>
+                            <h:outputText value="#{prItem.ownerCode} - #{prItem.ownerListName}"/>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['product.label.ProductGroup']}" />
+                            </f:facet>
+                            <h:outputText value="#{prItem.group.code} - #{prItem.group.name}"/>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.Info']}" />
+                            </f:facet>
+                            <h:outputText value="#{prItem.info}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="dateField">
+                            <f:facet name="header">	
+                            	<h:outputText value="#{messages['general.label.StartDate']}" />
+                            </f:facet>
+                            <h:outputText value="#{prItem.beginDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="dateField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.EndDate']}" />
+                            </f:facet>
+                            <h:outputText value="#{prItem.endDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column>
+	                        <a:commandLink reRender="copyPopup" action="#{priceItemHome.setId(prItem.id)}"
+	                            oncomplete="Richfaces.showModalPanel('copyProductPopup')">
+	                            <a:actionparam value="#{priceItem.id}" assignTo="#{priceItemHome.id}"/>
+	                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" rendered="#{s:hasPermission('priceItem', 'update')}" />
+	                        </a:commandLink>
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty priceItemBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

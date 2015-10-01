@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps">
+
+	<r:spacer height="5" rendered="#{currentEntity.paymentTable.detailList.size() > 0}"/>
+	
+	<r:dataTable id="paymentTableViewList" var="item" value="#{currentEntity.paymentTable.detailList}" 
+		rowKeyVar="rowKey" styleClass="detailTable" 
+		rendered="#{currentEntity.paymentTable.detailList.size() > 0}">
+
+		<f:facet name="header">
+			<r:columnGroup>
+				<r:column colspan="8">
+					<h:outputText value="#{currentEntity.tradeAction eq 'SaleReturn' ? messages['general.label.PaymentTable'] : messages['general.label.SalePaymentTable']}" />
+				</r:column>
+				<r:column breakBefore="true" styleClass="actionColumn"> 
+					<h:graphicImage url="/img/information.gif" /> 
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.PaymentType']}" />
+				</r:column>
+				<r:column styleClass="middle">
+					<h:outputText value="#{messages['general.label.Pos']}" />
+				</r:column>
+				<r:column styleClass="middle">
+					<h:outputText value="#{messages['general.label.Bank']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.Period']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.CreditCardNumber']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.Amount']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.Currency']}" />
+				</r:column>
+			</r:columnGroup>
+		</f:facet>
+
+		<r:column>
+            <h:graphicImage url="/img/vault.png" rendered="#{item.referenceId ne null}"/>
+            <h:graphicImage url="/img/plus.gif" rendered="#{item.referenceId eq null}"/>
+		</r:column>
+
+		<r:column>
+			<h:outputText value="#{messages[ut:concat('general.label.',item.paymentType)]}" />
+		</r:column>
+
+		<r:column>
+			<s:div id="pos" rendered="#{item.paymentType eq 'CreditCard'}">
+				<h:outputText value="#{item.pos.code} - #{item.pos.name}"
+					styleClass="middle" />
+			</s:div>
+		</r:column>
+
+		<r:column>
+			<h:outputText value="#{item.bank.code} - #{item.bank.name}"
+				styleClass="middle" rendered="#{item.pos ne null and item.paymentType eq 'CreditCard'}" />
+		</r:column>
+
+		<r:column>
+			<h:outputText value="#{item.period}" styleClass="middle" 
+				rendered="#{item.pos ne null and item.paymentType eq 'CreditCard'}" />
+		</r:column>
+
+		<r:column>
+			<s:div id="cardnumber" rendered="#{item.paymentType eq 'CreditCard'}">
+				<h:outputText value="#{item.creditCardNumber}" styleClass="middle" />
+			</s:div>
+		</r:column>
+
+		<r:column styleClass="amountFieldTiny">
+			<h:outputText id="amount" value="#{item.amount.value}"
+				styleClass="amountFieldTiny" alt="decimal" converter="bigDecimalConverter"/>
+		</r:column>
+
+		<r:column>
+			<h:outputText value="#{item.amount.currency}" styleClass="ccyField" />
+		</r:column>
+
+	</r:dataTable>
+
+</ui:composition>

@@ -1,0 +1,82 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+    
+    
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.ContactBrowse']}" /></h1>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        
+        <r:dataTable id="browseList" 
+                     var="contact"
+                     value="#{contactBrowse.entityList}">
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Code']}"/></f:facet>
+                <h:outputText value="#{contact.code}"/>
+            </r:column>
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Name']}" /></f:facet>
+                <h:outputText value="#{contact.fullname}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Company']}" /></f:facet>
+                <h:outputText value="#{contact.company}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Representative']}" /></f:facet>
+                <h:outputText value="#{contact.representative}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Type']}" /></f:facet>
+                <h:outputText value="#{messages['contact.type.Customer']}" rendered="#{contact.customerType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Provider']}" rendered="#{contact.providerType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Agent']}" rendered="#{contact.agentType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Personnel']}" rendered="#{contact.personnelType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Branch']}" rendered="#{contact.branchType eq true}"/>
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+	            	<h:outputText value="#{messages['contact.label.Mobile']}" />
+                </f:facet>
+	            <h:outputText value="#{contactBrowse.getGsm(contact.id)}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+	            	<h:outputText value="#{messages['contact.label.Fax']}" />
+                </f:facet>
+	            <h:outputText value="#{contactBrowse.getFax(contact.id)}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+	            	<h:outputText value="#{messages['contact.label.Immobile']}" />
+                </f:facet>
+	            <h:outputText value="#{contactBrowse.getImmobile(contact.id)}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+	            	<h:outputText value="#{messages['contact.label.Email']}" />
+                </f:facet>
+	            <h:outputText value="#{contactBrowse.getEmail(contact.id)}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+					<h:outputText value="#{messages['contact.label.Address']}" />
+                </f:facet>
+				<h:outputText value="#{contactBrowse.getAddress(contact.id)}" />
+            </r:column>
+
+        </r:dataTable>
+        
+    </ui:define> 
+</ui:composition>

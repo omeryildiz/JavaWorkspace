@@ -1,0 +1,376 @@
+
+/*
+
+GlassX theme colors
+
+*/
+
+
+/*Global Styles*/
+
+
+h1,				/* Headings (H1-H6) should only be used in */
+h2,				/* the main content area                   */
+h3 {
+    border-bottom:   1px solid #CCCCCC;
+}
+
+
+html {
+    background: #F2F5FE;
+}
+
+body {
+    background: #F2F5FE url(../img/tile.gif) repeat;
+    color: #616161;
+}
+
+.help-body{
+    background: white; /* url(../img/bg.gif) repeat-x;*/
+    color: #616161;
+}
+
+.headerwrap{
+    border-left: 1px solid navy;
+    border-right: 1px solid navy;
+}
+
+.body {
+    background: white;
+    border-left: 1px solid navy;
+    border-right: 1px solid navy;
+    border-bottom: 1px solid navy;
+}
+
+.body2 {
+    background: #CCDDFF url(../img/desktop.jpg) repeat-x;
+    border-left: 1px solid navy;
+    border-right: 1px solid navy;
+    border-bottom: 1px solid navy;
+}
+
+#header {			/* Warning: not printed out on paper */
+    color:           #003399;
+    padding: 0px;
+    background:  url(../img/ustbar.jpg) no-repeat;
+}
+
+
+
+#header div.left,
+#header div.left a:link,
+#header div.left a:visited {
+    color:           white;
+    background:      transparent;
+}
+
+
+#header div.left .alt {
+    color:           #FF9800;
+    background:      transparent;
+}
+
+
+.sitecompany {
+    color:           white;
+    background:      transparent;
+}
+
+.siteuser {
+    color:           white;
+    background:      transparent;
+}
+
+/* Right part of header is for external/global links, search, etc */
+
+#header div.right {
+    color: silver;
+}
+
+#header div.right a:link,
+#header div.right a:visited {
+    color: silver;
+}
+
+
+/* Subheader for global links */
+
+#header div.subheader {
+    color:           black;
+    background:      white;
+}
+
+/********************************/
+
+/* Tool Bar */
+
+
+.toolgroup-right{
+    background: url("../img/tool-sep.gif") no-repeat;
+}
+
+
+.toolgroup-left{
+    background: url("../img/tool-sep.gif") no-repeat;
+}
+
+.toolbutton{
+    background: #303030
+}
+
+/******************************/
+
+/*Sidebar*/
+
+#sidebar ul.sidemenu li {
+    border-bottom: 1px solid #EFF0F1;
+    background: url(../img/arrow.gif) no-repeat 2px 5px;
+}
+
+
+/**************************/
+
+
+
+a:active, a:link, a:visited {
+    color: #0D5798;
+    text-decoration: none;
+}
+a:hover {
+    /* color: #8CAFCD; */
+    color : orangered;
+}
+
+a.disabled {
+	color: #C0C0C0;
+}
+
+input, textarea, select {
+    border: 1px solid #BBBBBB;
+    background: #F0F8FF;
+    color: black;
+}
+
+input[disabled] {
+    background: #d0d0d0;
+    border: 1px solid #888888;
+    color: #505050;
+}
+
+.detailTable input, .detailTable textarea, .detailTable select {
+    border-top: 0px solid #BBBBBB;
+    border-left: 0px solid #BBBBBB;
+    border-right: 0px solid #BBBBBB;
+    border-bottom: 0px solid #BBBBBB;
+
+    color: black;
+    background: white url('../img/edit_ovr.gif') no-repeat top left;
+
+}
+
+.button {
+    width: 10em;
+    margin: 0px 2px 0px 2px;
+    /*padding: 2px 3px;
+    color: #333;*/
+}
+
+.button:hover{
+    border: 1px solid #053b8b;
+    color: orangered;
+}
+
+.checkbox {
+    border: 0px solid #999999;
+    background: #FFF;
+    color: #333;
+}
+
+.radio {
+    border: 0px solid #999999;
+}
+
+.columnHeader:hover
+{
+    color: #FF6600;
+}
+
+.error {
+    border: 1px solid red;
+}
+
+.errors {
+    color: red;
+}
+.errors input {
+    border: 1px solid red;
+}
+.errors textarea {
+    border: 1px solid red;
+}
+.required {
+    color: red;
+}
+
+.rowOdd{
+    background: white;
+}
+
+.rowEven{
+    background: #dddddd;
+}
+
+
+.red{
+    background: #ffcccc;
+    /*    border: 1px solid red;*/
+}
+
+.blue{
+    background: #ccccff;
+    border: 1px solid navy;
+}
+
+
+.green{
+    background: #eeffdd;
+    border: 1px solid green;
+}
+
+
+.yellow{
+    background: #ffffdd;
+    /*    border: 1px solid yellow;*/
+}
+
+
+.orange{
+    background: #ffddbb;
+    border: 1px solid orangered;
+}
+
+.rich-panel-header{
+    border-bottom: 1px solid #C0C0C0;
+}
+
+
+.rich-panel{
+    border: 1px solid #C0C0C0;
+}
+
+.rich-tool-tip{
+    color: black;
+}
+
+.warning{
+    background-image: url("../img/exclamation.gif");
+    background-repeat: no-repeat;
+    color: red;
+}
+
+.hint{
+    background-image: url("../img/hint.gif");
+    background-repeat: no-repeat;
+    color: gray;
+}
+
+.info{
+    background-image: url("../img/information.gif");
+    background-repeat: no-repeat;
+    color: gray;
+}
+
+.message {
+    border: 1px solid #FFCC00;
+    background-color: #F0F8FF;
+}
+
+.CreditNumber{
+    color:red;
+}
+
+.toolgroup-left a:hover{
+    background-color: #d7e7ff;
+    border: 1px solid navy;
+}
+
+
+.toolgroup-right a:hover{
+    background-color: #FFEBDA;
+    border: 1px solid #BED6F8;
+}
+
+.InvRowOdd{
+    background-color: #ffffdf;
+}
+
+.InvRowEven{
+    background-color: #ffffff;
+}
+
+.InvRowOdd input, .InvRowOdd select{
+    background-color: #ffffdf;
+}
+
+.InvRowEven input, .InvRowEven select{
+    background-color: #ffffff;
+}
+
+.negativeNumber{
+    color: red;
+}
+
+.emptyLabel {
+    color: white;
+    background: white;
+}
+.emptyInputValue {
+    color: white;
+    background: white;
+}
+.emptyInputDate {
+    color: white;
+    background: white;
+}
+
+.mainTab .sf-sub-indicator{
+    background:none;
+}
+
+.organizationLevel {
+	background-color: #C7E9F2;
+}
+
+.organizationLevel2 {
+	background-color: #C0DDF2;
+}
+
+.organizationLevel3 {
+	background-color: #C0CCF2;
+}
+
+.organizationLevel4 {
+	background-color: yellow;
+}
+
+.warningStyle {
+	color:red;
+}
+
+.drawLineBlueDot {
+    background-image: url("../img/blue-dot.gif");
+    background-repeat: repeat-x;
+}
+
+.drawLineBlackDot {
+    background-image: url("../img/black-dot.gif");
+    background-repeat: repeat-x;
+}
+
+.selectedRowStyle {
+	background-color:#E1E1EF;
+}
+
+.menuNewColumn {
+	background-color: #DFECF0;
+}

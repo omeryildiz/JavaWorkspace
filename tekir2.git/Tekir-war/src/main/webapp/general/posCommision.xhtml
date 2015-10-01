@@ -1,0 +1,214 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="posCommision"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/general.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.General']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/general/posCommisionBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PosCommisionBrowse']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link action="#{posCommisionHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['posCommision.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.PosCommision']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+
+        <ui:include src="/stock/productSelectPopup.xhtml" />
+
+
+
+        <h:form id="form" >
+
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/lorry.gif" alt="#{messages['posCommision.caption.Form']}"/>
+                        <h:outputText value="#{messages['posCommision.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+                <h:panelGrid columns="3">
+
+                    <s:div>
+ 
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['posCommision.label.Pos']}"/></ui:define>
+                            <h:selectOneMenu value="#{posCommision.pos}" styleClass="middle" required="true">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.posList}" var="acc" label="#{acc.name}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+                       <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['posCommision.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{posCommision.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['productTransfer.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+
+                        
+
+                    </s:div>
+
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['posCommision.label.BeginDate']}"/></ui:define>
+                            <r:calendar value="#{posCommision.startDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"
+                                        required="true"/>
+				        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['posCommision.label.EndDate']}"/></ui:define>
+                            <r:calendar value="#{posCommision.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"
+                                        required="true"/>
+				        </s:decorate>
+				        
+                    </s:div>
+
+                    
+                </h:panelGrid>
+
+
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+
+
+                <a:region>
+                    <r:dataTable id="its"
+                                 var="item"
+                                 value="#{posCommision.detailList}"
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="6">
+                                    <h:outputText value="#{messages['productTransfer.caption.Details']}" />
+                                </r:column>
+                                <r:column style="width:16px;">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{posCommisionHome.createNewLine()}"
+                                        	oncomplete="focusLastRow(); setMasks();" accesskey="N">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/>
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+
+                                <r:column breakBefore="true" styleClass="codeField">
+                                    <h:outputText value="#{messages['posCommision.label.DefaultDetail']}" />
+                                </r:column>
+                                <r:column  styleClass="codeField">
+                                    <h:outputText value="#{messages['posCommision.label.Active']}" />
+                                </r:column>
+                                <r:column  styleClass="codeField">
+                                    <h:outputText value="#{messages['posCommision.label.Campain']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['posCommision.label.Month']}" />
+                                </r:column>
+                                <r:column >
+                                    <h:outputText value="#{messages['posCommision.label.Rate']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['posCommision.label.Valor']}" />
+                                </r:column>
+                                <r:column style="width:16px;">
+                                    <h:outputText value="" />
+                                </r:column>
+                            </r:columnGroup>
+
+                        </f:facet>
+                        <r:column style="width:15px;">
+                     		<h:selectBooleanCheckbox value="#{item.defaultDetail}" />
+                     	</r:column>
+                        <r:column style="width:15px;">
+                     		<h:selectBooleanCheckbox value="#{item.active}" />
+                     	</r:column>
+                        <r:column style="width:15px;">
+                     		<h:selectBooleanCheckbox value="#{item.campain}" />
+                     	</r:column>
+
+                        <r:column>
+                            <s:decorate>
+                                <h:inputText  value="#{item.month}" styleClass="small" />
+                            </s:decorate>
+                        </r:column>
+                        <r:column>
+                            <s:decorate>
+                                <h:inputText  value="#{item.rate}" styleClass="small"  alt="decimal" converter="doubleConverter" />
+                            </s:decorate>
+                        </r:column>
+                        <r:column>
+                            <s:decorate>
+                                <h:inputText  value="#{item.valor}" styleClass="small" />
+                            </s:decorate>
+                        </r:column>
+                        
+                        <r:column>
+                            <a:commandLink reRender="its" action="#{posCommisionHome.deleteLine(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" />
+                            </a:commandLink>
+                        </r:column>
+                        <f:facet name="footer">
+                            
+                        </f:facet>
+
+                    </r:dataTable>
+                </a:region>
+
+
+            </r:panel>
+
+            <div class="actionButtons">
+
+
+                <h:commandButton id="save"
+                                 value="#{messages['general.button.Save']}"
+                                 action="#{posCommisionHome.save()}"
+                                 styleClass="button"/>
+
+<ui:remove>
+                <s:button id="delete"
+                          value="#{messages['general.button.Delete']}"
+                          action="#{posCommisionHome.delete()}"
+                          rendered="#{not empty posCommision.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+</ui:remove>
+                <s:button id="done"
+                          value="#{messages['general.button.Close']}"
+                          action="#{posCommisionHome.close()}"
+                          styleClass="button"/>
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

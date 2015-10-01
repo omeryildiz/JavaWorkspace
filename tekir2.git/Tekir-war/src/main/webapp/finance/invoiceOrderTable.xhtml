@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<s:div id="orderSelectPopupDiv">
+		<ui:include src="/finance/popup/orderSelectPopup.xhtml"/>
+	</s:div>
+
+	<a:region>
+		<r:dataTable id="orders" var="item" value="#{currentEntity.orderLinks}"
+			rowKeyVar="rowKey" styleClass="detailTable">
+			<f:facet name="header">
+				<r:columnGroup>
+					<r:column colspan="3">
+						<h:outputText value="#{messages['general.label.Orders']}" />
+					</r:column>
+					<r:column styleClass="actionColumn">
+						<a:commandLink reRender="orderSelectPopupDiv,totals"
+							oncomplete="Richfaces.showModalPanel('orderSelect')"
+							action="#{currentHome.findOrders()}">
+							<h:graphicImage url="/img/add.gif"
+								title="#{messages['general.label.AddOrder']}" />
+						</a:commandLink>
+					</r:column>
+					<r:column breakBefore="true">
+						<h:outputText value="#{messages['general.label.Serial']}" />
+					</r:column>
+					<r:column>
+						<h:outputText value="#{messages['general.label.Reference']}" />
+					</r:column>
+					<r:column>
+						<h:outputText value="#{messages['general.label.Date']}" />
+					</r:column>
+					<r:column />
+				</r:columnGroup>
+			</f:facet>
+
+			<r:column>
+				<h:outputText value="#{item.orderNote.serial}" />
+			</r:column>
+			<r:column>
+				<h:outputText value="#{item.orderNote.reference}" />
+			</r:column>
+			<r:column>
+				<h:outputText value="#{item.orderNote.date}">
+					<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+				</h:outputText>
+			</r:column>
+			<r:column styleClass="actionColumn">
+				<a:commandLink reRender="orders,itsDiv,itsMiniDiv,paymentTableList"
+					action="#{currentHome.removeOrderNote(rowKey)}">
+					<h:graphicImage url="/img/delete.gif" />
+				</a:commandLink>
+			</r:column>
+		</r:dataTable>
+	</a:region>
+
+</ui:composition>

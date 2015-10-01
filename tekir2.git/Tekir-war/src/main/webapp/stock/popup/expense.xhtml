@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:ut="http://utech.com/jsf/comps"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="expenseForm">
+		
+		<a:region>
+			<s:div id="popupMessages">
+			    <h:messages globalOnly="false" styleClass="message"/>
+			</s:div>
+	
+			<h:panelGrid>
+	               <s:decorate template="/layout/edit.xhtml" >
+	                      <ui:define name="label">
+	                      	<h:outputText value="#{messages['general.label.ExpenseSelection']}"/>
+	                      </ui:define>
+	                   <h:selectOneMenu value="#{currentHome.selectedDiscountExpense}" styleClass="middle" 
+	                   	rendered="#{currentHome.selectedDetail.productType ne 'DocumentExpense'}">
+	                       <s:convertEntity />
+	                       <s:selectItems value="#{generalSuggestion.expenseList}" var="exp" 
+	                       	label="#{exp.name} - #{exp.code}" hideNoSelectionLabel="true"/>
+	                       <a:support event="onchange" reRender="expenseSpan" ajaxSingle="true"/>	
+	                   </h:selectOneMenu>
+	
+	                   <h:selectOneMenu value="#{currentHome.selectedDiscountExpense}" styleClass="middle" 
+	                   	rendered="#{currentHome.selectedDetail.productType eq 'DocumentExpense'}">
+	                       <s:convertEntity />
+	                       <s:selectItems value="#{generalSuggestion.expenseList}" var="exp" 
+	                       	label="#{exp.name} - #{exp.code}" noSelectionLabel="#{messages['general.label.ManualInput']}" 
+	                       	hideNoSelectionLabel="false"/>
+	                       <a:support event="onchange" reRender="expenseSpan" ajaxSingle="true"/>	
+	                   </h:selectOneMenu>
+	                  </s:decorate>
+	
+				<s:span id="expenseSpan" rendered="#{currentHome.selectedDiscountExpense eq null and 
+					currentHome.selectedDetail.productType eq 'DocumentExpense'}">
+	                <s:decorate template="/layout/edit.xhtml" >
+	                       <ui:define name="label">
+	                       	<h:outputText value="#{messages['general.label.DistributionType']}"/>
+	                       </ui:define>
+	
+						<h:selectOneMenu value="#{currentHome.selectedDetail.expenseStyle}" 
+							style="width:100px;">
+							<f:selectItem itemValue="Equally" itemLabel="#{messages['tender.label.Equally']}"/>
+							<f:selectItem itemValue="AmountBased" itemLabel="#{messages['tender.label.AmountBased']}"/>
+							<f:selectItem itemValue="UnitBased" itemLabel="#{messages['tender.label.UnitBased']}"/>
+						</h:selectOneMenu>
+	                   </s:decorate>
+	
+	                <s:decorate template="/layout/edit.xhtml" style="width:260px">
+	                       <ui:define name="label">
+	                       	<h:outputText value="#{messages['general.label.AmountOrRate']}"/>
+	                       </ui:define>
+	
+						<h:selectOneMenu id ="expCheckbox" value="#{currentHome.selectedDetail.expense.percentage}" 
+							style="width:100px;">
+							<f:selectItem itemValue="true" itemLabel="#{messages['tenderDetail.label.Rate']}"/>
+							<f:selectItem itemValue="false" itemLabel="#{messages['tenderDetail.label.Amount']}"/>
+							<a:support event="onchange" reRender="expAmountAndRate" oncomplete="setMasks();" 
+								ajaxSingle="false"/>
+						</h:selectOneMenu>
+	
+						<r:spacer width="5" />
+	
+						<s:span id="expAmountAndRate" >
+	                        <h:inputText id="expAmount" rendered="#{not currentHome.selectedDetail.expense.percentage}" 
+		                       	value="#{currentHome.selectedDetail.expense.value}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+							
+	                        <h:inputText id="expPercentage" rendered="#{currentHome.selectedDetail.expense.percentage}" 
+		                       	value="#{currentHome.selectedDetail.expense.rate}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+						</s:span>
+	
+	                   </s:decorate>
+	
+	                <s:decorate template="/layout/edit.xhtml" >
+	                       <ui:define name="label">
+	                       	<h:outputText value="#{messages['general.label.Info']}"/>
+	                       </ui:define>
+						<h:inputTextarea value="#{currentHome.selectedDetail.info}" rows="2" 
+							styleClass="exlarge"/>
+					</s:decorate>
+				
+				</s:span>
+				
+			</h:panelGrid>
+
+			<div class="actionButtons">
+				<a:commandButton action="#{currentHome.addDocumentExpenseToItems()}" 
+					styleClass="button" value="#{messages['general.label.Add']}" 
+					reRender="its,itsMini" 
+					oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('expensePopup');setMasks();" 
+					rendered="#{currentHome.selectedDetail.productType eq 'DocumentExpense'}"/>
+	
+				<a:commandButton action="#{currentHome.addExpenseToItem()}" 
+					styleClass="button" value="#{messages['general.label.Add']}" 
+					reRender="its,itsMini" 
+					oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('expensePopup');setMasks();" 
+					rendered="#{currentHome.selectedDetail.productType ne 'DocumentExpense'}"/>
+				
+				<a:commandButton value="#{messages['general.button.Cancel']}"
+					oncomplete="Richfaces.hideModalPanel('expensePopup');"
+					styleClass="button" ajaxSingle="true" />
+			</div>
+
+		</a:region>
+
+	</h:form>
+
+</ui:composition>

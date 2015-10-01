@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+    <h:form id="quickLaunchOptionPaneForm">
+         <r:dataTable id="quickList"
+                     var="item"
+                     value="#{quickLaunchOptionPane.optionList}"
+                     onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                     onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+            <r:column styleClass="half">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['optionEditor.label.PageName']}"/>
+                </f:facet>
+                <h:outputText value="#{item.pageName}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+                	<h:outputText value="#{messages['optionEditor.label.Key']}"/>
+                </f:facet>
+                <h:inputText value="#{item.launchKey}" />
+            </r:column>
+        </r:dataTable>
+
+        <s:div styleClass="actionButtons">
+
+            <a:commandButton id="save"
+                             value="#{messages['general.button.Save']}"
+                             action="#{quickLaunchOptionPane.save()}"
+                             reRender="quickLaunchOptionPaneForm"
+                             styleClass="button"/>
+
+            <s:button id="done"
+                      value="#{messages['general.button.Close']}"
+                      action="#{quickLaunchOptionPane.cancel()}"
+                      styleClass="button"/>
+
+        </s:div>
+    </h:form>
+</ui:composition>

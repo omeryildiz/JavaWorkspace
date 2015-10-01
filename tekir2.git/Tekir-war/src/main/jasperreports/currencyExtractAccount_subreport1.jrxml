@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="extractAccount_subreport1" pageWidth="535" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="pContact" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pBDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date("1900/01/01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pWorkBunchId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pCode" class="java.lang.String"/>
+	<parameter name="pCurrency" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select sum(ft1.ccyval * case when ft1.finance_action = 1 then -1 else 1 end ) as oncekiBakiye
+from FINANCE_TXN ft1
+where ft1.CONTACT_ID = $P{pContact}
+and (ft1.txn_date < $P{pBDate})
+and (($P{pWorkBunchId} is null) or (ft1.WORK_BUNCH_ID = $P{pWorkBunchId}))
+and ( ($P{pCode} is null) or (ft1.code like concat($P{pCode} ,'%' )) )
+and ft1.ccy = $P{pCurrency}
+group by ft1.contact_id]]>
+	</queryString>
+	<field name="oncekiBakiye" class="java.math.BigDecimal"/>
+	<variable name="sendValue" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{oncekiBakiye}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

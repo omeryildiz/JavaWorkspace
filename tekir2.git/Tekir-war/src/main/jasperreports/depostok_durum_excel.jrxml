@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="depostok_durum_excel" pageWidth="1079" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1019" leftMargin="30" rightMargin="30" topMargin="0" bottomMargin="0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="pScode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pSname" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pScate" class="java.lang.Long"/>
+	<parameter name="pBDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date("1900/01/01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pEDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date("2100/01/01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pWare" class="java.lang.Long" isForPrompting="false"/>
+	<parameter name="pProductType" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pSmark" class="java.lang.Long" isForPrompting="false"/>
+	<parameter name="pSbarcode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pDocCode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pDocu" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pWorkBunchId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pProductLabel" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select wh.CODE, wh.NAME as WNAME, pr.PRODUCT_CATEGORY_ID,
+	pr.CODE as PROD,pr.NAME as SNAME, ptxn.TRADE_ACTION, ptxn.FINANCE_ACTION,
+	sum(ptxn.QUANTITY) as TOPLAMSTOK, ptxn.UNIT,max(pr.BARCODE1) as BARCODE,
+        min(pc.code) as CATEGORYCODE ,min(pg.code) as GROUPCODE, min(pg.name) as GROUPNAME
+from PRODUCT_TXN ptxn
+inner join PRODUCT pr on pr.ID = ptxn.PRODUCT_ID
+inner join WAREHOUSE wh on wh.ID = ptxn.WAREHOUSE_ID
+left outer join PRODUCT_GROUP pg on pg.ID = pr.GROUP_ID
+left outer join PRODUCT_CATEGORY pc on pc.ID = pr.PRODUCT_CATEGORY_ID
+where (( $P{pScode} is null) or ( pr.CODE like concat($P{pScode},'%')))
+      and (( $P{pSname} is null) or ( lower(pr.NAME) like concat(lower($P{pSname}),'%')))
+      and (( $P{pSbarcode} is null) or ( lower(pr.BARCODE1) like concat(lower($P{pSbarcode}),'%')))
+      and (( $P{pScate} is null ) or ( pr.PRODUCT_CATEGORY_ID = $P{pScate} ))
+      and ( ptxn.TXN_DATE >= $P{pBDate} and ptxn.TXN_DATE <= $P{pEDate} )
+      and (( $P{pWare} is null ) or (ptxn.WAREHOUSE_ID = $P{pWare} ))
+      and (( $P{pSmark} is null ) or (pr.GROUP_ID = $P{pSmark} ))
+      and (( $P{pDocCode} is null) or (lower(ptxn.CODE) like concat('%', lower($P{pDocCode}) ,'%') ))
+      and (( $P{pDocu} = 0  ) or ( ptxn.DOCUMENT_TYPE = $P{pDocu} ) )
+      and (( $P{pProductType} = 0 ) or ( ptxn.PRODUCT_TYPE = $P{pProductType} ))
+      and (( $P{pWorkBunchId} is null ) or ( ptxn.WORK_BUNCH_ID = $P{pWorkBunchId} ))
+group by wh.CODE, wh.NAME, pr.CODE, pr.NAME, ptxn.TRADE_ACTION, ptxn.FINANCE_ACTION, ptxn.UNIT
+order by wh.CODE, pr.CODE, ptxn.UNIT]]>
+	</queryString>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="WNAME" class="java.lang.String"/>
+	<field name="PRODUCT_CATEGORY_ID" class="java.lang.Long"/>
+	<field name="PROD" class="java.lang.String"/>
+	<field name="SNAME" class="java.lang.String"/>
+	<field name="TRADE_ACTION" class="java.lang.Integer"/>
+	<field name="FINANCE_ACTION" class="java.lang.Integer"/>
+	<field name="TOPLAMSTOK" class="java.lang.Double"/>
+	<field name="UNIT" class="java.lang.String"/>
+	<field name="BARCODE" class="java.lang.String"/>
+	<field name="CATEGORYCODE" class="java.lang.String"/>
+	<field name="GROUPCODE" class="java.lang.String"/>
+	<field name="GROUPNAME" class="java.lang.String"/>
+	<variable name="girenstok" class="java.lang.Double" resetType="Group" resetGroup="prod">
+		<variableExpression><![CDATA[new Double( ( $F{TRADE_ACTION}.intValue() == 0 ) ? ( ( $V{girenstok}.doubleValue() + $F{TOPLAMSTOK}.doubleValue() ) ) : $V{girenstok}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="cikanstok" class="java.lang.Double" resetType="Group" resetGroup="prod">
+		<variableExpression><![CDATA[new Double( ( $F{TRADE_ACTION}.intValue() == 1 ) ? ( ( $V{cikanstok}.doubleValue() + $F{TOPLAMSTOK}.doubleValue() ) ) : $V{cikanstok}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="rezervstok" class="java.lang.Double" resetType="Group" resetGroup="prod">
+		<variableExpression><![CDATA[new Double( ( $F{TRADE_ACTION}.intValue() == 6 ) ? ( ( $V{rezervstok}.doubleValue() + $F{TOPLAMSTOK}.doubleValue() ) ) : $V{rezervstok}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="teslimstok" class="java.lang.Double" resetType="Group" resetGroup="prod">
+		<variableExpression><![CDATA[new Double( ( $F{TRADE_ACTION}.intValue() == 7 ) ? ( ( $V{teslimstok}.doubleValue() + $F{TOPLAMSTOK}.doubleValue() ) ) : $V{teslimstok}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="alisiade" class="java.lang.Double" resetType="Group" resetGroup="prod">
+		<variableExpression><![CDATA[new Double( ( $F{TRADE_ACTION}.intValue() == 2 ) ? ( ( $V{alisiade}.doubleValue() + $F{TOPLAMSTOK}.doubleValue() ) ) : $V{alisiade}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="satisiade" class="java.lang.Double" resetType="Group" resetGroup="prod">
+		<variableExpression><![CDATA[new Double( ( $F{TRADE_ACTION}.intValue() == 3 ) ? ( ( $V{satisiade}.doubleValue() + $F{TOPLAMSTOK}.doubleValue() ) ) : $V{satisiade}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<group name="wname">
+		<groupExpression><![CDATA[$F{WNAME}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch"/>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="prod">
+		<groupExpression><![CDATA[$F{PROD}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch"/>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="gUnit">
+		<groupExpression><![CDATA[$F{UNIT}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="16" splitType="Stretch">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement key="textField-1" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="82" height="16">
+						<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{WNAME}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement key="textField-2" stretchType="RelativeToBandHeight" x="138" y="0" width="58" height="16">
+						<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SNAME}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField" stretchType="RelativeToBandHeight" x="523" y="0" width="54" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{girenstok}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField" stretchType="RelativeToBandHeight" x="577" y="0" width="55" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{cikanstok}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-3" stretchType="RelativeToBandHeight" x="930" y="0" width="89" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[new Double( ($V{girenstok}.doubleValue() + $V{teslimstok}.doubleValue() + $V{satisiade}.doubleValue() ) -  ( $V{cikanstok}.doubleValue() + $V{rezervstok}.doubleValue() + $V{alisiade}.doubleValue() ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement key="textField-4" stretchType="RelativeToBandHeight" x="482" y="0" width="41" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{UNIT}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-5" stretchType="RelativeToBandHeight" x="821" y="0" width="55" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{rezervstok}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-6" stretchType="RelativeToBandHeight" x="694" y="0" width="65" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{satisiade}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-7" stretchType="RelativeToBandHeight" x="632" y="0" width="62" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{alisiade}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-8" stretchType="RelativeToBandHeight" x="876" y="0" width="54" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{teslimstok}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-9" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="82" y="0" width="56" height="16">
+						<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{PROD}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-10" stretchType="RelativeToBandHeight" x="392" y="0" width="90" height="16">
+						<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{BARCODE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement key="textField" stretchType="RelativeToBandHeight" x="196" y="0" width="58" height="16">
+						<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					</reportElement>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CATEGORYCODE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField" stretchType="RelativeToBandHeight" x="254" y="0" width="71" height="16">
+						<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					</reportElement>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{GROUPCODE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement key="textField-11" stretchType="RelativeToBandHeight" x="325" y="0" width="67" height="16">
+						<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+					</reportElement>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{GROUPNAME}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-13" stretchType="RelativeToBandHeight" x="759" y="0" width="62" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[new Double( ($V{girenstok}.doubleValue() +  $V{satisiade}.doubleValue() ) -  ( $V{cikanstok}.doubleValue() + $V{alisiade}.doubleValue() ) )]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText" x="196" y="0" width="436" height="34"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="14" isBold="true" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[STOK/HİZMET DURUM RAPORU]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField" x="632" y="0" width="127" height="34"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText" x="138" y="34" width="58" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[STOK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" x="0" y="34" width="82" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[DEPO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" x="523" y="34" width="54" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[GİRİŞ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-93" x="577" y="34" width="55" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[ÇIKIŞ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-94" x="930" y="34" width="89" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[SATIŞA UYGUN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-1" x="482" y="34" width="41" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[BİRİM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-95" x="821" y="34" width="55" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[REZERVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-96" x="694" y="34" width="65" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[SATIŞ İADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-97" x="632" y="34" width="62" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[ALIŞ İADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-98" x="876" y="34" width="54" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[TESLİM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-2" x="82" y="34" width="56" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[KOD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="392" y="34" width="90" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[BARKOD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" x="196" y="34" width="58" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[KATEGORİ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-5" x="254" y="34" width="71" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[MARKA KOD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" x="325" y="34" width="67" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[MARKA ADI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-100" x="759" y="34" width="62" height="19"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[KALAN]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="13" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="0" y="0" width="196" height="13" forecolor="#666666"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="7" isBold="true" isItalic="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pProductLabel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

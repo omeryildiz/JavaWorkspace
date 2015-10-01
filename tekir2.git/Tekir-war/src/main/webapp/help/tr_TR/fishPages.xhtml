@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ut="http://utech.com/jsf/comps">
+    
+    <h1>Fiş Ekranları Genel Özellikleri</h1>
+    <p>Fiş giriş formları, uygulama içerisinde temel form türünü oluştururlar.</p>
+    <p>İrsaliye, Fatura, Tahsilat fişleri bu ekran türüne birer örnektir.</p>
+    
+    <h:graphicImage url="#{helpManager.helpImagePath}fishForm.png" />
+    
+    <p>Bir fiş giriş formu iki temel bölgeden oluşur: fiş başlığı ve fiş detayı.</p>
+    
+    
+    <h2>Fiş Başlığı</h2>
+    <p>Fiş başlığında bulunan bilgiler fiş türüne göre değişmekle birlikte Fiş Numarası, Belge Numarası, Tarih gibi bazı ortak alanlara sahiptirler.</p>
+    <p>Girişi zorunlu olan alanlar (*) ile işaretlenmiştir.</p>
+    
+    <h2>Detaylar</h2>
+    <p>Fiş türüne göre detay satırlarında alınacak olan bilgiler değişmektedir. Fakat ortak giriş yapısı hepsinde muhafaza edilmiştir.</p>
+    <p>Yeni bir detay satırı eklemek için detay<h:outputText value=" " /><h:graphicImage url="/img/add.gif" /> düğmesine tıklanması gerekmektedir.</p>
+    <p>Mevcut satırı silmek için ise o satır sonunda bulunan<h:outputText value=" " /><h:graphicImage url="/img/delete.gif" /> düğmesine tıklamak gerekir.</p>
+    
+</ui:composition>

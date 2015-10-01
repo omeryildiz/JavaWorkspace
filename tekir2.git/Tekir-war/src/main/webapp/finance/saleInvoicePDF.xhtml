@@ -1,0 +1,44 @@
+<p:document xmlns:ui="http://java.sun.com/jsf/facelets"
+            xmlns:f="http://java.sun.com/jsf/core"
+            xmlns:p="http://jboss.com/products/seam/pdf"
+            pageSize="A4"
+            title="Tekir Fatura"
+            subject="fatura"
+            author="tekir"
+            creator="Tekir Ticari Otomasyon">
+    
+    <p:font name="helvetica" encoding="CP1254" size="9">
+        <p:paragraph spacingBefore="12" spacingafter="200">#{saleInvoice.date}</p:paragraph><p:paragraph spacingBefore="1.1" spacingafter="20">#{saleInvoice.date}</p:paragraph>
+        <p:paragraph spacingBefore="10" spacingafter="20">#{saleInvoice.date}</p:paragraph>
+        
+        
+        <p:paragraph indentationLeft="2">#{saleInvoice.date}</p:paragraph>
+        
+        <p:table columns="2" >
+            <p:cell>
+                <p:paragraph>
+                    #{saleInvoice.contact.company}
+                    
+                    #{saleInvoice.contact.address1.street}
+                    #{saleInvoice.contact.address1.province} #{saleInvoice.contact.address1.zip} #{saleInvoice.contact.address1.city}
+                    
+                    V.D. : <p:text value="#{saleInvoice.contact.taxOffice}" /> V.N. :<p:text value="#{saleInvoice.contact.taxNumber}" />
+                    
+                </p:paragraph>
+            </p:cell>
+            <p:cell>
+                <p:paragraph indentationLeft="860" >#{saleInvoice.date}</p:paragraph>
+            </p:cell>
+        </p:table>
+        
+        <p:table columns="4" headerRows="0">
+            <ui:repeat value="#{saleInvoiceHome.items}" var="item">
+                <p:cell>#{item.info}</p:cell>
+                <p:cell>#{item.quantity.unit}</p:cell>
+                <p:cell>#{item.quantity.value}</p:cell>
+                <p:cell>#{item.amount.value}</p:cell>
+            </ui:repeat>
+        </p:table>
+        
+    </p:font>
+</p:document>

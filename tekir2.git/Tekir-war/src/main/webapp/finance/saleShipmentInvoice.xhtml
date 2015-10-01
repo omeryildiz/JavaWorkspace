@@ -1,0 +1,564 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewInvoice"/>
+            <ui:param name="cursubitem" value="saleShipmentInvoice"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/saleInvoiceBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.SaleInvoiceBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/saleInvoice.xhtml">
+                <h:outputText value="#{messages['module.caption.SaleShipmentInvoice']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{saleInvoiceHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['saleInvoice.action.AddShipmentInvoice']}" />
+            </s:link>
+            <ui:remove>
+            <s:link action="#{saleInvoiceHome.print()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['saleInvoice.action.Print']}" />
+            </s:link>
+            </ui:remove>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.SaleShipmentInvoice']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        
+        <r:modalPanel  id="shipmentSelect" minHeight="500" minWidth="450" 
+                       height="500" width="520" zindex="100">
+            <f:facet name="header">
+                <s:fragment>
+                    <h:graphicImage url="/img/lorry.gif" /> 
+                    <h:outputText value="#{messages['shipment.caption.ShipmentSelect']}" />
+                </s:fragment>
+            </f:facet>
+            <f:facet name="controls">
+                <h:graphicImage value="/img/exit.gif" style="cursor:pointer" onclick="Richfaces.hideModalPanel('shipmentSelect')" />
+            </f:facet>
+            
+            
+            <a:include viewId="/finance/saleShipmentSelect.xhtml" />
+            
+            <div class="actionButtons">
+                <input id="popClose" class="button" type="button" onclick="Richfaces.hideModalPanel('shipmentSelect')" value="#{messages['general.button.Close']}"/>
+            </div>
+            <!-- a href="javascript:Richfaces.hideModalPanel('mp')">Kapat</a -->
+        </r:modalPanel>
+        
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/script_delete.gif" alt="#{messages['saleInvoice.img.Form']}"/> 
+                        <h:outputText value="#{messages['saleShipmentInvoice.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:fragment>
+                        <table>
+                            <tr>
+                                <td>
+                                    <s:div>
+                                        <s:decorate template="/layout/edit.xhtml" >
+                                            <ui:define name="label"><h:outputText value="#{messages['saleInvoice.label.Serial']}" accesskey="Q"/></ui:define>
+                                            <h:inputText value="#{saleInvoice.serial}" styleClass="middle" 
+                                            	required="true" accesskey="Q" 
+                                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                                        </s:decorate>
+                                        
+                                        <s:decorate template="/layout/edit.xhtml" >
+                                            <ui:define name="label"><h:outputText value="#{messages['saleInvoice.label.Reference']}"/></ui:define>
+                                            <h:inputText value="#{saleInvoice.reference}" styleClass="middle" required="false"/>
+                                        </s:decorate>
+                                        
+                                        <a:region renderRegionOnly="true">
+                                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                                            <ui:define name="label"><h:outputText value="#{messages['saleInvoice.label.Contact']}"/></ui:define>
+                                            <h:inputText id="contact" value="#{saleInvoice.contact}" styleClass="middle" required="true">
+                                                <f:converter converterId="contactCaptionConverter"/>
+                                                <a:support event="onblur" requestDelay="500" reRender="contact"/>
+                                            </h:inputText>
+                                            
+                                            <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+                                                <h:graphicImage url="/img/selectBox.gif" /> 
+                                            </a>
+                                            
+                                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+												suggestionAction="#{contactSuggestion.suggestCustomer}" var="citem"
+												fetchValue="#{citem.caption}">
+												<ui:include src="/contact/contactSuggestionView.xhtml" />
+											</r:suggestionbox>
+                                        </s:decorate>
+                                        </a:region>
+                                    </s:div>
+                                </td>
+                                <td>
+                                    <s:div>
+                                        <s:decorate template="/layout/edit.xhtml" >
+                                            <ui:define name="label"><h:outputText value="#{messages['saleInvoice.label.Code']}"/></ui:define>
+                                            <h:inputText value="#{saleInvoice.code}" styleClass="middle" />
+                                        </s:decorate>
+                                        
+                                        <s:decorate template="/layout/edit.xhtml" >
+                                            <ui:define name="label"><h:outputText value="#{messages['saleInvoice.label.Date']}"/></ui:define>
+                                            <r:calendar value="#{saleInvoice.date}" enableManualInput="true"
+                                                        datePattern="#{messages['general.format.Date']}" required="true"/>
+                                        </s:decorate>
+                                        
+                                        <s:decorate template="/layout/edit.xhtml">
+                                            <ui:define name="label"><h:outputText value="#{messages['saleInvoice.label.Status']}"/></ui:define>
+                                            <h:selectBooleanCheckbox id="active" value="#{saleInvoice.active}" styleClass="checkbox" />
+                                            <h:outputLabel value="#{messages['saleInvoice.label.Active']}" for="active" styleClass="checkboxLabel" />
+                                        </s:decorate>
+                                        
+                                        
+                                    </s:div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="#{messages['saleInvoice.label.Info']}"/></ui:define>
+                                        <h:inputText value="#{saleInvoice.info}" styleClass="exlarge" />
+                                    </s:decorate>
+                                    
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="#{messages['invoice.label.Info1']}"/></ui:define>
+                                        <h:inputText value="#{saleInvoice.info1}" styleClass="exlarge" />
+                                    </s:decorate>
+                                    
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="#{messages['invoice.label.Info2']}"/></ui:define>
+                                        <h:inputText value="#{saleInvoice.info2}" styleClass="exlarge" />
+                                    </s:decorate>
+                                </td>
+                            </tr>
+                        </table>
+                    </s:fragment>
+                    
+                    <s:div style="width:350px;">
+                        <r:dataTable id="shipments"
+                                     var="item"
+                                     value="#{saleInvoice.shipments}" 
+                                     rowKeyVar="rowKey"
+                                     styleClass="detailTable">
+                            <f:facet name="header">
+                                <r:columnGroup>
+                                    <r:column colspan="3">
+                                        <h:outputText value="#{messages['saleInvoice.caption.ShipmentNotes']}" />
+                                    </r:column>
+                                    <r:column styleClass="actionColumn">
+                                        <a:commandLink reRender="shipmentSelectList" oncomplete="Richfaces.showModalPanel('shipmentSelect')" 
+                                        				action="#{saleInvoiceHome.buildShipmentNotes()}" ajaxSingle="true">
+                                            <!-- a href="javascript:Richfaces.showModalPanel('mp')"-->
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['invoice.button.NewShipmentLine']}"/> 
+                                        </a:commandLink>
+                                    </r:column>
+                                </r:columnGroup>
+                                
+                            </f:facet>
+                            <r:column>
+                                <h:outputText value="#{item.serial}" />
+                            </r:column>
+                            <r:column>
+                                <h:outputText value="#{item.reference}" />
+                            </r:column>
+                            <r:column>
+                                <h:outputText value="#{item.date}">
+                                	<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+                              	</h:outputText>
+                            </r:column>
+                            
+                            <r:column styleClass="actionColumn">
+                                <a:commandLink reRender="shipments,its" action="#{saleInvoiceHome.removeShipmentNote(rowKey)}" >
+                                    <h:graphicImage url="/img/delete.gif" /> 
+                                </a:commandLink>
+                            </r:column>
+                        </r:dataTable>
+                    </s:div>
+                    
+                </h:panelGrid>
+                <r:jQuery name="hede" timing="onJScall" query="get()" />
+                
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                
+                <a:region>
+                    <r:dataTable id="its" 
+                                 var="item"
+                                 value="#{saleInvoiceHome.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="11">
+                                    <h:outputText value="#{messages['saleInvoice.caption.Details']}" />
+                                </r:column>
+                                
+                                <ui:remove>
+                                    <r:column colspan="2">
+                                        <div>
+                                            <a:commandLink reRender="its" action="#{saleInvoiceHome.createNewServiceLine()}" accesskey="H" oncomplete="focusLastRow();">
+                                                <h:graphicImage url="/img/brick_add.gif" /> 
+                                            </a:commandLink>
+                                            <a:commandLink reRender="its" action="#{saleInvoiceHome.createNewShipmentLine()}" accesskey="S" oncomplete="focusLastRow();">
+                                                <h:graphicImage url="/img/package_add.gif" /> 
+                                            </a:commandLink>
+                                            <a:commandLink reRender="its,ccyRates,ccyTotals,taxTotal,grandTotal" action="#{saleInvoiceHome.recalculate()}" accesskey="C" oncomplete="focusLastRow(); setMasks();">
+                                                <h:graphicImage url="/img/reload.gif" /> 
+                                            </a:commandLink>
+                                            
+                                            <a:commandLink reRender="its" action="#{saleInvoiceHome.createNewDiscountLine()}" >
+                                                <h:graphicImage url="/img/minus.gif" /> 
+                                            </a:commandLink>
+                                            
+                                            <a:commandLink reRender="its" action="#{saleInvoiceHome.createNewExpenseLine()}" >
+                                                <h:graphicImage url="/img/plus.gif" /> 
+                                            </a:commandLink>
+                                            
+                                        </div>
+                                        
+                                    </r:column>
+                                </ui:remove>
+                                
+                                
+                                <r:column breakBefore="true" styleClass="actionColumn">
+                                    <ui:remove>
+                                        <h:outputText value="#{messages['saleInvoice.label.Type']}" />
+                                    </ui:remove>
+                                    <h:graphicImage url="/img/information.gif" /> 
+                                </r:column>
+                                <r:column styleClass="codeField" colspan="2">
+                                    <h:outputText value="#{messages['saleInvoice.label.LineCode']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.Product']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.LineInfo']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.Quantity']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.Unit']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.UnitPrice']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.Amount']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.TaxExcludedTotal']}" />
+                                </r:column>
+                                <ui:remove>
+                                    <r:column>
+                                        <h:outputText value="#{messages['saleInvoice.label.TaxRate']}" />
+                                    </r:column>
+                                    <r:column>
+                                        <h:outputText value="#{messages['saleInvoice.label.TaxAmount']}" />
+                                    </r:column>
+                                </ui:remove>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.Currency']}" />
+                                </r:column>
+                            </r:columnGroup>
+                            
+                        </f:facet>
+                        <r:column rowspan="#{item.discounts.size + 1}" styleClass="InvRow#{ut:oddEven(rowKey)} actionColumn">
+                            <ui:remove>
+                                <h:outputText  value="#{item.type}" styleClass="codeField" />
+                            </ui:remove>
+                            <h:graphicImage url="/img/brick.gif" rendered="#{item.type eq 'ServiceItem'}"/> 
+                            <h:graphicImage url="/img/package.gif" rendered="#{item.type eq 'InvoiceShipmentItem'}"/> 
+                            <h:graphicImage url="/img/package.gif" rendered="#{item.type eq 'ShipmentItem'}"/> 
+                            <s:fragment rendered="#{item.type eq 'InvoiceDiscount'}">
+                                <h:graphicImage url="/img/minus.gif" rendered="#{item.discount.discount}"/> 
+                                <h:graphicImage url="/img/plus.gif" rendered="#{not item.discount.discount}"/> 
+                            </s:fragment>
+                        </r:column>
+                        
+                        <r:column colspan="2" styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText  id="code" value="#{item.lineCode}" styleClass="codeField" />
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText id="product" value="#{item.product.caption}" />
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText  value="#{item.info}" />
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:inputText  id="quantity" value="#{item.quantity.value}" styleClass="quantityFieldTiny" disabled="true"  alt="decimal" converter="doubleConverter"/>
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText id="unit" value="#{item.quantity.unit}" />
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:inputText  id="unitPrice" value="#{item.unitPrice.value}" styleClass="amountFieldTiny utdff" onblur="calcAmount(#{rowKey});"  alt="decimal" converter="bigDecimalConverter"/>
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:inputText  id="amount" value="#{item.amount.value}" styleClass="amountField" onblur="calcPrice(#{rowKey});"  alt="decimal" converter="bigDecimalConverter"/>
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:inputText id="taxExcludedTotal" value="#{item.taxExcludedTotalAmount.value}" disabled="true" styleClass="amountField" converter="bigDecimalConverter"/>
+                            <s:div id="taxRate" styleClass="hidden"><h:outputText value="#{item.taxRate}" /></s:div>
+                            <s:div id="taxIncluded" styleClass="hidden"><h:outputText rendered="#{item.type ne 'ServiceItem'}" 
+                            	value="#{item.product.taxIncluded}" /><h:outputText rendered="#{item.type eq 'ServiceItem'}"
+                            	value="#{item.service.taxIncluded}" /></s:div>
+                        </r:column>
+                        
+                        <ui:remove>
+                            <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                <h:inputText  id="taxRate" value="#{item.taxRate}" styleClass="amountField" onblur="calcPrice(#{rowKey});"/>
+                            </r:column>
+                            
+                            <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                <h:inputText  id="taxAmount" value="#{item.taxAmount.value}" styleClass="amountField" onblur="calcPrice(#{rowKey});"/>
+                            </r:column>
+                        </ui:remove>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <s:decorate>
+                                <h:selectOneMenu value="#{item.amount.currency}" styleClass="ccyField">
+                                    <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                                </h:selectOneMenu> 
+                                
+                            </s:decorate>
+                        </r:column>
+                        
+                        
+                        
+                        <r:column styleClass="codeField InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}" colspan="2">
+                            <h:inputText value="#{item.discount.code}" styleClass="codeField"/>
+                        </r:column>
+                        <r:column colspan="5" styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:inputText value="#{item.discount.info}" />
+                        </r:column>
+                        <r:column styleClass="amountField InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:inputText value="#{item.discount.rate}" styleClass="amountField"/>
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:selectOneMenu value="#{item.discount.currency}" styleClass="ccyField">
+                                <s:selectItems value="#{currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="Yüzde" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu> 
+                        </r:column>
+                        
+                        
+                        
+                        <ui:remove>
+                            <r:column styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                
+                                <a:commandLink reRender="its" action="#{saleInvoiceHome.createNewSubDiscountLine(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                    <h:graphicImage url="/img/delete1.gif" /> 
+                                </a:commandLink>
+                                
+                                
+                                <a:commandLink reRender="its" action="#{saleInvoiceHome.createNewSubExpenseLine(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                    <h:graphicImage url="/img/add.gif" /> 
+                                </a:commandLink>
+                                
+                                
+                                <a:commandLink reRender="its" action="#{saleInvoiceHome.deleteLine(rowKey)}" >
+                                    <h:graphicImage url="/img/delete.gif" /> 
+                                </a:commandLink>
+                                
+                            </r:column>
+                        </ui:remove>    
+                        
+                        <ui:remove>
+                            
+                            <r:subTable var="sit" value="#{item.discounts}">
+                                <r:column styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <h:graphicImage url="/img/minus.gif" rendered="#{sit.discount}"/> 
+                                    <h:graphicImage url="/img/plus.gif" rendered="#{not sit.discount}"/> 
+                                </r:column>
+                                <r:column styleClass="codeField InvRow#{ut:oddEven(rowKey)}">
+                                    <h:inputText value="#{sit.code}" styleClass="codeField"/>
+                                </r:column>
+                                <r:column colspan="5" styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <h:inputText value="#{sit.info}" />
+                                </r:column>
+                                <r:column styleClass="amountField InvRow#{ut:oddEven(rowKey)}">
+                                    <h:inputText value="#{sit.rate}" styleClass="amountField"/>
+                                </r:column>
+                                <r:column styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <h:selectOneMenu value="#{sit.currency}" styleClass="ccyField">
+                                        <s:selectItems value="#{currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="Yüzde" hideNoSelectionLabel="false"/>
+                                    </h:selectOneMenu> 
+                                </r:column>
+                                <r:column  styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <a:commandLink reRender="its" action="#{saleInvoiceHome.deleteLine(rowKey)}" >
+                                        <h:graphicImage url="/img/delete.gif" /> 
+                                    </a:commandLink>
+                                </r:column>
+                            </r:subTable>
+                            
+                        </ui:remove>
+                    </r:dataTable>
+                    
+                    <h:panelGrid columns="4" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+                        <s:div style="margin-right:4px;">
+                            
+                            <r:dataTable id="ccyRates"
+                                         var="item"
+                                         value="#{saleInvoice.currencyRates}" 
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['saleInvoice.caption.CcyRates']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.currencyPair.caption}" />
+                                </r:column>
+                                <r:column>
+                                    <h:inputText value="#{item.ask}" styleClass="amountField" />
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+                        <s:div style="margin-left:4px;margin-right:4px;">
+                            
+                            <r:dataTable id="ccyTotals"
+                                         var="item"
+                                         value="#{saleInvoice.currencySummaries}" 
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['saleInvoice.caption.CcySummary']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.amount.localAmount}" converter="bigDecimalConverter" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.currency}" />
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+                        
+                        <s:div style="margin-left:4px;margin-right:4px;">
+                            <r:dataTable id="taxTotal"
+                                         var="item"
+                                         value="#{saleInvoice.taxSummaries}" 
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['saleInvoice.caption.TaxSummary']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.tax.name}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.rate}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.amount}" />
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+                        
+                        <s:div style="margin-left:4px;">
+                            <r:panel>
+                                <f:facet name="header">
+                                    <s:div>
+                                        
+                                        
+                                        <s:div style="float:right;">
+                                            <a:commandLink reRender="its,ccyRates,ccyTotals,taxTotal,grandTotal" action="#{saleInvoiceHome.recalculate()}" accesskey="C" oncomplete="focusLastRow(); setMasks();">
+                                                <h:graphicImage url="/img/reload.gif" /> 
+                                                <h:outputText value="#{messages['general.button.Calculate']}" />
+                                            </a:commandLink>
+                                        </s:div>
+                                        
+                                        <h:outputText value="#{messages['saleInvoice.caption.GrandTotal']}" />
+                                    </s:div>
+                                </f:facet>
+                                
+                                <h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+                                    <h:outputText value="#{messages['saleInvoice.label.BeforeTax']} :" />
+                                    <h:outputText value="#{saleInvoice.beforeTax}" />
+                                    
+                                    <h:outputText value="#{messages['saleInvoice.label.TaxTotal']} :" />
+                                    <h:outputText value="#{saleInvoice.totalTax}" />
+                                    
+                                    <h:outputText value="#{messages['saleInvoice.label.InvoiceTotal']} :" />
+                                    <h:outputText value="#{saleInvoice.invoiceTotal}" />
+                                </h:panelGrid>
+                            </r:panel>
+                        </s:div>
+                    </h:panelGrid>
+                </a:region>
+                
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{saleInvoiceHome.save()}"
+                                 styleClass="button checkRequired"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{saleInvoiceHome.delete()}"
+                          rendered="#{not empty saleInvoice.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{saleInvoiceHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

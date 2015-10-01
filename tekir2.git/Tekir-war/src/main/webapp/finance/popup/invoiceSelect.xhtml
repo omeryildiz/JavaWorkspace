@@ -1,0 +1,148 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+    
+    <h:form id="invoiceSelectForm" >
+
+           <h:outputText value="#{messages['invoice.label.Selection']}" styleClass="hint" 
+	           rendered="#{empty currentEntity.contact}"/>
+
+           <r:panel rendered="#{not empty currentEntity.contact}">
+               <f:facet name="header">
+                   <h:outputText value="#{messages['selectbox.contact.Filter']}" />
+               </f:facet>
+
+               <h:panelGrid columns="2">
+                   <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['purchaseInvoice.label.Serial']}" />
+                            </ui:define>
+                            <h:inputText value="#{currentHome.filterModel.serial}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['purchaseInvoice.label.Reference']}" />
+                            </ui:define>
+                            <h:inputText value="#{currentHome.filterModel.reference}" styleClass="middle"/>
+                        </s:decorate>
+						
+						<a:region>
+							<s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.ProductService']}" />
+	                            </ui:define>
+	                            <h:inputText id="product" value="#{currentHome.filterModel.product}" styleClass="middle" required="false">
+	                                <f:converter converterId="productCaptionConverter"/>
+	                            </h:inputText>
+	                            
+	                            <a href="javascript:productSelectPopup( '#{r:clientId('product')}' )">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+		                        <r:suggestionbox for="product" nothingLabel="#{messages['general.label.NoResult']}" rules="all" 
+		                        	ajaxSingle="true" suggestionAction="#{stockSuggestion.suggestProduct}" 
+		                        	var="it" fetchValue="#{it.caption}">
+		                            <h:column>
+		                                <h:outputText value="#{it.code}"/>
+		                            </h:column>
+		                            <h:column>
+		                                <h:outputText value="#{it.name}"/>
+		                            </h:column>
+		                        </r:suggestionbox>
+							</s:decorate>
+						</a:region>
+
+                    </s:fragment>
+					<s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['purchaseInvoice.label.BeginDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{currentHome.filterModel.beginDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['purchaseInvoice.label.EndDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{currentHome.filterModel.endDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                    	</s:decorate>
+					</s:fragment>
+			</h:panelGrid>
+
+            <div class="actionButtons">
+                <div style="margin-top:5px;">
+                    <a:commandLink id="select_search"
+                                   action="#{currentHome.findInvoices()}"
+                                   styleClass="button"
+                                   reRender="selectList">
+                        <h:outputText value="#{messages['general.button.Search']}" />
+                    </a:commandLink>
+                </div>
+            </div>
+		</r:panel>
+		
+        <s:div style="overflow: auto;height:195px;"  id="selectList" >
+	        <r:dataTable var="item"
+	                     id="browseList"
+	                     value="#{currentHome.invoiceList}"
+	                     rowKeyVar="rowKey"
+	                     rows="10"
+	                     rendered="#{not empty currentHome.invoiceList}"
+	                     onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+	                     onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+	            <f:facet name="header">
+	                <h:panelGroup>
+	                    <h:outputText value="#{messages['general.label.Results']}"/>
+	                </h:panelGroup>
+	            </f:facet>
+	
+	            <r:column>
+	                <f:facet name="header">
+	                	<h:outputText value="#{messages['purchaseInvoice.label.Serial']}" />
+	                </f:facet>
+                    <a:commandLink reRender="${reRenderAreas}"
+                    	action="#{currentHome.selectInvoice(rowKey)}"
+                        oncomplete="setMasks();Richfaces.hideModalPanel('invoiceSelect')" >
+                        <h:outputText value="#{item.serial}"/>
+                    </a:commandLink>
+	            </r:column>
+	            <r:column>
+	                <f:facet name="header">
+	                	<h:outputText value="#{messages['purchaseInvoice.label.Reference']}" />
+	                </f:facet>
+					<h:outputText value="#{item.reference}" />
+	            </r:column>
+                <r:column styleClass="dateField">
+                    <f:facet name="header">
+                    	<h:outputText value="#{messages['purchaseInvoice.label.Date']}" />
+                    </f:facet>
+                    <h:outputText value="#{item.date}">
+                        <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                    </h:outputText>
+                </r:column>
+                <r:column>
+                    <f:facet name="header">
+                    	<h:outputText value="#{messages['purchaseShipment.label.Warehouse']}" />
+                    </f:facet>
+                    <h:outputText value="#{item.warehouse.code}" />
+                </r:column>
+                <f:facet name="footer">
+                    <r:datascroller for="browseList" maxPages="10" renderIfSinglePage="false"/>
+                </f:facet>
+			</r:dataTable>		
+
+            <r:panel id="msg" rendered="#{empty currentHome.invoiceList}" styleClass="message">
+                <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+            </r:panel>
+		</s:div>
+    </h:form>
+</ui:composition>

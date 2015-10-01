@@ -1,0 +1,80 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+    <r:modalPanel  id="prntTmpltPop" minHeight="300" minWidth="550"
+                   height="500" width="750" zindex="100">
+        <f:facet name="header">
+            <s:fragment>
+                <h:graphicImage url="/img/vcard.gif" /> 
+                <h:outputText value="#{messages['selectbox.printTemplate.Caption']}" />
+            </s:fragment>
+        </f:facet>
+        <f:facet name="controls">
+            <h:graphicImage value="/img/exit.gif" style="cursor:pointer" onclick="Richfaces.hideModalPanel('prntTmpltPop')" />
+        </f:facet>
+        
+        <h:form id="prntTmpltPopForm">
+
+			<r:dataTable id="prntTmpltList" 
+			             var="ptl"
+			             value="#{printTemplateSuggestion.getTemplates(currentEntity.documentType)}" 
+			             onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+			             onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+			             rowKeyVar="rowKey">
+			    <f:facet name="header">
+			        <r:columnGroup>
+			        	<r:column>
+			        		<h:outputText value="#{messages['printTemplates.label.Code']}"/>
+			        	</r:column>
+			        	<r:column>
+			        		<h:outputText value="#{messages['printTemplates.label.Name']}"/>
+			        	</r:column>
+			        	<r:column>
+			        		<h:outputText value="#{messages['printTemplates.label.Organization']}"/>
+			        	</r:column>
+			        	<r:column>
+			        		<h:outputText value="#{messages['printTemplates.label.DocType']}"/>
+			        	</r:column>
+			        	<r:column styleClass="tiny">
+			        		<h:outputText value="#{messages['printTemplates.label.Default']}"/>
+			        	</r:column>
+						<r:column styleClass="actionColumn">
+						    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+						</r:column>
+					</r:columnGroup>			    	
+			    </f:facet>
+			    
+			    <r:column>
+			    	<h:outputText value="#{ptl.code}" />
+			    </r:column>
+			    <r:column>
+			    	<h:outputText value="#{ptl.name}" />
+			    </r:column>
+			    <r:column>
+			    	<h:outputText value="#{ptl.organization.name}" />
+			    </r:column>
+			    <r:column>
+			    	<h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,ptl.documentType)]}"/>
+			    </r:column>
+			    <r:column styleClass="tiny">
+			    	<h:graphicImage url="/img/button_ok.gif" title="#{messages['printTemplates.label.DefaultTempl']}" rendered="#{ptl.defaultTemplate}"/>
+			    </r:column>
+				<r:column styleClass="actionColumn">		
+					<h:commandLink action="#{currentHome.print(ptl.templateName)}" value="#{messages['general.button.Print']}" 
+						styleClass="button"/>			
+				</r:column>
+			</r:dataTable>
+		</h:form>
+        
+        <div class="actionButtons" >
+            <input id="popClose" style="margin-right: 7px;" class="button" type="button" onclick="Richfaces.hideModalPanel('prntTmpltPop')" value="#{messages['general.button.Close']}"/>
+        </div>
+    </r:modalPanel>
+</ui:composition>

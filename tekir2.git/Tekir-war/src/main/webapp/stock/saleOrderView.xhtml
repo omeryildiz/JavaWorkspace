@@ -1,0 +1,291 @@
+
+    <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="stock"/>
+            <ui:param name="curpage" value="stocknew"/>
+            <ui:param name="curitem" value="saleOrder"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/saleOrderBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.SaleOrderBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/stock/saleOrder.xhtml">
+                <h:outputText value="#{messages['module.caption.SaleOrder']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/stock/saleOrder.xhtml" action="#{saleOrderHome.createNew()}" rendered="#{s:hasPermission('saleOrder', 'insert')}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['saleOrder.action.Add']}" />
+            </s:link>
+        </div>
+
+    </ui:define>
+
+
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.SaleOrder']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif"
+							alt="#{messages['saleShipment.img.Form']}" />
+						<h:outputText value="#{messages['saleOrder.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<table>
+							<tr>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['saleOrder.label.Serial']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.serial eq null}" />
+										<h:outputText value="#{saleOrder.serial}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['saleOrder.label.Reference']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.reference eq null}" />
+										<h:outputText value="#{saleOrder.reference}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<ui:define name="label">
+											<h:outputText
+												value="#{messages['saleOrder.label.Contact']} : " />
+										</ui:define>
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.contact eq null}" />
+										<h:outputText value="#{saleOrder.contact.caption}" />
+										<br />
+										<h:outputText value="#{saleOrder.contact.company}"
+											rendered="#{saleOrder.contact.company ne null}" />
+										<br />
+										<h:outputText value="#{saleOrder.contact.defaultAddress.address.street}"
+											rendered="#{saleOrder.contact.defaultAddress.address.street ne null}" />
+										<br />
+										<h:outputText value="#{saleOrder.contact.defaultAddress.address.zip}"
+											rendered="#{saleOrder.contact.defaultAddress.address.zip ne null}" />
+										<br />
+										<h:outputText
+											value="#{saleOrder.contact.defaultAddress.province.name} / #{saleOrder.contact.defaultAddress.city.name}"
+											rendered="#{saleOrder.contact.defaultAddress.city.name ne null}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml"
+										rendered="#{saleOrder.contact.person eq false}">
+										<h:outputText
+											value="#{messages['saleOrder.label.TaxOfficeAndNumber']} : "
+											styleClass="boldLabel" />
+										<br />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.contact.taxOffice eq null}" />
+										<h:outputText
+											value="#{saleOrder.contact.taxOffice} / #{saleOrder.contact.taxNumber}"
+											rendered="#{saleOrder.contact.taxOffice ne '' or saleOrder.contact.taxNumber ne ''}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml"
+										rendered="#{saleOrder.contact.person eq true}">
+										<h:outputText value="#{messages['saleOrder.label.Ssn']} : "
+											styleClass="boldLabel" />
+										<br />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.contact.ssn eq null}" />
+										<h:outputText value="#{saleOrder.contact.ssn}" />
+									</s:decorate>
+
+								</s:div></td>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['saleOrder.label.Code']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.code eq null}" />
+										<h:outputText value="#{saleOrder.code}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['saleOrder.label.Info']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.info eq null}" />
+										<h:outputText value="#{saleOrder.info}"
+											styleClass="exlarge" rows="6" />
+									</s:decorate>
+
+									
+
+								</s:div></td>
+							</tr>
+						</table>
+					</s:fragment>
+
+					<s:fragment>
+						<table>
+						<tr>
+
+								<s:div>
+                                    <s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['saleOrder.label.Warehouse']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.warehouse eq null}" />
+										<h:outputText value="#{saleOrder.warehouse.code}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['saleOrder.label.Date']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{saleOrder.date eq null}" />
+										<h:outputText value="#{saleOrder.date}">
+											<s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+										</h:outputText>
+									</s:decorate>
+
+									
+
+								</s:div>
+						</tr>
+						
+						</table>
+					</s:fragment>
+
+				</h:panelGrid>
+
+				<r:dataTable id="its" var="item" value="#{saleOrder.items}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0">
+
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column>
+								<h:outputText value="#{messages['saleShipment.label.LineCode']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['saleShipment.label.Product']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['saleShipment.label.LineInfo']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['saleShipment.label.Quantity']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['saleShipment.label.Unit']}" />
+							</r:column>
+							<r:column>
+								<h:outputText
+									value="#{messages['saleShipment.label.UnitPrice']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['saleShipment.label.Amount']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['saleShipment.label.Currency']}" />
+							</r:column>
+
+						</r:columnGroup>
+					</f:facet>
+
+					<r:column style="width:101px; border:0">
+						<h:outputText value="#{item.lineCode}" />
+					</r:column>
+
+					<r:column style="width:401px; border:0">
+						<h:outputText value="#{item.product.caption}" />
+					</r:column>
+
+					<r:column style="width:201px; border:0">
+						<h:outputText value="#{item.info}" />
+					</r:column>
+
+					<r:column style="width:150px; border:0" styleClass="amountField">
+						<h:outputText value="#{item.quantity.value}"
+							styleClass="amountField" />
+					</r:column>
+
+					<r:column style="width:110px; border:0">
+						<h:outputText value="#{item.quantity.unit}" />
+					</r:column>
+
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.unitPrice.value}"
+							styleClass="amountField utdff" >
+							<f:convertNumber pattern="#,##0.00"/>
+						</h:outputText>
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.amount.value}"
+							styleClass="amountField" >
+							<f:convertNumber pattern="#,##0.00"/>
+						</h:outputText>
+
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.amount.currency}"
+							styleClass="ccyField" />
+					</r:column>
+
+				</r:dataTable>
+
+			</r:panel>
+
+			<div class="actionButtons">
+
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{saleOrderHome.print()}" styleClass="button" />
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{saleOrderHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{saleOrderHome.close()}" styleClass="button" />
+			</div>
+
+		</h:form>
+    </ui:define>
+
+</ui:composition>

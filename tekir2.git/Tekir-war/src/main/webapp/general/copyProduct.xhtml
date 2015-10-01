@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="popupForm">
+
+	    <h:messages globalOnly="false" styleClass="message"/>
+
+		<r:panel>
+			<f:facet name="header">
+				<s:fragment>
+					<h:graphicImage url="/img/house.gif" alt="#{messages['bankAccount.img.World']}" />
+					<h:outputText value="Yeni Fiyat Listesi Oluştma" />
+				</s:fragment>
+			</f:facet>
+
+			<h:panelGrid columns="1">
+                <a:region>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['priceItem.label.Code']}"/></ui:define>
+                    <h:inputText value="#{priceItemHome.code}" styleClass="middle" />
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="İndirim / Artış"/></ui:define>
+                    <h:selectOneMenu id="downup" value="#{priceItemHome.increase}"
+                        title="Select one" border="0" styleClass="radio" >
+                            <f:selectItem itemLabel="İndirim" itemValue="false"/>
+                            <f:selectItem itemLabel="Artış" itemValue="true"/>
+                    </h:selectOneMenu>
+                </s:decorate>
+
+
+							
+                <s:decorate template="/layout/edit.xhtml" >
+                <s:span id="kindAndRateAndAmount">
+								<s:fragment >
+									<h:selectOneMenu id="kind" value="#{priceItemHome.discountType}"
+										title="Select one" border="0" styleClass="radio">
+										<f:selectItem itemLabel="#{messages['tax.label.Rate']}" itemValue="true"/>
+										<f:selectItem itemLabel="#{messages['tax.label.Amount']}" itemValue="false"/>
+
+										<a:support reRender="discountInput" event="onchange"
+											oncomplete="setMasks();"/>
+									</h:selectOneMenu>
+
+									<r:spacer width="2" />
+
+									<s:span id="discountInput">
+
+                                        <h:inputText value="#{priceItemHome.discountRate}" style="width:80px;text-align:right"
+				                        	styleClass="rate" rendered="#{priceItemHome.discountType}"/>
+                                        <s:fragment rendered="#{not priceItemHome.discountType}" >
+                                            <h:inputText value="#{priceItemHome.price}" styleClass="amountField"
+                                                   alt="decimal" converter="bigDecimalConverter" />
+										</s:fragment>
+			                       	</s:span>
+								</s:fragment>
+							</s:span>
+             </s:decorate>
+             </a:region>
+			</h:panelGrid>
+
+		</r:panel>
+
+		<div class="actionButtons">
+
+                <h:commandButton id="save"
+                         value="#{messages['general.button.Save']}"
+                         action="#{priceItemHome.copyProducts()}"
+                         styleClass="button"/>
+
+                <s:button id="done"
+                          value="#{messages['general.button.Close']}"
+                          action="#{priceItemHome.close()}"
+                          styleClass="button"/>
+
+		</div>
+
+	</h:form>
+
+</ui:composition>

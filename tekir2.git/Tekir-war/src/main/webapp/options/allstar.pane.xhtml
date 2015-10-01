@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+    <r:dataTable id="optionList" var="option"
+                 value="#{allStarOptionPane.options}"
+                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+        <r:column>
+            <f:facet name="header">
+                <h:outputText value="#{messages['general.label.User']}" />
+            </f:facet>
+            <h:outputText value="#{option.user}" />
+        </r:column>
+        <r:column>
+            <f:facet name="header">
+                <h:outputText value="#{messages['general.label.Key']}" />
+            </f:facet>
+            <h:outputText value="#{messages[ut:concat('optionEditor.', option.key)]}" />
+        </r:column>
+        <r:column>
+            <f:facet name="header">
+                <h:outputText value="#{messages['general.label.Value']}" />
+            </f:facet>
+            <h:outputText value="#{option.value}" />
+        </r:column>
+    </r:dataTable>
+
+
+</ui:composition>

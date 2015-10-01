@@ -1,0 +1,90 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="admin"/>
+            <ui:param name="curpage" value="adminFront"/>
+        </ui:include>
+    </ui:define>
+    
+    
+    
+    <ui:define name="body">
+        
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:panelGrid columns="2">
+            <s:div>
+                <h2><h:outputText value="Sistem Bilgileri" /></h2>
+                
+                <h3>Şirket Bilgileri</h3>
+                <h:panelGrid columns="2" columnClasses="propkey,propval">
+                    
+                    <h:outputText value="Şirket" />
+                    <h:outputText value="#{optionManager.systemOption['company.Name'].value}" />
+                    
+                    <h:outputText value="Şirket Ünvanı" />
+                    <h:outputText value="#{optionManager.systemOption['company.Title'].value}" />
+                    
+                    <h:outputText value="Vergi Dairesi" />
+                    <h:outputText value="#{optionManager.systemOption['company.TaxOffice'].value}" />
+                    
+                    <h:outputText value="Verigi Sicil No" />
+                    <h:outputText value="#{optionManager.systemOption['company.TaxNumber'].value}" />
+                    
+                    <h:outputText value="Resmi Adres" />
+                    <h:outputText value="#{optionManager.systemOption['company.Address'].value}" />
+                </h:panelGrid>
+                
+                <ui:remove>
+                    <h3>Sunucu</h3>
+                    <h:panelGrid columns="2" columnClasses="propkey,propval">
+                        <h:outputText value="Veri Tabanı" />
+                        <h:outputText value="HSQL-DB" />
+                        
+                        <h:outputText value="Uygulama Sunucu" />
+                        <h:outputText value="JBoss 4.2.2" />
+                        
+                        <h:outputText value="Sistem Locale" />
+                        <h:outputText value="tr_TR:UTF8" />
+                    </h:panelGrid>
+                </ui:remove>
+                
+                
+            </s:div>
+            <s:div>
+                <h2><h:outputText value="İşlemler" /></h2>
+                
+                    <ul>
+                        <li>
+                            <s:link view="/admin/user.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/group.gif" alt="#{messages['user.img.Form']}"/> 
+                                <h:outputText value=" #{messages['module.caption.User']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/admin/systemProperties.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/wrench_orange.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value=" #{messages['module.caption.SystemProperties']}"/>
+                            </s:link>
+                        </li>
+                    </ul>
+                
+            </s:div>
+            
+        </h:panelGrid>
+        
+        
+    </ui:define> 
+</ui:composition>

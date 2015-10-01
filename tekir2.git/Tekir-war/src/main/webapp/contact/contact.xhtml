@@ -1,0 +1,1211 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps"
+	template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="contact" />
+			<ui:param name="curpage" value="new" />
+            <ui:param name="curitem" value="newcontact" />
+		</ui:include>
+	</ui:define>
+
+
+
+	<ui:define name="toolbar">
+		<div class="pathgroup">
+		<s:link
+			view="/contact/contactBrowse.xhtml" propagation="none">
+			<h:outputText value="#{messages['module.caption.ContactBrowse']}"  rendered="#{s:hasPermission('contact', 'select')}" />
+		</s:link> 
+		<h:outputText value=" » " /> 
+		<s:link view="/contact/contact.xhtml">
+			<h:outputText value="#{messages['module.caption.ContactEditor']}"  rendered="#{s:hasPermission('contact', 'update')}"  />
+		</s:link></div>
+
+		<div class="toolgroup-left"><s:link
+			action="#{contactHome.createNew()}" rendered="#{s:hasPermission('contact', 'insert')}"  propagation="begin">
+			<h:graphicImage url="/img/add.gif" />
+			<h:outputText value="#{messages['contact.action.Add']}"/>
+		</s:link> <s:link view="/contact/contactCategory.xhtml" propagation="begin" rendered="#{s:hasPermission('contactCategory', 'select')}" >
+			<h:graphicImage url="/img/vcard_add.gif"
+				alt="#{messages['currency.img.CurrencyPair']}" />
+			<h:outputText value="#{messages['module.caption.ContactCategory']}"  />
+		</s:link> <s:link view="/finance/financeTxnReport.xhtml" propagation="none" rendered="#{s:hasPermission('financeTxnReport', 'select')}"  >
+			<h:graphicImage url="/img/report.gif"
+				alt="#{messages['currency.img.Currency']}" />
+			<h:outputText value="#{messages['module.caption.FinanceTxnReport']}"  />
+		</s:link> 
+	</div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<ui:include src="/layout/messages.xhtml" />
+		<ui:include src="/contact/contactSelectPopup.xhtml" />
+		<s:div id="documentInfoPopup">
+        	<ui:include src="/documents/documentInfoPopup.xhtml" />
+        </s:div>	
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+		
+		<s:div id="documentUploadPopup">
+	        <ui:include src="/documents/documentUploadPopup.xhtml" />
+		</s:div>
+	
+		<s:div id="bankPopup">
+			<ui:include src="/contact/bankAccountAddPopup.xhtml" />
+		</s:div>
+
+		<s:div id="addressPopup">
+			<ui:include src="/contact/contactAddressAddPopup.xhtml" />
+		</s:div>
+
+		<s:div id="phonePopup">
+			<ui:include src="/contact/contactPhoneAddPopup.xhtml" />
+		</s:div>
+		
+		<s:div id="networkPopup">
+			<ui:include src="/contact/contactNetworkAddPopup.xhtml" />
+		</s:div>
+		
+		<h:form id="form">
+
+		<h1><h:outputText value="#{messages['module.caption.ContactEditor']}" 
+			rendered="#{contact.personelList.size() eq 0}"/></h1>
+
+		<s:div rendered="#{contact.personelList.size() ne 0}">
+			<h1>
+				<r:toggleControl for="optionPane" value="#{messages['module.caption.ContactEditor']}" 
+					switchToState="editPage"/>
+				
+				<r:spacer width="10"/>
+
+				<r:toggleControl for="optionPane" value="#{messages['contact.label.PersonelList']}" 
+					switchToState="personelPage" style="font-size:14px;color:gray"/>
+			</h1>
+		</s:div>
+		
+		<r:togglePanel stateOrder="editPage,personelPage" id="optionPane" value="editPage" switchType="client">
+
+			<f:facet name="editPage">
+				<r:panel>
+					<f:facet name="header">
+						<s:fragment>
+							<h:graphicImage url="/img/vcard.gif"
+								alt="#{messages['contact.img.Form']}" />
+							<h:outputText value="#{messages['contact.caption.Form']}" />
+						</s:fragment>
+					</f:facet>
+	
+					<h:panelGrid columns="3">
+						<s:div>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Code']}" />
+								</ui:define>
+								<h:inputText value="#{contact.code}" styleClass="small"
+									required="true" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Name']}" />
+								</ui:define>
+								<h:inputText value="#{contact.name}" styleClass="middle"
+									required="true" />
+							</s:decorate>
+	
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                                <h:outputText value="#{messages['contact.label.Midname']} *" />
+	                            </ui:define>
+	                            <h:inputText value="#{contact.midname}" styleClass="middle"
+	                                         required="false" />
+	                        </s:decorate>
+	
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                                <h:outputText value="#{messages['contact.label.Surname']} *" />
+	                            </ui:define>
+	                            <h:inputText value="#{contact.surname}" styleClass="middle"
+	                                         required="false" />
+	                        </s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.CompanyName']} *" />
+								</ui:define>
+								<h:inputText value="#{contact.company}" styleClass="exlarge" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contact.label.Representative']}" />
+								</ui:define>
+								<h:inputText value="#{contact.representative}"
+									styleClass="exlarge" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Title']}" />
+								</ui:define>
+								<h:inputText value="#{contact.title}" styleClass="exlarge" />
+							</s:decorate>
+	
+						</s:div>
+	
+						<s:div>
+							<h:outputText value="#{messages['contact.label.Type']}" class="name"/><br/>
+
+							<table>
+								<tr>
+									<td>
+										<h:selectBooleanCheckbox id="customerType" value="#{contact.customerType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Customer']}" 
+					                    	for="customerType" styleClass="checkboxLabel" />
+									</td>
+
+									<td>
+										<h:selectBooleanCheckbox id="personnelType" value="#{contact.personnelType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization,personnel" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Personnel']}" 
+					                    	for="personnelType" styleClass="checkboxLabel" />
+									</td>
+
+									<td>
+										<h:selectBooleanCheckbox id="providerType" value="#{contact.providerType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Provider']}" 
+					                    	for="providerType" styleClass="checkboxLabel" />
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<h:selectBooleanCheckbox id="agentType" value="#{contact.agentType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Agent']}" 
+					                    	for="agentType" styleClass="checkboxLabel" />
+									</td>
+
+									<td>
+										<h:selectBooleanCheckbox id="contactType" value="#{contact.contactType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Contact']}" 
+					                    	for="contactType" styleClass="checkboxLabel" />
+									</td>
+
+									<td>
+										<h:selectBooleanCheckbox id="branchType" value="#{contact.branchType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Branch']}" 
+					                    	for="branchType" styleClass="checkboxLabel" />
+									</td>
+								</tr>
+								
+								<tr>
+									<td>
+										<h:selectBooleanCheckbox id="bankType" value="#{contact.bankType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Bank']}" 
+					                    	for="bankType" styleClass="checkboxLabel" />
+									</td>
+
+									<td>
+										<h:selectBooleanCheckbox id="foundationType" value="#{contact.foundationType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Foundation']}" 
+					                    	for="foundationType" styleClass="checkboxLabel" />
+									</td>
+
+									<td>
+										<h:selectBooleanCheckbox id="relatedType" value="#{contact.relatedType}" 
+											styleClass="checkbox" >
+											<a:support event="onchange" reRender="organization" ajaxSingle="true"/>	
+										</h:selectBooleanCheckbox>
+		
+					                    <h:outputLabel value="#{messages['contact.type.Related']}" 
+					                    	for="relatedType" styleClass="checkboxLabel" />
+									</td>
+								</tr>							
+							</table>
+
+							<a:outputPanel id="organization" >
+								<s:decorate template="/layout/edit.xhtml" rendered="#{not contact.branchType and contactHome.getOrganizationSchemeOption()}">
+									<ui:define name="label">
+										<h:outputText value="#{messages['general.label.Organization']}" />
+									</ui:define>
+									<h:selectOneMenu value="#{contact.organization}" styleClass="large" required="true">
+										<s:convertEntity />
+										<s:selectItems value="#{generalSuggestion.findOrganizationsForContact(contact)}"
+											var="item" label="#{item.code}"
+											noSelectionLabel="#{messages['general.value.None']}"
+											hideNoSelectionLabel="false" />
+									</h:selectOneMenu>
+								</s:decorate>
+							</a:outputPanel>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Category']}" />
+								</ui:define>
+	
+								<h:selectOneMenu value="#{contact.category}" styleClass="large">
+									<s:selectItems value="#{contactSuggestion.contactCategoryList}"
+										var="item" label="#{item.code}"
+										noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false" />
+									<s:convertEntity />
+								</h:selectOneMenu>
+							</s:decorate>
+						
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Code1']}" />
+								</ui:define>
+								<h:inputText value="#{contact.exCode1}" styleClass="large" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Code2']}" />
+								</ui:define>
+								<h:inputText value="#{contact.exCode2}" styleClass="large" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label"><h:outputText value="#{messages['contact.label.ContactType']}"/></ui:define>
+	                            <h:selectOneRadio id="corp"
+	                                              value="#{contact.person}"
+	                                              title="Select one"
+	                                              border="0"
+	                                              styleClass="radio">
+	                                <f:selectItem id="corp1" itemLabel="Kişi" itemValue="true" />
+	                                <f:selectItem id="corp2" itemLabel="Şirket" itemValue="false" />
+	                            </h:selectOneRadio>
+							</s:decorate>
+	
+	<ui:remove>
+	//FIXME: Görünürlük org. seviyesine göre veya daha detaylı olarak ele alınacak
+	                        <s:decorate template="/layout/edit.xhtml" rendered="#{s:hasPermission('contact', 'changeVisibility')}">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['contact.label.Visibility']}"/>
+	                            </ui:define>
+	                            <h:selectOneRadio id="visibility"
+	                                              value="#{contact.isPublic}"
+	                                              title="Select one"
+	                                              border="0"
+	                                              styleClass="radio">
+	                                <f:selectItem itemLabel="#{messages['contact.label.Everyone']}" itemValue="true" />
+	                                <f:selectItem itemLabel="#{messages['contact.label.Region']}" itemValue="false" />
+	                            </h:selectOneRadio>
+	                        </s:decorate>
+	</ui:remove>
+						</s:div>
+	
+						<s:div>
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                                <h:outputText value="#{messages['contact.label.SSN']}" />
+	                            </ui:define>
+	                            <h:inputText value="#{contact.ssn}" styleClass="middle" required="false"/>
+	                        </s:decorate>
+	
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                                <h:outputText value="#{messages['contact.label.PassportNumber']}" />
+	                            </ui:define>
+	                            <h:inputText value="#{contact.passportNo}" styleClass="middle" required="false"/>
+	                        </s:decorate>
+	
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                                <h:outputText value="#{messages['contact.label.TaxOffice']} *" />
+	                            </ui:define>
+	                            <h:inputText value="#{contact.taxOffice}" styleClass="middle" required="false"/>
+	                        </s:decorate>
+	
+	                        <s:decorate template="/layout/edit.xhtml" id="taxNum">
+	                            <ui:define name="label">
+	                                <h:outputText value="#{messages['contact.label.TaxNumber']} *" />
+	                            </ui:define>
+	                            <h:inputText value="#{contact.taxNumber}" styleClass="middle" required="false">
+	                                <a:support reRender="DubleTax" ajaxSingle="true" event="onblur" />
+	                            </h:inputText>
+	
+	                            <h:outputText id="DubleTax" styleClass="hidden" value="#{contactHome.controlTaxNumber()}" />
+	                        </s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Info']}" />
+								</ui:define>
+								<h:inputTextarea value="#{contact.info}" styleClass="exlarge"
+									rows="3" />
+							</s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Status']}" />
+								</ui:define>
+								<h:selectBooleanCheckbox id="active" value="#{contact.active}"
+									styleClass="checkbox" />
+								<h:outputLabel value="#{messages['contact.label.Active']}"
+									for="active" styleClass="checkboxLabel" />
+							</s:decorate>
+	
+						</s:div>
+	
+					</h:panelGrid>
+	
+					<s:div id="personnel">
+						<s:div rendered="#{contact.personnelType}">
+							<h3>
+								<h:graphicImage url="/img/vcard.gif" alt="#{messages['contact.img.Form']}" />
+								<h:outputText value="#{messages['contact.personal.Form']}" />
+							</h3>
+						</s:div>
+
+						<h:panelGrid columns="3" rendered="#{contact.personnelType}">
+							<s:fragment>
+								<s:decorate id="sdc" template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.OwnCompany']}" />
+									</ui:define>
+									<h:inputText id="contact" value="#{contact.ownCompany}" 
+										converter="contactCaptionConverter" required="true"
+										styleClass="middle"/>
+										
+									<a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+	                                    <h:graphicImage url="/img/selectBox.gif" />
+	                                </a>
+	
+	                                <r:suggestionbox for="contact" rules="all"  ajaxSingle="true" 
+	                                	suggestionAction="#{contactSuggestion.suggestContact}" var="citem" 
+	                                	fetchValue="#{citem.caption}">
+	                                    <h:column>
+	                                        <h:outputText value="#{citem.code}"/>
+	                                    </h:column>
+	                                    <h:column>
+	                                        <h:outputText value="#{citem.fullname}" rendered="#{citem.person}"/>
+	                                        <h:outputText value="#{citem.company}" rendered="#{!citem.person}"/>
+	                                    </h:column>
+	                                </r:suggestionbox>
+								</s:decorate>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.SgkNumber']}" />
+									</ui:define>
+									<h:inputText value="#{contact.sgkNumber}" styleClass="middle"/>
+								</s:decorate>
+	
+								
+								<s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText
+											value="#{messages['contact.label.StartWorkingDate']}" />
+									</ui:define>
+									<r:calendar value="#{contact.startWorkingDate}"
+										enableManualInput="true"
+										datePattern="#{messages['general.format.Date']}"
+	                                    styleClass="medium"/>
+								</s:decorate>
+								
+								<s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText
+											value="#{messages['contact.label.EndWorkingDate']}" />
+									</ui:define>
+									<r:calendar value="#{contact.endWorkingDate}"
+										enableManualInput="true"
+										datePattern="#{messages['general.format.Date']}"
+	                                    styleClass="medium"/>
+								</s:decorate>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText
+											value="#{messages['contact.label.ActivePersonnel']}" />
+									</ui:define>
+									<h:selectBooleanCheckbox id="activePersonel"
+										value="#{contact.activePersonel}" styleClass="checkbox" />
+								</s:decorate>
+	
+							</s:fragment>
+	
+							<s:fragment>
+	
+								<s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.Birthdate']}" />
+									</ui:define>
+									<r:calendar value="#{contact.birthdate}"
+										enableManualInput="true"
+										datePattern="#{messages['general.format.Date']}"
+	                                    styleClass="medium"/>
+								</s:decorate>
+	
+								<s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.BloodGroup']}" />
+									</ui:define>
+									<h:inputText value="#{contact.bloodGroup}" styleClass="middle"/>
+								</s:decorate>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.FatherName']}" />
+									</ui:define>
+									<h:inputText value="#{contact.fatherName}" styleClass="middle"/>
+								</s:decorate>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.Gender']}" />
+									</ui:define>
+									<h:selectOneMenu value="#{contact.gender}" styleClass="small">
+										<s:convertEnum />
+										<s:enumItem enumValue="Unknown"
+											label="#{messages['contact.genderType.Unknown']}" />
+										<s:enumItem enumValue="Male"
+											label="#{messages['contact.genderType.Male']}" />
+										<s:enumItem enumValue="Female"
+											label="#{messages['contact.genderType.Female']}" />
+									</h:selectOneMenu>
+								</s:decorate>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+	                                <ui:define name="label">
+	                                    <h:outputText value="#{messages['contact.label.EducationStatus']}" />
+	                                </ui:define>
+	                                <h:selectOneMenu value="#{contact.education}" styleClass="small">
+	                                    <s:convertEnum />
+	                                    <s:enumItem enumValue="Unknown"
+	                                                label="#{messages['contact.education.Unknown']}" />
+	                                    <s:enumItem enumValue="NotEducated"
+	                                                label="#{messages['contact.education.NotEducated']}" />
+	                                    <s:enumItem enumValue="Primary"
+	                                                label="#{messages['contact.education.Primary']}" />
+	                                    <s:enumItem enumValue="Middle"
+	                                                label="#{messages['contact.education.Middle']}" />
+	                                    <s:enumItem enumValue="High"
+	                                                label="#{messages['contact.education.High']}" />
+	                                    <s:enumItem enumValue="Vocational"
+	                                                label="#{messages['contact.education.Vocational']}" />
+	                                    <s:enumItem enumValue="University"
+	                                                label="#{messages['contact.education.University']}" />
+	                                    <s:enumItem enumValue="Master"
+	                                                label="#{messages['contact.education.Master']}" />
+	                                    <s:enumItem enumValue="Phd"
+	                                                label="#{messages['contact.education.Phd']}" />
+	                                    <s:enumItem enumValue="Other"
+	                                                label="#{messages['contact.education.Other']}" />
+	                                </h:selectOneMenu>
+	                            </s:decorate>
+	
+							</s:fragment>
+	
+							<s:fragment>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.MaritalStatus']}" />
+									</ui:define>
+									<h:selectOneMenu value="#{contact.maritalStatus}" styleClass="small">
+										<s:convertEnum />
+										<s:enumItem enumValue="Unknown"
+											label="#{messages['contact.maritalStatus.Unknown']}" />
+										<s:enumItem enumValue="Married"
+											label="#{messages['contact.maritalStatus.Married']}" />
+										<s:enumItem enumValue="Single"
+											label="#{messages['contact.maritalStatus.Single']}" />
+										<s:enumItem enumValue="Divorced"
+											label="#{messages['contact.maritalStatus.Divorced']}" />
+	                                    <a:support event="onchange" ajaxSingle="true"
+	                                        reRender="spouse" />
+									</h:selectOneMenu>
+								</s:decorate>
+	
+	                            <a:outputPanel id="spouse">
+	                                <s:decorate template="/layout/edit.xhtml" rendered="#{contact.maritalStatus eq 'Married'}">
+	                                    <ui:define name="label">
+	                                        <h:outputText value="#{messages['contact.label.SpouseIncomeStatus']}" />
+	                                    </ui:define>
+	                                    <h:selectOneMenu value="#{contact.spouseIncomeStatus}" styleClass="small">
+	                                        <s:convertEnum />
+	                                        <s:enumItem enumValue="Unknown"
+	                                            label="#{messages['contact.spouseIncome.Unknown']}" />
+	                                        <s:enumItem enumValue="Working"
+	                                            label="#{messages['contact.spouseIncome.Working']}" />
+	                                        <s:enumItem enumValue="Notworking"
+	                                            label="#{messages['contact.spouseIncome.Notworking']}" />
+	                                        <s:enumItem enumValue="WithProfit"
+	                                            label="#{messages['contact.spouseIncome.WithProfit']}" />
+	                                        <s:enumItem enumValue="WithNoProfit"
+	                                            label="#{messages['contact.spouseIncome.WithNoProfit']}" />
+	                                    </h:selectOneMenu>
+	                                </s:decorate>
+	                            </a:outputPanel>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.ChildNumber']}" />
+									</ui:define>
+									<h:inputText value="#{contact.childNumber}" styleClass="middle"/>
+								</s:decorate>
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['contact.label.Dependents']}" />
+									</ui:define>
+									<h:inputText value="#{contact.dependents}" styleClass="middle"/>
+								</s:decorate>
+	
+	
+	                            <s:decorate template="/layout/edit.xhtml">
+	                                <ui:define name="label">
+	                                    <h:outputText value="#{messages['contact.label.GrossSalary']}" />
+	                                </ui:define>
+	                                <h:inputText value="#{contact.grossSalary.value}" styleClass="amountField"
+	                                    alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+	                                <h:outputText value=" " />
+	                                <h:outputText value="#{contact.grossSalary.currency }" />
+	                            </s:decorate>
+	
+							</s:fragment>
+						</h:panelGrid>
+								
+					</s:div>
+
+					<r:spacer width="1" height="15" />
+
+					<h:panelGrid columns="2" columnClasses="half,half">
+						<s:fragment>
+							<a:region>
+								<s:div id="bankAccounts">
+								<h3>
+									<h:graphicImage url="/img/shield.gif" alt="#{messages['contact.img.Form']}" />
+									<h:outputText value="#{messages['contact.caption.FinancialInfo']}" />
+								</h3>
+								<h4>
+	                                <h:outputText value="#{messages['contact.label.BankAccounts']}" />
+									<a:commandLink action="#{contactHome.createNewBankAccountLine()}"
+										reRender="bankPopup" status="commonAjaxStatus"
+										oncomplete="Richfaces.showModalPanel('bankAccountAddPopup')"
+										rendered="#{contact.bankAccountList.size() ne 0}" style="float:right">
+										<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewBankAccountLine']}" />
+									</a:commandLink>
+								</h4>
+								<s:div rendered="#{contact.bankAccountList.size() eq 0}">
+									<h:outputText value="#{messages['contact.label.NoBankAccountLineFound']}" /><h:outputText value=" " />
+									<a:commandLink action="#{contactHome.createNewBankAccountLine()}"
+										reRender="bankPopup" status="commonAjaxStatus"
+										oncomplete="Richfaces.showModalPanel('bankAccountAddPopup')"
+										value="#{messages['contact.label.Click']}" style="cursor:pointer;">
+									</a:commandLink>
+								</s:div>
+								<r:dataGrid id="bankAccountGrid" value="#{contact.bankAccountList}" var="item" columns="1" elements="5"
+									onRowMouseOver="toggleActionIcons('#{r:clientId('bankAccountActionColumns')}');this.style.backgroundColor='#F8F8F8'" 
+									onRowMouseOut="toggleActionIcons('#{r:clientId('bankAccountActionColumns')}');this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+									styleClass="tableBottomLine" columnClasses="noTableBottomLine,bankAccountHeight"
+									rowKeyVar="rowKey" >
+									
+									<h:graphicImage url="/img/NOTACT.gif" rendered="#{not item.active}"
+										style="cursor:pointer;" title="#{messages['general.hint.Passive']}">
+									</h:graphicImage>
+									
+									
+									<h:outputText value="#{item.bankAccount.accountNo} #{item.bankAccount.bankBranch.bank.name} - #{item.bankAccount.bankBranch.name} #{item.bankAccount.iban}" />
+
+									<s:div id="bankAccountActionColumns" styleClass="tableAction" style="display:none;"> 
+										<a:commandLink action="#{contactHome.deleteBankAccountLine(rowKey)}"
+											reRender="bankAccounts" status="commonAjaxStatus">
+											<h:graphicImage url="/img/delete.gif" title="#{messages['general.button.DeleteLine']}"/>
+										</a:commandLink>
+										<a:commandLink action="#{contactHome.editBankAccountLine(rowKey)}"
+											reRender="bankPopup" 
+											oncomplete="Richfaces.showModalPanel('bankAccountAddPopup')">
+											<h:graphicImage url="/img/edit.gif" title="#{messages['general.img.Edit']}"/>
+										</a:commandLink>
+									</s:div>
+						            
+								</r:dataGrid>
+								<s:div styleClass="tableScroller" rendered="#{contact.bankAccountList.size() > 5}">
+					                <r:datascroller for="bankAccountGrid" renderIfSinglePage="false"/>
+								</s:div>
+								</s:div>
+							</a:region>
+
+							<h4>
+								<h:outputText value="#{messages['general.label.PaymentPlan']}" />
+							</h4>
+							<h:selectOneMenu value="#{contact.paymentPlan}" styleClass="middle">
+								<s:convertEntity />
+								<s:selectItems value="#{generalSuggestion.paymentPlanList}"
+									var="pp" label="#{pp.code} - #{pp.name}"
+									noSelectionLabel="#{messages['general.value.SelectOne']}"
+									hideNoSelectionLabel="false" />
+							</h:selectOneMenu>
+
+							<h4>
+								<h:outputText value="#{messages['general.label.CurrencyRateType']}" />
+							</h4>
+							<h:selectOneMenu value="#{contact.currencyRateType}" styleClass="middle">
+								<f:selectItem itemValue="Bid" itemLabel="#{messages['currencyRateType.label.Bid']}"/>
+								<f:selectItem itemValue="Ask" itemLabel="#{messages['currencyRateType.label.Ask']}"/>
+							</h:selectOneMenu>
+
+							<h4>
+								<h:outputText value="#{messages['contact.label.HasWitholding']}" />
+							</h4>
+							<h:selectBooleanCheckbox id="withholding" value="#{contact.hasWithholding}"/>
+							
+							<h4>
+                            	<h:outputText value="#{messages['general.label.Discount']}"/>
+							</h4>
+							<h:selectBooleanCheckbox value="#{contact.hasDiscount}" label="Var">
+								<a:support reRender="kindAndRateAndAmount" event="onchange" ajaxSingle="true" 
+									oncomplete="setMasks();"/>
+							</h:selectBooleanCheckbox>
+														
+							<s:span id="kindAndRateAndAmount"> 
+								<s:fragment rendered="#{contact.hasDiscount}">
+									<h:selectOneMenu id="kind" value="#{contact.discount.percentage}">
+										<f:selectItem itemLabel="#{messages['tax.label.Rate']}" itemValue="true"/>
+										<f:selectItem itemLabel="#{messages['tax.label.Amount']}" itemValue="false"/>
+			
+										<a:support reRender="discountInput" event="onchange" ajaxSingle="true" 
+											oncomplete="setMasks();"/>
+									</h:selectOneMenu>
+		
+									<r:spacer width="2" />
+		
+									<s:span id="discountInput">
+			
+				                    	<h:inputText value="#{contact.discount.rate}" style="width:80px;text-align:right" 
+				                        	styleClass="rate" rendered="#{contact.discount.percentage}"/>
+			
+										<s:fragment rendered="#{not contact.discount.percentage}">
+			                                <h:inputText value="#{contact.discount.value}" styleClass="amountField"
+			                                    alt="decimal" converter="bigDecimalConverter" />
+			
+			                                <h:selectOneMenu value="#{contact.discount.currency}" >
+			                                    <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" 
+				                                   	label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" 
+				                                   	hideNoSelectionLabel="true"/>
+			                                </h:selectOneMenu>
+										</s:fragment>                            
+			                       	</s:span>
+								</s:fragment>
+							</s:span>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.DebitLimit']}" />
+								</ui:define>
+								<h:inputText value="#{contact.debitLimit}" styleClass="middle amountField" 
+									alt="decimal" converter="bigDecimalConverter"/>
+								<r:spacer width="2" />
+								<h:outputText value="#{contactHome.systemCurrency}" />
+							</s:decorate>
+		
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.RiskLimit']}" />
+								</ui:define>
+								<h:inputText value="#{contact.riskLimit}" styleClass="middle amountField" 
+									alt="decimal" converter="bigDecimalConverter"/>
+								<r:spacer width="2" />
+								<h:outputText value="#{contactHome.systemCurrency}" />
+							</s:decorate>
+	
+						</s:fragment>
+
+						<s:fragment>
+							<a:region> 
+								<s:div id="addresses">
+									<h3>
+										<h:graphicImage url="/img/telephone.gif" alt="#{messages['contact.img.Form']}" />
+										<h:outputText value="#{messages['contact.caption.CommunicationInfo']}" />
+									</h3>
+									<h4>
+										<h:outputText value="#{messages['contact.label.Addresses']}" />
+										<a:commandLink action="#{contactHome.createNewAddressLine()}"
+											reRender="addressPopup" status="commonAjaxStatus"
+											oncomplete="Richfaces.showModalPanel('contactAddressAddPopup')"
+											rendered="#{contact.addressList.size() ne 0}" style="float:right">
+											<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewAddressLine']}" />
+										</a:commandLink>
+									</h4>
+									<s:div rendered="#{contact.addressList.size() eq 0}">
+										<h:outputText value="#{messages['contact.label.NoAddressLineFound']}" /><h:outputText value=" " />
+										<a:commandLink action="#{contactHome.createNewAddressLine()}"
+											reRender="addressPopup" status="commonAjaxStatus"
+											oncomplete="Richfaces.showModalPanel('contactAddressAddPopup')"
+											value="#{messages['contact.label.Click']}" style="cursor:pointer;">
+										</a:commandLink>
+									</s:div>
+									<r:dataGrid id="addressGrid" value="#{contact.addressList}" var="item" columns="1" elements="5"
+										onRowMouseOver="toggleActionIcons('#{r:clientId('addressActionColumns')}');this.style.backgroundColor='#F8F8F8'" 
+										onRowMouseOut="toggleActionIcons('#{r:clientId('addressActionColumns')}');this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+										styleClass="tableBottomLine" columnClasses="noTableBottomLine"
+										rowKeyVar="rowKey">
+
+										
+										<h:graphicImage url="#{theme[item.iconName]}" />
+	
+										<h:graphicImage url="/img/checked.gif" rendered="#{item.defaultAddress}"
+											style="cursor:pointer;" title="#{messages['contact.hint.SetDefaultSelectedItem']}">
+											<a:support event="onchange" action="#{contactHome.activateSelected(rowKey)}" 
+												reRender="addresses" status="commonAjaxStatus"/>	                            
+										</h:graphicImage>
+										<h:graphicImage url="/img/unchecked.gif" rendered="#{not item.defaultAddress}"
+											style="cursor:pointer;" title="#{messages['contact.hint.SetDefaultSelectedItem']}">
+											<a:support event="onclick" action="#{contactHome.activateSelected(rowKey)}" 
+												reRender="addresses" status="commonAjaxStatus"/>	                            
+										</h:graphicImage>
+
+										<h:graphicImage url="/img/NOTACT.gif" rendered="#{not item.activeAddress}"
+											style="cursor:pointer;" title="#{messages['general.hint.Passive']}">
+										</h:graphicImage>
+										
+										<h:graphicImage url="/img/mail.png" rendered="#{item.deliveryAddress}" title="#{messages['general.label.DeliveryAddress']}" />
+										<h:graphicImage url="/img/script_add.gif" rendered="#{item.invoiceAddress}" title="#{messages['general.label.InvoiceAddress']}" />
+										<h:graphicImage url="/img/lorry.gif" rendered="#{item.shippingAddress}" title="#{messages['general.label.ShippingAddress']}" />
+									
+										<h:outputText value="#{item.address.description()}" />
+										
+										<r:spacer width="2"/>
+										<h:outputText value="#{item.info}"/>
+										
+										<s:div id="addressActionColumns" styleClass="tableAction" style="display:none;"> 
+											<a:commandLink action="#{contactHome.deleteAddressLine(rowKey)}"
+												reRender="addresses" status="commonAjaxStatus">
+												<h:graphicImage url="/img/delete.gif" title="#{messages['general.button.DeleteLine']}"/>
+											</a:commandLink>
+											<a:commandLink action="#{contactHome.editAddressLine(rowKey)}"
+												reRender="addressPopup" 
+												oncomplete="Richfaces.showModalPanel('contactAddressAddPopup')">
+												<h:graphicImage url="/img/edit.gif" title="#{messages['general.img.Edit']}"/>
+											</a:commandLink>
+										</s:div>
+
+									</r:dataGrid>
+									<s:div styleClass="tableScroller" rendered="#{contact.addressList.size() > 5}">
+						                <r:datascroller for="addressGrid" renderIfSinglePage="false"/>
+									</s:div>
+								</s:div>
+							</a:region>
+
+							<a:region>
+								<s:div id="phones">
+								<h4>
+									<h:outputText value="#{messages['contact.label.Phones']}" />
+									<a:commandLink action="#{contactHome.createNewPhoneLine()}"
+										reRender="phonePopup" status="commonAjaxStatus"
+										oncomplete="Richfaces.showModalPanel('contactPhoneAddPopup')"
+										rendered="#{contact.phoneList.size() ne 0}" style="float:right">
+										<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewPhoneLine']}" />
+									</a:commandLink>
+								</h4>
+								<s:div rendered="#{contact.phoneList.size() eq 0}">
+									<h:outputText value="#{messages['contact.label.NoPhoneLineFound']}" /><h:outputText value=" " />
+									<a:commandLink action="#{contactHome.createNewPhoneLine()}"
+										reRender="phonePopup" status="commonAjaxStatus"
+										oncomplete="Richfaces.showModalPanel('contactPhoneAddPopup')"
+										value="#{messages['contact.label.Click']}" style="cursor:pointer;">
+									</a:commandLink>
+								</s:div>
+								<r:dataGrid id="phoneGrid" value="#{contact.phoneList}" 
+									var="item" rowKeyVar="rowKey" columns="1" elements="5"
+									onRowMouseOver="toggleActionIcons('#{r:clientId('phoneActionColumns')}');this.style.backgroundColor='#F8F8F8'" 
+									onRowMouseOut="toggleActionIcons('#{r:clientId('phoneActionColumns')}');this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+									styleClass="tableBottomLine"  columnClasses="noTableBottomLine">
+
+									<h:graphicImage url="#{theme[item.iconName]}" />
+
+									<h:graphicImage url="/img/checked.gif" rendered="#{item.defaultPhone}"
+										style="cursor:pointer;" title="#{messages['contact.hint.SetDefaultSelectedItem']}">
+										<a:support event="onchange" action="#{contactHome.activateSelectedPhone(rowKey)}" 
+												reRender="phones" status="commonAjaxStatus"/>	                            
+									</h:graphicImage>
+									<h:graphicImage url="/img/unchecked.gif" rendered="#{not item.defaultPhone}"
+										style="cursor:pointer;" title="#{messages['contact.hint.SetDefaultSelectedItem']}">
+										<a:support event="onclick" action="#{contactHome.activateSelectedPhone(rowKey)}" 
+												reRender="phones" status="commonAjaxStatus"/>	                            
+									</h:graphicImage>
+									
+									<h:graphicImage url="/img/NOTACT.gif" rendered="#{not item.activePhone}"
+										style="cursor:pointer;" title="#{messages['general.hint.Passive']}">
+									</h:graphicImage>
+
+		                            <h:outputText value="#{item.phone.fullNumberWithAreaCode}" styleClass="middle phone_foreign" />
+
+									<r:spacer width="2"/>
+									<h:outputText value="#{item.info}"/>
+
+									<s:div id="phoneActionColumns" styleClass="tableAction" style="display:none;"> 
+										<a:commandLink action="#{contactHome.deletePhoneLine(rowKey)}"
+											reRender="phones" status="commonAjaxStatus">
+											<h:graphicImage url="/img/delete.gif" title="#{messages['general.button.DeleteLine']}"/>
+										</a:commandLink>
+
+										<a:commandLink action="#{contactHome.editPhoneLine(rowKey)}"
+											reRender="phonePopup" oncomplete="Richfaces.showModalPanel('contactPhoneAddPopup')">
+											<h:graphicImage url="/img/edit.gif" title="#{messages['general.img.Edit']}"/>
+										</a:commandLink>
+									</s:div>
+								</r:dataGrid>
+
+								<s:div styleClass="tableScroller" rendered="#{contact.phoneList.size() > 5}">
+					                <r:datascroller for="phoneGrid" renderIfSinglePage="false"/>
+								</s:div>
+
+							 	</s:div>	
+							</a:region>							
+
+							<a:region>
+								<s:div id="networks">
+								<h4>
+									<h:outputText value="#{messages['contact.label.Networks']}" />
+									<a:commandLink action="#{contactHome.createNewNetworkLine()}"
+										reRender="networkPopup" status="commonAjaxStatus"
+										oncomplete="Richfaces.showModalPanel('contactNetworkAddPopup')"
+										rendered="#{contact.networkList.size() ne 0}" style="float:right">
+                                		<h:graphicImage url="/img/add.gif" title="#{messages['contact.label.NewNetworkLine']}"/>
+									</a:commandLink>
+								</h4>
+								
+								<s:div rendered="#{contact.networkList.size() eq 0}">
+									<h:outputText value="#{messages['contact.label.NoNetworkLineFound']}" /><h:outputText value=" " />
+									<a:commandLink action="#{contactHome.createNewNetworkLine()}"
+										reRender="networkPopup" status="commonAjaxStatus"
+										oncomplete="Richfaces.showModalPanel('contactNetworkAddPopup')"
+										value="#{messages['contact.label.Click']}" style="cursor:pointer;">
+									</a:commandLink>
+								</s:div>
+								<r:dataGrid id="networkGrid" value="#{contact.networkList}" 
+									var="item" rowKeyVar="rowKey" columns="1" elements="5"
+									onRowMouseOver="toggleActionIcons('#{r:clientId('networkActionColumns')}');this.style.backgroundColor='#F8F8F8'" 
+									onRowMouseOut="toggleActionIcons('#{r:clientId('networkActionColumns')}');this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+									styleClass="tableBottomLine"  columnClasses="noTableBottomLine">
+
+									<h:graphicImage url="#{theme[item.iconName]}" />
+
+									<h:graphicImage url="/img/checked.gif" rendered="#{item.defaultNetwork}"
+										style="cursor:pointer;" title="#{messages['contact.hint.SetDefaultSelectedItem']}">
+										<a:support event="onchange" action="#{contactHome.activateSelectedEmail(rowKey)}" 
+											reRender="networks" status="commonAjaxStatus"/>	                            
+									</h:graphicImage>
+									<h:graphicImage url="/img/unchecked.gif" rendered="#{not item.defaultNetwork}"
+										style="cursor:pointer;" title="#{messages['contact.hint.SetDefaultSelectedItem']}">
+										<a:support event="onclick" action="#{contactHome.activateSelectedEmail(rowKey)}" 
+											reRender="networks" status="commonAjaxStatus"/>	                            
+									</h:graphicImage>
+									
+									<h:graphicImage url="/img/NOTACT.gif" rendered="#{not item.activeNetwork}"
+										style="cursor:pointer;" title="#{messages['general.hint.Passive']}">
+									</h:graphicImage>
+									
+		                            <h:outputText value="#{item.value}" styleClass="middle" />
+
+									<r:spacer width="2"/>
+									<h:outputText value="#{item.info}"/>
+
+									<s:div id="networkActionColumns" styleClass="tableAction" style="display:none;"> 
+										<a:commandLink action="#{contactHome.deleteNetworkLine(rowKey)}"
+											reRender="networks" status="commonAjaxStatus">
+											<h:graphicImage url="/img/delete.gif" title="#{messages['general.button.DeleteLine']}"/>
+										</a:commandLink>
+										
+										<a:commandLink action="#{contactHome.editNetworkLine(rowKey)}"
+											reRender="networkPopup" oncomplete="Richfaces.showModalPanel('contactNetworkAddPopup')">
+											<h:graphicImage url="/img/edit.gif" title="#{messages['general.img.Edit']}"/>
+										</a:commandLink>
+									</s:div>
+								
+								</r:dataGrid>
+								<s:div styleClass="tableScroller" rendered="#{contact.networkList.size() > 5}">
+					                <r:datascroller for="networkGrid" renderIfSinglePage="false"/>
+								</s:div>
+								
+								</s:div>
+
+							</a:region>							
+						</s:fragment>
+					
+					</h:panelGrid>
+
+					<s:div styleClass="contactCommunication">
+						<a:region>
+							<h3>
+		                        <h:graphicImage url="/img/shield.gif" alt="#{messages['contact.img.Form']}" />
+		                        <h:outputText value="#{messages['Contact.caption.Documents']}" />
+							</h3>						
+							<h4>
+	                            <h:outputText value="#{messages['general.label.DocumentList']}"/>
+							</h4>						
+			                <r:dataTable id="doclistarea"
+			                             var="contdoc"
+			                             value="#{contact.documentFiles}"
+			                             rows="20"
+			                             rowKeyVar="rowKey"
+			                             onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+			                             onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+			                    <f:facet name="header">
+			                        <r:columnGroup>
+			                        	<r:column>
+				                        	<h:outputText value="#{messages['document.label.Name']}" />
+			                        	</r:column>
+			                        	<r:column>
+				                        	<h:outputText value="#{messages['document.label.UploaderUser']}" />
+			                        	</r:column>
+			                        	<r:column>
+				                        	<h:outputText value="#{messages['document.label.DocType']}" />
+			                        	</r:column>
+			                        	<r:column>
+				                        	<h:outputText value="#{messages['document.label.Title']}" />
+			                        	</r:column>
+			                        	<r:column>
+				                        	<h:outputText value="#{messages['document.label.Info']}" />
+			                        	</r:column>
+			                        	<r:column>
+				                        	<h:outputText value="#{messages['document.label.UpdateDate']}" />
+			                        	</r:column>
+
+			                        	<r:column styleClass="actionColumnDouble">
+							                <a:commandLink ajaxSingle="true" action="#{contactHome.popupNewDocumentFile()}" 
+							                	oncomplete="Richfaces.showModalPanel('documentpanel')"
+							                	reRender="documentUploadPopup">
+		                                		<h:graphicImage url="/img/add.gif" title="#{messages['general.label.NewDocument']}"/>
+							                </a:commandLink>
+			                        	</r:column>
+			                        </r:columnGroup>
+			                    </f:facet>
+			
+			                    <r:column>
+			                        <h:commandLink action="#{documentHome.downloadDocument(contdoc.id)}">
+			                            <h:outputText value="#{contdoc.name}" />
+			                        </h:commandLink>
+			                    </r:column>
+			                    <r:column>
+			                        <h:outputText value="#{contdoc.user}"/>
+			                    </r:column>
+			                    <r:column>
+			                        <h:outputText value="#{messages[ut:concat( 'documentAdd.label.docType.', contdoc.docType)]}"
+				                        rendered="#{ contdoc.docType ne null }"/>
+			                    </r:column>
+			                    <r:column>
+			                        <h:outputText value="#{contdoc.title}"/>
+			                    </r:column>
+			                    <r:column>
+			                        <h:outputText value="#{contdoc.info}"/>
+			                    </r:column>
+			                    <r:column>
+			                        <h:outputText value="#{contdoc.updateDate}">
+			                            <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+			                        </h:outputText>
+			                    </r:column>
+			                    <r:column>
+			                        <a:commandLink action="#{documentHome.editDocument(contdoc)}"
+			                            oncomplete="Richfaces.showModalPanel('documentInfoPop')" reRender="documentInfoPopup">
+			                            <h:graphicImage url="/img/edit.gif" />
+			                        </a:commandLink>
+			                        <a:commandLink reRender="doclistarea" ajaxSingle="true" action="#{contactHome.deleteDocumentFile(rowKey)}"
+			                        onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;">
+			                            <h:graphicImage url="/img/delete.gif" />
+			                        </a:commandLink>
+			                    </r:column>
+			
+			                    <f:facet name="footer" >
+			                        <r:datascroller for="doclistarea" maxPages="20" renderIfSinglePage="false"
+			                        	styleClass="scroller"/>
+			                    </f:facet>
+			                </r:dataTable>
+						</a:region>
+					</s:div>
+
+		            <div class="actionButtons">
+		                <script type="text/javascript">
+		                    function compareTaxNum() {
+		                        var duble = $('form:taxNum:DubleTax').innerHTML;
+		                        var isPerson = $('form:ContactType:corp:0').checked;
+		                        if( isPerson == false ){
+		                            if ( duble == 'true' ) {
+		                                return confirm('Vergi Numarası Aynı Olan Kayıt Var!\nDevam etmek istiyor musunuz ?');
+		                            }
+		                        }
+		
+		                        return true;
+		                    }
+		                </script>
+<ui:remove>
+                                <ut:actionButtons home="#{contactHome}" entity="#{contact}" permission="contact" saveChecker="if ( !compareTaxNum() ) return false;"/>
+</ui:remove>
+                                
+                        <h:commandButton id="saveAndNew"
+                               value="#{messages['general.button.SaveAndNew']}"
+                               action="#{contactHome.saveAndNew()}"
+                               rendered="#{s:hasPermission('contact', 'insert') and s:hasPermission('contact', 'update')}"
+                               styleClass="button"/>
+		                
+		                <h:commandButton id="save"
+		                                 value="#{messages['general.button.Save']}"
+		                                 action="#{contactHome.save()}" styleClass="button"
+                                         rendered="#{(not empty contact.id and s:hasPermission('contact', 'update')) or (empty contact.id and s:hasPermission('contact', 'insert'))}"
+		                                 onclick="if ( !compareTaxNum() ) return false;"/>
+		
+		                <s:button id="delete" value="#{messages['general.button.Delete']}"
+		                    action="#{contactHome.delete()}" rendered="#{not empty contact.id and s:hasPermission('contact', 'delete')}"
+		                    onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+		                    styleClass="button" /> 
+		                
+		                <s:button id="done" value="#{messages['general.button.Close']}"
+		                	action="#{contactHome.close()}" styleClass="button" />
+           
+		        	</div>
+
+				</r:panel>
+					
+			</f:facet>
+			
+			<f:facet name="personelPage">
+				
+				<r:panel>
+					<f:facet name="header">
+						<s:fragment>
+							<h:graphicImage url="/img/vcard.gif" alt="#{messages['contact.img.Form']}" />
+							<h:outputText value="#{messages['contact.label.PersonelList']}" />
+						</s:fragment>
+					</f:facet>
+				
+                    <r:dataTable id="personels"
+                                 var="item"
+                                 value="#{contact.personelList}"
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 rows="30"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+						<f:facet name="header">
+							<r:columnGroup>
+								<r:column>
+									<h:outputText value="#{messages['contact.label.Name']}" />
+								</r:column>
+	
+								<r:column>
+									<h:outputText value="#{messages['contact.label.Surname']}" />
+								</r:column>
+	
+								<r:column >
+									<h:outputText value="#{messages['contact.label.SgkNumber']}" />
+								</r:column>
+								
+								<r:column>
+									<h:outputText value="#{messages['contact.label.StartWorkingDate']}" />
+								</r:column>
+	
+								<r:column>
+									<h:outputText value="#{messages['contact.label.EndWorkingDate']}" />
+								</r:column>
+	
+								<r:column>
+									<h:outputText value="#{messages['contact.label.Birthdate']}" />
+								</r:column>
+	
+								<r:column>
+									<h:outputText value="#{messages['contact.label.GrossSalary']}" />
+								</r:column>
+							</r:columnGroup>
+						</f:facet>
+
+						<r:column styleClass="small">
+							<h:outputText value="#{item.name}" />
+						</r:column>
+
+						<r:column styleClass="small">
+		                    <h:outputText value="#{item.surname}" />
+						</r:column>
+						
+						<r:column>
+							<h:outputText value="#{item.sgkNumber}"/>
+						</r:column>
+
+						<r:column>
+							<h:outputText value="#{item.startWorkingDate}" styleClass="middle">
+								<f:convertDateTime pattern="#{messages['general.format.Date']}"/>
+							</h:outputText>
+						</r:column>
+
+						<r:column>
+							<h:outputText value="#{item.endWorkingDate}" styleClass="middle">
+								<f:convertDateTime pattern="#{messages['general.format.Date']}"/>
+							</h:outputText>
+						</r:column>
+
+						<r:column>
+							<h:outputText value="#{item.birthdate}" styleClass="middle">
+								<f:convertDateTime pattern="#{messages['general.format.Date']}"/>
+							</h:outputText>
+						</r:column>
+						
+						<r:column styleClass="amountField">
+                            <h:outputText value="#{item.grossSalary.value}" styleClass="amountField"
+                                alt="decimal" converter="bigDecimalConverter"  />
+                            <h:outputText value=" " />
+                            <h:outputText value="#{item.grossSalary.currency }" />
+						</r:column>		
+						
+						<f:facet name="footer">
+	                        <r:datascroller for="personels" maxPages="20" renderIfSinglePage="false"/>
+	                    </f:facet>
+					
+					</r:dataTable>
+
+				</r:panel>
+				
+			</f:facet>
+
+		</r:togglePanel>
+	
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

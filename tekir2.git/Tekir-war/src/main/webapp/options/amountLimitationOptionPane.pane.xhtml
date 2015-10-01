@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+    <h:form id="amountLimitationOptionPaneForm">
+		
+		<h:panelGrid columns="1">
+
+			<s:decorate template="/layout/longinlineedit.xhtml">
+				<ui:define name="label">
+	            	<h:outputText value="#{messages['optionEditor.systemSettings.control.MaxRoundingAmount']}" />
+				</ui:define>
+		        <h:inputText value="#{amountLimitationOptionPane.getOption('MAX_ROUNDING_AMOUNT').asBigDecimal}" 
+		        	alt="decimal" converter="bigDecimalConverter"/>
+			</s:decorate>
+
+			<s:decorate template="/layout/longinlineedit.xhtml">
+				<ui:define name="label">
+	            	<h:outputText value="#{messages['optionEditor.systemSettings.control.MaxPaymentAmount']}" />
+				</ui:define>
+		        <h:inputText value="#{amountLimitationOptionPane.getOption('MAX_PAYMENT_AMOUNT').asBigDecimal}" 
+		        	alt="decimal" converter="bigDecimalConverter"/>
+			</s:decorate>
+
+		</h:panelGrid>
+        
+        <s:div styleClass="actionButtons">
+
+            <a:commandButton id="save"
+                             value="#{messages['general.button.Save']}"
+                             action="#{amountLimitationOptionPane.save()}"
+                             reRender="amountLimitationOptionPaneForm"
+                             styleClass="button"
+                             oncomplete="setMasks();"/>
+
+            <s:button id="done"
+                      value="#{messages['general.button.Close']}"
+                      action="#{amountLimitationOptionPane.cancel()}"
+                      styleClass="button"/>
+
+        </s:div>
+    </h:form>
+</ui:composition>

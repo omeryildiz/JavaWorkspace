@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ut="http://utech.com/jsf/comps">
+    
+    <h1>Cari Hesap Girişi Genel Özellikleri</h1>
+    <p>Cari hesap tanıtımı fatura, irsaliye vb. alanlarda gerekli olacak girişlerin bir kez yapılmasını hedefler.</p>
+    
+    <h2>Zorunlu Alanlar</h2>
+    <p><span style="color:red">*</span> ile işaretli alanların doldurulması zorunludur.</p>
+    <p><span style="color:black">*</span> ile işaretli alanların doldurulması farklı bir alanın alacağı değere göre zorunlu olabilir.</p>
+    
+    <h2>Bölümler</h2>
+    <h3>Cari Bilgileri</h3>
+    <h:graphicImage url="#{helpManager.helpImagePath}contactCard.png" />
+    <p>Cari kodu otomatik olarak gelen bir değerle doldurulur. İstenilirse bu kod kullanıcının isteğine göre kullanacağı şekilde değiştirilebilir.</p>
+    <p>Tip alanı müşterilerin sınıflandırması ve ilgili aramalarda kolaylık sağlaması amaçlı ön tanımlı seçeneklerdir.</p>
+    <p>Cari tipi kişi veya şirket olarak belirtilebilir. Bu alana göre uygulama içinde çeşitli kontroller yapılmaktadır.</p>
+    <p>Cari kategorisi kullanıcıların genel ayarlar bölümünde kendi isteklerine göre oluşturacakları yapının ilişkilendirilmesidir.</p>
+    <p>Ek kod alanları kullanıcının carilerini listelemek, aramak veya raporlarken kolaylık sağlaması amaçlıdır. Kullanım şekli kullanıcılara bırakılmıştır.</p>
+    
+    <h3>İletişim Bilgileri</h3>
+    <p>Adres 1 alanları fatura gibi resmi evrakların üzerinde yer alacak bilgileri içermelidir.</p>
+    <p>Bu bölümde ayrıca cariye erişilebilecek ek kanal bilgileride girilebilmektedir.</p>
+    
+    <h3>Finansal Bilgileri</h3>
+    <p>TCKN veya Vergi No alanları fatura gibi resmi evrakların üzerinde yer alacak bilgileri içermelidir.</p>
+    <p>Bu bölümde ayrıca carinin işlemlerinde kullanılabilecek banka ödeme bilgileri girilebilmektedir.</p>
+    
+    
+    
+</ui:composition>

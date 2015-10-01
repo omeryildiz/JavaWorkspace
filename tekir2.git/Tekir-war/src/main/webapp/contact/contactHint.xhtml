@@ -1,0 +1,128 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+    <r:toolTip id="contactTooltip" direction="top-right" mode="client"
+    	layout="block" delay="500" for="#{r:clientId('viewLink2')}">
+        
+        <f:facet name="defaultContent">
+            
+            <strong>#{messages['general.message.Loading']}</strong>
+            
+        </f:facet>
+        
+        <h3>
+            <h:outputText value="[#{contact.code}] #{contact.fullname}" />
+        </h3>
+        <ui:remove>
+            <s:decorate template="/layout/display.xhtml" rendered="#{not empty contact.categoryCode}">
+                <ui:define name="label"><h:outputText value="#{messages['contact.label.Category']}" /></ui:define>
+                <h:outputText value="#{contact.categoryCode}" />
+            </s:decorate>
+        </ui:remove>
+        
+		<s:fragment rendered="#{not empty contact.company}">
+	        <s:decorate template="/layout/display.xhtml" >
+	            <ui:define name="label"><h:outputText value="#{messages['contact.label.Company']}" /></ui:define>
+	            <h:outputText value="#{contact.company}" />
+	        </s:decorate>
+		</s:fragment >
+		
+		<s:fragment rendered="#{not empty contact.taxOffice}">
+	        <s:decorate template="/layout/display.xhtml" >
+	            <ui:define name="label"><h:outputText value="#{messages['contact.label.TaxOffice']}" /></ui:define>
+	            <h:outputText value="#{contact.taxOffice}" />
+	        </s:decorate>
+		</s:fragment>
+
+		<s:fragment rendered="#{not empty contact.taxNumber}">
+	        <s:decorate template="/layout/display.xhtml" >
+	            <ui:define name="label"><h:outputText value="#{messages['contact.label.TaxNumber']}" /></ui:define>
+	            <h:outputText value="#{contact.taxNumber}" />
+	        </s:decorate>
+		</s:fragment>
+		
+		<s:fragment rendered="#{not empty contact.ssn}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label"><h:outputText value="#{messages['contact.label.SSN']}" /></ui:define>
+	            <h:outputText value="#{contact.ssn}" />
+	        </s:decorate>
+		</s:fragment>
+
+		<s:fragment rendered="#{not empty contact.representative}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label"><h:outputText value="#{messages['contact.label.Representative']}" /></ui:define>
+	            <h:outputText value="#{contact.representative}" />
+	        </s:decorate>
+		</s:fragment>
+
+		<s:fragment rendered="#{not empty contact.title}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label"><h:outputText value="#{messages['contact.label.Title']}" /></ui:define>
+	            <h:outputText value="#{contact.title}" />
+	        </s:decorate>
+		</s:fragment>
+
+		<s:fragment rendered="#{not empty contact.info}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label"><h:outputText value="#{messages['contact.label.Info']}" /></ui:define>
+	            <h:outputText value="#{contact.info}" />
+	        </s:decorate>
+		</s:fragment>
+
+	    #{contactBrowse.initDefaults(rowKey)}
+        
+		<s:fragment rendered="#{not empty contact.defaultGsm}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">
+	            	<h:outputText value="#{messages['contact.label.Mobile']}" />
+	            </ui:define>
+	            <h:outputText value="#{contact.defaultGsm}" />
+	        </s:decorate>
+		</s:fragment>
+
+		<s:fragment rendered="#{not empty contact.defaultFax}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">
+	            	<h:outputText value="#{messages['contact.label.Fax']}" />
+	            </ui:define>
+	            <h:outputText value="#{contact.defaultFax}" />
+	        </s:decorate>
+		</s:fragment>
+
+		<s:fragment rendered="#{not empty contact.defaultImmobile}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">
+	            	<h:outputText value="#{messages['contact.label.Immobile']}" />
+	            </ui:define>
+	            <h:outputText value="#{contact.defaultImmobile}" />
+	        </s:decorate>
+		</s:fragment>
+	        
+	    <s:fragment rendered="#{not empty contact.defaultEmail}">
+	        <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">
+	            	<h:outputText value="#{messages['contact.label.Email']}" />
+	            </ui:define>
+	            <h:outputText value="#{contact.defaultEmail}" />
+	        </s:decorate>
+	    </s:fragment>
+
+		<s:fragment rendered="#{not empty contact.defaultAddress}">
+			<s:decorate template="/layout/display.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['contact.label.Address']}" />
+				</ui:define>
+				<h:outputText value="#{contact.defaultAddress}" />
+			</s:decorate>
+		</s:fragment>
+
+	</r:toolTip>
+    
+</ui:composition>

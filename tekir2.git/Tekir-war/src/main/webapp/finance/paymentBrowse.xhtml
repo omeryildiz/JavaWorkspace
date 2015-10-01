@@ -1,0 +1,261 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeAccount"/>
+            <ui:param name="curitem" value="paymentBrowse"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/paymentBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.PaymentBrowse']}" rendered="#{s:hasPermission('payment', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/finance/payment.xhtml" rendered="#{s:hasPermission('payment', 'insert')}" >
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['payment.action.Add']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/finance/paymentBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/finance/paymentBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PaymentBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['payment.label.Serial']}" /></ui:define>
+                            <h:inputText value="#{paymentBrowse.filterModel.serial}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['payment.label.Reference']}" /></ui:define>
+                            <h:inputText value="#{paymentBrowse.filterModel.reference}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contactToBankTransfer.label.ContactName']}" /></ui:define>
+                            <h:inputText value="#{paymentBrowse.filterModel.contactName}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contactToBankTransfer.label.ContactCode']}" /></ui:define>
+                            <h:inputText value="#{paymentBrowse.filterModel.contactCode}" styleClass="middle"/>
+                        </s:decorate>
+
+						<a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml" >
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['saleInvoice.label.followUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{paymentBrowse.filterModel.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['payment.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{paymentBrowse.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['payment.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{paymentBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['payment.label.Code']}" /></ui:define>
+                            <h:inputText value="#{paymentBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Advance']}" />
+							</ui:define>
+							<h:selectOneMenu id="processType" value="#{paymentBrowse.filterModel.processType}" styleClass="middle">
+								<f:selectItem itemLabel="#{messages['general.value.All']}"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Normal']}" itemValue="Normal"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Advance']}" itemValue="Advance"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.AdvanceReturn']}" itemValue="AdvanceReturn"/>
+							</h:selectOneMenu>
+						</s:decorate>
+
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{paymentBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    
+                    <ui:remove>
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{paymentBrowse.pdf()}"
+                                     styleClass="button"/>
+                    
+                    <h:commandButton id="detailedPdf" 
+                                     value="#{messages['general.button.DetailedPDF']}" 
+                                     action="#{paymentBrowse.detailedPdf()}"
+                                     styleClass="button"/>
+                    </ui:remove>
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="item"
+                                 value="#{paymentBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty paymentBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['payment.label.Serial']}"/></f:facet>
+                            
+                            <s:link view="/finance/paymentView.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['payment.label.Reference']}" /></f:facet>
+                            
+                            <s:link view="/finance/paymentView.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{item.id}"/>
+                                <h:outputText value="#{item.reference}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['payment.label.Date']}" /></f:facet>
+                            <h:outputText value="#{item.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['payment.label.Contact']}" /></f:facet>
+                            <h:outputText value=" [ #{item.contactCode} ] - #{item.contactName}" rendered="#{item.person eq true}" />
+                            <h:outputText value=" [ #{item.contactCode} ] - #{item.company}" rendered="#{item.person eq false}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['payment.label.Account']}" /></f:facet>
+                            <h:outputText value="#{item.accountCode}" />
+                        </r:column>
+                        
+                        <r:column styleClass="codeField">
+                            <f:facet name="header"><h:outputText value="#{messages['payment.label.Code']}" /></f:facet>
+                            <h:outputText value="#{item.code}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['payment.label.Info']}" /></f:facet>
+                            <h:outputText value="#{item.info}"/>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" rendered="#{item.itemAmountValue eq null}">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['collection.label.TotalAmount']}" />
+                            </f:facet>
+                            <h:outputText value="#{item.totalAmount}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" rendered="#{item.itemAmountValue ne null}">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['collection.label.TotalAmount']}" />
+                            </f:facet>
+                            <h:outputText value="#{item.itemAmountValue}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty paymentBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

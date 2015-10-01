@@ -1,0 +1,199 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<ui:include src="/layout/messages.xhtml" />
+	<ui:include src="/general/authorityDocumentSelectPopup.xhtml" />
+
+	<h:form id="form">
+		<input type="hidden" id="retpoint" value="" />
+
+		<r:panel>
+			<f:facet name="header">
+				<s:fragment>
+					<h:graphicImage url="/img/coins_add.gif"
+						alt="#{messages['collection.img.Form']}" />
+					<h:outputText
+						value="#{messages['contact.authorityDocuments.add.Form']}" />
+				</s:fragment>
+			</f:facet>
+			<a:region immediate="true" ajaxSingle="true" renderRegionOnly="true">
+				<h:panelGrid columns="2">
+					<s:div id="popDiv">
+
+						<s:fragment>
+
+							<s:decorate id="sdc" template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.AuthorityDocument']}" />
+								</ui:define>
+								<h:inputText id="authorityDocument"
+									value="#{contactHome.contactDocument.authorityDocument}"
+									var="detail" styleClass="middle" required="true">
+									<f:converter converterId="authorityDocumentCaptionConverter" />
+								</h:inputText>
+
+								<a:commandLink
+									action="#{authorityDocumentSuggestion.ownerParamInit('Contact')}"
+									oncomplete="javascript:authorityDocumentSelectPopup( '#{r:clientId( 'authorityDocument' )}' )"
+									accesskey="N" ajaxSingle="true">
+									<h:graphicImage url="/img/selectBox.gif"
+										title="#{messages['Detaylı Belge Arama']}" />
+								</a:commandLink>
+								<r:suggestionbox for="authorityDocument" rules="all"
+									ajaxSingle="true"
+									suggestionAction="#{authorityDocumentSuggestion.suggestContactAuthorityDocument}"
+									var="it" fetchValue="#{it.caption}">
+									<h:column>
+										<h:outputText value="#{it.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{it.name}" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.DocumentNo']}" />
+								</ui:define>
+								<h:inputText value="#{contactHome.contactDocument.documentNo}"
+									required="true" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.GiveProvince']}" />
+								</ui:define>
+								<h:inputText value="#{contactHome.contactDocument.giveProvince}"
+									required="true" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.Degree']}" />
+								</ui:define>
+								<h:inputText value="#{contactHome.contactDocument.degree}" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.FinePoint']}" />
+								</ui:define>
+								<h:inputText value="#{contactHome.contactDocument.finePoint}" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.Status']}" />
+								</ui:define>
+								<h:selectBooleanCheckbox id="active"
+									value="#{contactHome.contactDocument.active}"
+									styleClass="checkbox" />
+								<h:outputLabel
+									value="#{messages['contactDocument.label.Active']}"
+									for="active" styleClass="checkboxLabel" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.IsVisible']}" />
+								</ui:define>
+								<h:selectBooleanCheckbox id="visible"
+									value="#{contactHome.contactDocument.visible}"
+									styleClass="checkbox" />
+								<h:outputLabel
+									value="#{messages['contactDocument.label.Visible']}"
+									for="visible" styleClass="checkboxLabel" />
+							</s:decorate>
+						</s:fragment>
+					</s:div>
+
+					<s:div>
+						<s:fragment>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contactDocument.label.Code']}" />
+								</ui:define>
+								<h:inputText value="#{contactHome.contactDocument.code}" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.FirstDate']}" />
+								</ui:define>
+								<r:calendar value="#{contactHome.contactDocument.firstDate}"
+									enableManualInput="true"
+									datePattern="#{messages['general.format.Date']}"
+									required="true" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.RenewalDate']}" />
+								</ui:define>
+								<r:calendar value="#{contactHome.contactDocument.renewalDate}"
+									enableManualInput="true"
+									datePattern="#{messages['general.format.Date']}" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['contactDocument.label.ExpireDate']}" />
+								</ui:define>
+								<r:calendar value="#{contactHome.contactDocument.expireDate}"
+									enableManualInput="true"
+									datePattern="#{messages['general.format.Date']}" />
+							</s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['contactDocument.label.Establishment']}" />
+							</ui:define>
+							<h:inputText value="#{contactHome.contactDocument.establishment}" styleClass="exlarge"/>
+                            </s:decorate>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contactDocument.label.Info']}" />
+								</ui:define>
+								<h:inputTextarea value="#{contactHome.contactDocument.info}"
+									styleClass="exlarge" rows="4" />
+							</s:decorate>
+						</s:fragment>
+					</s:div>
+
+				</h:panelGrid>
+			</a:region>
+		</r:panel>
+
+		<div class="actionButtons">
+			<a:commandButton id="save"
+				value="#{messages['general.button.Ok']}"
+				action="#{contactHome.saveDocument()}" styleClass="button"
+				oncomplete="closeContactDocumentAdd()" reRender="its" /> 
+			<a:commandButton id="cancel" 
+				immediate="true"
+				value="#{messages['general.button.Cancel']}"
+				action="#{contactHome.cancel()}" styleClass="button"
+				oncomplete="closeContactDocumentAdd()" />
+		</div>
+
+		<ui:remove>
+			<a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+		</ui:remove>
+	</h:form>
+
+</ui:composition>

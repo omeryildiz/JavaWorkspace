@@ -1,0 +1,233 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+     <ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="finance" />
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewPromissory"/>
+            <ui:param name="cursubitem" value="promissoryToBankAssurancePayroll"/>
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="toolbar">
+		<div class="pathgroup">
+		<s:link
+			view="/finance/promissoryToBankAssurancePayrollBrowse.xhtml" propagation="none">
+			<h:outputText
+				value="#{messages['module.caption.PromissoryToBankAssurancePayrollBrowse']}" />
+		</s:link> <h:outputText value=" » " /> <s:link
+			view="/finance/promissoryToBankAssurancePayroll.xhtml">
+			<h:outputText
+				value="#{messages['module.caption.PromissoryToBankAssurancePayroll']}" />
+		</s:link></div>
+
+		<div class="toolgroup-left"><s:link view="/finance/promissoryToBankAssurancePayroll.xhtml"
+			action="#{promissoryToBankAssurancePayrollHome.createNew()}" rendered="#{s:hasPermission('promissoryToBankAssurancePayroll', 'insert')}">
+			<h:graphicImage url="/img/add.gif" />
+			<h:outputText value="#{messages['promissoryToBankAssurancePayroll.action.Add']}" />
+		</s:link></div>
+
+	</ui:define>
+
+
+
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.PromissoryToBankAssurancePayroll']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+
+        <h:form id="form" >
+
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['promissoryToBankAssurancePayroll.caption.Form']}"/>
+                        <h:outputText value="#{messages['promissoryToBankAssurancePayroll.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+                 <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+
+                <h:panelGrid columns="3">
+
+
+					 <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissoryToBankPayroll.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:outputText value="#{promissoryToBankAssurancePayroll.serial}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissoryToBankPayroll.label.Reference']}"/></ui:define>
+                            <h:outputText value="#{promissoryToBankAssurancePayroll.reference}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissoryToBankPayroll.label.Code']}"/></ui:define>
+                            <h:outputText value="#{promissoryToBankAssurancePayroll.code}" styleClass="middle" />
+                        </s:decorate>
+
+                        
+
+
+
+
+
+                    </s:div>
+                    <s:div>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissoryToBankPayroll.label.Date']}"/></ui:define>
+                            <h:outputText value="#{promissoryToBankAssurancePayroll.date}"
+                                        datePattern="#{messages['general.format.Date']}">
+                                            <s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+                            </h:outputText>
+                        </s:decorate>
+
+
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['promissoryToBankPayroll.label.Bank']}"/>
+                                </ui:define>
+                                <h:outputText id="bankBox"
+                                                 value="#{promissoryToBankAssurancePayroll.bank.name}"
+                                                 styleClass="middle">
+                                </h:outputText>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['promissoryToBankPayroll.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:outputText id="bankBranchBox"
+                                                 value="#{promissoryToBankAssurancePayroll.bankBranch.name}"
+                                                 styleClass="middle">
+                                    
+                                </h:outputText>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['promissoryToBankPayroll.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:outputText id="bankAccountBox"
+                                                 value="#{promissoryToBankAssurancePayroll.bankAccount.accountNo} - #{promissoryToBankAssurancePayroll.bankAccount.name} - #{promissoryToBankAssurancePayroll.bankAccount.currency}"
+                                                 styleClass="middle">
+                                </h:outputText>
+                            </s:decorate>
+
+                    </s:div>
+
+                    <s:div>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissoryToBankPayroll.label.Info']}"/></ui:define>
+                            <h:outputText value="#{promissoryToBankAssurancePayroll.info}" styleClass="exlarge" />
+                        </s:decorate>
+
+                    </s:div>
+                </h:panelGrid>
+
+               <a:region>
+                    <r:dataTable id="its"
+                                 var="item"
+                                 value="#{promissoryToBankAssurancePayroll.details}"
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="6">
+                                    <h:outputText value="#{messages['promissoryToBankPayroll.caption.Details']}" />
+                                </r:column>
+
+                             
+
+                                <r:column breakBefore="true" styleClass="middle" style="width:150px;">
+                                    <h:outputText value="#{messages['promissoryToBankPayroll.promissory.label.ReferenceNo']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['promissory.label.IssueDate']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['promissoryToContactPayroll.promissory.label.MaturityDate']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['promissory.label.PromissoryOwner']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['promissoryToBankPayroll.label.Info']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['promissoryToBankPayroll.promissory.label.Amount']}" />
+                                </r:column>
+
+                            </r:columnGroup>
+
+                        </f:facet>
+
+                        <r:column >
+                            <h:outputText  value="#{item.promissory.referenceNo}"/>
+                        </r:column>
+
+                        <r:column>
+                       		<h:outputText value="#{item.promissory.issueDate}" >
+	                       		<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                       		</h:outputText>
+                        </r:column>
+
+                        <r:column>
+                            <h:outputText  value="#{item.promissory.maturityDate}" >
+	                            <s:convertDateTime pattern="#{messages['general.format.Date']}" />
+							</h:outputText>
+                        </r:column>
+
+                        <r:column>
+                       		<h:outputText value="#{item.promissory.promissorynoteOwner}" />
+                        </r:column>
+
+                        <r:column styleClass="amountField">
+                            <h:outputText  value="#{item.promissory.money}"/>
+                        </r:column>
+
+                        <r:column>
+                      		<h:outputText value="#{item.promissory.info}" />
+                        </r:column>
+
+
+                    </r:dataTable>
+                </a:region>
+
+            </r:panel>
+
+            <div class="actionButtons">
+
+				<s:button id="edit" value="#{messages['general.button.EditDesc']}"
+					action="#{promissoryToBankAssurancePayrollHome.edit()}" styleClass="button">
+					<f:param name="eid" value="#{promissoryToBankAssurancePayroll.id}"/>	
+				</s:button>
+
+				<s:button id="done" value="#{messages['general.button.Close']}"
+					action="#{promissoryToBankAssurancePayrollHome.close()}" styleClass="button" />
+			</div>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

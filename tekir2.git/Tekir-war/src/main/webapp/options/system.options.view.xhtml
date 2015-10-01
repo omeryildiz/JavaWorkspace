@@ -1,0 +1,68 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="home" />
+            <ui:param name="curpage" value="home" />
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="rightBar">
+
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.SystemProperties']}" /></h1>
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+		<s:div id="messagesDiv">
+	        <ui:include src="/layout/messages.xhtml" />
+		</s:div>
+
+        <s:fragment id="optionsView">
+
+                <h:panelGrid columns="2" columnClasses="paramlist,paramform" rendered="#{s:hasPermission('system', 'update') and s:hasPermission('system', 'insert')}">
+                    <r:panel >
+                        <f:facet name="header"><h:outputText value="#{messages['module.caption.SetupGroups']}"/></f:facet>
+                        <h:panelGrid columns="1" >
+                            <c:forEach items="#{optionEditor.systemPanes}" var="pane">
+                                <r:toggleControl for="optionPaneX" value="#{messages[ut:concat( 'optionPane.caption.', pane.name)]}" switchToState="#{pane.name}" />
+                            </c:forEach>
+                        </h:panelGrid>
+                    </r:panel>
+
+                    <r:togglePanel id="optionPaneX" value="#{optionEditor.defaultPane}" switchType="client" stateOrder="#{optionEditor.paneNameList}">
+
+                        <c:forEach items="#{optionEditor.systemPanes}" var="pane">
+                            <f:facet name="#{pane.name}">
+                                <r:panel >
+                                    <f:facet name="header"><h:outputText value="#{messages[ut:concat( 'optionPane.caption.', pane.name)]}"/></f:facet>
+                                    <ui:include src="#{pane.viewID}">
+                                        <ui:param name="pane" value="#{pane}" />
+                                    </ui:include>
+                                </r:panel>
+                            </f:facet>
+                        </c:forEach>
+
+
+                    </r:togglePanel>
+
+                </h:panelGrid>
+            
+        </s:fragment>
+
+    </ui:define>
+</ui:composition>

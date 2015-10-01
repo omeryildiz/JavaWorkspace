@@ -1,0 +1,458 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="contactReport"/>
+            <ui:param name="curitem" value="contactServicesAcquiredReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/report/contactServicesAcquiredReport.xhtml" propagation="begin">
+                <h:outputText value="#{messages['module.caption.ContactServicesAcquiredReport']}" rendered="#{s:hasPermission('contactServicesAcquiredReport', 'select')}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ContactServicesAcquiredReport']}" /></h1>
+        
+        <h:form id="form" >
+	        <ui:include src="/layout/messages.xhtml"/>
+			<ui:include src="/contact/contactSelectPopup.xhtml" />
+			<ui:include src="/stock/productSelectPopup.xhtml" />
+	        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+	        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:panelGrid columns="4">
+                    <s:fragment>
+                    	<a:region id="ss">
+                            <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['collection.label.Contact']}"/></ui:define>
+
+                                <h:inputText id="contact" value="#{contactServicesAcquiredReport.filterModel.contact}" styleClass="middle" required="true">
+                                    <f:converter converterId="contactCaptionConverter"/>
+                                </h:inputText>
+
+                                <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+                                    <h:graphicImage url="/img/selectBox.gif" />
+                                </a>
+
+                                <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestCustomer}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                            </s:decorate>
+                        </a:region>
+                        
+                        <a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.FollowUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{contactServicesAcquiredReport.filterModel.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <a:region>
+	                        <s:decorate template="/layout/edit.xhtml" id="pro">
+	                        	<ui:define name="label"><h:outputText value="#{messages['salePriceItem.label.Product']}"/></ui:define>
+	                            <h:inputText id="product"  value="#{contactServicesAcquiredReport.filterModel.product}" styleClass="middle" required="false">
+	                                 <f:converter converterId="productCaptionConverter"/>
+	                            </h:inputText>
+	                             
+	                            <a href="javascript:productSelectPopup( '#{r:clientId('product')}' )">
+	                                 <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            <r:suggestionbox for="product" rules="all" ajaxSingle="true"
+							 			suggestionAction="#{stockSuggestion.suggestProduct}" var="pit"
+										fetchValue="#{pit.caption}">
+										<h:column>
+											<h:outputText value="#{pit.code}" />
+										</h:column>
+										<h:column>
+											<h:outputText value="#{pit.name}" />
+										</h:column>
+	                         	</r:suggestionbox>
+	                        </s:decorate>
+                        </a:region>                    
+                    
+                        <s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['product.label.Barcode']}" /></ui:define>
+                        	<h:inputText value="#{contactServicesAcquiredReport.filterModel.barcode1}" styleClass="middle"/>
+                        </s:decorate>                    
+                    
+                    </s:fragment>
+                    
+                    <s:fragment>
+						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Clerk']}"/>
+                            </ui:define>
+                            <h:selectOneMenu id="clerk" value="#{contactServicesAcquiredReport.filterModel.clerk}" styleClass="middle" >
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.userList}" var="acc"
+                                	label="#{acc.fullName} - #{acc.userName}"
+                                	noSelectionLabel="#{messages['general.value.SelectOne']}"
+                                	hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu>
+						</s:decorate>
+                   
+                   		<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Cashier']}"/>
+                            </ui:define>
+                            <h:selectOneMenu id="cashier" value="#{contactServicesAcquiredReport.filterModel.cashier}" styleClass="middle" >
+                                <s:selectItems value="#{generalSuggestion.userName}" var="acc"
+                                	label="#{acc}"
+                                	noSelectionLabel="#{messages['general.value.SelectOne']}"
+                                	hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu>
+						</s:decorate>
+						                    
+                    </s:fragment>
+
+					<s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label"><h:outputText value="#{messages['general.label.StartDate']}" /></ui:define>
+                    		<r:calendar value="#{contactServicesAcquiredReport.filterModel.beginDate}" enableManualInput="true" 
+                    					datePattern="#{messages['general.format.Date']}"/>
+                    	</s:decorate>
+
+                    	<s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label"><h:outputText value="#{messages['general.label.EndDate']}"/></ui:define>
+                    		<r:calendar value="#{contactServicesAcquiredReport.filterModel.endDate}" enableManualInput="true" 
+                    					datePattern="#{messages['general.format.Date']}"/>
+                    	</s:decorate>
+					
+					</s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{contactServicesAcquiredReport.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+                                     
+					<h:commandButton id="pdf"
+									 value="#{messages['general.button.PDF']}"
+									 action="#{contactServicesAcquiredReport.pdf()}" 
+									 rendered="#{s:hasPermission('contactServicesAcquiredReport', 'pdf')}"
+									 styleClass="button" />
+									 
+                    <h:commandButton id="xls" 
+                                     value="#{messages['general.label.XLS']}" 
+                                     action="#{contactServicesAcquiredReport.xls()}"
+                                     rendered="#{s:hasPermission('contactServicesAcquiredReport', 'xls')}"
+                                     styleClass="button"/>  									 					
+					                                     
+                </div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+            	<s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="it"
+                                 value="#{contactServicesAcquiredReport.entityList}" 
+                                 rendered="#{not empty contactServicesAcquiredReport.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rows="30">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.DocumentType']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{messages[ut:concat('general.value.DocumentType.',it.documentType)]}"/>
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Serial']}" />
+                        	</f:facet>
+                        	
+       	                    <s:link view="/finance/newsaleShipmentInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{it.documentType eq 'SaleInvoice' and it.tradeAction eq 'Sale'}">
+                                <f:param name="eid" value="#{it.fisId}"/>
+			                    <f:param name="it" value="1"/>
+			                    <f:param name="at" value="1"/>
+                                <h:outputText value="#{it.fis_no}"/>
+                            </s:link>
+                            
+                            <s:link view="/finance/newsaleInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{it.documentType eq 'SaleShipmentInvoice' and it.tradeAction eq 'Sale'}">
+			                    <f:param name="it" value="0"/>
+			                    <f:param name="at" value="1"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.fis_no}"/>
+                            </s:link>
+
+                            <s:link view="/finance/purchaseReturnInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{it.tradeAction eq 'PurchseReturn'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.fis_no}"/>
+                            </s:link>
+
+                            <s:link view="/finance/retailSaleInvoiceView.xhtml" propagation="begin"
+                                rendered="#{it.documentType eq 'RetailSaleShipmentInvoice' and it.tradeAction eq 'Sale'}">
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.fis_no}"/>
+                            </s:link>        
+                            
+                            <s:link view="/stock/newsaleOrderView.xhtml" propagation="begin"
+                            	rendered="#{it.documentType eq 'SaleOrder'}">
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.fis_no}"/>
+                            </s:link>       
+                            
+                            <s:link view="/finance/saleReturnInvoiceView.xhtml"
+                            	rendered="#{it.documentType eq 'PurchaseShipmentInvoice' and it.tradeAction eq 'SaleReturn'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.fis_no}"/>
+                            </s:link>      
+                            
+                            <s:link view="/finance/retailSaleReturnInvoiceView.xhtml"
+                            	rendered="#{it.documentType eq 'RetailSaleReturnInvoice' and it.tradeAction eq 'SaleReturn'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.fis_no}"/>
+                            </s:link>
+                        </r:column>
+ 						
+ 						<r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Reference']}" />
+                        	</f:facet>
+                        	
+                           <s:link view="/finance/newsaleShipmentInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{it.documentType eq 'SaleInvoice' and it.tradeAction eq 'Sale'}">
+                                <f:param name="eid" value="#{it.fisId}"/>
+			                    <f:param name="it" value="1"/>
+			                    <f:param name="at" value="1"/>
+                                <h:outputText value="#{it.belge_no}"/>
+                            </s:link>
+                            
+                            <s:link view="/finance/newsaleInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{it.documentType eq 'SaleShipmentInvoice' and it.tradeAction eq 'Sale'}">
+			                    <f:param name="it" value="0"/>
+			                    <f:param name="at" value="1"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.belge_no}"/>
+                            </s:link>
+
+                            <s:link view="/finance/purchaseReturnInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{it.tradeAction eq 'PurchseReturn'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.belge_no}"/>
+                            </s:link>
+
+                            <s:link view="/finance/retailSaleInvoiceView.xhtml" propagation="begin"
+                                rendered="#{it.documentType eq 'RetailSaleShipmentInvoice' and it.tradeAction eq 'Sale'}">
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.belge_no}"/>
+                            </s:link>
+                        	                
+                            <s:link view="/stock/newsaleOrderView.xhtml" propagation="begin"
+                            	rendered="#{it.documentType eq 'SaleOrder'}">
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.belge_no}"/>
+                            </s:link>
+                            <s:link view="/finance/saleReturnInvoiceView.xhtml"
+                            	rendered="#{it.documentType eq 'PurchaseShipmentInvoice' and it.tradeAction eq 'SaleReturn'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.belge_no}"/>
+                            </s:link>      
+                            
+                            <s:link view="/finance/retailSaleReturnInvoiceView.xhtml"
+                            	rendered="#{it.documentType eq 'RetailSaleReturnInvoice' and it.tradeAction eq 'SaleReturn'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{it.fisId}"/>
+                                <h:outputText value="#{it.belge_no}"/>
+                            </s:link>                        	                      		
+                        </r:column>
+ 
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Date']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.date}">
+                        		<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                        	</h:outputText>
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.DeliveryDate']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.deliveryDate}">
+                        		<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                        	</h:outputText>	                        		
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Clerk']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.tezgahtar.fullName}"/>                        		
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Cashier']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.kasiyer}"/>                        		
+                        </r:column>
+                                                
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['product.label.Barcode']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.barcode}"/>                        		
+                        </r:column>
+ 
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['loadType.label.code']}" />
+                        	</f:facet> 
+                        	
+                        	<s:link view="/stock/product.xhtml" rendered="#{it.productType eq 'Product'}" propagation="begin">
+                                <f:param name="eid" value="#{it.urunId}"/>
+                                <h:outputText value="#{it.urun_kodu}"/>
+                            </s:link>
+                            <s:link view="/contact/service.xhtml" rendered="#{it.productType eq 'Service'}" propagation="begin">
+                                <f:param name="eid" value="#{it.urunId}"/>
+                                <h:outputText value="#{it.urun_kodu}"/>
+                            </s:link>
+                            <s:link view="/stock/expense.xhtml" rendered="#{it.productType eq 'Expense'}" propagation="begin">
+                                <f:param name="eid" value="#{it.urunId}"/>
+                                <h:outputText value="#{it.urun_kodu}"/>
+                            </s:link>
+                            <s:link view="/stock/discount.xhtml" rendered="#{it.productType eq 'Discount'}" propagation="begin">
+                                <f:param name="eid" value="#{it.urunId}"/>
+                                <h:outputText value="#{it.urun_kodu}"/>
+                            </s:link>                     		
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['salePriceItem.label.Product']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.urun_adi}"/>                        		
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['purchaseInvoice.label.Quantity']}" />
+                        	</f:facet>
+                        	<s:div styleClass="quantityFieldTiny" >
+	                        	<h:outputText value="#{it.adet}"                         	 
+	                        		styleClass="quantityFieldTiny" alt="decimal" converter="doubleConverter"/>    
+                        	</s:div>                    		
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.UnitPrice']}" />
+                        	</f:facet>
+                        	<s:div styleClass="amountFieldTiny" >
+	                        	<h:outputText value="#{it.birim_fiyat}" styleClass="amountFieldTiny" converter="doubleConverter" />
+	                        	<h:outputText value=" #{it.doviz}" />
+	                        </s:div>	  
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['home.label.TotalValue']}" />
+                        	</f:facet>
+                        	<s:div styleClass="amountFieldTiny" >
+                        		<h:outputText value="#{it.value}" styleClass="amountfield" alt="decimal" converter="bigDecimalConverter" />
+                        		<h:outputText value=" #{it.doviz}" />
+                        	</s:div>	
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.LocalAmount']}" />
+                        	</f:facet>
+                        	
+                        	<s:div styleClass="quantityFieldTiny negativeNumber" 
+                        		rendered="#{(it.tradeAction eq 'Purchase') 
+                        					or (it.tradeAction eq 'SaleReturn') }">
+	                        	<h:outputText value="#{it.net_tutar * -1}" styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+	                        </s:div>
+	                        
+	                        <s:div styleClass="quantityFieldTiny" 
+	                              rendered="#{not((it.tradeAction eq 'Purchase') or (it.tradeAction eq 'SaleReturn'))}">
+	                        	<h:outputText value="#{it.net_tutar}" styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+	                        </s:div>
+	                        	
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" ajaxSingle="false"/>          
+                        </f:facet>
+                    </r:dataTable>
+
+                    <r:panel id="msg" rendered="#{empty contactServicesAcquiredReport.entityList}" styleClass="message">
+                    	<h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                	</r:panel>
+               </s:div>
+
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

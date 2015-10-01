@@ -1,0 +1,272 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="portfolioToPortfolioTransfer"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/portfolioToPortfolioTransferBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PortfolioToPortfolioTransferBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/portfolioToPortfolioTransfer.xhtml">
+                <h:outputText value="#{messages['module.caption.PortfolioToPortfolioTransfer']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{portfolioToPortfolioTransferHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['portfolioToPortfolioTransfer.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PortfolioToPortfolioTransfer']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <ui:include src="/finance/securitySelectPopup.xhtml" />
+     
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/lorry.gif" alt="#{messages['portfolioToPortfolioTransfer.img.Form']}"/> 
+                        <h:outputText value="#{messages['portfolioToPortfolioTransfer.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                 <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:inputText value="#{portfolioToPortfolioTransfer.serial}" styleClass="middle" 
+                            	required="true" accesskey="Q" 
+                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Reference']}"/></ui:define>
+                            <h:inputText value="#{portfolioToPortfolioTransfer.reference}" styleClass="middle" required="false"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.FromPortfolio']}"/></ui:define>
+                            <h:selectOneMenu value="#{portfolioToPortfolioTransfer.fromPortfolio}" styleClass="middle" required="true">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.portfolioList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.ToPortfolio']}"/></ui:define>
+                            <h:selectOneMenu value="#{portfolioToPortfolioTransfer.toPortfolio}" styleClass="middle" required="true">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.portfolioList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Code']}"/></ui:define>
+                            <h:inputText value="#{portfolioToPortfolioTransfer.code}" styleClass="middle" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Date']}"/></ui:define>
+                            <r:calendar value="#{portfolioToPortfolioTransfer.date}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{portfolioToPortfolioTransfer.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['portfolioToPortfolioTransfer.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{portfolioToPortfolioTransfer.info}" styleClass="exlarge" rows="6"/>
+                        </s:decorate>
+                    </s:div>
+                </h:panelGrid>
+                
+                
+                
+                <a:region>
+                    <r:dataTable id="its" 
+                                 var="item"
+                                 value="#{portfolioToPortfolioTransfer.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="5">
+                                    <h:outputText value="#{messages['portfolioToPortfolioTransfer.caption.Details']}" />
+                                </r:column>
+                                <r:column style="width:16px;">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{portfolioToPortfolioTransferHome.createNewLine()}" oncomplete="focusLastRow();" accesskey="N">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+                                
+                                <r:column breakBefore="true" styleClass="codeField">
+                                    <h:outputText value="#{messages['portfolioToPortfolioTransfer.label.LineCode']}" />
+                                </r:column>
+                                <r:column style="width:250px;">
+                                    <h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Security']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['portfolioToPortfolioTransfer.label.LineInfo']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Nominal']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Currency']}" />
+                                </r:column>
+                                
+                                <r:column style="width:16px;">
+                                    <h:outputText value="" />
+                                </r:column>
+                            </r:columnGroup>
+                            
+                        </f:facet>
+                        <r:column>
+                            <s:decorate>
+                                <h:inputText  value="#{item.lineCode}" styleClass="codeField utdff" />
+                            </s:decorate>
+                        </r:column>
+                        <r:column style="width:220px;">
+                            <s:div style="width:220px;">
+                            <h:inputText id="security" value="#{item.security}" style="width:180px;" requried="true">
+                                <f:converter converterId="securityCaptionConverter"/>
+                                <a:support event="onblur" actionListener="#{portfolioToPortfolioTransferHome.selectSecurity(rowKey)}" reRender="currency" ajaxSingle="true"/>
+                            </h:inputText>
+                            <a href="javascript:securitySelectPopup( 'form:its:#{rowKey}:security' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            <r:suggestionbox for="security" nothingLabel="Sonuç Yok" rules="all"  ajaxSingle="true" suggestionAction="#{securitySuggestion.suggestSecurity}" var="it" fetchValue="#{it.caption}"
+                                             reRender="currency" selfRendered="true">
+                                <h:column>
+                                    <h:outputText value="#{it.code}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.isin}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.currency}"/>
+                                </h:column>
+                            </r:suggestionbox>
+                            </s:div>
+                        </r:column>
+                        <r:column>
+                            <s:decorate>    
+                                <h:inputText  value="#{item.info}" style="width:450px;" />
+                            </s:decorate>
+                        </r:column>
+                        <r:column>
+                            <s:decorate>
+                                <h:inputText  value="#{item.nominal}" styleClass="amountField" 
+                                	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            </s:decorate>
+                        </r:column>
+                        <r:column>
+                            <h:outputText id="currency" value="#{item.security.currency.code}" styleClass="small"/>
+                        </r:column>
+                        <r:column>
+                            <a:commandLink reRender="its" action="#{portfolioToPortfolioTransferHome.deleteLine(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" /> 
+                            </a:commandLink>
+                        </r:column>
+                        
+                        
+                        <f:facet name="footer">
+                            <ui:remove>
+                                <r:dataTable id="totals"
+                                             var="item"
+                                             value="#{dekont.totals}" 
+                                             style="float:right; width: 30%;"
+                                             onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                             onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                                    
+                                    <r:column style="text-align:right;">
+                                        <f:facet name="header">
+                                            <h:outputText value="Toplamlar" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.value} #{item.currency}"/>
+                                    </r:column>
+                                </r:dataTable>
+                            </ui:remove>
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </a:region>
+                
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{portfolioToPortfolioTransferHome.save()}"
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{portfolioToPortfolioTransferHome.delete()}"
+                          rendered="#{not empty portfolioToPortfolioTransfer.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{portfolioToPortfolioTransferHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

@@ -1,0 +1,262 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="warehouse"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+                <s:link view="/general/warehouse.xhtml" rendered="#{s:hasPermission('warehouse', 'select')}" propagation="begin" >
+                    <h:outputText value="#{messages['module.caption.Warehouse']}"/>
+                </s:link>
+            </div>
+            
+            <div class="toolgroup-left">
+                <s:link action="#{warehouseHome.createNew()}" rendered="#{s:hasPermission('warehouse', 'insert')}" propagation="begin" >
+                    <h:graphicImage url="/img/add.gif" /> 
+                    <h:outputText value="#{messages['warehouse.action.Add']}"/>
+                </s:link>
+            </div>
+            
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Warehouse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{warehouseList}" 
+                                 rendered="#{s:hasPermission('warehouse', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['warehouse.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{warehouseHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code} - #{cty.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{warehouseHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['warehouse.hint.EmptyList']}" rendered="#{warehouseList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/house.gif" alt="#{messages['warehouse.img.World']}"/> 
+                            <h:outputText value="#{messages['warehouse.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                    	<s:fragment>
+	                        <s:decorate template="/layout/edit.xhtml" >
+	                            <ui:define name="label"><h:outputText value="#{messages['warehouse.label.Code']}"/></ui:define>
+	                            <h:inputText value="#{warehouse.code}" styleClass="small" required="true"/>
+	                        </s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['warehouse.label.Name']}"/></ui:define>
+	                            <h:inputText value="#{warehouse.name}" styleClass="large" required="true"/>
+	                        </s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml" rendered="#{warehouseHome.getOrganizationSchemeOption()}">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.Organization']}" />
+								</ui:define>
+								<h:selectOneMenu value="#{warehouse.organization}" styleClass="large" required="true">
+									<s:convertEntity />
+									<s:selectItems value="#{generalSuggestion.findSuitableOrganizations('Warehouse')}"
+										var="item" label="#{item.code} - #{item.name}"
+										noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false" />
+								</h:selectOneMenu>
+							</s:decorate>
+                    	
+	                 
+                    	</s:fragment>
+                        
+                        <s:fragment>
+                        
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['warehouse.label.Info']}"/></ui:define>
+	                            <h:inputTextarea value="#{warehouse.info}" styleClass="exlarge" rows="4"/>
+	                        </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['warehouse.label.Status']}"/></ui:define>
+	                            <h:selectBooleanCheckbox id="active" value="#{warehouse.active}" styleClass="checkbox" />
+	                            <h:outputLabel value="#{messages['warehouse.label.Active']}" for="active" styleClass="checkboxLabel" />
+                            </s:decorate>
+
+                        </s:fragment>
+                        
+                    </h:panelGrid>    
+                    <h3>#{messages['address.label.Address']}</h3>
+                    <table>
+                        <tr>
+                            <td colspan="2">
+                                <s:decorate template="/layout/edit.xhtml">
+                                    <ui:define name="label"><h:outputText value="#{messages['address.label.Street']}"/></ui:define>
+                                    <h:inputTextarea value="#{warehouse.address.street}" styleClass="exlarge" rows="4"/>
+                                </s:decorate>
+                            </td>
+                            <td>
+                                <s:decorate template="/layout/edit.xhtml">
+                                    <ui:define name="label"><h:outputText value="#{messages['address.label.Zip']}"/></ui:define>
+                                    <h:inputText value="#{warehouse.address.zip}" styleClass="middle zipcode"/>
+                                </s:decorate>
+                            </td>
+                        </tr>
+                        <tr>                            
+                            <td>
+	                            <s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['address.label.Country']}" />
+									</ui:define>					
+									<h:selectOneMenu value="#{warehouse.address.country}" 
+										styleClass="middle" required="true">
+										<s:selectItems value="#{generalSuggestion.countryList}"
+											var="it" label="#{it.name}" 
+											noSelectionLabel="#{messages['general.value.None']}"
+											hideNoSelectionLabel="false" 
+											itemValue="#{it.name}"/>
+										<a:support event="onchange" reRender="cityDec,provinceDec" ajaxSingle="true" status="commonAjaxStatus"/>
+									</h:selectOneMenu>
+								</s:decorate>
+							</td>
+                            <td>
+                            	<s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label"><h:outputText value="#{messages['address.label.City']}" /></ui:define>	
+									<h:selectOneMenu id="cityDec" value="#{warehouse.city}" styleClass="middle"  required="true">
+                                 		<s:convertEntity/>
+                                 		<s:selectItems value="#{generalSuggestion.getCityList(warehouse.address.country)}"
+                                             		   var="item"
+                                              		  label="#{item.name}"
+                                              		  noSelectionLabel="#{messages['general.value.None']}"
+                                              		  hideNoSelectionLabel="false" />
+                                 		<a:support event="onchange" reRender="provinceBox" ajaxSingle="true"/>
+                             		</h:selectOneMenu>                             	
+                            	</s:decorate>
+                            </td>  
+                            <td>
+                            	<s:div id="provinceDec">
+	                          		<s:decorate template="/layout/edit.xhtml"
+	                          			rendered="#{warehouse.address.country eq messages['country.label.Turkey']}" >
+	                           			<ui:define name="label"><h:outputText value="#{messages['address.label.Province']}"/></ui:define>
+	                            		<h:selectOneMenu id="provinceBox" value="#{warehouse.province}" styleClass="middle" required="true">
+	                                 		<s:convertEntity/>
+	                                 		<s:selectItems value="#{generalSuggestion.getProvinceList(warehouse.city)}"
+	                                        		        var="item"
+	                                                		label="#{item.name}"
+	                                                		noSelectionLabel="#{messages['general.value.None']}"
+	                                           			    hideNoSelectionLabel="false" />
+	                             		</h:selectOneMenu>
+	                        		</s:decorate>
+                        		</s:div>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <h3>#{messages['warehouse.label.AuthorizedPerson']}</h3>
+
+                    <h:panelGrid columns="2">
+						<s:div>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.FirstName']}" />
+								</ui:define>
+								<h:inputText value="#{warehouse.contactPerson.firstName}"
+									styleClass="middle" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.LastName']}" />
+								</ui:define>
+								<h:inputText value="#{warehouse.contactPerson.lastName}"
+									styleClass="middle" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.Title']}" />
+								</ui:define>
+								<h:inputText value="#{warehouse.contactPerson.title}"
+									styleClass="middle" />
+							</s:decorate>
+						</s:div>
+						<s:div>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.Phone']}" />
+								</ui:define>
+								<h:inputText value="#{warehouse.contactPerson.phone.fullNumber}"
+									styleClass="middle phone" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.Fax']}" />
+								</ui:define>
+								<h:inputText value="#{warehouse.contactPerson.fax.fullNumber}"
+									styleClass="middle phone" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Email']}" />
+								</ui:define>
+								<h:inputText value="#{warehouse.contactPerson.email}"
+									styleClass="middle email" />
+							</s:decorate>
+						</s:div>
+
+                    </h:panelGrid>
+                    
+                    <ut:actionButtons home="#{warehouseHome}" entity="#{warehouse}" permission="warehouse" />
+
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

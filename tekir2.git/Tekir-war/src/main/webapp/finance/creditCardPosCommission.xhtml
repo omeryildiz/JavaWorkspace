@@ -1,0 +1,254 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeOther"/>
+            <ui:param name="curitem" value="creditCardPosCommission"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/creditCardPosCommission.xhtml" propagation="begin">
+                <h:outputText value="#{messages['module.caption.CreditCardPosCommissionReport']}" rendered="#{s:hasPermission('creditCardPosCommission', 'select')}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.CreditCardPosCommissionReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:panelGrid columns="3">
+                    <s:fragment>
+                       	<s:decorate template="/layout/edit.xhtml">
+                               <ui:define name="label">
+                                   <h:outputText value="#{messages['posCommision.label.Pos']}"/>
+                               </ui:define>
+                               <h:selectOneMenu id="posBox"
+                                                value="#{creditCardPosCommissionReport.filterModel.pos}"
+                                                required="false"
+                                                styleClass="middle">
+                                   <s:convertEntity/>
+                                   <s:selectItems value="#{generalSuggestion.posList}"
+                                                  var="item"
+                                                  label="#{item.code} #{item.name} #{item.bank.name}"
+                                                  noSelectionLabel="#{messages['general.value.None']}"
+                                                  hideNoSelectionLabel="false" />
+                               </h:selectOneMenu>
+                           </s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+                               <ui:define name="label">
+                                   <h:outputText value="#{messages['posCommision.label.Bank']}"/>
+                               </ui:define>
+                               <h:selectOneMenu id="bankBox"
+                                                value="#{creditCardPosCommissionReport.filterModel.bank}"
+                                                required="false"
+                                                styleClass="middle">
+                                   <s:convertEntity/>
+                                   <s:selectItems value="#{generalSuggestion.bankList}"
+                                                  var="item"
+                                                  label="#{item.name}"
+                                                  noSelectionLabel="#{messages['general.value.None']}"
+                                                  hideNoSelectionLabel="false" />
+                               </h:selectOneMenu>
+                           </s:decorate>
+                        
+                    </s:fragment>
+
+					<s:fragment>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label"><h:outputText value="#{messages['general.label.TxnBeginDate']}" /></ui:define>
+                    		<r:calendar value="#{creditCardPosCommissionReport.filterModel.beginDate}" enableManualInput="true" 
+                    					datePattern="#{messages['general.format.Date']}"/>
+                    	</s:decorate>
+
+                    	<s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label"><h:outputText value="#{messages['general.label.TxnEndDate']}"/></ui:define>
+                    		<r:calendar value="#{creditCardPosCommissionReport.filterModel.endDate}" enableManualInput="true" 
+                    					datePattern="#{messages['general.format.Date']}"/>
+                    	</s:decorate>
+					
+					</s:fragment>
+
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.MaturityBeginDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{creditCardPosCommissionReport.filterModel.maturityBeginDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.MaturityEndDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{creditCardPosCommissionReport.filterModel.maturityEndDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+						
+
+					</s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{creditCardPosCommissionReport.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+					<h:commandButton action="#{creditCardPosCommissionReport.commissionPdf()}" 
+									 value="#{messages['general.button.PDF']}"
+									 rendered="#{s:hasPermission('creditCardPosCommission', 'pdf')}"
+									 styleClass="button" />					
+					                                     
+                </div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+            	<s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="it"
+                                 value="#{creditCardPosCommissionReport.entityList}" 
+                                 rendered="#{not empty creditCardPosCommissionReport.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rows="30">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+						<r:column>
+                        	<f:facet name="header">
+                        		<s:div>
+					                <h:graphicImage url="/img/information.gif"/> 
+                        		</s:div>
+                        	</f:facet>
+			                <h:graphicImage url="/img/button_ok.gif" rendered="#{it.repaidStatus}" 
+			                	title="#{messages['general.label.Repaid']}"/> 
+
+			                <h:graphicImage url="/img/NOTACT.gif" rendered="#{not it.repaidStatus}" 
+			                	title="#{messages['general.label.UnRepaid']}" />  
+						</r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['contact.label.BankName']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.pos.bank.name}" />
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['contact.label.BranchName']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.pos.bankBranch.name}" />
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['contact.label.Account']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.pos.bankAccount.accountNo}" />
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.TxnDate']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.txnDate}">
+                        		<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                        	</h:outputText>
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.MaturityDate']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.maturityDate}" >
+                        		<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                        	</h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="amountField">
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.value.SaleAmount']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.sale}" alt="decimal" converter="bigDecimalConverter"/>
+                        </r:column>
+                        
+                        <r:column styleClass="amountField">
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Commission']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.commission}" alt="decimal" converter="bigDecimalConverter"/>
+                        </r:column>
+                        
+                        
+                        <r:column styleClass="amountField">
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.value.financeAction.NetCredit']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.netPrice}"  alt="decimal" converter="bigDecimalConverter"/>
+                        </r:column>
+
+                        <r:column styleClass="actionColumn">
+                            <f:facet name="header">
+                            	<h:selectBooleanCheckbox id="checkAll" value="false" onchange="toggleCheckAll();" styleClass="checkbox" />
+							</f:facet>
+                            
+                            <h:selectBooleanCheckbox id="active" value="#{it.selected}" 
+                            	styleClass="checkbox" disabled="#{it.repaidStatus}"/>
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" ajaxSingle="false"/>          
+                        </f:facet>
+                    </r:dataTable>
+
+                    <r:panel id="msg" rendered="#{empty creditCardPosCommissionReport.entityList}" styleClass="message">
+                    	<h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                	</r:panel>
+               </s:div>
+
+	           <s:div styleClass="actionButtons">
+	     			<a:commandButton action="#{creditCardPosCommissionReport.createTransferDocumentFromSelectedItems()}"
+	     				value="#{messages['general.label.CreateTransferDocument']}" reRender="results"
+	     				styleClass="button" rendered="#{creditCardPosCommissionReport.filterModel.pos ne null}"/>
+
+	     	   </s:div>
+                
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

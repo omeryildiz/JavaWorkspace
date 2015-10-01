@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ut="http://utech.com/jsf/comps">
+    
+    <h1>Liste Ekranları Genel Özellikleri</h1>
+    <p>Kart ve Fiş girişlerinin her birisi için erişimi kolaylaştırıcı birer liste ekranı bulunmaktadır.</p>
+    <p>Bir liste ekranı temel olarak iki bölümden oluşur: filtre formu ve sonuç tablosu alanları.</p>
+    
+    <h:graphicImage url="#{helpManager.helpImagePath}listeform.png" />
+    
+    <h2>Filtre Formu</h2>
+    <p>Her liste ekranında içeriğine göre değişen farklı filtreleme olanakları sunulmuştur. İstenilen değerler doldurulur ve "Ara" düğmesine basıldığında aranılan ölçütlere uyan sonuçlar "Sonuç Tablosu"nda listelenecektir.</p>
+    
+    <h2>Sonuç Listeden Seçim</h2>
+    <p>Arama sonucuna göre gelen listede bir kaydın üzerine tıklanırsa kayıt düzenlenecek şekilde açılır. Örneğin Cari listesinde “Mehmet Öztürk” isimli cari kartına tıklarsak, “Cari Düzenleyici” ekranı içerisinde bu kayıt düzenlenecek şekilde açılır.</p>
+    <p>Önemli Uyarı! Ekranlar büyük küçük harfe duyarlı olduğundan arama girişlerinin buna göre yapılması gereklidir.</p>
+    
+    
+    <h2>Kart Liste Ekranlarındaki Kısa Yollar</h2>
+    <p>Liste ekranlarında girildiğinde ana menünün alt satırında listelenen kart ile ilgili en sık kullanılacak alt menülere bağ verilmiştir.</p>
+    
+    <h2>Excel'e Aktarım</h2>
+    <h:graphicImage url="#{helpManager.helpImagePath}toolbar.png" />
+    <p>Tüm liste ekranlarında Excel'e aktarma seçeneği bulunmaktadır. Bunun için liste ekranın istenen ölçütlere göre kayıtlar listelendikten sonra, ekranın sağ üst tarafında bulunan aktarım düğmesine  tıklanmalıdır</p>
+    <p>Excel'e aktarın düğmesine tıkladıktan sonra tarayıcınız dosyayı hangi uygulama ile açılacağını soracaktır. Burada ilgili uygulama seçildikten sonra “Tamam” düğmesine tıklandığında, listelenmiş olan bilgi Excel'de açılır.</p>
+    <h:graphicImage url="#{helpManager.helpImagePath}excelll.png" />
+    
+    <h2>Yazdır İşlevi</h2>
+    <p>Tüm liste ekranlarında yazdırma düğmesi bulunmaktadır. Bunun için liste ekranın istenen ölçütlere göre kayıtlar listelendikten sonra, ekranın sağ üst tarafında bulunan yazdırma düğmesine tıklanmalıdır.</p>
+    <p>Yazdır düğmesine tıklandığında listelenen kayıtlar ekranda yazdırabilir şekilde biçimlendirilmiş olarak görüntülenir. Bu ekrandan yazdırma yapılabilir.</p>
+    
+</ui:composition>

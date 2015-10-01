@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps">
+
+	<br/>
+	
+	<a:region renderRegionOnly="true">
+	<r:dataTable id="paymentTableList" var="item" value="#{currentEntity.paymentTable.detailList}" 
+		rowKeyVar="rowKey" styleClass="detailTable" >
+
+		<f:facet name="header">
+			<r:columnGroup>
+				<r:column colspan="8">
+					<h:outputText value="#{messages['general.label.PaymentTable']}" />
+				</r:column>
+				<r:column>
+					<div>
+						<a:commandLink reRender="paymentTableList" action="#{currentHome.createNewPaymentTableDetail()}"
+							accesskey="Z" oncomplete="setMasks();">
+							<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+						</a:commandLink>
+					</div>
+				</r:column>
+				<r:column breakBefore="true" styleClass="actionColumn"> 
+					<h:graphicImage url="/img/information.gif" /> 
+				</r:column>
+				<r:column styleClass="middle">
+					<h:outputText value="#{messages['general.label.PaymentType']}" />
+				</r:column>
+				<r:column styleClass="small">
+					<h:outputText value="#{messages['general.label.Pos']}" />
+				</r:column>
+				<r:column styleClass="middle">
+					<h:outputText value="#{messages['general.label.BankOfCard']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.Period']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.CardNumber']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.Amount']}" />
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.Currency']}" />
+				</r:column>
+				<r:column styleClass="actionColumn">
+					<h:outputText value="" />
+				</r:column>
+			</r:columnGroup>
+		</f:facet>
+		<r:column >
+            <h:graphicImage url="/img/vault.png" rendered="#{item.referenceId ne null}"/>
+            <h:graphicImage url="/img/plus.gif" rendered="#{item.referenceId eq null}"/>
+		</r:column>
+		<r:column>
+			<h:selectOneMenu value="#{item.paymentType}" styleClass="middle" disabled="#{item.referenceId ne null}">
+				<f:selectItem itemValue="Cash" itemLabel="#{messages['general.label.Cash']}" />
+				<f:selectItem itemValue="CreditCard" itemLabel="#{messages['general.label.CreditCard']}" />
+				<f:selectItem itemValue="BonusPay" itemLabel="#{messages['general.label.BonusPay']}" />
+				<f:selectItem itemValue="DebitCard" itemLabel="#{messages['general.label.DebitCard']}" />				
+				<a:support event="onchange" reRender="pos,period,bank,cardnumber" ajaxSingle="true" oncomplete="setMasks();" />
+			</h:selectOneMenu>
+		</r:column>
+
+		<r:column id="pos">
+			<s:div rendered="#{item.paymentType eq 'CreditCard' or item.paymentType eq 'BonusPay' or item.paymentType eq 'DebitCard'}">
+				<h:selectOneMenu value="#{item.pos}" styleClass="small" disabled="#{item.referenceId ne null}">
+					<s:convertEntity />
+					<s:selectItems value="#{generalSuggestion.posList}" var="pos"
+						label="#{pos.code} - #{pos.name}" noSelectionLabel="#{messages['general.value.None']}"
+						hideNoSelectionLabel="true" />
+					<a:support event="onchange" reRender="pos,period,bank" ajaxSingle="true" 
+						oncomplete="setMasks();" />
+				</h:selectOneMenu>
+			</s:div>
+		</r:column>
+
+		<r:column id="bank">
+			<s:div rendered="#{item.pos ne null and (item.paymentType eq 'CreditCard' or item.paymentType eq 'BonusPay' or item.paymentType eq 'DebitCard' )}">
+				<h:selectOneMenu value="#{item.bank}" styleClass="middle" disabled="#{item.referenceId ne null}">
+					<s:convertEntity />
+					<s:selectItems value="#{generalSuggestion.allBankList}"
+						var="bnk" label="#{bnk.code} - #{bnk.name}" noSelectionLabel="#{messages['general.value.None']}"
+						hideNoSelectionLabel="true" />
+				</h:selectOneMenu>
+			</s:div>
+		</r:column>
+
+		<r:column id="period">
+			<s:div rendered="#{item.pos ne null and (item.paymentType eq 'CreditCard' or item.paymentType eq 'BonusPay' or item.paymentType eq 'DebitCard' )}">
+				<h:selectOneMenu value="#{item.period}" disabled="#{item.referenceId ne null}">
+					<s:selectItems value="#{item.pos.getPeriods()}"
+						var="per" label="#{per}" noSelectionLabel="#{messages['general.value.None']}"
+						hideNoSelectionLabel="true" />
+				</h:selectOneMenu>
+			</s:div>
+		</r:column>
+
+		<r:column id="cardnumber">
+			<s:div rendered="#{item.paymentType eq 'CreditCard' or item.paymentType eq 'BonusPay' or item.paymentType eq 'DebitCard' }">
+				<h:inputText value="#{item.creditCardNumber}" styleClass="middle"
+					disabled="#{item.referenceId ne null}"/>
+			</s:div>
+		</r:column>
+
+		<r:column id="amount" >
+			<h:inputText value="#{item.amount.value}" styleClass="amountFieldTiny" 
+				alt="decimal" converter="bigDecimalConverter" disabled="#{item.referenceId ne null}"/>
+		</r:column>
+
+		<r:column>
+			<h:selectOneMenu value="#{item.amount.currency}" styleClass="ccyField" disabled="#{item.referenceId ne null}">
+				<s:selectItems value="#{generalSuggestion.currencyList}" var="ccy"
+					label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}"
+					hideNoSelectionLabel="true" />
+			</h:selectOneMenu>
+		</r:column>
+		
+		<r:column>
+			<a:commandLink reRender="paymentTableList" action="#{currentHome.deletePaymentTableDetail(rowKey)}"
+				oncomplete="setMasks();">
+				<h:graphicImage url="/img/delete.gif" />
+			</a:commandLink>
+		</r:column>
+
+	</r:dataTable>
+	</a:region>
+
+</ui:composition>

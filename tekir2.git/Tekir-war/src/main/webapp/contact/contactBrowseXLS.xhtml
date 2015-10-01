@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+    
+    <f:view contentType="application/vnd.ms-excel" >
+        <h:dataTable id="browseList" 
+                     var="contact"
+                     value="#{contactBrowse.entityList}">
+            <h:column>
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Code']}"/></f:facet>
+                <h:outputText value="#{contact.code}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Name']}" /></f:facet>
+                <h:outputText value="#{contact.name}"/>
+            </h:column>
+            <h:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Category']}" /></f:facet>
+                <h:outputText value="#{contact.category.code}"/>
+            </h:column>
+            <h:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Company']}" /></f:facet>
+                <h:outputText value="#{contact.company}"/>
+            </h:column>
+            <h:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Representative']}" /></f:facet>
+                <h:outputText value="#{contact.representative}"/>
+            </h:column>
+            <h:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Code1']}" /></f:facet>
+                <h:outputText value="#{contact.exCode1}"/>
+            </h:column>
+            <h:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Code2']}" /></f:facet>
+                <h:outputText value="#{contact.exCode2}"/>
+            </h:column>
+        </h:dataTable>
+    </f:view>
+    
+</ui:composition>

@@ -1,0 +1,67 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:ut="http://utech.com/jsf/comps"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <h:panelGrid columns="2">
+
+        <s:div>
+            <h3>Döviz ve Kurlar</h3>
+            <ul id="list-content">
+                <ut:paramMenuItem view="/general/currencyRate.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.CurrencyRate']}" />
+                <ut:paramMenuItem view="/general/currency.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.Currency']}" />
+                <ut:paramMenuItem view="/general/currencyPair.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.CurrencyPair']}" />
+            </ul>
+
+            <h3>Organizasyon</h3>
+            <ul id="list-content">
+                <ut:paramMenuItem view="/general/account.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.Account']}" />
+                <ut:paramMenuItem view="/general/warehouse.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.Warehouse']}" />
+                <ut:paramMenuItem view="/general/organizationBrowse.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.OrganizationBrowse']}" />
+            </ul>
+
+            <h3>Bankalar</h3>
+            <ul id="list-content">
+                <ut:paramMenuItem view="/general/bank.xhtml" img="/img/award_star_bronze_3.gif" text="#{messages['module.caption.BankDefinition']}" />
+                <ut:paramMenuItem view="/general/bankBranch.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.BankBranchDefinition']}" />
+                <ut:paramMenuItem view="/general/bankAccount.xhtml" img="/img/money_euro.gif" text="#{messages['module.caption.BankAccountDefinition']}" />
+                <ut:paramMenuItem view="/general/bankCard.xhtml" img="/img/plugin.gif" text="#{messages['module.caption.BankCard']}" />
+                <ut:paramMenuItem view="/general/pos.xhtml" img="/img/plugin.gif" text="#{messages['module.caption.Pos']}" />
+                <ut:paramMenuItem view="/general/paymentContractBrowse.xhtml" img="/img/plugin.gif" text="#{messages['paymentContract.caption.Form']}" />
+                <ui:remove>
+	            <ut:paramMenuItem view="/general/posCommisionBrowse.xhtml" img="/img/plugin.gif" text="#{messages['module.caption.PosCommisionBrowse']}" />
+                </ui:remove>
+            </ul>
+        </s:div>
+
+        <s:div>
+            <h3>Parametre Tanımları</h3>
+            <ul id="list-content">
+                <ut:paramMenuItem view="/general/country.xhtml" img="/img/world.gif" text="#{messages['module.caption.Country']}" />
+                <ut:paramMenuItem view="/general/city.xhtml" img="/img/world.gif" text="#{messages['module.caption.City']}" />
+                <ut:paramMenuItem view="/general/province.xhtml" img="/img/world.gif" text="#{messages['module.caption.Province']}" />
+                <ut:paramMenuItem view="/general/unit.xhtml" img="/img/plugin.gif" text="#{messages['module.caption.Unit']}" />
+                <ut:paramMenuItem view="/general/tax.xhtml" img="/img/plugin.gif" text="#{messages['module.caption.Tax']}" />
+                <ut:paramMenuItem view="/general/foundation.xhtml" img="/img/plugin.gif" text="#{messages['foundation.caption.Form']}" />
+                <ut:paramMenuItem view="/general/productGroup.xhtml" img="/img/plugin.gif" text="#{messages['productGroup.caption.Form']}" />
+                <ut:paramMenuItem view="/general/paymentPlan.xhtml" img="/img/plugin.gif" text="#{messages['paymentPlan.caption.Form']}" />
+                <ut:paramMenuItem view="/general/priceList.xhtml" img="/img/plugin.gif" text="#{messages['priceList.caption.Form']}" />
+                <ut:paramMenuItem view="/general/priceItemBrowse.xhtml" img="/img/plugin.gif" text="#{messages['priceItemBrowse.caption.Form']}" />
+                <ut:paramMenuItem view="/general/paymentCommission.xhtml" img="/img/plugin.gif" text="#{messages['paymentCommission.caption.Form']}" />
+                <ut:paramMenuItem view="/general/paymentActionType.xhtml" img="/img/plugin.gif" text="#{messages['paymentActionType.caption.Form']}" />
+                <ut:paramMenuItem view="/general/paymentContractBrowse.xhtml" img="/img/plugin.gif" text="#{messages['paymentContractBrowse.caption.Form']}" />
+                <ut:paramMenuItem view="/general/paymentContractBrowse.xhtml" img="/img/plugin.gif" text="#{messages['paymentContractBrowse.caption.Form']}" />
+            </ul>
+
+            <h3>Diğer</h3>
+            <ul id="list-content">
+                <ut:browseMenuItem view="/general/contactImporter.xhtml" img="/img/plugin.gif" text="#{messages['module.caption.ContactImporter']}" />
+            </ul>
+        </s:div>
+    </h:panelGrid>
+
+
+</div>

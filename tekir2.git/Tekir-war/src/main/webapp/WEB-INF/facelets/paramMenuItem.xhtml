@@ -1,0 +1,32 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                 xmlns:c="http://java.sun.com/jstl/core"
+                 xmlns:s="http://jboss.com/products/seam/taglib">
+                 
+    <li>
+        <s:link view="#{view}" propagation="begin" >
+
+            <c:if test="${not empty param1}">
+                <f:param name="#{param1}" value="#{param1value}"/>
+            </c:if>
+
+            <c:if test="${not empty param2}">
+                <f:param name="#{param2}" value="#{param2value}"/>
+            </c:if>
+
+            <c:if test="${not empty param3}">
+                <f:param name="#{param3}" value="#{param3value}"/>
+            </c:if>
+
+            <c:if test="${not empty img}">
+	            <h:graphicImage url="#{img}" />
+			</c:if>
+
+            <h:outputText value="#{text}" />
+         </s:link>
+    </li>
+    
+</ui:composition>

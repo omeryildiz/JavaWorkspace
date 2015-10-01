@@ -1,0 +1,170 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="general"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h1><h:outputText value="#{messages['paramsPage.caption.Module']}" /></h1>
+        <p><h:outputText value="#{messages['paramsPage.desc.Module']}" /></p>
+        <h:panelGrid columns="2">
+            <s:div>
+                <h2><h:outputText value="#{messages['financePage.caption.Currency']}" /></h2>
+                <p><h:outputText value="#{messages['financePage.desc.Currency']}" /></p>
+                <div>
+                    <ul>
+                        <li>
+                            <s:link view="/general/currency.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/money_euro.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.Currency']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/general/currencyPair.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/money_euro.gif" alt="#{messages['currency.img.CurrencyPair']}"/> 
+                                <h:outputText value="#{messages['module.caption.CurrencyPair']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/general/currencyRate.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/chart_line.gif" alt="#{messages['currency.img.CurrencyRate']}"/> 
+                                <h:outputText value="#{messages['module.caption.CurrencyRate']}"/>
+                            </s:link>
+                        </li>
+                    </ul>
+                </div>
+            </s:div>
+            <s:div>
+                <h2><h:outputText value="#{messages['financePage.caption.General']}" /></h2>
+                <p><h:outputText value="#{messages['financePage.desc.General']}" /></p>
+                <ul>
+                    <li>
+                        <s:link view="/general/country.xhtml">
+                            <h:graphicImage url="/img/world.gif" alt="#{messages['country.img.CurrencyRate']}"/> 
+                            <h:outputText value="#{messages['module.caption.Country']}"/>
+                        </s:link>
+                    </li>
+                    <li>
+                        <s:link view="/general/city.xhtml" propagation="begin">
+                            <h:graphicImage url="/img/world.gif" alt="#{messages['city.img.World']}"/> 
+                            <h:outputText value="#{messages['module.caption.City']}"/>
+                        </s:link>
+                    </li>
+                     <li>
+                        <s:link view="/general/province.xhtml" propagation="begin">
+                            <h:graphicImage url="/img/world.gif" alt="#{messages['province.img.World']}"/> 
+                            <h:outputText value="#{messages['module.caption.Province']}"/>
+                        </s:link>
+                    </li>
+                    
+                    
+                    <li>
+                        <s:link view="/general/unit.xhtml" propagation="begin">
+                            <h:graphicImage url="/img/plugin.gif" alt="#{messages['unit.img.House']}"/> 
+                            <h:outputText value="#{messages['module.caption.Unit']}"/>
+                        </s:link>
+                    </li>
+                    
+                </ul>
+            </s:div>
+            <s:div>
+                <h2><h:outputText value="#{messages['financePage.caption.Cards']}" /></h2>
+                <p><h:outputText value="#{messages['financePage.desc.Cards']}" /></p>
+                <div><ul>
+                        <li>
+                            <s:link view="/general/warehouse.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/house.gif" alt="#{messages['warehouse.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.Warehouse']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/general/account.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/award_star_bronze_3.gif" alt="#{messages['account.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.Account']}"/>
+                            </s:link>
+                           </li>  
+                        </ul>
+                        <ul>             
+                        <li>
+                            <s:link view="/general/bank.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/award_star_bronze_3.gif" alt="#{messages['account.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.BankDefinition']}"/>
+                            </s:link>
+                         </li>
+                         
+                         <li>
+                            <s:link view="/general/bankBranch.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/award_star_bronze_3.gif" alt="#{messages['account.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.BankBranchDefinition']}"/>
+                            </s:link>
+                        </li>   
+                         <li>
+                            <s:link view="/general/bankAccount.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/award_star_bronze_3.gif" alt="#{messages['account.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.BankAccountDefinition']}"/>
+                            </s:link>
+                        </li>
+                        </ul>
+                </div>
+            </s:div>
+            <s:div>
+                <h2><h:outputText value="#{messages['financePage.caption.Tax']}" /></h2>
+                <p><h:outputText value="#{messages['financePage.desc.Tax']}" /></p>
+                <div><ul>
+                        <li>
+                            <s:link view="/general/tax.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/plugin.gif" alt="#{messages['tax.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.Tax']}"/>
+                            </s:link>
+                        </li>
+                       
+                       
+                    </ul>
+                </div>
+            </s:div>
+            
+            <s:div>
+            <ui:remove>
+                <h2><h:outputText value="#{messages['financePage.caption.Staff']}" /></h2>
+                <p><h:outputText value="#{messages['financePage.desc.Staff']}" /></p>
+                <div><ul>
+                        <li>
+                            <s:link view="/general/employee.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/plugin.gif" alt="#{messages['tax.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.Employee']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/general/department.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/plugin.gif" alt="#{messages['tax.img.House']}"/> 
+                                <h:outputText value="#{messages['module.caption.Department']}"/>
+                            </s:link>
+                        </li>
+                       
+                    </ul>
+                </div>
+                </ui:remove>
+                
+            </s:div>
+            
+            
+       </h:panelGrid>
+        
+        
+    </ui:define> 
+</ui:composition>

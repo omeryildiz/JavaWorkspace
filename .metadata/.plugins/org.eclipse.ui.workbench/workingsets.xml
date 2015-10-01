@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workingSetManager>
+<workingSet editPageId="org.eclipse.ui.resourceWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1443692714429_1" label="Tekir" name="Tekir">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/tekir2.git" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/Tekir-ear" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/Tekir-ejb" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/Tekir-war" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/Tekir-dist" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/Tekir-liqui" type="4"/>
+</workingSet>
 <workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1441611053385_0" label="Window Working Set" name="Aggregate for window 1441611053384"/>
 </workingSetManager>

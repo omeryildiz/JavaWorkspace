@@ -1,0 +1,302 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="tax"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/tax.xhtml">
+                <h:outputText value="#{messages['module.caption.Tax']}" rendered="#{s:hasPermission('tax', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{taxHome.createNew()}" rendered="#{s:hasPermission('tax', 'insert')}" >
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['tax.action.Add']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Tax']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{taxList}" 
+                                 rendered="#{s:hasPermission('tax', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['tax.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{taxHome.edit(cty)}">
+                            	<h:graphicImage url="/img/button_ok.gif" title="#{messages['tax.label.IsTransportTax']}" rendered="#{cty.isTransportTax}"/>
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code} - #{cty.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{taxHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['tax.hint.EmptyList']}" rendered="#{taxList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/plugin.gif" alt="#{messages['tax.img.World']}"/> 
+                            <h:outputText value="#{messages['tax.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:fragment>
+                            <s:decorate template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['tax.label.Code']}"/></ui:define>
+                                <h:inputText value="#{tax.code}" styleClass="small" required="true"/>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['tax.label.Type']}" />
+                                </ui:define>
+                                <h:selectOneMenu value="#{tax.type}">
+                                    <s:convertEnum />
+                                    <s:enumItem enumValue="VAT"
+                                        label="#{messages['tax.type.VAT']}" />
+                                    <s:enumItem enumValue="OTV"
+                                        label="#{messages['tax.type.OTV']}" />
+                                    <s:enumItem enumValue="OIV"
+                                        label="#{messages['tax.type.OIV']}" />
+                                    <s:enumItem enumValue="STOPAJ"
+                                        label="#{messages['tax.type.STOPAJ']}" />
+                                    <s:enumItem enumValue="DAMGA"
+                                        label="#{messages['tax.type.DAMGA']}" />
+                                    <s:enumItem enumValue="TK"
+                                        label="#{messages['tax.type.TK']}" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            
+                        </s:fragment>
+
+                        <s:fragment>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['tax.label.Name']}"/></ui:define>
+                                <h:inputText value="#{tax.name}" styleClass="large" required="true"/>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['tax.label.Info']}"/></ui:define>
+                                <h:inputTextarea value="#{tax.info}" styleClass="exlarge" rows="4"/>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['tax.label.Status']}"/></ui:define>
+                                <h:selectBooleanCheckbox id="active" value="#{tax.active}" styleClass="checkbox" />
+                                <h:outputLabel value="#{messages['tax.label.Active']}" for="active" styleClass="checkboxLabel" />
+                            </s:decorate>
+                        </s:fragment>
+                        
+                    </h:panelGrid>
+                    
+                    <a:region>
+                    
+	                <r:spacer width="1" height="15" title="Here is a spacer..."/>
+                
+                	<r:dataTable id="its" 
+                                 var="taxItem"
+                                 value="#{tax.rates}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                                 
+                     	<f:facet name="header">
+                     		<r:columnGroup>
+                     			<r:column colspan="4">
+                                    <h:outputText value="#{messages['tax.caption.TaxDetail']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{taxHome.createNewLine()}" accesskey="N" oncomplete="focusLastRow(); setMasks();">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+                                <r:column breakBefore="true" style="width:80px" >
+                                    <h:outputText value="#{messages['general.label.StartDate']}" />
+                                </r:column>
+                                <r:column style="width:80px">
+                                    <h:outputText value="#{messages['general.label.EndDate']}" />
+                                </r:column>
+                                <r:column style="width:120px">
+                                    <h:outputText value="#{messages['tax.label.Witholding']}" />
+                                </r:column>
+                                <r:column>
+                                   	<h:outputText value="#{messages['tax.label.AmountOrRate']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:outputText value="" />
+                                </r:column>
+                     		</r:columnGroup>
+                     	</f:facet>
+
+                     	<r:column>
+                     		<s:decorate template="/layout/inlineedit.xhtml">
+                     		<r:calendar value="#{taxItem.beginDate}" enableManualInput="true" required="true"
+                            	datePattern="#{messages['general.format.Date']}" inputStyle="width:80px"/>
+                            </s:decorate>	
+                        </r:column>
+
+                     	<r:column>
+                     		<s:decorate template="/layout/inlineedit.xhtml">
+                     		<r:calendar value="#{taxItem.endDate}" enableManualInput="true" required="true"
+                            	datePattern="#{messages['general.format.Date']}" inputStyle="width:80px"/>
+                            </s:decorate>	
+                        </r:column>
+
+                        <r:column>
+							<h:selectOneMenu value="#{taxItem.withholdingKind}">
+								<s:selectItems var="item" value="#{taxHome.taxKindList}" 
+									noSelectionLabel="#{messages['general.value.None']}" 
+									label="#{messages[ ut:concat( 'tax.label.', item)]}" 
+									hideNoSelectionLabel="false"/>
+								<a:support event="onchange" reRender="withholdInput" ajaxSingle="true"
+									oncomplete="setMasks();"/>
+							</h:selectOneMenu>
+							
+							<r:spacer width="2" />
+
+							<s:span id="withholdInput">
+	                            <h:inputText id="wRate" value="#{taxItem.withholdingRate}" style="width:80px;text-align:right;"
+	                            	styleClass="rate" rendered="#{taxItem.withholdingKind eq 'Rate'}"/>
+	
+	                            <h:inputText id="wAmount" style="width:80px;text-align:right" 
+	                            	value="#{taxItem.withholdingAmount}" alt="decimal" converter="bigDecimalConverter"
+	                            	rendered="#{taxItem.withholdingKind eq 'Amount'}"/>
+	
+								<s:span rendered="#{taxItem.withholdingKind eq 'Fraction'}">
+									<h:outputText value="1 / " />
+		                            <h:inputText id="wFraction" value="#{taxItem.withholdingRate}" style="width:80px;text-align:right"
+		                            	styleClass="rate" />
+								</s:span>
+							</s:span>
+                        </r:column>
+                        
+                        <r:column  style="width:150px;">
+							<h:selectOneMenu id="kind" value="#{taxItem.kind}"
+								title="Select one" border="0" styleClass="radio">
+								<f:selectItem itemLabel="#{messages['tax.label.Rate']}" itemValue="Rate"/>
+								<f:selectItem itemLabel="#{messages['tax.label.Amount']}" itemValue="Amount"/>
+
+								<a:support reRender="taxInput" event="onchange" ajaxSingle="true" 
+									oncomplete="setMasks();"/>
+							</h:selectOneMenu>
+
+							<r:spacer width="2" />
+
+							<s:span id="taxInput">
+
+		                    	<h:inputText value="#{taxItem.rate}" style="width:80px;text-align:right" 
+		                        	styleClass="rate" rendered="#{taxItem.kind eq 'Rate'}"/>
+
+								<s:fragment rendered="#{taxItem.kind eq 'Amount'}">
+	                                <h:inputText value="#{taxItem.amount.value}" styleClass="amountField"
+	                                    alt="decimal" converter="bigDecimalConverter" />
+	
+	                                <h:selectOneMenu value="#{taxItem.amount.currency}" >
+	                                    <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" 
+		                                   	label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" 
+		                                   	hideNoSelectionLabel="true"/>
+	                                </h:selectOneMenu>
+								</s:fragment>                            
+                        	</s:span>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                           <a:commandLink reRender="its" action="#{taxHome.deleteLine(rowKey)}" >
+                               <h:graphicImage url="/img/delete.gif" /> 
+                           </a:commandLink>
+                     	</r:column>
+
+	                     <f:facet name="footer">
+	                     	<r:datascroller for="its" maxPages="20" />
+	                     </f:facet>            
+
+                     </r:dataTable>
+                     
+                </a:region>
+                    
+                    <div class="actionButtons">
+                        <h:commandButton id="saveAndNew" 
+                                         value="#{messages['general.button.SaveAndNew']}" 
+                                         action="#{taxHome.saveAndNew()}"
+                                         rendered="#{s:hasPermission('tax', 'insert') and s:hasPermission('tax', 'update') }"
+                                         styleClass="button"/>  
+                        
+                        <h:commandButton id="save" 
+                                         value="#{messages['general.button.Save']}" 
+                                         action="#{taxHome.save()}"
+                                         rendered="#{s:hasPermission('tax', 'insert')}"
+                                         styleClass="button"/>  
+                        
+                        
+                        <s:button id="delete" 
+                                  value="#{messages['general.button.Delete']}" 
+                                  action="#{taxHome.delete()}"
+                                  rendered="#{not empty tax.id and s:hasPermission('tax', 'delete')}"
+                                  onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                                  styleClass="button"/>
+                        
+                        <s:button id="done" 
+                                  value="#{messages['general.button.Close']}"
+                                  action="#{taxHome.close()}"
+                                  styleClass="button"/>
+                        
+                    </div>
+                    
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

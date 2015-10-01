@@ -1,0 +1,435 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="accountReport"/>
+            <ui:param name="curitem" value="accountTxnReport"/>
+
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/report/accountTxnReport.xhtml">
+                <h:outputText value="#{messages['module.caption.AccountTxnReport']}" rendered="#{s:hasPermission('accountTxnReport', 'select')}"/>
+            </s:link>
+        </div>
+        
+        
+        <div class="toolgroup-left">
+        
+            <s:link view="/report/accountStatusReport.xhtml" propagationBegin="true" rendered="#{s:hasPermission('accountStatusReport', 'select')}">
+                <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.AccountStatusReport']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    
+    <ui:define name="rightBar">
+        <s:link view="/report/accountTxnReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/report/accountTxnReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.AccountTxnReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="4">
+                    <s:fragment>                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.Account']}" /></ui:define>
+                            <h:selectOneMenu value="#{accountTxnReport.account}" styleClass="middle" >
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.accountList}" var="acc" label="#{acc.code}" 
+                                	noSelectionLabel="#{messages['general.value.All']}" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+		                    	<ui:define name="label">
+		                        	<h:outputText value="#{messages['accountTxnReport.label.Currency']}" />
+		                        </ui:define>
+			                    <h:selectOneMenu value="#{accountTxnReport.currency}"
+									styleClass="middle" required="false">
+									<s:selectItems value="#{generalSuggestion.currencyList}"
+										var="acc" label="#{acc.code}"
+										noSelectionLabel="#{messages['general.value.All']}"
+										hideNoSelectionLabel="false" />
+								</h:selectOneMenu>								
+	                    </s:decorate>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+                    
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.AdverseCode']}" /></ui:define>
+                            <h:inputText value="#{accountTxnReport.adverseCode}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.AdverseName']}" /></ui:define>
+                            <h:inputText value="#{accountTxnReport.adverseName}" styleClass="middle"/>
+                        </s:decorate>
+                    
+                    </s:fragment>                    
+                    
+
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.DocumentType']}" /></ui:define>
+                            <h:selectOneMenu value="#{accountTxnReport.documentType}" styleClass="middle">
+                                <s:convertEnum />
+                                <s:enumItem enumValue="Unknown" label="#{messages['general.value.All']}"/>
+                                <s:enumItem enumValue="Payment" label="#{messages['general.value.DocumentType.Payment']}"/>
+                                <s:enumItem enumValue="Collection" label="#{messages['general.value.DocumentType.Collection']}"/>
+                                <s:enumItem enumValue="FundTransfer" label="#{messages['general.value.DocumentType.FundTransfer']}"/>
+                                <s:enumItem enumValue="BankToAccountTransfer" label="#{messages['general.value.DocumentType.BankToAccountTransfer']}"/>
+                                <s:enumItem enumValue="AccountToBankTransfer" label="#{messages['general.value.DocumentType.AccountToBankTransfer']}"/>
+                                <s:enumItem enumValue="ChequeAccountPaymentPayroll" label="#{messages['general.value.DocumentType.ChequeAccountPaymentPayroll']}"/>
+                                <s:enumItem enumValue="ChequeAccountCollectionPayroll" label="#{messages['general.value.DocumentType.ChequeAccountCollectionPayroll']}"/>
+                                <s:enumItem enumValue="PromissoryAccountPaymentPayroll" label="#{messages['general.value.DocumentType.PromissoryAccountPaymentPayroll']}"/>
+                                <s:enumItem enumValue="PromissoryAccountCollectionPayroll" label="#{messages['general.value.DocumentType.PromissoryAccountCollectionPayroll']}"/>
+                                <s:enumItem enumValue="AccountCreditNote" label="#{messages['general.value.DocumentType.AccountCreditNote']}"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.Serial']}" /></ui:define>
+                            <h:inputText value="#{accountTxnReport.serial}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.Reference']}" /></ui:define>
+                            <h:inputText value="#{accountTxnReport.reference}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.Code']}" /></ui:define>
+                            <h:inputText value="#{accountTxnReport.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['saleInvoice.label.followUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{accountTxnReport.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                    </s:fragment>
+
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{accountTxnReport.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['accountTxnReport.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{accountTxnReport.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Advance']}" />
+							</ui:define>
+							<h:selectOneMenu id="processType" value="#{accountTxnReport.processType}" styleClass="middle">
+								<f:selectItem itemLabel="#{messages['general.value.All']}" />
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Normal']}" itemValue="Normal"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Advance']}" itemValue="Advance"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.AdvanceReturn']}" itemValue="AdvanceReturn"/>
+							</h:selectOneMenu>
+						</s:decorate>
+                        
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{accountTxnReport.executeReport()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{accountTxnReport.pdf()}"
+                                     rendered="#{s:hasPermission('accountTxnReport', 'pdf')}"
+                                     styleClass="button"/>
+                                     
+                    <h:commandButton id="xls" 
+                   					 rendered="#{s:hasPermission('accountTxnReport', 'xls')}" 
+                                     value="#{messages['general.label.XLS']}" 
+                                     action="#{accountTxnReport.xls()}"
+                                     styleClass="button"/>                                     
+                    
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:2px;">
+                    <r:dataTable id="browseList" 
+                                 var="rowItem"
+                                 rows="20"
+                                 rowKeyVar="rowKey"
+                                 value="#{accountTxnReport.resultList}">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.DocumentType']}" /></f:facet>
+                            <h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,rowItem.documentType)]} / A" styleClass="CreditNumber" rendered="#{rowItem.processType eq 'Advance'}"/>
+                            <h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,rowItem.documentType)]} / Aİ" styleClass="CreditNumber" rendered="#{rowItem.processType eq 'AdvanceReturn'}"/>
+                            <h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,rowItem.documentType)]}" rendered="#{rowItem.processType eq 'Normal'}"/>
+                            <h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,rowItem.documentType)]}" rendered="#{rowItem.documentType eq 'AccountCreditNote'}"/>
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Account']}" /></f:facet>
+                            <h:outputText value="[#{rowItem.account.code}] #{rowItem.account.name}" />
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['accountTxnReport.label.Serial']}" />
+                            </f:facet>
+                            
+                            <s:link view="/finance/collectionView.xhtml" rendered="#{rowItem.documentType eq 'Collection' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/paymentView.xhtml" rendered="#{rowItem.documentType eq 'Payment' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/fundTransferView.xhtml" rendered="#{rowItem.documentType eq 'FundTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/bankToAccountTransferView.xhtml" rendered="#{rowItem.documentType eq 'BankToAccountTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+
+                            <s:link view="/finance/accountToBankTransferView.xhtml" rendered="#{rowItem.documentType eq 'AccountToBankTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+
+                            <s:link view="/finance/chequeToAccountPaymentPayrollView.xhtml" rendered="#{rowItem.documentType eq 'ChequeAccountPaymentPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/chequeToAccountCollectionPayrollView.xhtml" rendered="#{rowItem.documentType eq 'ChequeAccountCollectionPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/promissoryToAccountPaymentPayrollView.xhtml" rendered="#{rowItem.documentType eq 'PromissoryAccountPaymentPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/promissoryToAccountCollectionPayrollView.xhtml" rendered="#{rowItem.documentType eq 'PromissoryAccountCollectionPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/accountCreditNoteView.xhtml" rendered="#{rowItem.documentType eq 'AccountCreditNote'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Reference']}" /></f:facet>
+                            
+                            <s:link view="/finance/collectionView.xhtml" rendered="#{rowItem.documentType eq 'Collection' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/paymentView.xhtml" rendered="#{rowItem.documentType eq 'Payment' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/fundTransferView.xhtml" rendered="#{rowItem.documentType eq 'FundTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/bankToAccountTransferView.xhtml" rendered="#{rowItem.documentType eq 'BankToAccountTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/accountToBankTransferView.xhtml" rendered="#{rowItem.documentType eq 'AccountToBankTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/chequeToAccountPaymentPayrollView.xhtml" rendered="#{rowItem.documentType eq 'ChequeAccountPaymentPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/chequeToAccountCollectionPayrollView.xhtml" rendered="#{rowItem.documentType eq 'ChequeAccountCollectionPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/promissoryToAccountPaymentPayrollView.xhtml" rendered="#{rowItem.documentType eq 'PromissoryAccountPaymentPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/promissoryToAccountCollectionPayrollView.xhtml" rendered="#{rowItem.documentType eq 'PromissoryAccountCollectionPayroll'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/accountCreditNoteView.xhtml" rendered="#{rowItem.documentType eq 'AccountCreditNote'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Date']}" /></f:facet>
+                            <h:outputText value="#{rowItem.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Code']}" /></f:facet>
+                            <h:outputText value="#{rowItem.code}" />
+                        </r:column>
+                        
+                        <r:column >
+			                <f:facet name="header"><h:outputText value="#{messages['general.txnReport.label.workBunchCode']}" /></f:facet>
+			                <h:outputText value="#{rowItem.workBunch.caption}" />
+			            </r:column>
+			            
+                        <r:column >
+			                <f:facet name="header"><h:outputText value="#{messages['general.label.Adverse']}" /></f:facet>
+			                <h:outputText value="#{rowItem.adverseCode} - #{rowItem.adverseName}" />
+			            </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Info']}" /></f:facet>
+                            <h:outputText value="#{rowItem.info}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Action']}" /></f:facet>
+                            <h:outputText value="#{messages[ut:concat( 'general.value.financeActionShort.' , rowItem.action )]}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Amount']}" /></f:facet>
+                            <h:outputText value="#{rowItem.amount}" styleClass="#{rowItem.action}Number"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.LocalAmount']}" /></f:facet>
+                            <h:outputText value="#{rowItem.amount.localAmount}" styleClass="#{rowItem.action}Number">
+                            	<f:convertNumber pattern="#,##0.00"/>
+                            </h:outputText>
+                        </r:column>
+                        
+                        <ui:remove>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['accountTxnReport.label.Output']}" /></f:facet>
+                                <h:outputText value="#{rowItem['inqty']}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>
+                            </r:column>
+                        </ui:remove>
+                        
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" /> 
+                        </f:facet>
+                        
+                    </r:dataTable>
+                    
+                    
+                </s:div>
+                
+                <ui:remove>
+                    <r:panel id="msg" rendered="#{empty financeTxnReport.entityList}" styleClass="message">
+                        <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                    </r:panel>
+                </ui:remove>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

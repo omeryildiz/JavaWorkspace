@@ -1,0 +1,219 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+				xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewTransfer"/>
+            <ui:param name="cursubitem" value="contactToBankTransfer"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/contactToBankTransferBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ContactToBankTransferBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/bankToContactTransfer.xhtml">
+                <h:outputText value="#{messages['module.caption.ContactToBankTransfer']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left"><s:link
+			view="/finance/contactToBankTransfer.xhtml" propagation="begin" rendered="#{s:hasPermission('contactToBankTransfer', 'insert')}" >
+			<f:param name="eid" value="0" />
+			<h:graphicImage url="/img/add.gif" />
+			<h:outputText value="#{messages['contactToBankTransfer.action.Add']}" />
+		</s:link></div>
+
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.ContactToBankTransfer']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+
+        <h:form id="form" >
+
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['contactToBankTransfer.img.Form']}"/>
+                        <h:outputText value="#{messages['contactToBankTransfer.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+                 <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+
+                <h:panelGrid columns="3">
+
+
+					 <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToContactTransfer.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.serial}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToContactTransfer.label.Reference']}"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.reference}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToContactTransfer.label.Code']}"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.code}" styleClass="middle" />
+                        </s:decorate>
+
+                    </s:div>
+
+                    <s:div>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToContactTransfer.label.Date']}"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.date}"
+                                        datePattern="#{messages['general.format.Date']}">
+                                            <s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+                            </h:outputText>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.FollowUp']}"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.workBunch.caption}" styleClass="middle" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" rendered="#{contactToBankTransfer.processType ne null}" >
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.Advance']}"/></ui:define>
+                            <h:outputText value="#{messages[ut:concat('paymentProcessType.label.', contactToBankTransfer.processType)]}" styleClass="middle" />
+                        </s:decorate>
+
+                    </s:div>
+
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bankToContactTransfer.label.Info']}"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.info}" styleClass="exlarge" />
+                        </s:decorate>
+
+                    </s:div>
+
+					<s:div>
+
+						<h2><h:outputText value="#{messages['general.label.payer']}" /></h2>
+
+                            <s:decorate id="sdc" template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText
+									value="#{messages['bankToContactTransfer.label.Contact']}" />
+							</ui:define>
+							<h:outputText id="contact"
+								value="#{contactToBankTransfer.contact}"
+								styleClass="middle" required="true">
+								<f:converter converterId="contactCaptionConverter" />
+							</h:outputText>
+    					</s:decorate>
+
+
+					</s:div>
+
+					<s:div>
+                    	<h2><h:outputText value="#{messages['general.label.receiver']}" /></h2>
+
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToContactTransfer.label.Bank']}"/>
+                                </ui:define>
+                                <h:outputText id="bankBox"
+                                                 value="#{contactToBankTransfer.bank.name}" styleClass="middle">
+                                    <s:convertEntity/>
+                                </h:outputText>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToContactTransfer.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:outputText id="bankBranchBox"
+                                                 value="#{contactToBankTransfer.bankBranch.name}" styleClass="middle">
+                                    <s:convertEntity/>
+                                </h:outputText>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToContactTransfer.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:outputText id="bankAccountBox"
+                                                 value="#{contactToBankTransfer.bankAccount.accountNo} - #{contactToBankTransfer.bankAccount.currency}" styleClass="middle">
+                                    <s:convertEntity/>
+                                </h:outputText>
+                                <br />
+                                <h:outputText id="bankAccountIban"
+                                                 value="#{contactToBankTransfer.bankAccount.iban}" styleClass="large" rendered="#{contactToBankTransfer.bankAccount.iban ne null}">    
+                                </h:outputText>                                
+                            </s:decorate>
+
+
+                        
+					</s:div>
+					<s:div>
+                    	<h2><h:outputText value="#{messages['general.label.transferTypeAndAmount']}" /></h2>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bankTransfer.label.TransferType']}"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.transferType}" />
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToContactTransfer.label.Amount']}"/></ui:define>
+                            <h:outputText value="#{contactToBankTransfer.amount.value}" styleClass="amountField" required="true"
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="bankAccountCurrency" value="#{contactToBankTransfer.bankAccount.currency }" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToContactTransfer.label.Cost']}"/></ui:define>
+                            <h:outputText id="cost" value="#{contactToBankTransfer.cost.value}" styleClass="amountField"
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();">
+                            </h:outputText>
+                            <h:outputText value=" " />
+                            <h:outputText id="costCurrency" value="#{contactToBankTransfer.bankAccount.currency }" />
+                        </s:decorate>
+					</s:div>
+
+				</h:panelGrid>
+
+            </r:panel>
+
+            <div class="actionButtons">
+
+<ui:remove>
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{contactToBankTransferHome.print()}" styleClass="button" />
+</ui:remove>
+
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{contactToBankTransferHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{contactToBankTransferHome.close()}" styleClass="button" />
+			</div>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,231 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeEdit"/>
+            <ui:param name="curitem" value="promissoryChangeStatus"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/promissoryChangeStatus.xhtml">
+                <h:outputText value="#{messages['module.caption.PromissoryChangeStatus']}" rendered="#{s:hasPermission('promissoryChangeStatus', 'select')}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PromissoryChangeStatus']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['module.caption.PromissoryChangeStatus']}" /></f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:fragment>
+                                     
+                    	 <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.ReferenceNumber']}" /></ui:define>
+                            <h:inputText value="#{promissoryChangeStatus.filterModel.referenceNo}" styleClass="middle"/>
+                        </s:decorate>
+                        <a:region renderRegionOnly="true">
+                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.Contact']}"/></ui:define>
+                            
+                            <h:inputText id="contact" value="#{promissoryChangeStatus.filterModel.contact}" styleClass="middle" required="false">
+                                <f:converter converterId="contactCaptionConverter"/>
+                            </h:inputText>
+                            
+                            <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            
+                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                        </s:decorate>
+                        </a:region>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryOwner']}" /></ui:define>
+                            <h:inputText value="#{promissoryChangeStatus.filterModel.promissorynoteOwner}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                    </s:fragment>
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.processBeginDate']}" /></ui:define>
+                            <r:calendar value="#{promissoryChangeStatus.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.processEndDate']}" /></ui:define>
+                            <r:calendar value="#{promissoryChangeStatus.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+	                        <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryType']}"/></ui:define>
+	                        <h:selectOneMenu value="#{promissoryChangeStatus.isClientPromissory}" styleClass="middle">
+	                            <f:selectItem itemValue="" itemLabel="Hepsi"/>
+                                    <f:selectItem itemValue="true" itemLabel="#{messages['promissory.label.ClientPromissory']}"/>
+                                    <f:selectItem itemValue="false" itemLabel="#{messages['promissory.label.FirmPromissory']}" />
+	                        </h:selectOneMenu> 
+	                    </s:decorate>
+	                    
+	                    <s:decorate template="/layout/edit.xhtml">
+	                        <ui:define name="label"><h:outputText value="#{messages['chequeChangeLastStatus.label.LastStatus']}"/></ui:define>
+
+                                 <h:selectOneMenu value="#{promissoryChangeStatus.filterModel.lastStatus}"
+                                             styleClass="middle">
+                                    <s:selectItems value="#{promissoryChangeStatus.lastStatus}" var="status" label="#{messages[ut:concat('cheque.label.status.', status)]}"
+                                    noSelectionLabel="#{messages['general.value.None']}"
+                                    hideNoSelectionLabel="false"/>
+                                    <s:convertEnum />
+                                </h:selectOneMenu>
+	                    </s:decorate>
+	                    
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{promissoryChangeStatus.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+                    
+                    <s:button id="done" 
+		                          value="#{messages['general.button.Close']}"
+		                          action="#{promissoryChangeStatus.close()}"
+		                          styleClass="button"/>                  
+                </div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="promissory"
+                                 value="#{promissoryChangeStatus.entityList}" 
+                                 rendered="#{not empty promissoryChangeStatus.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column styleClass="actionColumn">
+                            <f:facet name="header">
+                            	<h:selectBooleanCheckbox id="checkAll" value="false" onchange="toggleCheckAll();" styleClass="checkbox" />
+							</f:facet>
+                            
+                            <h:selectBooleanCheckbox id="active" value="#{promissory.checked}" styleClass="checkbox" />
+                        </r:column>
+                        
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.ReferenceNumber']}"/></f:facet>
+                            
+                            <s:link view="/finance/promissoryView.xhtml">
+                                <f:param name="eid" value="#{promissory.id}"/>
+                                <h:outputText value="#{promissory.referenceNo}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        <r:column styleClass="small">
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.PromissorynoteOwner']}"/></f:facet>
+                            
+                            <s:link view="/finance/promissoryView.xhtml">
+                                <f:param name="eid" value="#{promissory.id}"/>
+                                <h:outputText value="#{promissory.promissorynoteOwner}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.Bank']}" /></f:facet>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="amountField">
+                        	<f:facet name="header"><h:outputText value="#{messages['promissory.label.Amount']}" /></f:facet>
+                        	<h:outputText value="#{promissory.money}" />
+                        </r:column>
+                        
+                        <r:column styleClass="middle">
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.Contact']}" /></f:facet>
+                            <h:outputText value="#{promissory.contactName}" />
+                        </r:column>
+                        
+                        <r:column styleClass="small">
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.Position']}" /></f:facet>
+                            <h:outputText value="#{promissory.lastStatus}"/>
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.Info']}" /></f:facet>
+                            <h:outputText value="#{promissory.info}"/>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    <r:panel id="msg" rendered="#{empty promissoryChangeStatus.entityList}" styleClass="message">
+                    	<h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                	</r:panel>
+               </s:div>
+            
+            <r:panel style="margin:2px;" rendered="#{not empty promissoryChangeStatus.entityList}">
+                	<f:facet name="header"><h:outputText value="#{messages['promissory.label.Operation']}" /></f:facet>
+                <h:panelGrid columns="2">
+                	<s:div>
+                		<s:decorate template="/layout/edit.xhtml">
+	                        <ui:define name="label"><h:outputText value="#{messages['promissory.label.Position']}"/></ui:define>
+	                        <h:selectOneMenu id="status" value="#{promissoryChangeStatus.newStatus}" styleClass="middle">
+	                            <s:convertEnum />
+	                            <s:enumItem enumValue="Kapandi" label="#{messages['cheque.label.status.Kapandi']}"/>
+	                            <s:enumItem enumValue="Karsiliksiz" label="#{messages['cheque.label.status.Karsiliksiz']}"/>
+	                            <s:enumItem enumValue="Supheli" label="#{messages['cheque.label.status.Supheli']}"/>
+	                            <s:enumItem enumValue="Takipte" label="#{messages['cheque.label.status.Takipte']}"/>
+	                        </h:selectOneMenu> 
+	                    </s:decorate>
+                	</s:div>
+           		</h:panelGrid>
+                    <div class="actionButtons">
+		                <h:commandButton id="save" 
+		                                 value="#{messages['general.button.Save']}" 
+		                                 action="#{promissoryChangeStatus.savePosition()}"
+		                                 rendered="#{s:hasPermission('promissoryChangeStatus', 'insert')}"
+		                                 styleClass="button"/>  
+		                
+           			 </div>
+           		</r:panel>
+            
+            </a:outputPanel>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

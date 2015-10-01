@@ -1,0 +1,86 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" 
+	template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.CountNoteCompare']}" /></h1>
+    </ui:define>
+
+	<ui:define name="body">
+		<r:dataTable id="its" var="item" value="#{countNote.items}"
+			rowKeyVar="rowKey">
+			<r:column>
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.Barcode']}" />
+				</f:facet>
+				<h:outputText value="#{item.product.barcode1}" />
+			</r:column>
+	
+			<r:column>
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.ProductCode']}" />
+				</f:facet>
+				<h:outputText value="#{item.product.code}" />
+			</r:column>
+	
+			<r:column>
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.ProductName']}" />
+				</f:facet>
+				<h:outputText value="#{item.product.name}" />
+			</r:column>
+	
+	        <r:column>
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.Counted']}" />
+				</f:facet>
+	            <h:outputText id="countedQuantity" value="#{countNoteHome.compareList.get(rowKey).counted}">
+		            <f:convertNumber pattern="#,###,##0.00"/>
+	            </h:outputText>
+	        </r:column>
+	
+	        <r:column>
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.Found']}" />
+				</f:facet>
+	            <h:outputText id="foundQuantity" value="#{countNoteHome.compareList.get(rowKey).found}">
+		            <f:convertNumber pattern="#,###,##0.00"/>
+	            </h:outputText>
+	        </r:column>
+
+	        <r:column>
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.Difference']}" />
+				</f:facet>
+	            <h:outputText id="differenceQuantity" value="#{countNoteHome.compareList.get(rowKey).difference}">
+		            <f:convertNumber pattern="#,###,##0.00"/>
+	            </h:outputText>
+	        </r:column>
+	
+			<r:column>
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.Price']}" />
+				</f:facet>
+				<h:outputText value="#{item.price.value}" converter="bigDecimalConverter">
+				</h:outputText>
+			</r:column>
+	
+			<r:column >
+				<f:facet name="header">
+					<h:outputText value="#{messages['general.label.Currency']}" />
+				</f:facet>
+				<h:outputText value="#{item.price.currency}" />
+			</r:column>
+		</r:dataTable>
+
+    </ui:define>
+
+</ui:composition>

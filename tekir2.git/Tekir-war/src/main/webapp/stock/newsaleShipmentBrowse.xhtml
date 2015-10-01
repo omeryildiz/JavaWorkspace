@@ -1,0 +1,248 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="stock"/>
+            <ui:param name="curpage" value="stockShipment"/>
+            <ui:param name="curitem" value="saleShipmentBrowse"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/newsaleShipmentBrowse.xhtml" rendered="#{s:hasPermission('saleShipment', 'select')}">
+                <h:outputText value="#{messages['module.caption.SaleShipmentBrowse']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/stock/newsaleShipment.xhtml" rendered="#{s:hasPermission('saleShipment', 'insert')}" >
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['saleShipment.action.Add']}"/>
+            </s:link>
+            <s:link view="/finance/saleInvoiceBrowse.xhtml"  rendered="#{s:hasPermission('saleInvoice', 'select')}" >
+                <h:graphicImage url="/img/script_delete.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.SaleInvoiceBrowse']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/stock/saleShipmentBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/stock/saleShipmentBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.SaleShipmentBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.Serial']}" /></ui:define>
+                            <h:inputText value="#{saleShipmentBrowse.filterModel.serial}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.Reference']}" /></ui:define>
+                            <h:inputText value="#{saleShipmentBrowse.filterModel.reference}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.Code']}" /></ui:define>
+                            <h:inputText value="#{saleShipmentBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+						<a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['saleInvoice.label.followUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{saleShipmentBrowse.filterModel.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                    </s:fragment>
+
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.ContactName']}"/></ui:define>
+                            <h:inputText value="#{saleShipmentBrowse.filterModel.contactName}" styleClass="middle" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.ContactCode']}"/></ui:define>
+                            <h:inputText value="#{saleShipmentBrowse.filterModel.contactCode}" styleClass="middle" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.Warehouse']}"/></ui:define>
+                            <h:selectOneMenu value="#{saleShipmentBrowse.filterModel.warehouse}" styleClass="middle" >
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.warehouseList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{saleShipmentBrowse.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['saleShipment.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{saleShipmentBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['saleShipment.label.ShowInvoiced']}" />
+                            </ui:define>
+							<h:selectOneMenu value="#{saleShipmentBrowse.filterModel.invoiced}">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>
+								<f:selectItem itemValue="true" itemLabel="#{messages['general.label.yes']}"/>
+								<f:selectItem itemValue="false" itemLabel="#{messages['general.label.no']}"/>
+							</h:selectOneMenu>
+                        </s:decorate>
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{saleShipmentBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="saleItem"
+                                 value="#{saleShipmentBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty saleShipmentBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['saleShipment.label.Serial']}"/></f:facet>
+                            
+                            <s:link view="/stock/newsaleShipmentView.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{saleItem.id}"/>
+                                <h:outputText value="#{saleItem.serial}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['saleShipment.label.Reference']}" /></f:facet>
+                            
+                            <s:link view="/stock/newsaleShipmentView.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{saleItem.id}"/>
+                                <h:outputText value="#{saleItem.reference}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['saleShipment.label.Date']}" /></f:facet>
+                            <h:outputText value="#{saleItem.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['saleShipment.label.Warehouse']}" /></f:facet>
+                            <h:outputText value="#{saleItem.warehouse.code}" />
+                        </r:column>
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['saleShipment.label.Contact']}" /></f:facet>
+                            <h:outputText value="[#{saleItem.contactCode}] #{saleItem.contactName}" rendered="#{saleItem.person eq true}" />
+                            <h:outputText value="[#{saleItem.contactCode}] #{saleItem.company}" rendered="#{saleItem.person eq false}" />
+                        </r:column>
+
+                        <r:column styleClass="codeField">
+                            <f:facet name="header"><h:outputText value="#{messages['saleShipment.label.Code']}" /></f:facet>
+                            <h:outputText value="#{saleItem.code}" />
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['saleShipment.label.Info']}" /></f:facet>
+                            <h:outputText value="#{saleItem.info}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty saleShipmentBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

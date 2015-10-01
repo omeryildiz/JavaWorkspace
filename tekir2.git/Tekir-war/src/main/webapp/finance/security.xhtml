@@ -1,0 +1,241 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="finance" />
+			<ui:param name="curpage" value="security" />
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="toolbar">
+		<div class="pathgroup"><s:link view="/finance/finance.xhtml"
+			propagation="none">
+			<h:outputText value="#{messages['module.caption.Finance']}" />
+		</s:link> <h:outputText value=" » " /> <s:link
+			view="/finance/securityBrowse.xhtml" propagation="none">
+			<h:outputText
+				value="#{messages['module.caption.SecurityBrowse']}" />
+		</s:link> <h:outputText value=" » " /> <s:link
+			view="/finance/security.xhtml">
+			<h:outputText
+				value="#{messages['module.caption.Security']}" />
+		</s:link></div>
+
+		<div class="toolgroup-left"><s:link
+			action="#{securityHome.createNew()}">
+			<h:graphicImage url="/img/add.gif" />
+			<h:outputText value="#{messages['security.action.Add']}" />
+		</s:link></div>
+
+	</ui:define>
+	
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.Security']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/coins_add.gif"
+							alt="#{messages['security.img.Form']}" />
+						<h:outputText
+							value="#{messages['security.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				
+				<h:panelGrid columns="3">
+					<s:div>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.Code']}" />
+							</ui:define>
+							<h:inputText value="#{security.code}" styleClass="middle" required="true" />
+						</s:decorate>
+					
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.Isin']}" />
+							</ui:define>
+							<h:inputText value="#{security.isin}" styleClass="middle" required="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.IssueDate']}" />
+							</ui:define>
+							<r:calendar value="#{security.issueDate}"
+								enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.MaturityDate']}" />
+							</ui:define>
+							<r:calendar value="#{security.maturityDate}"
+								enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+					</s:div>
+					
+					<s:div>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.Unit']}" />
+							</ui:define>
+							<h:inputText value="#{security.unit}" styleClass="middle"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.Rate']}" />
+							</ui:define>
+							<h:inputText value="#{security.rate}">
+							<a:support  event="onblur" action="#{securityHome.initCouponRate()}" ajaxSingle="true" reRender="CouponRate"/>	
+							</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.CouponCount']}" />
+							</ui:define>
+							<h:inputText id="CouponCount" value="#{security.couponCount}" disabled="true"/>
+						</s:decorate>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.Currency']}" />
+							</ui:define>
+                            <h:selectOneMenu value="#{security.currency}" styleClass="ccyField">
+                            	<s:convertEntity/>
+                                <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}"/>
+                            </h:selectOneMenu>
+					</s:decorate>
+					</s:div>
+					
+					<s:div>
+					<s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label">
+							<h:outputText value="#{messages['security.label.SecurityType']}" />
+						</ui:define>
+						<h:selectOneMenu value="#{security.securityType}" styleClass="middle">
+							<s:convertEnum />
+							<s:enumItem enumValue="DiscountBond" label="#{messages['security.type.DiscountBond']}"/>
+							<s:enumItem enumValue="CouponBond" label="#{messages['security.type.CouponBond']}" />
+							<s:enumItem enumValue="IndexedBond" label="#{messages['security.type.IndexedBond']}" />
+							<s:enumItem enumValue="EuroBond" label="#{messages['security.type.EuroBond']}" />
+							<a:support event="onchange" ajaxSingle="true" reRender="sc,CouponCount" action="#{securityHome.resetCoupon()}"/>
+						</h:selectOneMenu>
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['security.label.Info']}" />
+							</ui:define>
+							<h:inputTextarea value="#{security.info}" styleClass="exlarge" rows="6"/>
+						</s:decorate>
+						
+					</s:div>
+			</h:panelGrid>
+			<a:outputPanel id="sc">
+			<a:region>
+                    <r:dataTable id="its" 
+                                 var="coupon"
+                                 value="#{security.coupons}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rendered="#{security.securityType ne 'DiscountBond'}">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="3">
+                                    <h:outputText value="#{messages['security.caption.Details']}" />
+                                </r:column>
+                                <r:column style="width:20px;">
+                                    <div>
+                                        <a:commandLink reRender="its,CouponCount,CouponRate" action="#{securityHome.createNewLine()}" oncomplete="focusLastRow();" accesskey="N">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+                                <r:column breakBefore="true">
+                                    <h:outputText value="#{messages['security.label.BeginDate']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['security.label.EndDate']}" />
+                                </r:column>
+                                <r:column styleClass="amountField">
+                                    <h:outputText value="#{messages['security.label.Rate']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="" />
+                                </r:column>
+                            </r:columnGroup>
+                       </f:facet>
+                        <r:column >
+                            <s:decorate>
+                                <r:calendar value="#{coupon.beginDate}"
+								enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+                            </s:decorate>
+                        </r:column>
+                        <r:column>
+                        	<s:decorate>
+                        		<r:calendar value="#{coupon.endDate}"
+								enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+							</s:decorate>
+						</r:column>
+						<r:column>
+							<s:decorate>
+								<h:inputText  id="CouponRate" value="#{coupon.rate}" styleClass="amountField" />
+							</s:decorate>
+						</r:column>
+						<r:column styleClass="actionColumn">
+                            <a:commandLink reRender="its, CouponCount" action="#{securityHome.deleteLine(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" /> 
+                            </a:commandLink>
+                        </r:column>
+					</r:dataTable>
+				</a:region>
+				</a:outputPanel>
+			</r:panel>
+			<div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{securityHome.save()}"
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{securityHome.delete()}"
+                          rendered="#{not empty security.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{securityHome.close()}"
+                          styleClass="button"/>
+                
+        	</div>
+    	</h:form>
+	</ui:define>
+ </ui:composition>

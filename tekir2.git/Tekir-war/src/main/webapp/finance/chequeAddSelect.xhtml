@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http//utech.com/jsf/comps"
+                >
+    
+    <ui:include src="/layout/messages.xhtml"/>
+    <ui:include src="/contact/contactSelectPopup.xhtml" />
+    
+    
+    <h:form id="form" >
+     <input type="hidden" id="retpoint" value="" />
+                    
+              <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['collection.img.Form']}"/> 
+                        <h:outputText value="#{messages[ut:concat('cheque.caption.Form.', chequePopupHome.isClient)]}"/>
+                        <h:outputText value="#{messages['cheque.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+              <a:region immediate="true" ajaxSingle="true" renderRegionOnly="true">
+                <h:panelGrid columns="3">
+                    <s:div>
+                        
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ReferenceNumber']}"/></ui:define>
+                            <h:inputText value="#{cheque.serialNo}" styleClass="middle" required="true"/>
+                        </s:decorate>
+                        
+                         <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Contact']}"/></ui:define>
+                            
+                            <h:inputText id="contact" value="#{cheque.contact}" styleClass="middle" required="true">
+                                <f:converter converterId="contactCaptionConverter"/>
+                            </h:inputText>
+                            
+                            <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['cheque.label.IssueDate']}" />
+							</ui:define>
+							<r:calendar value="#{cheque.issueDate}" enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeDate']}"/></ui:define>
+                            <r:calendar value="#{cheque.maturityDate}" enableManualInput="true" required="true" 
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeAmount']}"/></ui:define>
+                            <h:inputText value="#{cheque.moneySet.localAmount}" onfocus="setMasks();" alt="decimal"  converter="bigDecimalConverter" styleClass="middle" style="text-align: right;" required="true"/>
+                        </s:decorate>
+                     </s:div>
+                     <s:div>   
+						<s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeStub']}"/></ui:define>
+                        	<h:selectOneMenu value="#{chequePopupHome.chequeStub}">
+                            <s:convertEntity />
+                        	<s:selectItems value="#{generalSuggestion.chequeStubList}"  
+                        	noSelectionLabel="#{messages['general.value.None']}"
+                        	hideNoSelectionLabel="false"
+                        	var="item" label="#{item.code}"></s:selectItems> 
+                        	<a:support event="onchange" reRender="bankBranch, bankName, account, paymentPlace" 
+                                   action="#{chequePopupHome.setChequeFromChequeStub()}" ajaxSingle="true"/>
+                        	</h:selectOneMenu>
+                                   
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Bank']}"/></ui:define>
+                            <h:inputText  id="bankName" value="#{cheque.bankName}" styleClass="middle" required="false"/>
+                        </s:decorate>
+                        
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Branch']}"/></ui:define>
+                            <h:inputText id="bankBranch" value="#{cheque.bankBranch}" styleClass="middle" required="false"/>
+                        </s:decorate>
+                        
+                        <s:decorate  template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Account']}"/></ui:define>
+                            <h:inputText id="account" value="#{cheque.accountNo}" styleClass="middle" required="false">
+                            </h:inputText>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeNumber']}"/></ui:define>
+                            <h:inputText id="contact" value="#{cheque.referenceNo}" styleClass="middle" required="false">
+                            </h:inputText>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeOwner']}"/></ui:define>
+                            <h:inputText value="#{cheque.chequeOwner}" styleClass="middle" required="true"/>
+                        </s:decorate>
+                        
+                           <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.PaymentPlace']}"/></ui:define>
+                            <h:inputText id="paymentPlace" value="#{cheque.paymentPlace}" styleClass="middle" required="false" />
+                        </s:decorate>
+                    </s:div>
+           
+                    <s:div>
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.CardDate']}"/></ui:define>
+                            <r:calendar value="#{cheque.entryDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Position']}"/></ui:define>
+                            
+                            <h:selectOneMenu value="#{cheque.lastStatus}" disabled="true"
+                                             styleClass="large">
+                                <s:selectItems value="#{chequePopupHome.chequeStatus}" var="status" label="#{status ne null ? messages[ut:concat('cheque.label.status.', status)] : ''}"
+                                noSelectionLabel="#{chequePopupHome.chequeStatus[0]}" 
+                                hideNoSelectionLabel="false"/>
+                                <s:convertEnum />
+                            </h:selectOneMenu> 
+                            
+                        </s:decorate>
+                       
+                       <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{cheque.info}" styleClass="exlarge" rows="6"/>
+                        </s:decorate>
+               
+                    </s:div>
+                </h:panelGrid>
+                </a:region>
+            </r:panel>
+            
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Ok']}" 
+                                 action="#{chequePopupHome.close()}"
+                                 styleClass="button"/> 
+                                 
+                 <input id="popClose" class="button" type="button"  onclick="closeChequeAddSelect('')" value="#{messages['general.button.Cancel']}"/> 
+                
+      		 </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+    
+    
+</ui:composition>

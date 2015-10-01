@@ -1,0 +1,60 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <s:div>
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="collection"/>
+        </ui:include>
+        </s:div>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <s:div styleClass="pathgroup">
+            
+            <s:link view="/finance/collectionBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.CollectionBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/collection.xhtml">
+                <h:outputText value="#{messages['module.caption.Collection']}"/>
+            </s:link>
+        </s:div>
+
+        <div class="toolgroup-left">
+            <s:link action="#{collectionHome.createNew()}" view="/finance/collection.xhtml" rendered="#{s:hasPermission('collection', 'insert')}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['collection.action.Add']}" />
+            </s:link>
+        </div>
+
+    </ui:define>
+
+	<ui:define name="body">
+		<ui:include src="/finance/paymentViewBase.xhtml">
+	       	<ui:param name="currentHome" value="${collectionHome}" />
+	       	<ui:param name="currentEntity" value="${collection}" />
+		</ui:include>                
+		<h:form id="form">
+			<div class="actionButtons">
+				<s:button id="print" value="#{messages['general.button.Print']}" action="#{collectionHome.print()}"
+					styleClass="button">
+					<f:param name="eid" value="#{collectionHome.id}" />
+				</s:button> 
+				<s:button id="edit" value="#{messages['general.button.EditDesc']}" action="#{collectionHome.edit()}" styleClass="button">
+					<f:param name="eid" value="#{collectionHome.id}" />
+				</s:button> 
+				<s:button id="done" value="#{messages['general.button.Close']}" action="#{collectionHome.close()}" styleClass="button" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

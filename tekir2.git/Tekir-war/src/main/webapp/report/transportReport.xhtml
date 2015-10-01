@@ -1,0 +1,116 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="transportReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/transport/transportFront.xhtml">
+                <h:outputText value="#{messages['module.caption.Transport']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/report/transportReport.xhtml">
+                <h:outputText value="#{messages['module.caption.TransportReport']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:remove>
+    <ui:define name="rightBar">
+        <s:link view="/report/transportReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/report/transportReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    </ui:remove>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.TransportReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['transportReport.label.FirmDocument']}"/></ui:define>
+                            <h:selectOneMenu value="#{transportReport.firmDocument}" styleClass="middle">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.firmDocumentsList}" var="acc" label="#{acc.authorityDocument.caption}" noSelectionLabel="#{messages['general.value.SelectOne']}" hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                    </s:fragment>
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['transportReport.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{transportReport.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['transportReport.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{transportReport.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                	<ui:remove>
+                    <h:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{transportReport.executeReport()}"
+                                     styleClass="button"
+                                     />  
+                    </ui:remove>
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{transportReport.pdf()}"
+                                     styleClass="button"/>
+                    <ui:remove>                 
+                    <h:commandButton id="excel" 
+                                     value="#{messages['general.button.Excel']}" 
+                                     action="#{transportReport.excel()}"
+                                     styleClass="button"/>
+                    </ui:remove>
+                </s:div>
+            </r:panel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

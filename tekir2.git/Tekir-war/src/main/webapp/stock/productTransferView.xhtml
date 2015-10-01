@@ -1,0 +1,196 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="stock"/>
+            <ui:param name="curpage" value="productTransfer"/>
+        </ui:include>
+    </ui:define>
+
+	<ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/productTransferBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ProductTransferBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/stock/productTransfer.xhtml">
+                <h:outputText value="#{messages['module.caption.ProductTransfer']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{productTransferHome.createNew()}" view="/stock/productTransfer.xhtml" rendered="#{s:hasPermission('productTransfer', 'insert')}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['productTransfer.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.ProductTransferView']}" /></h1>
+		
+		<ui:include src="/layout/messages.xhtml" />
+
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif"
+							alt="#{messages['productTransfer.img.Form']}" />
+						<h:outputText value="#{messages['productTransfer.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				<h:panelGrid columns="3">
+					<s:div>
+					
+						<s:decorate template="/layout/edit.xhtml" >
+                            <h:outputText value="#{messages['productTransfer.label.Serial']} : " styleClass="boldLabel"/>
+                            <h:outputText value="Yok" rendered="#{productTransfer.serial eq null}" />
+							<h:outputText value="#{productTransfer.serial}"/>
+                        </s:decorate>                        
+                        
+						<s:decorate template="/layout/edit.xhtml" >
+                            <h:outputText value="#{messages['productTransfer.label.Reference']} : " styleClass="boldLabel"/>
+                            <h:outputText value="Yok" rendered="#{productTransfer.reference eq null}" />
+							<h:outputText value="#{productTransfer.reference}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <h:outputText value="#{messages['productTransfer.label.FromWarehouse']} : " styleClass="boldLabel"/>
+                            <h:outputText value="Yok" rendered="#{productTransfer.fromWarehouse eq null}" />
+							<h:outputText value="#{productTransfer.fromWarehouse.code}"/><br />
+							<h:outputText value="#{productTransfer.fromWarehouse.address.street}" rendered="#{productTransfer.fromWarehouse.address.street ne null}"/><br />
+							<h:outputText value="#{productTransfer.fromWarehouse.address.zip}" rendered="#{productTransfer.fromWarehouse.address.zip ne null}"/><br />
+							<h:outputText value="#{productTransfer.fromWarehouse.province.name} #{productTransfer.fromWarehouse.city.name}" rendered="#{productTransfer.fromWarehouse.city.name ne null}"/>
+                        
+                        </s:decorate>
+                        
+                        </s:div>
+                        
+                        <s:div>
+                        
+							<s:decorate template="/layout/edit.xhtml" >
+                           	 	<h:outputText value="#{messages['productTransfer.label.Code']} : " styleClass="boldLabel"/>
+                            	<h:outputText value="Yok" rendered="#{productTransfer.code eq null}" />
+								<h:outputText value="#{productTransfer.code}"/>
+                        	</s:decorate>
+                        
+							<s:decorate template="/layout/edit.xhtml" >
+                            	<h:outputText value="#{messages['productTransfer.label.Info']} : " styleClass="boldLabel"/>
+                            	<h:outputText value="Yok" rendered="#{productTransfer.info eq null}" />
+								<h:outputText value="#{productTransfer.info}" styleClass="exlarge" rows="6"/>
+                        	</s:decorate>
+                        	
+                        	<s:decorate template="/layout/edit.xhtml" >
+                            	<h:outputText value="#{messages['productTransfer.label.ToWarehouse']} : " styleClass="boldLabel"/>
+                            	<h:outputText value="Yok" rendered="#{productTransfer.toWarehouse eq null}" />
+								<h:outputText value="#{productTransfer.toWarehouse.code}"/><br />
+								<h:outputText value="#{productTransfer.toWarehouse.address.street}" rendered="#{productTransfer.toWarehouse.address.street ne null}"/><br />
+								<h:outputText value="#{productTransfer.toWarehouse.address.zip}" rendered="#{productTransfer.toWarehouse.address.zip ne null}"/><br />
+								<h:outputText value="#{productTransfer.toWarehouse.province.name} #{productTransfer.toWarehouse.city.name}" rendered="#{productTransfer.toWarehouse.city.name ne null}"/>
+                        	</s:decorate>
+						</s:div>
+						<s:div>
+							<s:decorate template="/layout/edit.xhtml">
+								<h:outputText value="#{messages['productTransfer.label.Date']} : " styleClass="boldLabel"/>
+								<h:outputText value="Yok" rendered="#{productTransfer.date eq null}" />
+								<h:outputText value="#{productTransfer.date}">
+									<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+								</h:outputText>
+							</s:decorate>
+							
+							<s:decorate template="/layout/edit.xhtml" >
+		                    	<h:outputText value="#{messages['general.label.Time']} : "
+		                            styleClass="boldLabel"/>
+		                            <h:outputText value="#{productTransfer.time}" required="true">
+		                            	<s:convertDateTime  pattern="#{messages['general.format.Time']}" />
+								</h:outputText>
+		                   </s:decorate>
+				                   
+						</s:div>
+
+				</h:panelGrid>
+				
+							<r:dataTable id="its" 
+                                 var="item"
+                                 value="#{productTransfer.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 style="border:0">
+						
+							<f:facet name="header">
+								<r:columnGroup>	
+									<r:column>
+                                    	<h:outputText value="#{messages['productTransfer.label.LineCode']}" />
+                                	</r:column>
+									<r:column>
+										<h:outputText value="#{messages['productTransfer.label.Product']}" />
+									</r:column>
+									<r:column>
+										<h:outputText value="#{messages['productTransfer.label.LineInfo']}" />
+									</r:column>
+									<r:column>
+										<h:outputText value="#{messages['productTransfer.label.Quantity']}" />
+									</r:column>
+									<r:column>
+										<h:outputText value="#{messages['productTransfer.label.Unit']}" />
+									</r:column>
+									
+								</r:columnGroup>
+							</f:facet>
+
+							<r:column style="width:101px; border:0">
+								<h:outputText value="#{item.lineCode}" />
+							</r:column>
+							
+							<r:column style="width:401px; border:0">
+								<h:outputText value="#{item.product.caption}"/>
+							</r:column>							
+							
+							<r:column style="width:201px; border:0">
+								<h:outputText value="#{item.info}" />
+							</r:column>
+							
+							<r:column style="width:150px; border:0" styleClass="amountField">
+								<h:outputText value="#{item.quantity.value}"
+									styleClass="amountField" />
+							</r:column>							
+							
+							<r:column style="width:110px; border:0">
+								<h:outputText value="#{item.quantity.unit}" />
+							</r:column>
+							
+						</r:dataTable>
+						
+			</r:panel>
+			
+			<div class="actionButtons">
+                <s:button id="print"
+				value="#{messages['general.button.Print']}"
+				action="#{productTransferHome.print()}" styleClass="button" />
+
+                <s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{productTransferHome.edit()}" styleClass="button" /> 
+                
+                <s:button id="done" value="#{messages['general.button.Close']}"
+				action="#{productTransferHome.close()}" styleClass="button" />
+             </div>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

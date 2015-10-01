@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ut="http://utech.com/jsf/comps">
+    
+    <h1>Tekir Yardım</h1>
+    <p>Aşağıda uygulama kullanımı için temel araç ve yöntemler bulunmaktadır.</p>
+    
+    <h2>İçindekiler</h2>
+    <ul>
+        <li><s:link view="/help/help.xhtml" action="#{helpManager.topicPath('/paramPages.xhtml')}" >Genel Tanım Ekranları</s:link></li>
+        <li><s:link view="/help/help.xhtml" action="#{helpManager.topicPath('/cardPages.xhtml')}" >Liste Ekranları</s:link></li>
+        <li><s:link view="/help/help.xhtml" action="#{helpManager.topicPath('/fishPages.xhtml')}" >Fiş Giriş Ekranları</s:link></li>
+        <li><s:link view="/help/help.xhtml" action="#{helpManager.topicPath('/contact/contact.xhtml')}" >Cari Giriş Ekranı</s:link></li>
+    </ul>
+    <ul>
+        <li><s:link view="/help/help.xhtml" action="#{helpManager.topicPath('/license.xhtml')}" >Lisans : GNU LGPL</s:link></li>
+    </ul>
+    
+    <h2>Kullanım Kılavuzu</h2>
+    <p>Tekir Kullanım Kılavuzu PDF olarak hazırlanmıştır. Okumak için herhangi bir PDF okuyucu ( Acrobat Reader, KPdf v.b. ) kullanabilirsiniz.</p>
+    <ul>
+        <li><a href="http://www.tekir.com.tr/media/dosya/kilavuz.pdf" >Kullanıcı Kılavuzu</a></li>
+    </ul>
+    
+    <h2>Daha Fazlası</h2>
+    <p>Tekir için en güncel bilgiye ve kullanıcı topluluğuna <a href="http://www.tekir.com.tr" target="_blank">tekir.com.tr</a>'den erişebilirsiniz.</p>
+    
+</ui:composition>

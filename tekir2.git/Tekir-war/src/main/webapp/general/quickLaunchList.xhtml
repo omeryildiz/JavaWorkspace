@@ -1,0 +1,58 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+                    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="home"/>
+            <ui:param name="curpage" value="quickLaunchList"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/base/home.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Home']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/general/quickLaunchList.xhtml">
+                <h:outputText value="#{messages['module.caption.QuickLaunchList']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+        </div>
+
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.QuickLaunchList']}" /></h1>
+
+         <r:dataTable id="quickList"
+                     var="item"
+                     value="#{quickLaunchOptionPane.optionList}"
+                     onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                     onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+            <r:column styleClass="half">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['optionEditor.label.PageName']}"/>
+                </f:facet>
+                <h:outputText value="#{item.pageName}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+                	<h:outputText value="#{messages['optionEditor.label.Key']}"/>
+                </f:facet>
+                <h:outputText value="#{item.launchKey}" />
+            </r:column>
+        </r:dataTable>
+
+    </ui:define>
+</ui:composition>

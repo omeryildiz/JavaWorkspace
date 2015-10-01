@@ -1,0 +1,146 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="contact"/>
+            <ui:param name="curpage" value="category"/>
+            <ui:param name="curitem" value="contactCategory"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/contact/contactCategory.xhtml">
+                <h:outputText value="#{messages['module.caption.ContactCategory']}" rendered="#{s:hasPermission('contactCategory', 'select')}" />
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{contactCategoryHome.createNew()}" rendered="#{s:hasPermission('contactCategory', 'insert')}" propagation="begin">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['contactCategory.action.Add']}" />
+            </s:link>
+            <s:link view="/contact/contactBrowse.xhtml" propagation="none" rendered="#{s:hasPermission('contact', 'select')}">
+                <h:graphicImage url="/img/vcard.gif" alt="#{messages['contact.img.Form']}"/> 
+                <h:outputText value="#{messages['module.caption.ContactBrowse']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ContactCategory']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="3" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{contactCategoryList}" 
+                                 rendered="#{s:hasPermission('contactCategory', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="2">
+                                    <h:outputText value="#{messages['contactCategory.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{contactCategoryHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code}" />
+                            </s:link>
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="#{cty.weight}" />
+                        </r:column>
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{contactCategoryHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}" />
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['contactCategory.hint.EmptyList']}" rendered="#{contactCategoryList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/folder.gif" alt="#{messages['contactCategory.img.Form']}"/> 
+                            <h:outputText value="#{messages['contactCategory.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:fragment>
+                            <s:decorate template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['contactCategory.label.Code']}"/></ui:define>
+                                <h:inputText value="#{contactCategory.code}" styleClass="small" required="true"/>
+                            </s:decorate>
+                            
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                                <h:outputText value="#{messages['priceItem.label.PriceList']}"/>
+	                            </ui:define>
+	                            <h:selectOneMenu id="priceList"
+	                                             value="#{contactCategory.priceList}"
+	                                             styleClass="middle">
+	                                <s:convertEntity/>
+	                                <s:selectItems value="#{generalSuggestion.priceListList}"
+	                                               var="item"
+	                                               label="#{item.code} - #{item.listName}"
+	                                               noSelectionLabel="#{messages['general.value.All']}"
+	                                               hideNoSelectionLabel="false" />
+	                            </h:selectOneMenu>
+	                        </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['contactCategory.label.Status']}"/></ui:define>
+                                <h:selectBooleanCheckbox id="active" value="#{contactCategory.active}" styleClass="checkbox" />
+                                <h:outputLabel value="#{messages['contactCategory.label.Active']}" for="active" styleClass="checkboxLabel" />
+                            </s:decorate>
+                        </s:fragment>
+                        <s:fragment>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['contactCategory.label.Weight']}" />
+                                </ui:define>
+                                <h:inputText value="#{contactCategory.weight}" styleClass="small" />
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['contactCategory.label.Info']}"/></ui:define>
+                                <h:inputTextarea value="#{contactCategory.info}" styleClass="exlarge" rows="4"/>
+                            </s:decorate>
+                        </s:fragment>
+
+                    </h:panelGrid>
+
+					<ut:actionButtons home="#{contactCategoryHome}" entity="#{contactCategory}" permission="contactCategory" />
+
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

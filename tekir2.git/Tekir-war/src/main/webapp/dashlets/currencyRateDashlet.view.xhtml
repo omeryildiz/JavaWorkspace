@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/dashlet.xhtml">
+    <ui:define name="view">
+        <s:fragment rendered="#{currencyManager.todayCurrencyRates.size eq 0}">
+            <h:outputText value="Günlük kurlar tanımlanmamış. Tanımlamak için " />
+            <s:link view="/general/currencyRate.xhtml" propagation="begin">
+                <h:outputText value="kur girişlerini" />
+            </s:link>
+            <h:outputText value=" ziyaret edin." />
+        </s:fragment>
+
+        <r:dataTable id="curlist"
+                     var="cty"
+                     value="#{currencyManager.todayCurrencyRates}"
+                     rendered="#{currencyManager.todayCurrencyRates.size > 0}"
+                     onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                     onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+            <r:column>
+                <f:facet name="header">
+                    Döviz
+                </f:facet>
+                <h:outputText value="#{cty.currencyPair.caption}"/>
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+                    Alış
+                </f:facet>
+                <h:outputText value="#{cty.bid}">
+                    <f:convertNumber pattern="#.0000" />
+                </h:outputText>
+            </r:column>
+            <r:column>
+                <f:facet name="header">
+                    Satış
+                </f:facet>
+                <h:outputText value="#{cty.ask}">
+                    <f:convertNumber pattern="#.0000" />
+                </h:outputText>
+
+            </r:column>
+
+        </r:dataTable>
+    </ui:define>
+</ui:composition>

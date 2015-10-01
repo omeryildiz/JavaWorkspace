@@ -1,0 +1,225 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewAccount"/>
+            <ui:param name="cursubitem" value="newCreditVirement"/>
+        </ui:include>
+    </ui:define>
+
+	   <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/debitCreditVirementBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.DebitCreditVirementBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/debitCreditVirement.xhtml">
+                <h:outputText value="#{messages['module.caption.DebitCreditVirement']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/finance/debitCreditVirement.xhtml" rendered="#{s:hasPermission('debitCreditVirement', 'insert')}" propagation="begin" >
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['debitCreditVirement.action.Add']}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+
+
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.DebitCreditVirement']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif"
+							alt="#{messages['debitCreditVirement.img.Form']}" />
+						<h:outputText value="#{messages['debitCreditVirement.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<table>
+							<tr>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditVirement.label.Serial']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditVirement.serial eq null}" />
+										<h:outputText value="#{debitCreditVirement.serial}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditVirement.label.Reference']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditVirement.reference eq null}" />
+										<h:outputText value="#{debitCreditVirement.reference}" />
+									</s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditVirement.label.Code']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditVirement.code eq null}" />
+										<h:outputText value="#{debitCreditVirement.code}" />
+									</s:decorate>
+
+								</s:div></td>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditVirement.label.Info']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditVirement.info eq null}" />
+										<h:outputText value="#{debitCreditVirement.info}"
+											styleClass="exlarge" rows="6" />
+									</s:decorate>
+
+								</s:div></td>
+							</tr>
+						</table>
+					</s:fragment>
+
+					<s:fragment>
+						<table>
+						<tr>
+
+								<s:div>
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditVirement.label.Date']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditVirement.date eq null}" />
+										<h:outputText value="#{debitCreditVirement.date}">
+											<s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+										</h:outputText>
+									</s:decorate>
+
+									
+
+								</s:div>
+						</tr>
+						
+						</table>
+					</s:fragment>
+
+				</h:panelGrid>
+
+				<r:dataTable id="its" var="item" value="#{debitCreditVirement.items}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0">
+
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineCode']}" />
+							</r:column>
+                            <r:column>
+                                <h:outputText value="#{messages['debitCreditVirement.label.FromContact']}" />
+                            </r:column>
+                            <r:column>
+                                <h:outputText value="#{messages['debitCreditVirement.label.ToContact']}" />
+                            </r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineInfo']}" />
+							</r:column>
+
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Amount']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Currency']}" />
+							</r:column>
+
+						</r:columnGroup>
+					</f:facet>
+
+					<r:column style="width:41px; border:0">
+						<h:outputText value="#{item.lineCode}" />
+					</r:column>
+
+                    <r:column style="width:181px; border:0">
+                            <s:decorate id="sd" >
+                                <h:outputText id="fromContact" value="#{item.fromContact}" >
+                                    <f:converter converterId="contactCaptionConverter"/>
+                                </h:outputText>
+                            </s:decorate>
+                    </r:column>
+                    <r:column style="width:181px; border:0">
+                            <s:decorate id="sd1">
+                                <h:outputText  id="toContact" value="#{item.toContact}"  >
+                                    <f:converter converterId="contactCaptionConverter"/>
+                                </h:outputText>
+                            </s:decorate>
+                    </r:column>
+
+					<r:column style="width:201px; border:0">
+						<h:outputText value="#{item.info}" />
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.amount.value}"
+							styleClass="amountField" >
+							<f:convertNumber pattern="#,##0.00"/>
+						</h:outputText>
+
+					</r:column>
+
+					<r:column  style="width:41px; border:0">
+						<h:outputText value="#{item.amount.currency}"
+							styleClass="ccyField" />
+					</r:column>
+
+				</r:dataTable>
+
+			</r:panel>
+
+			<div class="actionButtons">
+
+<ui:remove>
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{debitCreditVirementHome.print()}" styleClass="button" />
+</ui:remove>
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{debitCreditVirementHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{debitCreditVirementHome.close()}" styleClass="button" />
+			</div>
+
+		</h:form>
+    </ui:define>
+
+</ui:composition>

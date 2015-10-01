@@ -1,0 +1,126 @@
+ID,USER_NAME,OP_VALUE,OPKEY
+1,SYSTEM,tr_TR,base.Lang
+2,SYSTEM,UTF-8,base.Encode
+3,SYSTEM,MaviBuz,base.Thema
+10,SYSTEM,TRL,default.CCY
+11,SYSTEM,MERKEZ,default.Account
+12,SYSTEM,MERKEZ,default.Warehouse
+20,SYSTEM,Tekir Ticari Otomasyon,company.Name
+21,SYSTEM,Şirket Unvanı,company.Title
+22,SYSTEM,Vergi Dairesi,company.TaxOffice
+23,SYSTEM,Sicil No,company.TaxNumber
+24,SYSTEM,Resmi Adres,company.Address
+30,SYSTEM,AF,serial.invoice.Purchase
+31,SYSTEM,SF,serial.invoice.Sale
+32,SYSTEM,AI,serial.shipment.Purchase
+33,SYSTEM,SI,serial.shipment.Sale
+34,SYSTEM,DSI,serial.shipment.Transfer
+35,SYSTEM,KS,serial.fund.Transfer
+36,SYSTEM,TH,serial.fund.Collection
+37,SYSTEM,TD,serial.fund.Payment
+38,SYSTEM,CV,serial.fund.DebitCredit
+40,SYSTEM,AA,reference.invoice.Purchase
+41,SYSTEM,AA,reference.invoice.Sale
+42,SYSTEM,AA,reference.shipment.Purchase
+43,SYSTEM,AA,reference.shipment.Sale
+44,SYSTEM,AA,reference.shipment.Transfer
+45,SYSTEM,AA,reference.fund.Transfer
+46,SYSTEM,AA,reference.fund.Collection
+47,SYSTEM,AA,reference.fund.Payment
+48,SYSTEM,AA,reference.fund.DebitCredit
+49,SYSTEM,ST,serial.stock.ProductVirement
+50,SYSTEM,ADF,serial.debitcreditnote.Collection
+51,SYSTEM,BDF,serial.debitcreditnote.Payment
+52,SYSTEM,BCT,serial.banktocontact.Transfer
+53,SYSTEM,BKT,serial.banktoaccount.Transfer
+54,SYSTEM,BBT,serial.banktobank.Transfer
+55,SYSTEM,VH,serial.finance.DepositAccount
+56,SYSTEM,BS,serial.bond.Sale
+57,SYSTEM,BA,serial.bond.Purchase
+58,SYSTEM,PT,serial.finance.PortfolioToPortfolio
+59,SYSTEM,POY,default.Portfolio
+60,SYSTEM,CTH,serial.chequeToBankPayroll
+61,SYSTEM,CC,serial.chequeToContactPayroll
+62,SYSTEM,AS,reference.order.Purchase
+63,SYSTEM,SS,reference.order.Sale
+64,SYSTEM,SP,serial.order.Purchase
+65,SYSTEM,SP,serial.order.Sale
+66,SYSTEM,STH,serial.promissoryToBankPayroll
+67,SYSTEM,SC,serial.promissoryToContactPayroll
+71,SYSTEM,CK,serial.cards.Contact
+72,SYSTEM,SK,serial.cards.Stock
+73,SYSTEM,HK,serial.cards.Service
+74,SYSTEM,CBT,serial.contacttobank.Transfer
+75,SYSTEM,KBT,serial.accountToBank.Transfer
+76,SYSTEM,CG,serial.chequeFromContactPayroll
+77,SYSTEM,CTM,serial.chequeToBankAssurancePayroll
+78,SYSTEM,CTE,serial.chequeCollectedAtBankPayroll
+79,SYSTEM,CKT,serial.chequeToAccountCollectionPayroll
+80,SYSTEM,CKO,serial.chequeToAccountPaymentPayroll
+81,SYSTEM,CKO,serial.chequeToBankPaymentPayroll
+82,SYSTEM,SG,serial.promissoryFromContactPayroll
+83,SYSTEM,STM,serial.promissoryToBankAssurancePayroll
+84,SYSTEM,STE,serial.promissoryCollectedAtBankPayroll
+85,SYSTEM,SKT,serial.promissoryToAccountCollectionPayroll
+86,SYSTEM,SKO,serial.promissoryToAccountPaymentPayroll
+87,SYSTEM,SBO,serial.promissoryToBankPaymentPayroll
+88,SYSTEM,TE,serial.tender
+89,SYSTEM,AA,serial.Cheque
+90,SYSTEM,AA,serial.Promissory
+91,SYSTEM,false,currencyAlertPopup.isVisible
+92,SYSTEM,GF,serial.expenseNote
+93,SYSTEM,false,organizationSchemeOption.UseScheme
+94,SYSTEM,Merkez,organizationLevelOption.value.Contact
+95,SYSTEM,Şube,organizationLevelOption.value.Account
+96,SYSTEM,Şube,organizationLevelOption.value.Warehouse
+97,SYSTEM,Merkez,organizationLevelOption.value.BankBranch
+98,SYSTEM,Merkez,organizationLevelOption.value.Personnel
+99,SYSTEM,Merkez,organizationLevelOption.value.Provider
+100,SYSTEM,Merkez,organizationLevelOption.value.Agent
+101,SYSTEM,Merkez,organizationLevelOption.value.Customer
+102,SYSTEM,NoControl,systemSettings.control.StockLevel
+103,SYSTEM,NoControl,systemSettings.control.AccountLevel
+104,SYSTEM,NoControl,systemSettings.control.ContactRiskLimit
+105,SYSTEM,NoControl,systemSettings.control.ContactCreditLimit
+106,SYSTEM,NoControl,systemSettings.control.StockShelfLife
+107,SYSTEM,NoControl,systemSettings.control.PriceChangeControl
+108,SYSTEM,2.1.0,base.programVersion
+109,SYSTEM,false,base.isUnderConstruction
+110,SYSTEM,MK,serial.cards.Expense
+111,SYSTEM,IK,serial.cards.Discount
+112,SYSTEM,pos1,systemSettings.control.DefaultPos
+113,SYSTEM,MERKEZ,systemSettings.control.DefaultAccount
+114,SYSTEM,/\\/hostname/\\pos,systemSettings.control.DefaultPosPrinter
+115,SYSTEM,/\\/hostname/\\barcode,systemSettings.control.DefaultBarcodePrinter
+116,SYSTEM,B1,serial.stock.Barcode
+117,SYSTEM,0.09,systemSettings.control.MaxRoundingAmount
+118,SYSTEM,MERKEZ,systemSettings.control.DefaultWarehouse
+119,SYSTEM,GGC,systemSettings.value.GeneralExpenseContact
+120, SYSTEM,SF,serial.countNote
+121, SYSTEM,true,SerialNumber.isEditable
+122, SYSTEM,NoControl,systemSettings.control.SaleInvoiceZeroLineAmount
+123, SYSTEM,NoControl,systemSettings.control.PurchaseInvoiceZeroLineAmount
+124, SYSTEM,NoControl,systemSettings.control.SaleShipmentZeroLineAmount
+125, SYSTEM,NoControl,systemSettings.control.PurchaseShipmentZeroLineAmount
+126, SYSTEM,NoControl,systemSettings.control.SaleOrderZeroLineAmount
+127, SYSTEM,NoControl,systemSettings.control.PurchaseOrderZeroLineAmount
+128, SYSTEM,NoControl,systemSettings.control.SaleTenderZeroLineAmount
+129, SYSTEM,NoControl,systemSettings.control.PurchaseTenderZeroLineAmount
+130, SYSTEM,8000.00,systemSettings.control.MaxPaymentAmount
+131, SYSTEM,PI,serial.proformaInvoice.Sale
+132, SYSTEM,TL,systemOption.CurrencyCode
+133, SYSTEM,KR,systemOption.CurrencydecCode
+134, SYSTEM,TÜRKİYE,systemOption.CountryName
+135, SYSTEM,90,systemOption.CountryCode
+136, SYSTEM,TR,systemOption.CountryShortName
+137, SYSTEM,tr_TR,systemOption.Locale
+138,SYSTEM,Telefon,company.Phone
+139,SYSTEM,Fax,company.Fax
+140,SYSTEM,E-Posta,company.Email
+141,SYSTEM,Web,company.Web
+142,SYSTEM,true,systemSettings.foreignInvoicingEnabled
+1000,tezgahtar,pos2,systemSettings.control.DefaultPos
+1001,tezgahtar,kasa2,systemSettings.control.DefaultAccount 
+1002,tezgahtar,posprinter2,systemSettings.control.DefaultPosPrinter 
+1003,tezgahtar,barcprinter2,systemSettings.control.DefaultBarcodePrinter 
+1004,tekir,GGC,systemSettings.value.GeneralExpenseContact 

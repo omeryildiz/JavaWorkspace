@@ -1,0 +1,70 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+    
+    
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.PortfolioToPortfolioTransferBrowse']}" /></h1>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <r:dataTable id="browseList" 
+                     var="portfolioToPortfolioTransfer"
+                     value="#{portfolioToPortfolioTransferBrowse.entityList}" >
+            <f:facet name="header">
+                <h:panelGroup>
+                    <h:outputText value="#{messages['general.label.Results']}"/>
+                </h:panelGroup>
+            </f:facet>
+            <r:column styleClass="serialField">
+                <f:facet name="header"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Serial']}"/></f:facet>
+                
+                <h:outputText value="#{portfolioToPortfolioTransfer.serial}"/>
+                
+            </r:column>
+            <r:column styleClass="serialField">
+                <f:facet name="header"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Reference']}" /></f:facet>
+                
+                <h:outputText value="#{portfolioToPortfolioTransfer.reference}"/>
+                
+            </r:column>
+            
+            
+            <r:column styleClass="dateField">
+                <f:facet name="header"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Date']}" /></f:facet>
+                <h:outputText value="#{portfolioToPortfolioTransfer.date}">
+                    <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                </h:outputText>
+            </r:column>
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.FromPortfolio']}" /></f:facet>
+                <h:outputText value="#{portfolioToPortfolioTransfer.fromPortfolio.code}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.ToPortfolio']}" /></f:facet>
+                <h:outputText value="#{portfolioToPortfolioTransfer.toPortfolio.code}" />
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Code']}" /></f:facet>
+                <h:outputText value="#{portfolioToPortfolioTransfer.code}" />
+                
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['portfolioToPortfolioTransfer.label.Info']}" /></f:facet>
+                <h:outputText value="#{portfolioToPortfolioTransfer.info}"/>
+            </r:column>
+            
+        </r:dataTable>
+        
+    </ui:define> 
+</ui:composition>

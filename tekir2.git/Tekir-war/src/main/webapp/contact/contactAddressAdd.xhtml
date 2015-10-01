@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="popupForm">
+		
+		<s:div id="popMessages">
+			<ui:include src="/layout/messages.xhtml" />
+		</s:div>
+		
+		<h:panelGrid columns="2">
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['contactAddress.label.UsageType']}" />
+					<span class="required"> *</span>
+				</ui:define>
+
+				<h:selectBooleanCheckbox id="deliveryAddr" value="#{contactHome.selectedAddress.deliveryAddress}" 
+					styleClass="checkbox" />
+                   <h:outputLabel value="#{messages['contactAddress.label.DeliveryAddress']}" 
+                   	for="deliveryAddr" styleClass="checkboxLabel" />
+
+				<h:selectBooleanCheckbox id="invoiceAddr" value="#{contactHome.selectedAddress.invoiceAddress}" 
+					styleClass="checkbox" />
+                   <h:outputLabel value="#{messages['contactAddress.label.InvoiceAddress']}" 
+                   	for="invoiceAddr" styleClass="checkboxLabel" />
+
+				<h:selectBooleanCheckbox id="shippingAddr" value="#{contactHome.selectedAddress.shippingAddress}" 
+					styleClass="checkbox" />
+                   <h:outputLabel value="#{messages['contactAddress.label.ShippingAddress']}" 
+                   	for="shippingAddr" styleClass="checkboxLabel" />
+
+			</s:decorate>
+
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['contact.label.AddressType']}" styleClass="middle"/>
+				</ui:define>
+				<h:selectOneMenu value="#{contactHome.selectedAddress.usageType}">
+					<f:selectItem itemValue="workAddress" itemLabel="#{messages['contactAddress.label.WorkAddress']}"/>
+					<f:selectItem itemValue="homeAddress" itemLabel="#{messages['contactAddress.label.HomeAddress']}" />
+					<f:selectItem itemValue="homeOfficeAddress" itemLabel="#{messages['contactAddress.label.HomeOfficeAddress']}"/>
+					<f:selectItem itemValue="otherAddress" itemLabel="#{messages['contactAddress.label.OtherAddress']}"/>
+					<f:selectItem itemValue="relatedAddress" itemLabel="#{messages['contactAddress.label.RelatedAddress']}"/>
+				</h:selectOneMenu>
+			</s:decorate>
+
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['address.label.Address']}" />
+				</ui:define>					
+				<h:inputTextarea value="#{contactHome.selectedAddress.address.street}" styleClass="large" 
+					rows="9"/>
+			</s:decorate>
+
+			<s:fragment>
+			
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['address.label.Zip']}" />
+					</ui:define>					
+					<h:inputText value="#{contactHome.selectedAddress.address.zip}" styleClass="middle"/>
+				</s:decorate>
+			
+				<a:region renderRegionOnly="true">
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['address.label.Country']}" />
+						</ui:define>					
+						<h:selectOneMenu value="#{contactHome.selectedAddress.address.country}" 
+							styleClass="middle" required="true">
+							<s:selectItems value="#{generalSuggestion.countryList}"
+								var="it" label="#{it.name}" 
+								noSelectionLabel="#{messages['general.value.None']}"
+								hideNoSelectionLabel="false" 
+								itemValue="#{it.name}"/>
+							<a:support event="onchange" reRender="cityDec,provinceDec" ajaxSingle="true" status="commonAjaxStatus"/>
+						</h:selectOneMenu>
+					</s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['address.label.City']}" />
+						</ui:define>					
+						<h:selectOneMenu id="cityDec" value="#{contactHome.selectedAddress.city}" styleClass="middle"
+							required="true">
+							<s:convertEntity />
+							<s:selectItems value="#{generalSuggestion.getCityList(contactHome.selectedAddress.address.country)}"
+								var="it" label="#{it.name}" 
+								noSelectionLabel="#{messages['general.value.None']}"
+								hideNoSelectionLabel="false" />
+							<a:support event="onchange" reRender="provinceDec"
+								ajaxSingle="true" status="commonAjaxStatus"/>
+						</h:selectOneMenu>
+					</s:decorate>
+					
+					<s:div id="provinceDec">
+						<s:decorate template="/layout/edit.xhtml" 
+							rendered="#{contactHome.selectedAddress.address.country eq messages['country.label.Turkey']}" >
+							<ui:define name="label"  >
+								<h:outputText value="#{messages['address.label.Province']}" />
+							</ui:define>					
+							<h:selectOneMenu id="province" value="#{contactHome.selectedAddress.province}" 
+								styleClass="middle" required="false" >
+								<s:convertEntity />
+								<s:selectItems value="#{generalSuggestion.getProvinceList(contactHome.selectedAddress.city)}"
+									var="it" label="#{it.name}" 
+									noSelectionLabel="#{messages['general.value.None']}"
+									hideNoSelectionLabel="false" />
+							</h:selectOneMenu>
+						</s:decorate>
+
+					</s:div>
+		
+				</a:region>	
+                
+                <s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Status']}" />
+					</ui:define>
+					<h:selectBooleanCheckbox id="active" value="#{contactHome.selectedAddress.activeAddress}"
+						styleClass="checkbox" />
+					<h:outputLabel value="#{messages['general.label.Active']}"
+						for="active" styleClass="checkboxLabel" />
+				</s:decorate>
+
+			</s:fragment>
+
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['contact.label.Info']}" />
+				</ui:define>					
+				<h:inputTextarea value="#{contactHome.selectedAddress.info}"
+					rows="2" style="width:500px"/>
+			</s:decorate>
+			
+		</h:panelGrid>
+
+		<div class="actionButtons">
+			<a:commandButton action="#{contactHome.addToAddressList()}" 
+				styleClass="button" value="#{messages['general.label.Add']}" 
+				reRender="addresses,popupForm" rendered="#{not contactHome.isEdit}"
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('contactAddressAddPopup');" />
+
+			<a:commandButton action="#{contactHome.endAddressEdit()}" reRender="addresses" 
+				value="#{messages['general.button.Ok']}"
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('contactAddressAddPopup');"
+				styleClass="button" rendered="#{contactHome.isEdit}" /> 
+			
+			<a:commandButton value="#{messages['general.button.Cancel']}"
+				oncomplete="Richfaces.hideModalPanel('contactAddressAddPopup');"
+				styleClass="button" ajaxSingle="true" />
+		
+		</div>
+
+	</h:form>
+
+</ui:composition>

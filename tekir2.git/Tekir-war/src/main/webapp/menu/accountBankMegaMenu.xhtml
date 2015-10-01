@@ -1,0 +1,79 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich"
+     xmlns:ut="http://utech.com/jsf/comps"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<!-- TODO:menkul kıymetleri eklemeli. -->
+	<table>
+		<tr>
+			<td class="menuNewColumn">
+				<table>
+					<tr>
+						<td>
+				            <h3>#{messages['general.button.New']}</h3>
+				            <ul id="list-content">
+				                <ut:newMenuItem view="/finance/collection.xhtml" text="#{messages['menu.accountBank.new.Collection']}" img="/img/add.gif" disabled="#{not s:hasPermission('collection', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/payment.xhtml" text="#{messages['menu.accountBank.new.Payment']}" img="/img/add.gif" disabled="#{not s:hasPermission('payment', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/fundTransfer.xhtml" text="#{messages['menu.accountBank.new.FundTransfer']}" img="/img/add.gif" disabled="#{not s:hasPermission('fundTransfer', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/accountCreditNote.xhtml" text="#{messages['menu.accountBank.new.AccountCreditNote']}" img="/img/add.gif" disabled="#{not s:hasPermission('accountCreditNote', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/bankToContactTransfer.xhtml" text="#{messages['menu.accountBank.new.BankToContactTransfer']}" img="/img/add.gif" disabled="#{not s:hasPermission('bankToContactTransfer', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/contactToBankTransfer.xhtml" text="#{messages['menu.accountBank.new.ContactToBankTransfer']}" img="/img/add.gif" disabled="#{not s:hasPermission('contactToBankTransfer', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/bankToAccountTransfer.xhtml" text="#{messages['menu.accountBank.new.BankToAccountTransfer']}" img="/img/add.gif" disabled="#{not s:hasPermission('bankToAccountTransfer', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/accountToBankTransfer.xhtml" text="#{messages['menu.accountBank.new.AccountToBankTransfer']}" img="/img/add.gif" disabled="#{not s:hasPermission('accountToBankTransfer', 'insert')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td style="padding-right:30px;">
+				            <h3>#{messages['menu.accountBank.label.Contact']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/debitCreditNoteCollectionBrowse.xhtml" text="#{messages['menu.accountBank.browse.DebitCreditNoteCollectionBrowse']}" img="/img/coins_add.gif" disabled="#{not s:hasPermission('debitCreditNoteCollection', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/debitCreditNotePaymentBrowse.xhtml" text="#{messages['menu.accountBank.browse.DebitCreditNotePaymentBrowse']}" img="/img/coins_delete.gif" disabled="#{not s:hasPermission('debitCreditNotePayment', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/debitCreditVirementBrowse.xhtml" text="#{messages['menu.accountBank.browse.DebitCreditVirementBrowse']}" img="/img/coins.gif" disabled="#{not s:hasPermission('debitCreditVirement', 'select')}"/>
+				       		</ul>
+						</td>
+						<td style="padding-right:30px;">
+				            <h3>#{messages['menu.accountBank.label.Account']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/collectionBrowse.xhtml" text="#{messages['menu.accountBank.browse.CollectionBrowse']}" img="/img/coins_add.gif" disabled="#{not s:hasPermission('collection', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/paymentBrowse.xhtml" text="#{messages['menu.accountBank.browse.PaymentBrowse']}" img="/img/coins_delete.gif" disabled="#{not s:hasPermission('payment', 'select')}"/>
+								<ut:browseMenuItem view="/finance/accountCreditNoteBrowse.xhtml" text="#{messages['menu.accountBank.browse.AccountCreditNoteBrowse']}" img="/img/coins.gif" disabled="#{not s:hasPermission('accountCreditNote', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/fundTransferBrowse.xhtml" text="#{messages['menu.accountBank.browse.FundTransferBrowse']}" img="/img/coins.gif" disabled="#{not s:hasPermission('fundTransfer', 'select')}"/>				                
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.accountBank.label.Transfer']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/bankToContactTransferBrowse.xhtml" text="#{messages['menu.accountBank.browse.BankToContactTransferBrowse']}" img="/img/arrow_switch.gif" disabled="#{not s:hasPermission('bankToContactTransfer', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/contactToBankTransferBrowse.xhtml" text="#{messages['menu.accountBank.browse.ContactToBankTransferBrowse']}" img="/img/arrow_switch.gif" disabled="#{not s:hasPermission('contactToBankTransfer', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/bankToBankTransferBrowse.xhtml" text="#{messages['menu.accountBank.browse.BankToBankTransferBrowse']}" img="/img/arrow_switch.gif" disabled="#{not s:hasPermission('bankToBankTransfer', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/bankToAccountTransferBrowse.xhtml" text="#{messages['menu.accountBank.browse.BankToAccountTransferBrowse']}" img="/img/arrow_switch.gif" disabled="#{not s:hasPermission('bankToAccountTransfer', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/accountToBankTransferBrowse.xhtml" text="#{messages['menu.accountBank.browse.AccountToBankTransferBrowse']}" img="/img/arrow_switch.gif" disabled="#{not s:hasPermission('accountToBankTransfer', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/foreignExchangeBrowse.xhtml" text="#{messages['menu.accountBank.browse.ForeignExchangeBrowse']}" img="/img/arrow_switch.gif" disabled="#{not s:hasPermission('foreignExchange', 'select')}"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.accountBank.label.Other']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/foundationRefunding.xhtml" text="#{messages['module.caption.FoundationRefunding']}" img="/img/coins_add.gif" disabled="#{not s:hasPermission('foundationRefunding', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/creditCardPosCommission.xhtml" text="#{messages['module.caption.CreditCardPosCommissionReport']}" img="/img/coins_add.gif" disabled="#{not s:hasPermission('creditCardPosCommission', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/depositAccountBrowse.xhtml" text="#{messages['module.caption.DepositAccountBrowse']}" img="/img/coins_add.gif" disabled="true"/>
+				                <ut:browseMenuItem view="/docmatch/invoicePaymentMapper.xhtml" text="#{messages['module.caption.InvoicePaymentMapper']}" img="#{theme.arrowSplitIcon}" disabled="#{not s:hasPermission('invoicePaymentMapper', 'map')}" propagation="begin"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>

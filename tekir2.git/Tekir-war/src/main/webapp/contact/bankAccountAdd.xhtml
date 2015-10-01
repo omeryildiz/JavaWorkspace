@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+
+	<h:form id="popupForm">
+		<a:region>
+
+			<h:panelGrid columns="2">
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['bankAccount.label.AccountNo']}" />
+					</ui:define>
+					<h:inputText value="#{contactHome.selectedBankAccount.bankAccount.accountNo}" styleClass="middle"
+						required="true" />
+				</s:decorate>
+	
+	                  <s:decorate template="/layout/edit.xhtml" >
+	                  	<ui:define name="label">
+	                      	<h:outputText value="#{messages['bankBranch.label.Bank']}"/>
+	                      </ui:define>
+	                      <h:selectOneMenu value="#{contactHome.bank}" styleClass="middle">
+	                          <s:convertEntity />
+	                          <s:selectItems value="#{generalSuggestion.allBankList}" var="acc" 
+	                          	label="#{acc.name}" noSelectionLabel="#{messages['general.value.None']}" 
+	                          	hideNoSelectionLabel="true"/>
+						<a:support event="onchange" ajaxSingle="true" reRender="branches" />
+	                      </h:selectOneMenu> 
+	                  </s:decorate>
+	
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['bankAccount.label.IBAN']}" />
+					</ui:define>
+					<h:inputText value="#{contactHome.selectedBankAccount.bankAccount.iban}" styleClass="middle"/>
+				</s:decorate>
+	
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText
+							value="#{messages['bankAccount.label.BankBranch']}" />
+					</ui:define>
+					<h:selectOneMenu id="branches" value="#{contactHome.selectedBankAccount.bankAccount.bankBranch}"
+						styleClass="middle" required="true">
+						<s:convertEntity />
+						<s:selectItems value="#{generalSuggestion.getBankBranches(contactHome.bank)}"
+							var="acc" label=" #{acc.bank.name} > #{acc.name}"
+							noSelectionLabel="#{messages['general.value.None']}"
+							hideNoSelectionLabel="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+	
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText
+							value="#{messages['bankAccount.label.Currency']}" />
+					</ui:define>
+					<h:selectOneMenu value="#{contactHome.selectedBankAccount.bankAccount.currency}"
+						styleClass="middle" required="true">
+						<s:selectItems value="#{generalSuggestion.currencyList}"
+							var="acc" label="#{acc.code}"
+							noSelectionLabel="#{messages['general.value.None']}"
+							hideNoSelectionLabel="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+	
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['bankAccount.label.Status']}" />
+					</ui:define>
+					<h:selectBooleanCheckbox id="active"
+						value="#{contactHome.selectedBankAccount.bankAccount.active}" styleClass="checkbox" />
+					<h:outputLabel value="#{messages['bankAccount.label.Active']}"
+						for="active" styleClass="checkboxLabel" />
+				</s:decorate>
+	
+			</h:panelGrid>
+		
+		</a:region>	
+				
+		<div class="actionButtons">
+			<a:commandButton action="#{contactHome.addToBankAccountList()}" styleClass="button" 
+				value="#{messages['general.label.Add']}" 
+				reRender="bankAccounts,messages"
+				rendered="#{not contactHome.isEdit}" 
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('bankAccountAddPopup');"/>
+
+			<a:commandButton action="#{contactHome.endBankAccountEdit()}" reRender="bankAccounts" 
+				value="#{messages['general.button.Ok']}"
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('bankAccountAddPopup');"
+				styleClass="button" 
+				rendered="#{contactHome.isEdit}"/>	
+
+			<a:commandButton value="#{messages['general.button.Cancel']}"
+				oncomplete="Richfaces.hideModalPanel('bankAccountAddPopup');"
+				styleClass="button" 
+				ajaxSingle="true"/>	
+
+	    </div>
+
+	</h:form>
+			
+</ui:composition>	

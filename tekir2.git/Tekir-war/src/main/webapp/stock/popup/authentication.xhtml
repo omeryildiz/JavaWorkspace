@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:ut="http://utech.com/jsf/comps"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="authenticationForm">
+		
+		<a:region>
+			<s:div id="authPopupMessages">
+			    <h:messages globalOnly="false" styleClass="message"/>
+			</s:div>
+			
+			<s:div style="margin-left:70px;padding-top:10px;">
+				<s:decorate template="/layout/edit.xhtml">
+		            <ui:define name="label">
+		            	<h:outputText value="#{messages['general.label.UserName']}"/>
+		            </ui:define>
+		            <h:inputText value="#{currentHome.authorizedUser.userName}" />
+				</s:decorate>
+		
+				<s:decorate template="/layout/edit.xhtml">
+		            <ui:define name="label">
+		            	<h:outputText value="#{messages['general.label.Password']}"/>
+		            </ui:define>
+		            <h:inputSecret value="#{currentHome.authorizedUser.pass}" />
+				</s:decorate>
+				
+				<br/>
+				<s:decorate template="/layout/edit.xhtml">
+					<a:commandButton action="#{currentHome.addDocumentDiscountToItems()}" 
+						styleClass="button" value="#{messages['general.label.Approve']}" 
+						oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('discountPopup');setMasks();" 
+						reRender="its,itsMini" style="width:80px;"/>
+						
+					<a:commandButton value="#{messages['general.button.Cancel']}"
+						oncomplete="Richfaces.hideModalPanel('authenticationPopup');"
+						styleClass="button" ajaxSingle="true" style="width:80px;"/>
+				</s:decorate>
+				
+			</s:div>
+
+		</a:region>
+
+	</h:form>
+
+</ui:composition>

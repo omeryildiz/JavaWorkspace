@@ -1,0 +1,97 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewAccount"/>
+            <ui:param name="cursubitem" value="newCollection"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/collectionBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.CollectionBrowse']}" rendered="#{s:hasPermission('collection', 'select')}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/collection.xhtml">
+                <h:outputText value="#{messages['module.caption.Collection']}" rendered="#{s:hasPermission('collection', 'update')}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link action="#{collectionHome.createNew()}" rendered="#{s:hasPermission('collection', 'insert')}" >
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['collection.action.Add']}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+
+    <ui:define name="body">
+		<ui:include src="/general/ajaxLoadingPopup.xhtml" />
+		<ui:include src="/contact/contactSelectPopup.xhtml" />
+		<ui:include src="/finance/chequeSelectPopup.xhtml" />
+		<ui:include src="/finance/promissorySelectPopup.xhtml" />
+		<ui:include src="/finance/customerPromissoryAddSelectPopup.xhtml" />
+	    <ui:include src="/finance/firmChequeAddSelectPopup.xhtml" />
+	    <ui:include src="/finance/firmPromissoryAddSelectPopup.xhtml" />
+	
+		<s:div id="messagesDiv">
+			<ui:include src="/layout/messages.xhtml" />
+		</s:div>
+	
+		<s:div id="customerCheAddSelectPopDiv">
+			<ui:include src="/finance/customerChequeAddSelectPopup.xhtml" />
+		</s:div>
+	
+		<s:div id="docMatchEditPopupDiv">
+			<ui:include src="/docmatch/popup/docMatchEditPopup.xhtml">
+		       	<ui:param name="currentHome" value="${collectionHome}" />
+			</ui:include>
+		</s:div>
+
+    	<h:form id="form">
+	    	
+	        <h1><h:outputText value="#{messages['module.caption.Collection']}" /></h1>
+	
+			<ui:include src="/finance/paymentBase.xhtml">
+		       	<ui:param name="currentHome" value="${collectionHome}" />
+		       	<ui:param name="currentEntity" value="${collection}" />
+			</ui:include>                
+
+	        <div class="actionButtons">
+	            
+	            <h:commandButton id="save" 
+	                             value="#{messages['general.button.Save']}" 
+	                             action="#{collectionHome.save()}"
+	                             styleClass="button checkRequired"
+	                             rendered="#{collectionHome.isEditable and s:hasPermission('collection', 'insert')}"/>  
+	            
+	            <s:button id="delete" 
+	                      value="#{messages['general.button.Delete']}" 
+	                      action="#{collectionHome.delete()}"
+	                      rendered="#{not empty collection.id and collectionHome.isEditable and s:hasPermission('collection', 'delete')}"
+	                      onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+	                      styleClass="button"/>
+	            
+	            <s:button id="done" 
+	                      value="#{messages['general.button.Close']}"
+	                      action="#{collectionHome.close()}"
+	                      styleClass="button"/>
+	            
+	        </div>
+		</h:form>
+    </ui:define>
+</ui:composition>

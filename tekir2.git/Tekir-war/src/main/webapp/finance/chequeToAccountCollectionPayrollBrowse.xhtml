@@ -1,0 +1,169 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeCheck"/>
+            <ui:param name="curitem" value="chequeToAccountCollectionPayrollBrowse"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/chequeToAccountCollectionPayrollBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.ChequeToAccountCollectionPayrollBrowse']}" rendered="#{s:hasPermission('chequeToAccountCollectionPayroll', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/finance/chequeToAccountCollectionPayroll.xhtml" rendered="#{s:hasPermission('chequeToAccountCollectionPayroll', 'insert')}">
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['chequeToAccountCollectionPayroll.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+    
+     <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ChequeToAccountCollectionPayrollBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Serial']}" /></ui:define>
+                            <h:inputText value="#{chequeToAccountCollectionPayrollBrowse.filterModel.serial}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Reference']}" /></ui:define>
+                            <h:inputText value="#{chequeToAccountCollectionPayrollBrowse.filterModel.reference}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Code']}" /></ui:define>
+                            <h:inputText value="#{chequeToAccountCollectionPayrollBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+
+                    </s:fragment>
+                    <s:fragment>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{chequeToAccountCollectionPayrollBrowse.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{chequeToAccountCollectionPayrollBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                    	<s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.Account']}"/></ui:define>
+                            
+                            <h:selectOneMenu value="#{chequeToAccountCollectionPayrollBrowse.filterModel.account}" styleClass="middle" required="false">
+                                    <s:convertEntity />
+                                    <s:selectItems value="#{generalSuggestion.accountList}" var="acc" label="[#{acc.code}] #{acc.name}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                                </h:selectOneMenu> 
+                        </s:decorate>
+                    	
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{chequeToAccountCollectionPayrollBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    
+                </div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                    			 styleClass="entitylist"
+                                 var="chequeToAccountCollectionPayroll"
+                                 value="#{chequeToAccountCollectionPayrollBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty chequeToAccountCollectionPayrollBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['chequeToBankPayroll.label.Serial']}"/></f:facet>
+                            
+                            <s:link view="/finance/chequeToAccountCollectionPayrollView.xhtml">
+                                <f:param name="eid" value="#{chequeToAccountCollectionPayroll.id}"/>
+                                <h:outputText value="#{chequeToAccountCollectionPayroll.serial}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['chequeToBankPayroll.label.Reference']}" /></f:facet>
+                            
+                            <s:link view="/finance/ChequeToAccountCollectionPayrollView.xhtml">
+                                <f:param name="eid" value="#{chequeToAccountCollectionPayroll.id}"/>
+                                <h:outputText value="#{chequeToAccountCollectionPayroll.reference}"/>
+                            </s:link>
+                            
+                        </r:column>
+
+                        <r:column styleClass="codeField">
+                            <f:facet name="header"><h:outputText value="#{messages['chequeToBankPayroll.label.Code']}" /></f:facet>
+                            <h:outputText value="#{chequeToAccountCollectionPayroll.code}" />
+                        </r:column>
+                        
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['chequeToBankPayroll.label.Date']}" /></f:facet>
+                            <h:outputText value="#{chequeToAccountCollectionPayroll.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['chequeToBankPayroll.label.Info']}" /></f:facet>
+                            <h:outputText value="#{chequeToAccountCollectionPayroll.info}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty chequeToAccountCollectionPayrollBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

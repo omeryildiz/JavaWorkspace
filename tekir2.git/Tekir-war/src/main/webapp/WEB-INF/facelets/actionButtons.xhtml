@@ -1,0 +1,47 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                 xmlns:c="http://java.sun.com/jstl/core"
+                 xmlns:ut="http://utech.com/jsf/comps"
+                 xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                 xmlns:s="http://jboss.com/products/seam/taglib">
+    <div class="actionButtons">
+    	<ui:remove>
+        <script type="text/javascript"> 
+			function getLocationHref(command,cid) {
+				location.href='#{ut:getLocation(facesContext)}?actionMethod=#{ut:getServletPath(facesContext)}%3A#{ut:seamCompName(home)}.'+command+'%28%29&amp;cid='+cid; 
+				return false;
+        	}
+        </script>
+
+		<s:fragment rendered="#{not empty entity.id and s:hasPermission(permission, 'delete')}">
+			<input type="button" value="#{messages['general.button.Delete']}" class="button" />
+		</s:fragment>			
+    	</ui:remove>
+
+        <h:commandButton id="saveAndNew"
+                         value="#{messages['general.button.SaveAndNew']}"
+                         action="#{home.saveAndNew()}"
+                         rendered="#{s:hasPermission( permission, 'insert') and s:hasPermission( permission, 'update')}"
+                         styleClass="button"
+                         onclick="#{saveChecker}"/>
+
+        <h:commandButton id="save"
+                         value="#{messages['general.button.Save']}"
+                         action="#{home.save()}" styleClass="button"
+                         rendered="#{(not empty entity.id and s:hasPermission(permission, 'update')) or (empty entity.id and s:hasPermission(permission, 'insert'))}"
+                         onclick="#{saveChecker}"/>
+
+		<h:commandButton id="delete" action="#{home.delete()}" value="#{messages['general.button.Delete']}"
+			rendered="#{not empty entity.id and s:hasPermission(permission, 'delete')}"
+			onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+			immediate="true" styleClass="button"/>
+
+		<h:commandButton id="done" action="#{home.close()}" 
+			value="#{messages['general.button.Close']}" styleClass="button" 
+			immediate="true"/>
+
+    </div>
+</ui:composition>

@@ -1,0 +1,92 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:ut="http://utech.com/jsf/comps"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    style="width: 600px;"
+    >
+
+
+    <r:toggleControl for="optionPane" value="Çek" switchToState="cheque" style="margin: 8px;"/>
+    <r:toggleControl for="optionPane" value="Senet" switchToState="promissory" style="margin: 8px;" />
+    
+    <r:togglePanel id="optionPane" value="cheque" switchType="client"
+                	stateOrder="cheque,promissory">
+
+        <f:facet name="cheque">
+    <h:panelGrid columns="2">
+        <s:div>
+            <h3>Yeni Çek Girişleri</h3>
+            <ul id="list-content">
+                <ut:newMenuItem view="/finance/chequeStub.xhtml" text="#{messages['chequeStub.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeFromContactPayroll.xhtml" text="#{messages['chequeFromContactPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeToContactPayroll.xhtml" text="#{messages['chequeToContactPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeToBankAssurancePayroll.xhtml" text="#{messages['chequeToBankAssurancePayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeToBankPayroll.xhtml" text="#{messages['chequeToBankPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeCollectedAtBankPayroll.xhtml" text="#{messages['chequeCollectedAtBankPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeToAccountCollectionPayroll.xhtml" text="#{messages['chequeToAccountCollectionPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeToAccountPaymentPayroll.xhtml" text="#{messages['chequeToAccountPaymentPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/chequeToAccountPaymentPayroll.xhtml" text="#{messages['chequeToAccountPaymentPayroll.action.Add']}" img="/img/add.gif" />
+            </ul>
+        </s:div>
+        <s:div>
+            <h3>Çek Durum</h3>
+            <ul id="list-content">
+                <ut:newMenuItem view="/finance/chequeChangeStatus.xhtml" text="#{messages['module.caption.ChequeChangeStatus']}" img="/img/edit1.gif" />
+                <ut:newMenuItem view="/finance/chequeChangeLastStatus.xhtml" text="#{messages['module.caption.ChequeChangeLastStatus']}" img="/img/edit1.gif" />
+            </ul>
+            <h3>Çek Föyleri</h3>
+            <ul id="list-content">
+                <ut:browseMenuItem view="/finance/chequeStubBrowse.xhtml" text="#{messages['module.caption.ChequeStubBrowse']}" img="/img/coins.gif" />
+                <ut:browseMenuItem view="/finance/chequeBrowse.xhtml" text="#{messages['module.caption.ChequeBrowse']}" img="/img/coins.gif" />
+                <ut:browseMenuItem view="/finance/chequeFromContactPayrollBrowse.xhtml" text="#{messages['module.caption.ChequeFromContactPayrollBrowse']}" img="/img/coins_add.gif" />
+                <ut:browseMenuItem view="/finance/chequeToContactPayrollBrowse.xhtml" text="#{messages['module.caption.ChequeToContactPayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/chequeToBankAssurancePayrollBrowse.xhtml" text="#{messages['module.caption.ChequeToBankAssurancePayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/chequeToBankPayrollBrowse.xhtml" text="#{messages['module.caption.ChequeToBankPayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/chequeCollectedAtBankPayrollBrowse.xhtml" text="#{messages['module.caption.ChequeCollectionAtBankPayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/chequeToAccountCollectionPayrollBrowse.xhtml" text="#{messages['module.caption.ChequeToAccountCollectionPayrollBrowse']}" img="/img/coins_add.gif" />
+                <ut:browseMenuItem view="/finance/chequeToAccountPaymentPayrollBrowse.xhtml" text="#{messages['module.caption.ChequeToAccountPaymentPayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/chequeToBankPaymentPayrollBrowse.xhtml" text="#{messages['module.caption.ChequeToBankPaymentPayrollBrowse']}" img="/img/coins_delete.gif" />
+            </ul>
+        </s:div>
+    </h:panelGrid>
+        </f:facet>
+        <f:facet name="promissory">
+    <h:panelGrid columns="2">
+        <s:div>
+            <h3>Yeni Senet Girişleri</h3>
+            <ul id="list-content">
+                <ut:newMenuItem view="/finance/promissoryFromContactPayroll.xhtml" text="#{messages['promissoryFromContactPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/promissoryToContactPayroll.xhtml" text="#{messages['promissoryToContactPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/promissoryToBankAssurancePayroll.xhtml" text="#{messages['promissoryToBankAssurancePayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/promissoryToBankPayroll.xhtml" text="#{messages['promissoryToBankPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/promissoryCollectedAtBankPayroll.xhtml" text="#{messages['promissoryCollectedAtBankPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/promissoryToAccountCollectionPayroll.xhtml" text="#{messages['promissoryToAccountCollectionPayroll.action.Add']}" img="/img/add.gif" />
+                <ut:newMenuItem view="/finance/promissoryToAccountPaymentPayroll.xhtml" text="#{messages['promissoryToAccountPaymentPayroll.action.Add']}" img="/img/add.gif" />
+            </ul>
+        </s:div>
+        <s:div>
+            <h3>Senet Durum</h3>
+            <ul id="list-content">
+                <ut:newMenuItem view="/finance/promissoryChangeStatus.xhtml" text="#{messages['module.caption.PromissoryChangeStatus']}" img="/img/edit1.gif" />
+                <ut:newMenuItem view="/finance/promissoryChangeLastStatus.xhtml" text="#{messages['module.caption.PromissoryChangeLastStatus']}" img="/img/edit1.gif" />
+            </ul>
+            <h3>Senet Föyleri</h3>
+            <ul id="list-content">
+                <ut:browseMenuItem view="/finance/promissoryBrowse.xhtml" text="#{messages['module.caption.PromissoryBrowse']}" img="/img/coins.gif" />
+                <ut:browseMenuItem view="/finance/promissoryFromContactPayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryFromContactPayrollBrowse']}" img="/img/coins_add.gif" />
+                <ut:browseMenuItem view="/finance/promissoryToContactPayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryToContactPayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/promissoryToBankAssurancePayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryToBankAssurancePayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/promissoryToBankPayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryToBankPayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/promissoryCollectedAtBankPayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryCollectionAtBankPayrollBrowse']}" img="/img/coins_add.gif" />
+                <ut:browseMenuItem view="/finance/promissoryToAccountCollectionPayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryToAccountCollectionPayrollBrowse']}" img="/img/coins_add.gif" />
+                <ut:browseMenuItem view="/finance/promissoryToAccountPaymentPayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryToAccountPaymentPayrollBrowse']}" img="/img/coins_delete.gif" />
+                <ut:browseMenuItem view="/finance/promissoryToBankPaymentPayrollBrowse.xhtml" text="#{messages['module.caption.PromissoryToBankPaymentPayrollBrowse']}" img="/img/coins_delete.gif" />
+            </ul>
+        </s:div>
+    </h:panelGrid>
+        </f:facet>
+    </r:togglePanel>
+</div>

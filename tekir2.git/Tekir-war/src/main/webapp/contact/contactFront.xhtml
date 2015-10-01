@@ -1,0 +1,130 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="contact"/>
+            <ui:param name="curpage" value="contactFront"/>
+        </ui:include>
+    </ui:define>
+    
+    
+    
+    <ui:define name="body">
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h1><h:outputText value="#{messages['cardsPage.caption.Module']}" /></h1>
+        
+        <p><h:outputText value="#{messages['cardsPage.desc.Module']}" /></p>
+        <h:panelGrid columns="2">
+            <s:div>
+                <h2><h:outputText value="#{messages['cardsPage.caption.Contact']}" /></h2>
+                <p><h:outputText value="#{messages['cardsPage.desc.Contact']}" /></p>
+                <div>
+                    <ul>
+                        <li>
+                            <s:link view="/contact/contactBrowse.xhtml">
+                                <h:graphicImage url="/img/vcard.gif" alt="#{messages['contact.img.Form']}"/> 
+                                <h:outputText value="#{messages['module.caption.ContactBrowse']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/contact/contactCategory.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/folder.gif" alt="#{messages['currency.img.CurrencyPair']}"/> 
+                                <h:outputText value="#{messages['module.caption.ContactCategory']}"/>
+                            </s:link>
+                        </li>
+                    </ul>
+                </div>
+                
+                <h2><h:outputText value="#{messages['cardsPage.caption.Product']}" /></h2>
+                <p><h:outputText value="#{messages['cardsPage.desc.Product']}" /></p>
+                <div>
+                    <ul>
+                        <li>
+                            <s:link view="/stock/productBrowse.xhtml">
+                                <h:graphicImage url="/img/package.gif" alt="#{messages['product.img.Icon']}"/> 
+                                <h:outputText value="#{messages['module.caption.ProductBrowse']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/stock/productCategory.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/folder.gif" alt="#{messages['currency.img.CurrencyPair']}"/> 
+                                <h:outputText value="#{messages['module.caption.ProductCategory']}"/>
+                            </s:link>
+                        </li>
+                    </ul>
+                </div>
+                
+                
+                <h2><h:outputText value="#{messages['cardsPage.caption.Service']}" /></h2>
+                <p><h:outputText value="#{messages['cardsPage.desc.Service']}" /></p>
+                <div>
+                    <ul>
+                        <li>
+                            <s:link view="/contact/serviceBrowse.xhtml" >
+                                <h:graphicImage url="/img/brick.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.ServiceBrowse']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/contact/serviceCategory.xhtml" propagation="begin">
+                                <h:graphicImage url="/img/folder.gif" alt="#{messages['currency.img.CurrencyPair']}"/> 
+                                <h:outputText value="#{messages['module.caption.ServiceCategory']}"/>
+                            </s:link>
+                        </li>
+                    </ul>
+                </div>
+                
+                
+                
+                
+            </s:div>
+            <s:div>
+                <h2><h:outputText value="İşlemler" /></h2>
+                <p><h:outputText value="Yeni Kart tanıtımları" /></p>
+                <div>
+                    <ul>
+                        
+                        <li>
+                            <s:link action="#{contactHome.createNew()}">
+                                <h:graphicImage url="/img/add.gif" /> 
+                                <h:outputText value="#{messages['contact.action.Add']}" />
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link action="#{productHome.createNew()}">
+                                <h:graphicImage url="/img/add.gif" /> 
+                                <h:outputText value="#{messages['product.action.Add']}" />
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link action="#{serviceHome.createNew()}">
+                                <h:graphicImage url="/img/add.gif" /> 
+                                <h:outputText value="#{messages['service.action.Add']}" />
+                            </s:link>
+                        </li>
+                     
+                    </ul>
+                    
+                    
+                    
+                </div>
+            </s:div>
+        
+        </h:panelGrid>
+        
+        
+    </ui:define> 
+</ui:composition>

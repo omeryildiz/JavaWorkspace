@@ -1,0 +1,248 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="paymentContractBrowse"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/PaymentContractBrowse.xhtml" rendered="#{s:hasPermission('paymentContract', 'select')}" >
+                <h:outputText value="#{messages['module.caption.PaymentContractBrowse']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/general/paymentContract.xhtml" rendered="#{s:hasPermission('paymentContract', 'insert')}" propagation="begin" >
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['paymentContract.action.Add']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/general/priceItemBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/general/priceItemBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PaymentContractBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:panelGrid columns="2">
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Code']}" />
+                            </ui:define>
+                            <h:inputText value="#{paymentContractBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Name']}" />
+                            </ui:define>
+                            <h:inputText value="#{paymentContractBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.PaymentOwnerType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{paymentContractBrowse.filterModel.ownerType}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>                                
+								<f:selectItem itemValue="Pos" itemLabel="#{messages['paymentOwnerType.label.Pos']}"/>                                
+								<f:selectItem itemValue="Foundation" itemLabel="#{messages['paymentOwnerType.label.Foundation']}"/>                                
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.CardOwnerType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{paymentContractBrowse.filterModel.cardOwnerType}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>                                
+								<f:selectItem itemValue="Own" itemLabel="#{messages['cardOwnerType.label.Own']}"/>                                
+								<f:selectItem itemValue="Domestic" itemLabel="#{messages['cardOwnerType.label.Domestic']}"/>                                
+								<f:selectItem itemValue="International" itemLabel="#{messages['cardOwnerType.label.International']}"/>                                
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                    </s:fragment>
+
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.StartDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{paymentContractBrowse.filterModel.beginDate}" 
+                            	enableManualInput="true" datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.EndDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{paymentContractBrowse.filterModel.endDate}" 
+                            	enableManualInput="true" datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.PaymentType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{paymentContractBrowse.filterModel.paymentType}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>                                
+								<f:selectItem itemValue="Cash" itemLabel="#{messages['paymentType.label.Cash']}"/>                                
+								<f:selectItem itemValue="Cheque" itemLabel="#{messages['paymentType.label.Cheque']}"/>                                
+								<f:selectItem itemValue="PromissoryNote" itemLabel="#{messages['paymentType.label.PromissoryNote']}"/>                                
+								<f:selectItem itemValue="CreditCard" itemLabel="#{messages['paymentType.label.CreditCard']}"/>                                
+								<f:selectItem itemValue="Instalment" itemLabel="#{messages['paymentType.label.Instalment']}"/>                                
+								<f:selectItem itemValue="DebitCard" itemLabel="#{messages['paymentType.label.DebitCard']}"/>                                
+								<f:selectItem itemValue="GiftCheque" itemLabel="#{messages['paymentType.label.GiftCheque']}"/>                                
+								<f:selectItem itemValue="Contribution" itemLabel="#{messages['paymentType.label.Contribution']}"/>                                
+								<f:selectItem itemValue="BonusPay" itemLabel="#{messages['paymentType.label.BonusPay']}"/>                                
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{paymentContractBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="pContract"
+                                 value="#{paymentContractBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty paymentContractBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column styleClass="codeField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.Code']}" />
+                            </f:facet>
+                            <s:link view="/general/paymentContract.xhtml">
+                                <f:param name="eid" value="#{pContract.id}"/>
+                                <h:outputText value="#{pContract.code}" rendered="#{s:hasPermission('paymentContract', 'update')}"/>
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.Name']}" />
+                            </f:facet>
+                            <h:outputText value="#{pContract.name}"/>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.Info']}" />
+                            </f:facet>
+                            <h:outputText value="#{pContract.info}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="dateField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.StartDate']}" />
+                            </f:facet>
+                            <h:outputText value="#{pContract.beginDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="dateField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.EndDate']}" />
+                            </f:facet>
+                            <h:outputText value="#{pContract.endDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="dateField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.PaymentOwnerType']}"/>
+                            </f:facet>
+                            <h:outputText value="#{messages[ut:concat('paymentOwnerType.label.',pContract.ownerType)]}"/>
+                            
+                        </r:column>
+
+                        <r:column styleClass="dateField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.CardOwnerType']}"/>
+                            </f:facet>
+                            <h:outputText value="#{messages[ut:concat('cardOwnerType.label.',pContract.cardOwnerType)]}" rendered="#{pContract.cardOwnerType ne null}"/>
+                            <h:outputText value="" rendered="#{pContract.cardOwnerType eq null}"/>
+                        </r:column>
+
+                        <r:column styleClass="dateField">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.PaymentType']}"/>
+                            </f:facet>
+                            <h:outputText value="#{messages[ut:concat('paymentType.label.',pContract.paymentType)]}" rendered="#{pContract.paymentType ne null}" />
+                            <h:outputText value="" rendered="#{pContract.paymentType eq null}"/>
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty paymentContractBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

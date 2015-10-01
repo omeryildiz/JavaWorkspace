@@ -1,0 +1,202 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="paymentCommission"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/paymentCommission.xhtml" propagation="begin" rendered="#{s:hasPermission('paymentCommission', 'select')}">
+                <h:outputText value="#{messages['paymentCommission.caption.Form']}"/>
+            </s:link>
+        </div>
+     
+        <div class="toolgroup-left">
+            <s:link action="#{paymentCommissionHome.createNew()}" rendered="#{s:hasPermission('paymentCommission', 'insert')}" propagation="begin">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['paymentCommission.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PaymentCommission']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="curItem"
+                                 value="#{paymentCommissionList}"
+                                 rendered="#{s:hasPermission('paymentCommission', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rows="20">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['paymentCommission.caption.List']}"/>
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{paymentCommissionHome.edit(curItem)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not curItem.active}"/>
+                                <h:outputText value="#{curItem.code} - #{curItem.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{paymentCommissionHome.edit(curItem)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="curlist" />
+                        </f:facet>
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['unit.hint.EmptyList']}" rendered="#{paymentCommissionList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/plugin.gif" alt="#{messages['unit.img.World']}"/> 
+                            <h:outputText value="#{messages['paymentCommission.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:div>
+                            
+                            <s:decorate template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['general.label.Code']}"/></ui:define>
+                                <h:inputText value="#{paymentCommission.code}" styleClass="middle" required="true"/>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml" >
+	                            <ui:define name="label"><h:outputText value="#{messages['general.label.PaymentActionType']}"/></ui:define>
+	                            <h:selectOneMenu value="#{paymentCommission.paymentActionType}" styleClass="middle" required="true">
+	                                <s:convertEntity />
+	                                <s:selectItems value="#{generalSuggestion.paymentActionTypeList}"
+                                        var="acc" label="#{acc.code} - #{acc.name}"
+                                        noSelectionLabel="#{messages['general.value.SelectOne']}"
+                                        hideNoSelectionLabel="true"/>
+	                            </h:selectOneMenu>
+	                        </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['taxKind.label.Kind']}" />
+                                </ui:define>
+                                <h:selectOneMenu value="#{paymentCommission.kind}" styleClass="middle">
+                                    <s:convertEnum />
+                                    <s:enumItem enumValue="Rate"
+                                        label="#{messages['taxKind.Type.Rate']}" />
+                                    <s:enumItem enumValue="Amount"
+                                        label="#{messages['taxKind.Type.Amount']}" />
+
+                                    <a:support event="onchange" oncomplete="setMasks()" reRender="kind" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+
+                            <a:outputPanel id="kind">
+                                <s:decorate id="rate" template="/layout/edit.xhtml" rendered="#{paymentCommission.kind eq 'Rate'}">
+                                    <ui:define name="label">
+                                        <h:outputText value="#{messages['general.label.Rate']}" />
+                                    </ui:define>
+                                    <h:inputText value="#{paymentCommission.rate}" styleClass="middle" alt="decimal_rate"
+                                        converter="currencyConverter"/>
+                                </s:decorate>
+
+                                <s:decorate id="amount" template="/layout/edit.xhtml" rendered="#{paymentCommission.kind eq 'Amount'}">
+                                    <ui:define name="label">
+                                        <h:outputText value="#{messages['general.label.Amount']}" />
+                                    </ui:define>
+                                    <h:inputText value="#{paymentCommission.amount}" styleClass="middle" alt="decimal_rate"
+                                        converter="currencyConverter"/>
+                                </s:decorate>
+                            </a:outputPanel>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['general.label.Effect']}" />
+                                </ui:define>
+                                <h:selectOneMenu value="#{paymentCommission.effect}" styleClass="middle">
+                                    <f:selectItem itemValue="true"  itemLabel="#{messages['paymentCommision.label.Add']}"/>
+                                    <f:selectItem itemValue="false"  itemLabel="#{messages['paymentCommision.label.Subtract']}" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['paymentCommision.label.CollectionTime']}" />
+                                </ui:define>
+                                <h:selectOneMenu value="#{paymentCommission.collectionTime}" styleClass="middle">
+                                    <f:selectItem itemValue="false"  itemLabel="#{messages['paymentCommision.label.AtFirstPeriod']}"/>
+                                    <f:selectItem itemValue="true"  itemLabel="#{messages['paymentCommision.label.EachPeriod']}" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            
+                        </s:div>
+                        <s:div>
+
+                            <s:decorate template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['general.label.Name']}"/></ui:define>
+                                <h:inputText value="#{paymentCommission.name}" styleClass="exlarge" required="true"/>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['general.label.Weight']}" />
+                                </ui:define>
+                                <h:inputText value="#{paymentCommission.weight}" styleClass="middle numberColumn" />
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['general.label.Info']}"/></ui:define>
+                                <h:inputTextarea value="#{paymentCommission.info}" styleClass="exlarge" rows="3"/>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['general.label.Status']}"/></ui:define>
+                                <h:selectBooleanCheckbox id="active" value="#{paymentCommission.active}" styleClass="checkbox" />
+                                <h:outputLabel value="#{messages['unit.label.Active']}" for="active" styleClass="checkboxLabel" />
+                            </s:decorate>
+
+                        </s:div>
+                    </h:panelGrid>    
+
+                    <ut:actionButtons home="#{paymentCommissionHome}" entity="#{paymentCommission}" permission="paymentCommission" />
+
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

@@ -1,0 +1,28 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+    <r:modalPanel  id="docAddPop" minHeight="480" minWidth="700" 
+                   height="480" width="700" zindex="100" >
+        <f:facet name="header">
+            <s:fragment>
+                <h:graphicImage url="/img/vcard.gif" /> 
+                <h:outputText value="#{messages['contact.authorityDocument.Add']}" />
+            </s:fragment>
+        </f:facet>
+        <f:facet name="controls">
+            <h:graphicImage value="/img/exit.gif" style="cursor:pointer" onclick="closeContactDocumentAdd()" />
+        </f:facet>
+        
+        
+        <a:include viewId="/contact/contactDocumentAdd.xhtml" />
+        
+        <!-- a href="javascript:Richfaces.hideModalPanel('mp')">Kapat</a -->
+    </r:modalPanel>
+</ui:composition>

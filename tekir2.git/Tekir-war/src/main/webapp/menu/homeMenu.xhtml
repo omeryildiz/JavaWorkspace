@@ -1,0 +1,30 @@
+<ul xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <li class="#{curpage eq 'about' ? 'current' : '' }">
+        <s:link styleClass="sf-not-with-ul" view="/base/home.xhtml" propagation="none" >
+            <h:outputText value="#{messages['module.caption.About']}" />
+        </s:link>
+    </li>
+    <li class="#{curpage eq 'help' ? 'current' : '' }">
+        <s:link styleClass="sf-not-with-ul" view="/help/help.xhtml" propagation="none" target="HelpWinId" onclick="openHelp();">
+            <f:param name="topic" value="index.xhtml"/>
+            <h:outputText value="#{messages['module.caption.Help']}" />
+        </s:link>
+    </li>
+    <li class="#{curpage eq 'password' ? 'current' : '' }">
+        <s:link styleClass="sf-not-with-ul" view="/admin/passwordEditor.xhtml" propagation="begin" >
+            <h:outputText value="#{messages['module.caption.PasswordEditor']}" />
+        </s:link>
+    </li>
+    <li class="#{curpage eq 'password' ? 'current' : '' }">
+        <s:link styleClass="sf-not-with-ul" view="/general/quickLaunchList.xhtml" propagation="begin" >
+            <h:outputText value="#{messages['module.caption.QuickLaunchList']}" />
+        </s:link>
+    </li>
+
+</ul>

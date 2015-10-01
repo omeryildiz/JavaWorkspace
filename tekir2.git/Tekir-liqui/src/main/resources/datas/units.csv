@@ -1,0 +1,8 @@
+ID,CODE,CODE_EN,ISACTIVE
+1,Adet,Qty,TRUE
+2,Kilo,Kg,TRUE
+3,Gram,gr,TRUE
+4,Metre,mt,TRUE
+5,Litre,lt,TRUE
+6,Saat,hour,TRUE
+7,Gün,day,TRUE

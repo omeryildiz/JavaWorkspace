@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps">
+
+	<r:spacer height="5" rendered="#{currentEntity.paymentPlanItems.size() > 0}"/>
+	
+	<r:dataTable id="paymentPlanList" var="item" value="#{currentEntity.paymentPlanItems}" 
+		rowKeyVar="rowKey" styleClass="detailTable" 
+		rendered="#{currentEntity.paymentPlanItems.size() > 0}">
+
+		<f:facet name="header">
+			<r:columnGroup>
+				<r:column colspan="4">
+					<h:outputText value="#{messages['general.label.PaymentPlan']}" />
+				</r:column>
+				<r:column breakBefore="true" >
+					<h:outputText value="#{messages['general.label.Period']}"/>									
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.Date']}"/>									
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.TotalAmount']}"/>									
+				</r:column>
+				<r:column>
+					<h:outputText value="#{messages['general.label.PaidAmount']}"/>									
+				</r:column>
+			</r:columnGroup>
+		</f:facet>
+
+		<r:column>
+			<h:outputText value="#{item.lineNumber}"/>
+		</r:column>						
+
+		<r:column>
+			<h:outputText value="#{item.date}">
+	          <s:convertDateTime pattern="#{messages['general.format.Date']}" />
+			</h:outputText>
+		</r:column>						
+
+		<r:column styleClass="amountField" >
+			<h:outputText value="#{item.total}" converter="bigDecimalConverter" alt="decimal"/>
+		</r:column>						
+
+		<r:column styleClass="amountField" >
+			<h:outputText value="#{item.paidTotal}" converter="bigDecimalConverter" alt="decimal"/>
+		</r:column>						
+
+	</r:dataTable>
+
+</ui:composition>

@@ -1,0 +1,279 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="cursubitem" value="newAccountCreditNoteTransfer"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/accountCreditNoteBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.AccountCreditNoteBrowse']}" rendered="#{s:hasPermission('accountCreditNote', 'select')}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/accountCreditNote.xhtml">
+                <h:outputText value="#{messages['module.caption.AccountCreditNote']}" rendered="#{s:hasPermission('accountCreditNote', 'update')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{accountCreditNoteHome.createNew()}" rendered="#{s:hasPermission('accountCreditNote', 'insert')}" >
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['accountCreditNote.action.Add']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="body">
+        <h1><h:outputText value="#{messages['module.caption.AccountCreditNote']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+		<ui:include src="/stock/productSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins.gif" alt="#{messages['accountCreditNote.img.Form']}"/> 
+                        <h:outputText value="#{messages['accountCreditNote.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="3">
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Serial']}" accesskey="Q"/>
+                            </ui:define>
+                            <h:inputText value="#{accountCreditNote.serial}" styleClass="middle" 
+                            	required="true" accesskey="Q" 
+                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Reference']}"/>
+                            </ui:define>
+                            <h:inputText value="#{accountCreditNote.reference}" styleClass="middle" 
+                            	required="false"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Account']}"/>
+                            </ui:define>
+                            <h:selectOneMenu id="acc" value="#{accountCreditNote.account}" styleClass="middle" 
+                            	required="true">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.accountList}" var="acc"
+                                	label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}"
+                                	hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.DocumentCode']}"/>
+                            </ui:define>
+                            <h:inputText value="#{accountCreditNote.code}" styleClass="middle" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Date']}"/>
+                            </ui:define>
+                            <r:calendar value="#{accountCreditNote.date}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Status']}"/>
+                            </ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{accountCreditNote.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['general.label.Active']}" for="active" 
+                            	styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">	
+                            	<h:outputText value="#{messages['general.label.Info']}"/>
+                            </ui:define>
+                            <h:inputTextarea value="#{accountCreditNote.info}" styleClass="exlarge" rows="6"/>
+                        </s:decorate>
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                <a:region renderRegionOnly="true">
+                    <r:dataTable id="its" 
+                                 var="item"
+                                 value="#{accountCreditNote.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="4">
+                                    <h:outputText value="#{messages['general.label.Details']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{accountCreditNoteHome.createNewLine()}" 
+                                        	oncomplete="focusLastRow(); setMasks();" accesskey="N">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+                                
+                                <r:column breakBefore="true" >
+                                    <h:outputText value="#{messages['general.label.Cost']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['general.label.Info']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['general.label.Amount']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['general.label.Currency']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+
+                       	<r:column id="productColumn" styleClass="productWidthExt">
+                       		<s:fragment>
+	                            <div>
+	                                <h:inputText id="product" value="#{item.product}" styleClass="middle" 
+	                                	required="false" converter="productCaptionConverter">
+	                                </h:inputText>
+	                                
+	                                <a href="javascript:productSelectPopup( '#{r:clientId('product')}' )">
+	                                    <h:graphicImage url="/img/selectBox.gif" /> 
+	                                </a>
+	                            </div>
+	                            <r:suggestionbox for="product" nothingLabel="#{messages['general.label.NoResult']}" rules="all" 
+	                            	suggestionAction="#{stockSuggestion.suggestExpenseAndDiscount}" var="it" fetchValue="#{it.caption}">
+	                                <h:column>
+	                                    <h:outputText value="#{it.code}"/>
+	                                </h:column>
+	                                <h:column>
+	                                    <h:outputText value="#{it.name}"/>
+	                                </h:column>
+	                            </r:suggestionbox>
+                       		</s:fragment>
+                        </r:column>
+                        <r:column>
+                            <h:inputText value="#{item.info}"/>
+                        </r:column>
+                        <r:column styleClass="amountField">
+                            <h:inputText value="#{item.amount.value}"  
+                            	alt="decimal" converter="bigDecimalConverter" />
+                        </r:column>
+                        <r:column styleClass="ccyField">
+                            <h:selectOneMenu value="#{item.amount.currency}" >
+                                <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu> 
+                        </r:column>
+                        <r:column>
+                            <a:commandLink reRender="its" action="#{accountCreditNoteHome.deleteLine(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" /> 
+                            </a:commandLink>
+                        </r:column>
+                    </r:dataTable>
+
+                    <h:panelGrid columns="4" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+                        <s:div style="margin-right:4px;">
+
+                            <r:dataTable id="ccyRates"
+                                         var="item"
+                                         value="#{accountCreditNote.currencyRateList}"
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['general.label.CcyRates']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.currencyPair.caption}" />
+                                </r:column>
+                                <r:column>
+                                    <h:inputText value="#{item.ask}" styleClass="tiny" converter="bigDecimalConverter"
+                                    	alt="decimal"/>
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+
+                        <s:div style="margin-left:4px;">
+                            <r:panel>
+                                <f:facet name="header">
+
+                                    <s:div>
+                                        <s:div style="float:right;">
+                                            <a:commandLink reRender="its,ccyRates,grandTotal" action="#{accountCreditNoteHome.recalculate()}" 
+                                            	accesskey="C" oncomplete="focusLastRow(); setMasks();">
+                                                <h:graphicImage url="/img/reload.gif" />
+                                                <h:outputText value="#{messages['general.button.Calculate']}" />
+                                            </a:commandLink>
+                                        </s:div>
+                                        <h:outputText value="#{messages['general.label.GrandTotal']}" />
+                                    </s:div>
+                                </f:facet>
+                                <h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+                                    <h:outputText value="#{messages['general.label.TotalAmount']} :" />
+                                    <h:outputText value="#{accountCreditNote.totalAmount}" />
+                                </h:panelGrid>
+                            </r:panel>
+                        </s:div>
+                    </h:panelGrid>
+                </a:region>
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{accountCreditNoteHome.save()}"
+                                 rendered="#{s:hasPermission('accountCreditNote', 'insert')}"
+                                 styleClass="button checkRequired"/>  
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{accountCreditNoteHome.delete()}"
+                          rendered="#{not empty accountCreditNote.id and s:hasPermission('accountCreditNote', 'delete')}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{accountCreditNoteHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

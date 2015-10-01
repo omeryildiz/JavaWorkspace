@@ -1,0 +1,330 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="contact"/>
+            <ui:param name="curpage" value="cards"/>
+            <ui:param name="curitem" value="contactBrowse"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        
+        <div class="pathgroup">
+            <s:link view="/contact/contactBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.ContactBrowse']}" rendered="#{s:hasPermission('contact', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            
+            <s:link view="/contact/contact.xhtml" rendered="#{s:hasPermission('contact', 'insert')}" propagation="begin">
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['contact.action.Add']}" />
+            </s:link>
+
+            <s:link view="/contact/contactCategory.xhtml" propagation="begin" rendered="#{s:hasPermission('contactCategory', 'select')}">
+                <h:graphicImage url="/img/folder.gif" alt="#{messages['currency.img.CurrencyPair']}"/> 
+                <h:outputText value="#{messages['module.caption.ContactCategory']}"/>
+            </s:link>
+            
+            <s:link view="/finance/financeTxnReport.xhtml" rendered="#{s:hasPermission('financeTxnReport', 'select')}" >
+                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.FinanceTxnReport']}"/>
+            </s:link>
+            
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/contact/contactBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/contact/contactBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    
+    <ui:define name="body">
+        
+        
+        
+        <h1><h:outputText value="#{messages['module.caption.ContactBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                <h:panelGrid columns="3">
+                    
+                    <s:div>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.Code']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.Name']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.fullname}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.SSN']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.ssn}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.ContactType']}" /></ui:define>
+                            <h:selectOneMenu value="#{contactBrowse.filterModel.companyType}"  styleClass="middle">
+
+                                <f:selectItem itemValue="All" itemLabel="#{messages['Hepsi']}"/>
+                                <f:selectItem itemValue="Person" itemLabel="#{messages['Kişi']}" />
+                                <f:selectItem itemValue="Firm" itemLabel="#{messages['Şirket']}" />
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['contact.label.Type']}" /></ui:define>
+                        	<h:selectOneMenu value="#{contactBrowse.filterModel.type}"  styleClass="middle">
+                        		<s:convertEnum />
+                        			<s:enumItem enumValue="All" label="#{messages['contact.type.All']}"/>
+                        			<s:enumItem enumValue="Customer" label="#{messages['contact.type.Customer']}" />
+                        			<s:enumItem enumValue="Provider" label="#{messages['contact.type.Provider']}" />
+                        			<s:enumItem enumValue="Bank" label="#{messages['contact.type.Bank']}" />
+                        			<s:enumItem enumValue="Foundation" label="#{messages['contact.type.Foundation']}" />
+                        			<s:enumItem enumValue="Agent" label="#{messages['contact.type.Agent']}" />
+                        			<s:enumItem enumValue="Branch" label="#{messages['contact.type.Branch']}" />
+                        			<s:enumItem enumValue="Contact" label="#{messages['contact.type.Contact']}" />
+                        			<s:enumItem enumValue="Related" label="#{messages['contact.type.Related']}" />
+                        			<s:enumItem enumValue="Personnel" label="#{messages['contact.type.Personnel']}" />
+                        	</h:selectOneMenu>
+                        </s:decorate>
+
+                    </s:div>
+                    
+                    <s:div>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.CompanyName']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.company}" styleClass="large"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.Representative']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.representative}" styleClass="large"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.TaxNumber']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.taxNumber}" styleClass="middle"/>
+                        </s:decorate>
+
+						<a:region>
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['address.label.Country']}" /></ui:define>
+	                            <h:selectOneMenu value="#{contactBrowse.filterModel.country}" styleClass="middle" >
+	                                <s:selectItems value="#{generalSuggestion.countryList}"
+	                                               var="item"
+	                                               label="#{item.name}"
+	                                               noSelectionLabel="#{messages['general.value.All']}"
+	                                               hideNoSelectionLabel="false"
+	                                               itemValue="#{item.name}" />
+									<a:support event="onchange" reRender="cityDec" ajaxSingle="true" 
+										status="commonAjaxStatus"/>
+	                           </h:selectOneMenu>
+	                        </s:decorate>
+	
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['address.label.City']}" /></ui:define>
+	                            <h:selectOneMenu id="cityDec" value="#{contactBrowse.filterModel.city1}" styleClass="middle" required="false">
+	                                <s:convertEntity/>
+	                                <s:selectItems value="#{generalSuggestion.getCityList(contactBrowse.filterModel.country)}"
+	                                               var="item"
+	                                               label="#{item.name}"
+	                                               noSelectionLabel="#{messages['general.value.All']}"
+	                                               hideNoSelectionLabel="false" />
+	                           </h:selectOneMenu>
+	                        </s:decorate>
+						</a:region>
+
+                    </s:div>                 
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Organization']}" />
+							</ui:define>
+							<h:selectOneMenu value="#{contactBrowse.filterModel.organization}" styleClass="middle" >
+								<s:convertEntity />
+								<s:selectItems value="#{generalSuggestion.organizationList}"
+									var="item" label="#{item.code}"
+									noSelectionLabel="#{messages['general.value.All']}"
+									hideNoSelectionLabel="false" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['contact.label.Category']}"/>
+                            </ui:define>
+                            <h:selectOneMenu id="fldCategory"
+                                             value="#{contactBrowse.filterModel.category}"
+                                             styleClass="middle">
+                                <s:convertEntity/>
+                                <s:selectItems value="#{contactSuggestion.contactCategoryList}"
+                                               var="item"
+                                               label="#{item.code}"
+                                               noSelectionLabel="#{messages['general.value.All']}"
+                                               hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.Code1']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.exCode1}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.Code2']}" /></ui:define>
+                            <h:inputText value="#{contactBrowse.filterModel.exCode2}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                    </s:div>
+                    
+                    
+                    
+                    
+                    
+                </h:panelGrid>    
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{contactBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{contactBrowse.pdf()}"
+                                     rendered="#{s:hasPermission('contact', 'pdf')}"
+                                     styleClass="button"/> 
+
+                    <h:commandButton id="xls"
+                                     value="#{messages['general.label.XLS']}"
+                                     rendered="#{contactBrowse.exid eq 1 and s:hasPermission('contact', 'xls')}"
+                                     action="#{contactBrowse.xls()}"
+                                     styleClass="button"/>                 
+                                     
+                </div>
+                
+            </r:panel>
+            
+            <a:region>
+            <a:outputPanel id="results" >
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="contact"
+                                 value="#{contactBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty contactBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rowKeyVar="rowKey">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.Code']}"/></f:facet>
+                            <s:link id="viewLink1" view="/contact/contact.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{contact.id}"/>
+                                <h:outputText value="#{contact.code}"/>
+						
+							    <r:componentControl attachTo="viewLink1" event="onmouseover" operation="show" for="contactTooltip" />
+							    <r:componentControl attachTo="viewLink1" event="onmouseout" operation="hide" for="contactTooltip" />
+                                <ui:include src="contactHint.xhtml"/>
+                            </s:link>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.Name']}" /></f:facet>
+                            <s:link id="viewLink2" view="/contact/contact.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{contact.id}"/>
+                                <h:outputText value="#{contact.fullname}"/>
+
+							    <r:componentControl attachTo="viewLink2" event="onmouseover" operation="show" for="contactTooltip" />
+							    <r:componentControl attachTo="viewLink2" event="onmouseout" operation="hide" for="contactTooltip" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.SSN']}" /></f:facet>
+                            <h:outputText value="#{contact.ssn}"/>
+                        </r:column>
+                       
+                    	<r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.Company']}" /></f:facet>
+                            <h:outputText value="#{contact.company}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.TaxNumber']}" /></f:facet>
+                            <h:outputText value="#{contact.taxNumber}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.Representative']}" /></f:facet>
+                            <h:outputText value="#{contact.representative}"/>
+                        </r:column>
+                            
+                        <r:column>
+                        	<f:facet name="header"><h:outputText value="#{messages['contact.label.Type']}" /></f:facet>
+                        	<h:outputText value="#{contact.typeCaption}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.Code1']}" /></f:facet>
+                            <h:outputText value="#{contact.exCode1}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['contact.label.Code2']}" /></f:facet>
+                            <h:outputText value="#{contact.exCode2}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" status="commonAjaxStatus" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty contactBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel >
+            </a:region>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

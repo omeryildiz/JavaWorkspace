@@ -1,0 +1,455 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="stockReport"/>
+            <ui:param name="curitem" value="productStatusReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/report/productStatusReport.xhtml">
+                <h:outputText value="#{messages['module.caption.ProductStatusReport']}" rendered="#{s:hasPermission('productStatusReport', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/stock/productTxnReport.xhtml" rendered="#{s:hasPermission('productStatusReport', 'select')}" >
+                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.ProductTxnReport']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    
+    <ui:define name="rightBar">
+        <s:link view="/report/productStatusReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/report/productStatusReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ProductStatusReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productStatusReport.label.Code']}" /></ui:define>
+                            <h:inputText value="#{productStatusReport.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productStatusReport.label.Name']}" /></ui:define>
+                            <h:inputText value="#{productStatusReport.name}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Barcode']}" /></ui:define>
+                            <h:inputText value="#{productStatusReport.barcode}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['productStatusReport.label.Warehouse']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{productStatusReport.warehouseBase}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['productStatusReport.label.WarehouseBase']}" for="active" styleClass="checkboxLabel" />
+                            <br/>
+                            <h:selectOneMenu value="#{productStatusReport.warehouse}" styleClass="middle" >
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.warehouseList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.All']}" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+                        
+                    </s:fragment>
+                    <s:fragment>
+                         <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productTxnReport.label.DocumentType']}"/></ui:define>
+                            <h:selectOneMenu value="#{productStatusReport.documentType}" styleClass="middle">
+                                <s:convertEnum />
+                                <s:enumItem enumValue="Unknown" label="#{messages['general.value.All']}"/>
+                                <s:enumItem enumValue="ProductTransfer" label="#{messages['general.value.DocumentType.ProductTransfer']}"/>
+                                <s:enumItem enumValue="PurchaseShipmentNote" label="#{messages['general.value.DocumentType.PurchaseShipmentNote']}"/>
+                                <s:enumItem enumValue="SaleShipmentNote" label="#{messages['general.value.DocumentType.SaleShipmentNote']}"/>
+                                <s:enumItem enumValue="ProductVirement" label="#{messages['general.value.DocumentType.ProductVirement']}"/>
+                                <s:enumItem enumValue="SaleOrder" label="#{messages['general.value.DocumentType.SaleOrder']}"/>
+                                <s:enumItem enumValue="ExpenseNote" label="#{messages['general.value.DocumentType.ExpenseNote']}"/>
+                                <s:enumItem enumValue="ReturnExpenseNote" label="#{messages['general.value.DocumentType.ReturnExpenseNote']}"/>
+                                <s:enumItem enumValue="CountNote" label="#{messages['general.value.DocumentType.CountNote']}"/>                                
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productTxnReport.label.Code']}" /></ui:define>
+                            <h:inputText value="#{productStatusReport.docCode}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        
+                        <a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['saleInvoice.label.followUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{productStatusReport.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productStatusReport.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{productStatusReport.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productStatusReport.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{productStatusReport.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Category']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{productStatusReport.category}"
+                                             styleClass="middle">
+                                <s:selectItems value="#{stockSuggestion.productCategoryList}" var="item" label="#{item.code}" 
+                                noSelectionLabel="#{messages['general.value.All']}" hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['product.label.ProductGroup']}"/>
+                            </ui:define>
+
+                            <h:selectOneMenu value="#{productStatusReport.group}"
+                                             styleClass="middle">
+                                <s:selectItems value="#{generalSuggestion.productGroupList}"
+                                    var="item" label="#{item.code} - #{item.name}"
+                                    noSelectionLabel="#{messages['general.value.All']}"
+                                    hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.ProductType']}" /></ui:define>
+                            <h:selectOneMenu value="#{productStatusReport.productType}"  styleClass="middle">
+
+                                <f:selectItem itemValue="0" itemLabel="#{messages['Hepsi']}"/>
+                                <f:selectItem itemValue="1" itemLabel="#{messages['Ürün']}" />
+                                <f:selectItem itemValue="2" itemLabel="#{messages['Hizmet']}" />
+                            </h:selectOneMenu>
+                        </s:decorate>                       
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <h:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{productStatusReport.executeReport()}"
+                                     styleClass="button"
+                                     />  
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{productStatusReport.detailPdf()}"
+                                     rendered="#{s:hasPermission('productStatusReport', 'pdf')}"
+                                     styleClass="button"/>
+                                     
+                   <h:commandButton id="xls" 
+                   					 rendered="#{s:hasPermission('productStatusReport', 'xls')}" 
+                                     value="#{messages['general.label.XLS']}" 
+                                     action="#{productStatusReport.xls()}"
+                                     styleClass="button"/>
+                                      
+                </s:div>
+            </r:panel>
+            
+            
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:2px;">
+                    
+                    
+                    
+                    <r:dataTable id="browseList" 
+                                 var="rowItem"
+                                 rows="20"
+                                 rowKeyVar="rowKey"
+                                 value="#{productStatusReport.reportResult}">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['productStatusReport.caption.ProductList']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column rendered="#{productStatusReport.warehouseBase}">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Warehouse']}" /></f:facet>
+                            <h:outputText value="[#{rowItem['warecode']}] #{rowItem['warename']}" rendered="#{productStatusReport.renderColumn(rowKey, 'warecode')}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Product']}" /></f:facet>
+                            <h:outputText value="[#{rowItem['prodcode']}] #{rowItem['prodname']}" rendered="#{productStatusReport.renderColumn(rowKey, 'prodcode')}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode']}" /></f:facet>
+                            <h:outputText value="#{rowItem['barcode']} " />
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['product.label.ProductGroup']}" /></f:facet>
+                            <h:outputText value="#{rowItem['group'].code} - #{rowItem['group'].name}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Unit']}" /></f:facet>
+                            <h:outputText value="#{rowItem['unit']}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Input']}" /></f:facet>
+                            <h:outputText value="#{rowItem['inqty']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Output']}" /></f:facet>
+                            <h:outputText value="#{rowItem['outqty']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.BuyReturn']}" /></f:facet>
+                            <h:outputText value="#{rowItem['buyretqty']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.SellReturn']}" /></f:facet>
+                            <h:outputText value="#{rowItem['sellretqty']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Reservation']}" /></f:facet>
+                            <h:outputText value="#{rowItem['resqty']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Deliver']}" /></f:facet>
+                            <h:outputText value="#{rowItem['delqty']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.ReadyToShipment']}" /></f:facet>
+                            <h:outputText value="#{rowItem['resqty'] - rowItem['delqty']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.AvailableToSale']}" /></f:facet>
+                            
+                            <h:outputText value="#{rowItem['balance']}" styleClass="negativeNumber" rendered="#{rowItem['balance'] lt 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                            
+                            <h:outputText value="#{rowItem['balance']}" rendered="#{rowItem['balance'] ge 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.RemainStock']}" /></f:facet>
+                            
+                            <h:outputText value="#{rowItem['remainStock']}" styleClass="negativeNumber" rendered="#{rowItem['remainStock'] lt 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                            
+                            <h:outputText value="#{rowItem['remainStock']}" rendered="#{rowItem['remainStock'] ge 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                            
+                        </r:column>
+                        
+                        
+                        <ui:remove>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.UnitPrice']}" /></f:facet>
+                                <h:outputText value="#{rowItem['unitPrice']}">
+                                    <f:convertNumber pattern="#,##0.00" />
+                                </h:outputText>
+                            </r:column>
+                            
+                            
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Rate']}" /></f:facet>
+                                <h:outputText value="#{rowItem['rate']}">
+                                    <f:convertNumber pattern="#.0000" />
+                                </h:outputText>
+                            </r:column>
+                            
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.LocalDebit']}" /></f:facet>
+                                <h:outputText value="#{rowItem['localDebit']}">
+                                    <f:convertNumber pattern="#,###.00" />
+                                </h:outputText>
+                            </r:column>
+                            
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.LocalCredit']}" /></f:facet>
+                                <h:outputText value="#{rowItem['localCredit']}">
+                                    <f:convertNumber pattern="#,###.00" />
+                                </h:outputText>
+                            </r:column>
+                            
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.LocalBalance']}" /></f:facet>
+                                <h:outputText value="#{rowItem['localBalance']}" styleClass="negativeNumber" rendered="#{rowItem['localBalance'] lt 0}">
+                                    <f:convertNumber pattern="#,###.00" />
+                                </h:outputText>
+                                
+                                <h:outputText value="#{rowItem['localBalance']}" rendered="#{rowItem['localBalance'] ge 0}">
+                                    <f:convertNumber pattern="#,###.00" />
+                                </h:outputText>
+                            </r:column>
+                            
+                        </ui:remove>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" /> 
+                        </f:facet>
+                        
+                    </r:dataTable>
+                    
+                    <r:spacer size="2" />
+                    <ui:remove>
+                        <r:dataTable id="sumList" 
+                                     var="rowItem"
+                                     value="#{productStatusReport.summaryList}" 
+                                     onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                     onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                            <f:facet name="header">
+                                <h:panelGroup>
+                                    <h:outputText value="#{messages['productStatusReport.caption.CurrencyList']}"/>
+                                </h:panelGroup>
+                            </f:facet>
+                            
+                            
+                            <r:column >
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Currency']}" /></f:facet>
+                                <h:outputText value="#{rowItem['currency']}"/>
+                            </r:column>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Amount']}" /></f:facet>
+                                <h:outputText value="#{rowItem['amount']}">
+                                    <f:convertNumber pattern="#,###.00" />
+                                </h:outputText>
+                            </r:column>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Rate']}" /></f:facet>
+                                <h:outputText value="#{rowItem['rate']}">
+                                    <f:convertNumber pattern="#.0000" />
+                                </h:outputText>
+                            </r:column>
+                            <r:column styleClass="numberColumn" footerClass="numberColumn">
+                                <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.LocalAmount']}" /></f:facet>
+                                <h:outputText value="#{rowItem['localAmount']}">
+                                    <f:convertNumber pattern="#,###.00" />
+                                </h:outputText>
+                            </r:column>
+                            
+                            <f:facet name="footer">
+                                <r:columnGroup >
+                                    <r:column colspan="3" style="background-color:#E0E0E0;font-weight:bold;">
+                                        <h:outputText value="#{messages['general.label.GrandTotal']}" />
+                                    </r:column>
+                                    <r:column styleClass="numberColumn" style="background-color:#E0E0E0;font-weight:bold;">
+                                        <h:outputText value="#{productStatusReport.grandTotal}">
+                                            <f:convertNumber pattern="#,###.00" />
+                                        </h:outputText>
+                                    </r:column>
+                                </r:columnGroup>
+                            </f:facet>
+                        </r:dataTable>
+                    </ui:remove>
+                </s:div>
+                
+                <ui:remove>
+                    <r:panel id="msg" rendered="#{empty financeTxnReport.entityList}" styleClass="message">
+                        <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                    </r:panel>
+                </ui:remove>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

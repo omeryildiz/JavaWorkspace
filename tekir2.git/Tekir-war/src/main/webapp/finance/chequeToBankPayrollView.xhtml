@@ -1,0 +1,261 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewCheque"/>
+            <ui:param name="cursubitem" value="chequeToBankPayroll"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/chequeToBankPayrollBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ChequeToBankPayrollBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/chequeToBankPayroll.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ChequeToBankPayroll']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/finance/chequeToBankPayroll.xhtml" action="#{chequeToBankPayrollHome.createNew()}" rendered="#{s:hasPermission('chequeToBankPayroll', 'insert')}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['chequeToBankPayroll.action.Add']}" />
+            </s:link>
+        </div>
+
+    </ui:define>
+    <ui:define name="rightBar">
+        <s:link view="/finance/chequeToBankPayrollBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/finance/chequeToBankPayrollBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+
+
+
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.ChequeToBankPayroll']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+
+        <h:form id="form" >
+
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['chequeToBankPayroll.img.Form']}"/>
+                        <h:outputText value="#{messages['chequeToBankPayroll.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+                <s:fragment rendered="#{not chequeToBankPayrollHome.isEditable}">
+                	<h:outputText value="#{messages['collection.hint.NotEditable']}" styleClass="hint" />
+                </s:fragment>
+
+                <h:panelGrid columns="3">
+
+
+					 <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.serial}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Reference']}"/></ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.reference}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Code']}"/></ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.code}" styleClass="middle" />
+                        </s:decorate>
+
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Status']}"/></ui:define>
+                            <h:outputLabel rendered="#{chequeToBankPayroll.active}" value="#{messages['chequeToBankPayroll.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+
+                    </s:div>
+
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Date']}"/></ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}" />
+                            </h:outputText>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['chequeToBankPayroll.label.Bank']}"/>
+                            </ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.bank.name}"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['chequeToBankPayroll.label.BankBranch']}"/>
+                            </ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.bankBranch.name}"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['chequeToBankPayroll.label.BankAccount']}"/>
+                            </ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.bankAccount.accountNo}"/>
+                        </s:decorate>
+                    </s:div>
+
+                    <s:div>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['chequeToBankPayroll.label.Info']}"/></ui:define>
+                            <h:outputText value="#{chequeToBankPayroll.info}" styleClass="exlarge" rows="6"/>
+                        </s:decorate>
+
+                    </s:div>
+                </h:panelGrid>
+
+                <a:region renderRegionOnly="false">
+                    <r:dataTable id="its"
+                                 var="item"
+                                 value="#{chequeToBankPayroll.details}"
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="7">
+                                    <h:outputText value="#{messages['chequeToBankPayroll.caption.Details']}" />
+                                </r:column>
+
+                                <r:column breakBefore="true" styleClass="middle" style="width:150px;">
+                                    <h:outputText value="#{messages['cheque.label.ChequeNumber']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['cheque.label.Contact']}" />
+                                </r:column>
+
+                                <r:column style="width:150px;">
+                                    <h:outputText value="#{messages['cheque.label.ChequeOwner']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['cheque.label.BankAccount']}"/>
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['cheque.label.Amount']}"/>
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['cheque.label.IssueDate']}" />
+                                </r:column>
+
+                                <r:column>
+                                    <h:outputText value="#{messages['cheque.label.MaturityDate']}" />
+                                </r:column>
+
+
+                            </r:columnGroup>
+
+                        </f:facet>
+                        <r:column >
+                            <s:decorate>
+                                <h:outputText  value="#{item.cheque.referenceNo}"/>
+                            </s:decorate>
+                        </r:column>
+
+                        <r:column>
+                            <h:outputText rendered="#{not empty item.cheque.contact}" value="[#{item.cheque.contact.code}] #{item.cheque.contact.name}" />
+                        </r:column>
+
+                        <r:column>
+                            <h:outputText value="#{item.cheque.chequeOwner}" />
+                        </r:column>
+
+                        <r:column>
+                            <h:outputText value="#{item.cheque.bankName} - #{item.cheque.bankBranch} - #{item.cheque.accountNo}" />
+                        </r:column>
+
+                        <r:column styleClass="amountField">
+                            <h:outputText value="#{item.cheque.money}" />
+                        </r:column>
+
+                        <r:column>
+                            <s:decorate>
+                                <h:outputText value="#{item.cheque.issueDate}" >
+                                    <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                                </h:outputText>
+                            </s:decorate>
+                        </r:column>
+
+                        <r:column>
+                            <s:decorate>
+                                <h:outputText  value="#{item.cheque.maturityDate}" >
+                                    <s:convertDateTime
+                                        pattern="#{messages['general.format.Date']}" />
+                                </h:outputText>
+                            </s:decorate>
+                        </r:column>
+
+                	</r:dataTable>
+                </a:region>
+
+            </r:panel>
+
+            <div class="actionButtons">
+            	<h:commandButton id="pdf"
+                                 value="#{messages['general.button.PDF']}"
+                                 action="#{chequeToBankPayrollHome.pdf(chequeToBankPayroll)}"
+                                 styleClass="button"
+                                 rendered="#{not empty chequeToBankPayroll.id}"/>
+            
+                <ui:remove>
+                    <s:button id="print"
+                              value="#{messages['general.button.Print']}"
+                              action="#{chequeToBankPayrollHome.print()}" styleClass="button" >
+                        <f:param name="eid" value="#{chequeToBankPayrollHome.id}"/>
+                    </s:button>
+                </ui:remove>
+                <s:button id="edit" propagation="begin"
+                          rendered="#{chequeToBankPayrollHome.isEditable}"
+                          value="#{messages['general.button.EditDesc']}"
+                          action="#{chequeToBankPayrollHome.edit()}" styleClass="button" >
+                    <f:param name="eid" value="#{chequeToBankPayrollHome.id}"/>
+                </s:button>
+
+                <s:button id="done"
+                          value="#{messages['general.button.Close']}"
+                          action="#{chequeToBankPayrollHome.close()}"
+                          styleClass="button"/>
+
+            </div>
+
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<r:modalPanel id="barcodeSpool" height="120" width="270" zindex="100"
+		resizeable="false">
+		<f:facet name="header">
+			<h:outputText value="Barkod Kuyruğu" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:graphicImage value="/img/exit.gif" style="cursor:pointer"
+				onclick="Richfaces.hideModalPanel('barcodeSpool')" />
+		</f:facet>
+
+		<a:include id="barcodeInclude" styleClass="innerpop" viewId="/stock/popup/barcode.xhtml"/>
+
+	</r:modalPanel>
+
+</ui:composition>

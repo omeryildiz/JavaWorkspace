@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+    
+    <ui:include src="/layout/messages.xhtml"/>
+    
+    <h:form id="selectform" >
+        <input type="hidden" id="retpoint" value="" />
+        <a:region renderRegionOnly="true">
+        <r:panel>
+            <f:facet name="header">
+                <h:outputText value="#{messages['selectbox.product.Filter']}" />
+            </f:facet>
+            <table style="padding:0px;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Code']}" /></ui:define>
+                            <h:inputText value="#{stockSuggestion.code}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Name']}" /></ui:define>
+                            <h:inputText value="#{stockSuggestion.name}" styleClass="middle"/>
+                        </s:decorate>
+                    </td>
+                    <td>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.ExpenseOrDiscount']}" /></ui:define>
+                            <h:selectOneMenu value="#{stockSuggestion.productType}" styleClass="middle">
+                                <s:convertEnum />
+                                <s:enumItem enumValue="Unknown"
+									label="#{messages['product.productType.All']}" />
+                                <s:enumItem enumValue="Expense"
+                                    label="#{messages['product.productType.Expense']}" />
+                                <s:enumItem enumValue="Discount"
+                                    label="#{messages['product.productType.Discount']}" />
+                            </h:selectOneMenu>
+                        </s:decorate>
+                    </td>
+                    <td style="vertical-align:bottom;padding-bottom:4px;padding-top:4px; width:70px;">
+                        
+                            <a:commandLink id="select_search" 
+                                           action="#{stockSuggestion.selectExpenseAndDiscountList()}"
+                                           styleClass="button"
+                                           reRender="selectList">  
+                                     <ui:remove>
+                                        <h:graphicImage url="/img/selectBox.gif" /> 
+                                    </ui:remove>
+                                    <h:outputText value="#{messages['general.button.Search']}" />
+                            </a:commandLink>
+                        
+                    </td>
+                </tr>
+            </table>
+        </r:panel>
+        
+        <s:div id="selectList" >
+            <r:dataTable var="item"
+            			 id="browseList"
+                         value="#{stockSuggestion.expenseAndDiscountList}" 
+                         rowKeyVar="rowKey"
+                         rows="10"
+                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                <f:facet name="header">
+                    <h:panelGroup>
+                        <h:outputText value="#{messages['general.label.Results']}"/>
+                    </h:panelGroup>
+                </f:facet>
+                <r:column >
+                    
+                    <a href="javascript:void(0);" onclick="closeExpenseAndDiscountSelect( '[#{item[0]}] #{item[1]}' )" >
+                        <h:outputText value="[#{item[0]}] #{item[1]}" />
+                    </a>
+                    
+                </r:column>
+                <f:facet name="footer">
+                	<r:datascroller for="browseList" maxPages="5" />          
+				</f:facet>
+            </r:dataTable>
+            
+        </s:div>
+        </a:region>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,193 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="account"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+                <s:link view="/general/account.xhtml" rendered="#{s:hasPermission('account', 'select')}" propagation="begin" >
+                    <h:outputText value="#{messages['module.caption.Account']}"/>
+                </s:link>
+            </div>
+            
+            <div class="toolgroup-left">
+                <s:link action="#{accountHome.createNew()}" rendered="#{s:hasPermission('account', 'insert')}" propagation="begin" >
+                    <h:graphicImage url="/img/add.gif" /> 
+                    <h:outputText value="#{messages['account.action.Add']}"  />
+                </s:link>
+            </div>
+            
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Account']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{accountList}" 
+                                 rendered="#{s:hasPermission('account', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['account.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{accountHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code} - #{cty.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{accountHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['account.hint.EmptyList']}" rendered="#{accountList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/award_star_bronze_3.gif" alt="#{messages['account.img.Form']}"/> 
+                            <h:outputText value="#{messages['account.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+						<s:fragment>
+	                        <s:decorate template="/layout/edit.xhtml" >
+	                            <ui:define name="label"><h:outputText value="#{messages['account.label.Code']}"/></ui:define>
+	                            <h:inputText value="#{account.code}" styleClass="middle" required="true"/>
+	                        </s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['account.label.Name']}"/></ui:define>
+	                            <h:inputText value="#{account.name}" styleClass="large" required="true"/>
+	                        </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml" rendered="#{accountHome.getOrganizationSchemeOption()}">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.Organization']}" />
+								</ui:define>
+								<h:selectOneMenu value="#{account.organization}" styleClass="large" required="true">
+									<s:convertEntity />
+									<s:selectItems value="#{generalSuggestion.findSuitableOrganizations('Account')}"
+										var="item" label="#{item.code} - #{item.name}"
+										noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false" />
+								</h:selectOneMenu>
+							</s:decorate>
+						</s:fragment>
+
+						<s:fragment>
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['account.label.Info']}"/></ui:define>
+	                            <h:inputTextarea value="#{account.info}" styleClass="exlarge" rows="4"/>
+	                        </s:decorate>
+						
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['account.label.Status']}"/></ui:define>
+	                            <h:selectBooleanCheckbox id="active" value="#{account.active}" styleClass="checkbox" />
+	                            <h:outputLabel value="#{messages['account.label.Active']}" for="active" styleClass="checkboxLabel" />
+	                        </s:decorate>
+						</s:fragment>
+                        
+                    </h:panelGrid>    
+
+                    <h3>#{messages['account.label.AuthorizedPerson']}</h3>
+
+                    <h:panelGrid columns="2">
+						<s:div>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.FirstName']}" />
+								</ui:define>
+								<h:inputText value="#{account.contactPerson.firstName}"
+									styleClass="middle" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.LastName']}" />
+								</ui:define>
+								<h:inputText value="#{account.contactPerson.lastName}"
+									styleClass="middle" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.Title']}" />
+								</ui:define>
+								<h:inputText value="#{account.contactPerson.title}"
+									styleClass="middle" />
+							</s:decorate>
+						</s:div>
+						<s:div>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.Phone']}" />
+								</ui:define>
+								<h:inputText value="#{account.contactPerson.phone.fullNumber}"
+									styleClass="middle phone" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['bankBranch.label.Fax']}" />
+								</ui:define>
+								<h:inputText value="#{account.contactPerson.fax.fullNumber}"
+									styleClass="middle phone" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['contact.label.Email']}" />
+								</ui:define>
+								<h:inputText value="#{account.contactPerson.email}"
+									styleClass="middle email" />
+							</s:decorate>
+						</s:div>
+                    </h:panelGrid>
+                    
+                    <ut:actionButtons home="#{accountHome}" entity="#{account}" permission="account" />
+
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

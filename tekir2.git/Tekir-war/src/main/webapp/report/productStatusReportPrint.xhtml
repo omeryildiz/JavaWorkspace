@@ -1,0 +1,75 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+
+
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.ProductStatusReport']}" /></h1>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <r:dataTable id="browseList"
+                     var="rowItem"
+                     value="#{productStatusReport.reportResult}" >
+            <f:facet name="header">
+                <h:panelGroup>
+                    <h:outputText value="#{messages['general.label.Results']}"/>
+                </h:panelGroup>
+            </f:facet>
+
+
+            <r:column rendered="#{productStatusReport.warehouseBase}">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Warehouse']}" /></f:facet>
+                            <h:outputText value="[#{rowItem['warecode']}] #{rowItem['warename']}" rendered="#{productStatusReport.renderColumn(rowKey, 'warecode')}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Product']}" /></f:facet>
+                            <h:outputText value="[#{rowItem['prodcode']}] #{rowItem['prodname']}" rendered="#{productStatusReport.renderColumn(rowKey, 'prodcode')}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Unit']}" /></f:facet>
+                            <h:outputText value="#{rowItem['unit']}"/>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Input']}" /></f:facet>
+                            <h:outputText value="#{rowItem['inqty']}">
+                                <f:convertNumber pattern="#,###.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Output']}" /></f:facet>
+                            <h:outputText value="#{rowItem['outqty']}">
+                                <f:convertNumber pattern="#,###.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Balance']}" /></f:facet>
+
+                            <h:outputText value="#{rowItem['balance']}" styleClass="negativeNumber" rendered="#{rowItem['balance'] lt 0}">
+                                <f:convertNumber pattern="#,###.00" />
+                            </h:outputText>
+
+                            <h:outputText value="#{rowItem['balance']}" rendered="#{rowItem['balance'] ge 0}">
+                                <f:convertNumber pattern="#,###.00" />
+                            </h:outputText>
+
+                        </r:column>
+
+        </r:dataTable>
+
+    </ui:define>
+</ui:composition>

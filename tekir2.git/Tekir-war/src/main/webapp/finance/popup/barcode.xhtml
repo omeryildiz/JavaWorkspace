@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="barcodeForm">
+		<a:region>
+		<s:div>
+			<h:inputText value="#{retailSaleInvoiceHome.barcodeQuantity}"
+				id="barcodeQuantity" styleClass="quantityFieldTiny" alt="decimal"
+				converter="doubleConverter" />x
+              <h:inputText value="#{retailSaleInvoiceHome.barcodeInput}"
+				id="barcodeBox">
+				<a:support event="onchange"
+					action="#{retailSaleInvoiceHome.createNewLineWithBarcode()}"
+					reRender="its" ajaxSingle="false" oncomplete="clearBarcodeInput()" />
+			</h:inputText>
+		</s:div>
+		</a:region>
+
+	</h:form>
+</ui:composition>

@@ -1,0 +1,239 @@
+<ul xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <li class="#{curpage eq 'contactReport' ? 'current' : '' }">
+        <a href="#">Cari Raporları</a>
+        <ul>
+            <li class="#{curitem eq 'financeTxnReport' ? 'current' : '' }">
+                <s:link view="/finance/financeTxnReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.FinanceTxnReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'contactStatusReport' ? 'current' : '' }">
+                <s:link view="/report/contactStatusReport.xhtml" >
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ContactStatusReport']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'debtorContactReport' ? 'current' : '' }">
+                <s:link view="/report/debtorContactReport.xhtml" >
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.DebtorContactReport']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'payeeContactReport' ? 'current' : '' }">
+                <s:link view="/report/payeeContactReport.xhtml" >
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.PayeeContactReport']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'reconciliationContactReport' ? 'current' : '' }">
+                <s:link view="/report/reconciliationContactReport.xhtml" >
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ReconciliationContactReport']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'extractAccountReport' ? 'current' : '' }">
+                <s:link view="/report/extractAccountReport.xhtml" >
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ExtractAccountReport']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'contactServicesAcquiredReport' ? 'current' : '' }">
+                <s:link view="/report/contactServicesAcquiredReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ContactServicesAcquiredReport']}" />
+                </s:link>
+             </li>
+        </ul>
+    </li>
+    <li class="#{curpage eq 'stockReport' ? 'current' : '' }">
+        <a href="#">Stok Raporları</a>
+        <ul>
+            <li class="#{curitem eq 'productTxnReport' ? 'current' : '' }">
+                <s:link view="/stock/productTxnReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ProductTxnReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productStatusReport' ? 'current' : '' }">
+                <s:link view="/report/productStatusReport.xhtml" >
+                	<f:param name="exid" value="0"/>
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ProductStatusReport']}"/>
+                </s:link>
+            </li>
+        </ul>
+    </li>
+    <li class="#{curpage eq 'accountReport' ? 'current' : '' }">
+        <a href="#">Kasa Raporları</a>
+        <ul>
+            <li class="#{curitem eq 'accountTxnReport' ? 'current' : '' }">
+                <s:link view="/report/accountTxnReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.AccountTxnReport']}" />
+                </s:link>
+
+            </li>
+            <li class="#{curitem eq 'accountStatusReport' ? 'current' : '' }">
+                <s:link view="/report/accountStatusReport.xhtml" propagationBegin="true">
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.AccountStatusReport']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'detailedAccountReport' ? 'current' : '' }">
+                <s:link view="/report/detailedAccountReport.xhtml">
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.DetailedAccountReport']}"/>
+                </s:link>
+            </li>
+        </ul>
+    </li>
+    <li class="#{curpage eq 'bankReport' ? 'current' : '' }">
+        <a href="#">Banka Raporları</a>
+        <ul>
+            <li class="#{curitem eq 'bankTxnReport' ? 'current' : '' }">
+                <s:link view="/report/bankTxnReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.BankTxnReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'bankStatusReport' ? 'current' : '' }">
+                <s:link view="/report/bankStatusReport.xhtml" >
+                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.BankStatusReport']}"/>
+                </s:link>
+            </li>
+        </ul>
+    </li>
+    <li class="#{curpage eq 'analysisReport' ? 'current' : '' }">
+        <a href="#">Analiz Raporları</a>
+        <ul>
+            <ui:remove>
+            <li class="#{curitem eq 'taxTxnReport' ? 'current' : '' }">
+                <s:link view="/report/taxTxnReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.TaxTxnReport']}" />
+                </s:link>
+            </li>
+            
+                <li class="#{curitem eq 'taxStatusReport' ? 'current' : '' }">
+                    <s:link view="/report/taxStatusReport.xhtml" >
+                        <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                        <h:outputText value="#{messages['module.caption.TaxStatusReport']}"/>
+                    </s:link>
+                </li>
+            </ui:remove>
+            <li class="#{curitem eq 'clerkReport' ? 'current' : '' }">
+                <s:link view="/report/clerkReport.xhtml" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ClerkReport']}"/>
+                </s:link>
+            </li>
+            <li class="#{curpage eq 'endOfDayReport' ? 'current' : '' }">
+                <s:link view="/report/endOfDayReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.EndOfDayReport']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+    <ui:remove>
+	    <li class="#{curpage eq 'serviceReport' ? 'current' : '' }">
+	        <a href="#">Hizmet Raporları</a>
+	        <ul>
+	            <li class="#{curitem eq 'serviceTxnReport' ? 'current' : '' }">
+	                <s:link view="/report/serviceTxnReport.xhtml" propagation="none" >
+	                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+	                    <h:outputText value="#{messages['module.caption.ServiceTxnReport']}" />
+	                </s:link>
+	            </li>
+	            <li class="#{curitem eq 'serviceStatusReport' ? 'current' : '' }">
+	                <s:link view="/report/serviceStatusReport.xhtml" >
+	                    <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+	                    <h:outputText value="#{messages['module.caption.ServiceStatusReport']}"/>
+	                </s:link>
+	            </li>
+	        </ul>
+	    </li>
+    </ui:remove>
+
+    <li class="#{curpage eq 'exports' ? 'current' : '' }">
+        <a href="#">Dışa Aktarımlar</a>
+        <ul>
+            <li class="#{curitem eq 'stockReport' ? 'current' : '' }">
+                <s:link view="/stock/productBrowse.xhtml" propagation="none" >
+                	<f:param name="exid" value="1"/>
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.StockServiceReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productStatusReport' ? 'current' : '' }">
+                <s:link view="/report/productStatusReport.xhtml" >
+                	<f:param name="exid" value="1"/>
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ProductStatusReport']}"/>
+                </s:link>               
+            </li>
+            <li class="#{curitem eq 'purchaseInvoiceBrowse' ? 'current' : '' }">
+                <s:link view="/finance/newpurchaseInvoiceBrowse.xhtml" propagation="none">
+                	<f:param name="exid" value="1"/>
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.PurchaseInvoiceReport']}" />
+                </s:link>
+            </li>
+            <ui:remove>
+            <li class="#{curitem eq 'purchaseInvoiceReport' ? 'current' : '' }">
+                <s:link view="/report/purchaseInvoiceReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.PurchaseInvoiceReport']}" />
+                </s:link>
+            </li>
+            </ui:remove>
+            <li class="#{curitem eq 'saleInvoiceReport' ? 'current' : '' }">
+                <s:link view="/finance/newsaleInvoiceBrowse.xhtml" propagation="none" >
+                	<f:param name="exid" value="1"/>
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.SaleInvoiceReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'priceItemReport' ? 'current' : '' }">
+                <s:link view="/report/priceItemReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.PriceItemReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'contactReport' ? 'current' : '' }">
+                <s:link view="/contact/contactBrowse.xhtml" propagation="none" >
+                	<f:param name="exid" value="1" />
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ContactReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'purchaseSaleReport' ? 'current' : '' }">
+                <s:link view="/report/purchaseSaleReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.PurchaseSaleReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'creditCardPosCommissionReport' ? 'current' : '' }">
+                <s:link view="/report/creditCardPosCommissionReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.PosCommissionReport']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'monthlyTurnoverReport' ? 'current' : '' }">
+                <s:link view="/report/monthlyTurnoverReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.MonthlyTurnoverReport']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+</ul>

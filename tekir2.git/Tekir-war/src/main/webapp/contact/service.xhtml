@@ -1,0 +1,350 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="contact"/>
+            <ui:param name="curpage" value="new"/>
+            <ui:param name="curitem" value="newservice" />
+        </ui:include>
+    </ui:define>
+    
+    
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/productBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ProductBrowse']}"  rendered="#{s:hasPermission('service', 'select')}" />
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/contact/service.xhtml">
+                <h:outputText value="#{messages['module.caption.ServiceEditor']}" rendered="#{s:hasPermission('service', 'update')}" />
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{serviceHome.createNew()}" rendered="#{s:hasPermission('service', 'insert')}" propagation="begin" >
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['service.action.Add']}" />
+            </s:link>
+            <s:link view="/stock/productCategory.xhtml" propagation="begin" rendered="#{s:hasPermission('serviceCategory', 'select')}">
+                <h:graphicImage url="/img/folder.gif" alt="#{messages['product.img.Form']}"/> 
+                <h:outputText value="#{messages['module.caption.ProductCategory']}" />
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ServiceEditor']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/brick.gif" alt="#{messages['service.img.Form']}"/> 
+                        <h:outputText value="#{messages['service.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="3">
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['service.label.Code']}"/></ui:define>
+                            <h:inputText value="#{product.code}" styleClass="small" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['service.label.Name']}"/></ui:define>
+                            <h:inputText value="#{product.name}" styleClass="exlarge" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['service.label.Category']}"/></ui:define>
+                            
+                            <h:selectOneMenu value="#{product.category}" 
+                                             styleClass="middle">
+                                <s:selectItems value="#{stockSuggestion.productCategoryList}" 
+                                            var="item"
+                                            label="#{item.code}"
+                                            noSelectionLabel="#{messages['general.value.None']}"
+                                            hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu> 
+                            
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['service.label.Unit']}"/></ui:define>
+	                            <h:selectOneMenu id="unit"
+                                                 value="#{product.unit}"
+	                            				 disabled="#{serviceHome.isDefault()}"
+	                                             styleClass="middle"
+                                                 required="true">
+	                                <s:selectItems value="#{generalSuggestion.unitList}" var="unit" label="#{unit.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+	                                <a:support event="onchange" action="#{serviceHome.createDefaultUnitLine()}" reRender="its" ajaxSingle="true"/>
+	                            </h:selectOneMenu>
+
+                        </s:decorate>
+                    </s:div>
+                    
+                    <s:div></s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['product.label.LastPurchasePrice']}"/>
+                            </ui:define>
+
+	                    	<h:inputText value="#{product.lastPurchasePrice.value}" styleClass="amountField"
+	                        	alt="decimal" converter="bigDecimalConverter"/>
+
+                            <h:selectOneMenu value="#{product.lastPurchasePrice.currency}" >
+                                <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy"
+                                	label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}"
+                                	hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+	                	<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['product.label.LastSalePrice']}"/>
+                            </ui:define>
+
+	                    	<h:inputText value="#{product.lastSalePrice.value}" styleClass="amountField"
+	                        	alt="decimal" converter="bigDecimalConverter"/>
+
+                            <h:selectOneMenu value="#{product.lastSalePrice.currency}" >
+                                <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy"
+                                	label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}"
+                                	hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['service.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{product.info}" styleClass="exlarge" rows="3"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['service.label.Status']}"/></ui:define>
+	                            <h:selectBooleanCheckbox id="active" value="#{product.active}" styleClass="checkbox" />
+	                            <h:outputLabel value="#{messages['service.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </s:div>
+
+                </h:panelGrid>
+                
+                <br/>
+                    <r:separator height="2" lineType="dotted" />
+                <br />
+
+                <h:panelGrid columns="5">
+                	<s:fragment>
+                		<s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.SellTax']}"/></ui:define>
+                            
+                            <h:selectOneMenu value="#{product.sellTax}" 
+                                             styleClass="small" required="true">
+                                <s:selectItems value="#{generalSuggestion.taxList}" var="tax" label="#{tax.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu> 
+                            
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <h:selectBooleanCheckbox id="taxInc" value="#{product.taxIncluded}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['service.label.TaxIncluded']}" for="taxInc" styleClass="checkboxLabel" />
+                        </s:decorate>
+                	</s:fragment>
+                	
+                	<s:fragment>
+                		<s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.SellTax2']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{product.sellTax2}"
+                                             styleClass="small">
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax2" label="#{tax2.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <h:selectBooleanCheckbox id="tax2Inc" value="#{product.tax2Included}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['service.label.Tax2Included']}" for="tax2Inc" styleClass="checkboxLabel" />
+                        </s:decorate>
+                	</s:fragment>
+                
+                	<s:fragment>
+                		<s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.SellTax3']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{product.sellTax3}"
+                                             styleClass="small">
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax2" label="#{tax2.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <h:selectBooleanCheckbox id="tax3Inc" value="#{product.tax3Included}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['product.label.Tax3Included']}" for="tax3Inc" styleClass="checkboxLabel" />
+                        </s:decorate>
+                	</s:fragment>
+                
+                	<s:fragment>
+                		<s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.SellTax4']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{product.sellTax4}"
+                                             styleClass="small">
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax2" label="#{tax2.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <h:selectBooleanCheckbox id="tax4Inc" value="#{product.tax4Included}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['product.label.Tax4Included']}" for="tax4Inc" styleClass="checkboxLabel" />
+                        </s:decorate>
+                	</s:fragment>
+                
+                	<s:fragment>
+                		<s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.SellTax5']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{product.sellTax5}"
+                                             styleClass="small">
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax2" label="#{tax2.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" styleClass="middle">
+                            <h:selectBooleanCheckbox id="tax5Inc" value="#{product.tax5Included}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['product.label.Tax5Included']}" for="tax5Inc" styleClass="checkboxLabel" />
+                        </s:decorate>
+                	</s:fragment>
+                
+                </h:panelGrid>    
+                
+                <a:region>
+                <r:spacer width="1" height="15" title="Here is a spacer..."/>
+                
+                	<r:dataTable id="its" 
+                                 var="item"
+                                 value="#{product.productUnitList}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                                 
+                     	<f:facet name="header">
+                     		<r:columnGroup>
+                     			<r:column colspan="5">
+                                    <h:outputText value="#{messages['product.caption.ProductUnits']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <div>
+                                        <a:commandLink reRender="its, unit" action="#{serviceHome.createNewLine()}" accesskey="N" oncomplete="focusLastRow(); setMasks();">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+                                <r:column breakBefore="true" style="width:15px;">
+                                    <h:outputText value="#{messages['product.label.MainUnitTitle']}" />
+                                </r:column>
+                                <r:column style="width:200px;">
+                                    <h:outputText value="#{messages['product.label.MainUnitValue']}" />
+                                </r:column>
+                                <r:column style="width:200px;">
+                                    <h:outputText value="#{messages['product.label.MainUnit']}" />
+                                </r:column>
+                                <r:column style="width:200px;">
+                                    <h:outputText value="#{messages['product.label.ChangeUnitValue']}" />
+                                </r:column>
+                                <r:column style="width:200px;">
+                                    <h:outputText value="#{messages['product.label.ChangeUnit']}" />
+                                </r:column>
+                                <r:column style="width:16px;">
+                                    <h:outputText value="" />
+                                </r:column>
+                     		</r:columnGroup>
+                     	</f:facet>
+                     	<r:column style="width:15px;">
+                     		<h:selectBooleanCheckbox value="#{item.defaultUnit}" disabled="true"/>
+                     	</r:column>
+                     	<r:column style="width:200px;">
+                            <h:inputText id="mainUnitValue" value="#{item.mainUnitValue}" disabled="#{item.defaultUnit}"/>
+                        </r:column>
+                        <r:column style="width:200px;">
+                            <h:selectOneMenu value="#{item.mainUnit}" styleClass="large" disabled="#{item.defaultUnit}">
+	                        	<s:selectItems value="#{generalSuggestion.unitList}" var="unit" label="#{unit.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu>
+                        </r:column>
+                     	<r:column style="width:200px;">
+                            <h:inputText id="changeUnitValue" value="#{item.changeUnitValue}" styleClass="codeField utdff" disabled="#{item.defaultUnit}" />
+                        </r:column>
+                        <r:column style="width:200px;">
+	                        <h:selectOneMenu value="#{item.changeUnit}" styleClass="large" disabled="#{item.defaultUnit}" >
+	                        	<s:selectItems value="#{generalSuggestion.unitList}" var="unit" label="#{unit.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu>
+                        </r:column>
+                        <r:column styleClass="actionColumn">
+                           <a:commandLink reRender="its, unit" action="#{serviceHome.deleteLine(rowKey)}" >
+                               <h:graphicImage url="/img/delete.gif" /> 
+                           </a:commandLink>
+                     	</r:column>
+                     </r:dataTable>
+                     
+                     <f:facet name="footer">
+                     	<r:datascroller for="its" maxPages="20" />
+                     </f:facet>            
+                </a:region>
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                <h:commandButton id="save1"
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{serviceHome.save()}"
+                                 rendered="#{s:hasPermission('service', 'insert')}"
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{serviceHome.delete()}"
+                          rendered="#{not empty product.id and s:hasPermission('service', 'delete') }"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{serviceHome.close()}"                          
+                          styleClass="button"/>
+                
+            </div>
+
+        </h:form>
+        
+    </ui:define> 
+
+</ui:composition>

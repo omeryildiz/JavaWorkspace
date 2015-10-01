@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="barcodeForm">
+		
+		<b><h:outputText value="#{messages['general.label.HowManyBarcodeWillBeSent']}" /></b>
+		<br/> 
+		<br/> 
+		<h:inputText value="#{productHome.count}" id="barcodeQuantity" 
+			styleClass="quantityFieldTiny" style="margin-left:40px;"/>
+		<r:spacer width="2"/>
+		<h:outputText value="#{messages['general.label.Unit']}" />
+		
+		<br/> 
+		<br/> 
+		<a:commandButton action="#{productHome.sendToBarcodeSpool()}"
+			reRender="messagesDiv" style="margin-left:40px;"
+			oncomplete="Richfaces.hideModalPanel('barcodeSpool')" 
+			value="#{messages['general.label.Send']}" 
+			styleClass="button"/>
+		
+	</h:form>
+</ui:composition>

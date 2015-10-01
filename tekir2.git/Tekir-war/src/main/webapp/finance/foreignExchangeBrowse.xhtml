@@ -1,0 +1,271 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeAccount" />
+            <ui:param name="curitem" value="foreignExchange"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/foreignExchangeBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.foreignExchangeBrowse']}" rendered="#{s:hasPermission('foreignExchange', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/finance/foreignExchange.xhtml" rendered="#{s:hasPermission('foreignExchange', 'insert')}" >
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['foreignExchange.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/finance/foreignExchangeBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/finance/foreignExchangeBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    <ui:define name="body">
+    
+    	<h1><h:outputText value="#{messages['module.caption.ForeignExchangeBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:panelGrid columns="3">
+                
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['foreignExchange.label.Serial']}" /></ui:define>
+                            <h:inputText value="#{foreignExchangeBrowse.filterModel.serial}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['foreignExchange.label.Reference']}" /></ui:define>
+                            <h:inputText value="#{foreignExchangeBrowse.filterModel.reference}" styleClass="middle"/>
+                        </s:decorate>
+
+                    	<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['foreignExchange.label.Code']}" /></ui:define>
+                            <h:inputText value="#{foreignExchangeBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                    </s:div>
+
+                   	<s:div>    
+	                    <a:region id="fromBank" immediate="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['foreignExchange.label.Bank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="fromBankBox"
+                                                 value="#{foreignExchangeBrowse.filterModel.bank}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.ourBankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.All']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankBranchBox,fromBankAccountBox,toBankAccountBox " ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['foreignExchange.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBranchBox"
+                                                 value="#{foreignExchangeBrowse.filterModel.bankBranch}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getOurBankBranches(foreignExchangeBrowse.filterModel.bank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.All']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="fromBankAccountBox, toBankAccountBox " ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                  
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['foreignExchange.label.FromBankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="fromBankAccountBox"
+                                                 value="#{foreignExchangeBrowse.filterModel.fromBankAccount}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getOurBankAccounts(foreignExchangeBrowse.filterModel.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo} - #{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.All']}"
+                                                   hideNoSelectionLabel="false" />
+                                    
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['foreignExchange.label.ToBankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="toBankAccountBox"
+                                                 value="#{foreignExchangeBrowse.filterModel.toBankAccount}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getOurBankAccounts(foreignExchangeBrowse.filterModel.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo} - #{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.All']}"
+                                                   hideNoSelectionLabel="false" />
+                                </h:selectOneMenu>
+                            </s:decorate>                        
+	                    </a:region>
+					</s:div>                    
+
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['foreignExchange.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{foreignExchangeBrowse.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['foreignExchange.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{foreignExchangeBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+					
+					</s:div>                    
+                    
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search"
+                                     value="#{messages['general.button.Search']}"
+                                     action="#{foreignExchangeBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+
+                </s:div>
+                
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="border: 1px solid #F1F1F1; overflow: auto;width:100%;">
+					
+                    <r:dataTable id="browseList" 
+                    			 styleClass="entitylist"
+                                 var="foreignExchange"
+                                 value="#{foreignExchangeBrowse.entityList}" 
+                                 rows="20"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['foreignExchange.label.Serial']}"/></f:facet>
+                            <s:link view="/finance/foreignExchangeView.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{foreignExchange.id}"/>
+                                <h:outputText value="#{foreignExchange.serial}"/>
+                            </s:link>
+                        </r:column>
+
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['foreignExchange.label.Reference']}" /></f:facet>
+                            
+                            <s:link view="/finance/foreignExchangeView.xhtml" propagation="begin">
+                                <f:param name="eid" value="#{foreignExchange.id}"/>
+                                <h:outputText value="#{foreignExchange.reference}"/>
+                            </s:link>
+                            
+                        </r:column>
+
+                        <r:column styleClass="codeField">
+                            <f:facet name="header"><h:outputText value="#{messages['foreignExchange.label.Code']}" /></f:facet>
+                            <h:outputText value="#{foreignExchange.code}" />
+                        </r:column>
+
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['foreignExchange.label.Date']}" /></f:facet>
+                            <h:outputText value="#{foreignExchange.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['foreignExchange.label.FromBankAccount']}" /></f:facet>
+                            <h:outputText value="#{foreignExchange.bank.name} - #{foreignExchange.bankBranch.name} - #{foreignExchange.fromBankAccount.accountNo}" />
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['foreignExchange.label.ToBankAccount']}" /></f:facet>
+                            <h:outputText value="#{foreignExchange.bank.name} - #{foreignExchange.bankBranch.name} - #{foreignExchange.toBankAccount.accountNo}" />
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['foreignExchange.label.Info']}" /></f:facet>
+                            <h:outputText value="#{foreignExchange.info}"/>
+                        </r:column>
+                        <r:column styleClass="numberColumn" >
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['foreignExchange.label.FromAmount']}" />
+                            </f:facet>
+                            <h:outputText value="#{foreignExchange.fromAmount}"/>
+                        </r:column>
+                        <r:column styleClass="numberColumn" >
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['foreignExchange.label.ToAmount']}" />
+                            </f:facet>
+                            <h:outputText value="#{foreignExchange.toAmount}"/>
+                        </r:column>
+                        <r:column styleClass="numberColumn" >
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['foreignExchange.label.Cost']}" />
+                            </f:facet>
+                            <h:outputText value="#{foreignExchange.cost}"/>
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" renderIfSinglePage="false"/>
+                        </f:facet>
+                        
+                    </r:dataTable>
+                    
+                </s:div>
+                
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+
+</ui:composition>

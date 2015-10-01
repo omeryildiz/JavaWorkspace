@@ -1,0 +1,192 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.org/rich"
+                xmlns:a="http://richfaces.org/a4j"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="province"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/province.xhtml">
+                <h:outputText value="#{messages['module.caption.Province']}" rendered="#{s:hasPermission('province', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{provinceHome.createNew()}" rendered="#{s:hasPermission('province', 'insert')}" >
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['province.action.Add']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    
+    <ui:define name="body">
+        
+     
+        <h1><h:outputText value="#{messages['module.caption.Province']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <a:form id="form" focus="focusField" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{provinceList}" 
+                                 rendered="#{s:hasPermission('province', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rows="20">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['province.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{provinceHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.plate} - #{cty.name} - #{cty.city.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{provinceHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        <f:facet name="footer">
+                            <r:datascroller for="curlist" maxPages="5" />          
+						</f:facet>
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['province.hint.EmptyList']}" rendered="#{provinceList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/world.gif" alt="#{messages['city.img.World']}"/> 
+                            <h:outputText value="#{messages['province.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['province.label.Plate']}" /></ui:define>
+                            <h:inputText id="focusField" value="#{province.plate}" styleClass="small" required="true" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['province.label.Name']}"/></ui:define>
+                            <h:inputText value="#{province.name}" styleClass="large"/>
+                        </s:decorate>
+                        
+    <ui:remove>                    
+                        <s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								
+								<h:outputText value="#{messages['province.label.City']}" />
+								<f:converter converterId="cityCaptionConverter" />
+							</ui:define>
+							<h:inputText id="city" value="#{province.city}"
+								styleClass="middle" />
+	
+							<r:suggestionbox for="city"
+								suggestionAction="#{generalSuggestion.suggestCity}" var="item"
+								fetchValue="#{item.name}">
+								<h:column>
+									<h:outputText value="#{item.code}" />
+								</h:column>
+								<h:column>
+									<h:outputText value="#{item.name}" />
+								</h:column>
+							</r:suggestionbox>
+						</s:decorate>
+	           
+	</ui:remove>           
+	           
+	           
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText
+									value="#{messages['province.label.City']}" />
+							</ui:define>
+							<h:selectOneMenu value="#{province.city}"
+								styleClass="middle" required="true">
+								<s:convertEntity />
+								<s:selectItems value="#{generalSuggestion.cityList}"
+									var="acc" label="#{acc.name}"
+									noSelectionLabel="#{messages['general.value.None']}"
+									hideNoSelectionLabel="true" />
+							</h:selectOneMenu>
+						</s:decorate>
+	           
+	                     
+                         <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['province.label.Weight']}"/></ui:define>
+                            <h:inputText value="#{province.weight}" styleClass="small"/>
+                        </s:decorate>
+                        
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['province.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{province.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['province.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </h:panelGrid>    
+                    
+                    <div class="actionButtons">
+                        <h:commandButton id="saveAndNew" 
+                                         value="#{messages['general.button.SaveAndNew']}" 
+                                         action="#{provinceHome.saveAndNew()}"
+                                         rendered="#{s:hasPermission('province', 'update') and s:hasPermission('province', 'insert')}"
+                                         styleClass="button"/>  
+                        
+                        <h:commandButton id="save" 
+                                         value="Sakla" 
+                                         accesskey="s"
+                                         action="#{provinceHome.save()}"
+                                         rendered="#{s:hasPermission('province', 'insert')}"
+                                         styleClass="button"/>  
+                        
+                        
+                        <s:button id="delete" 
+                                  value="#{messages['general.button.Delete']}" 
+                                  action="#{provinceHome.delete()}"
+                                  rendered="#{not empty province.id and s:hasPermission('province', 'delete')}"
+                                  onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                                  styleClass="button"/>
+                        
+                        <s:button id="done" 
+                                  value="#{messages['general.button.Close']}"
+                                  action="#{provinceHome.close()}"
+                                  styleClass="button"/>
+                        
+                    </div>
+                    
+                </r:panel>
+                
+            </h:panelGrid>
+        </a:form>
+        
+    </ui:define> 
+</ui:composition>

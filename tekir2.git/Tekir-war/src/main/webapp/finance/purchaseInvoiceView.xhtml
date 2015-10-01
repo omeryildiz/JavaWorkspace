@@ -1,0 +1,382 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewInvoice"/>
+            <ui:param name="cursubitem" value="purchaseInvoice"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <h:outputText value=" » "/>
+            <s:link view="/finance/purchaseInvoiceBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PurchaseInvoiceBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/purchaseInvoice.xhtml">
+                <h:outputText value="#{messages['module.caption.PurchaseInvoice']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/finance/purchaseInvoice.xhtml" action="#{purchaseInvoiceHome.createNew()}" rendered="#{s:hasPermission('purchaseInvoice', 'insert')}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['purchaseInvoice.action.Add']}" />
+            </s:link>
+        </div>
+
+    </ui:define>
+
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.PurchaseInvoice']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif"
+							alt="#{messages['purchaseInvoice.img.Form']}" />
+						<h:outputText value="#{messages['purchaseInvoice.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<table>
+							<tr>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseInvoice.label.Serial']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseInvoice.serial eq null}" />
+										<h:outputText value="#{purchaseInvoice.serial}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseInvoice.label.Reference']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseInvoice.reference eq null}" />
+										<h:outputText value="#{purchaseInvoice.reference}" />
+									</s:decorate>
+
+                                    <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Contact']}"/></ui:define>
+                                        <h:outputText id="contact" value="#{purchaseInvoice.contact}">
+                                            <f:converter converterId="contactCaptionConverter"/>
+                                        </h:outputText>
+                                    </s:decorate>
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Warehouse']}"/></ui:define>
+                                        <h:outputText value="#{purchaseInvoice.warehouse.code}">
+                                            <s:convertEntity />
+                                        </h:outputText>
+                                    </s:decorate>
+
+
+								</s:div></td>
+								<td><s:div>
+                                    <s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseInvoice.label.Code']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseInvoice.code eq null}" />
+										<h:outputText value="#{purchaseInvoice.code}" />
+									</s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseInvoice.label.Date']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseInvoice.date eq null}" />
+										<h:outputText value="#{purchaseInvoice.date}">
+											<s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+										</h:outputText>
+									</s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="#{messages['general.label.ShippingDate']}"/></ui:define>
+                                        <h:outputText value="#{purchaseInvoice.shippingDate}">
+                                        <s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+                                        </h:outputText>
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="#{messages['general.label.Time']}"/></ui:define>
+                                        <h:outputText value="#{purchaseInvoice.time}" required="true">
+                                            <s:convertDateTime  pattern="#{messages['general.format.Time']}" />
+                                        </h:outputText>
+                                    </s:decorate>
+
+								
+								</s:div></td>
+							</tr>
+						</table>
+					</s:fragment>
+
+					<s:fragment>
+						<table>
+						<tr>
+
+								<s:div>
+                                    <s:decorate template="/layout/edit.xhtml">
+                                        <h:outputText
+                                            value="#{messages['purchaseInvoice.label.Info']} : "
+                                            styleClass="boldLabel" />
+                                        <h:outputText value="Yok"
+                                            rendered="#{purchaseInvoice.info eq null}" />
+                                        <h:outputText value="#{purchaseInvoice.info}"
+                                            styleClass="exlarge" rows="6" />
+                                    </s:decorate>
+
+
+									<s:decorate template="/layout/edit.xhtml">
+                                        <ui:define name="label"><h:outputText value="#{messages['invoice.label.Info1']}"/></ui:define>
+                                        <h:outputText value="#{purchaseInvoice.info1}" styleClass="exlarge" />
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml">
+                                        <ui:define name="label"><h:outputText value="#{messages['invoice.label.Info2']}"/></ui:define>
+                                        <h:outputText value="#{purchaseInvoice.info2}" styleClass="exlarge" />
+                                    </s:decorate>
+
+								</s:div>
+						</tr>
+						
+						</table>
+					</s:fragment>
+
+				</h:panelGrid>
+
+				<r:dataTable id="its" var="item" value="#{purchaseInvoiceHome.items}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0">
+
+					<f:facet name="header">
+						<r:columnGroup>
+							 <r:column styleClass="codeField" colspan="2">
+                                    <h:outputText value="#{messages['purchaseInvoice.label.LineCode']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Product']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.LineInfo']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Quantity']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Unit']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.UnitPrice']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Amount']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.TaxExcludedTotal']}" />
+                                </r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Currency']}" />
+							</r:column>
+
+						</r:columnGroup>
+					</f:facet>
+                        <r:column colspan="2" styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText  id="code" value="#{item.lineCode}" styleClass="codeField utdff" />
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <s:fragment rendered="#{item.type eq 'ServiceItem'}">
+                                <div style="width:190px;">
+                                    <h:outputText id="service" value="#{item.service}" styleClass="middle" requried="true">
+                                        <f:converter converterId="productCaptionConverter"/>
+                                    </h:outputText>
+                                </div>
+                            </s:fragment>
+
+
+                            <s:fragment rendered="#{item.type ne 'ServiceItem'}">
+                                <div style="width:190px;">
+                                    <h:outputText id="product" value="#{item.product}" styleClass="middle" requried="true">
+                                        <f:converter converterId="productCaptionConverter"/>
+                                    </h:outputText>
+                                </div>
+                                
+                            </s:fragment>
+
+                        </r:column>
+
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                <h:outputText  value="#{item.info}" style="width:140px;" />
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText  id="quantity" styleClass="tiny" value="#{item.quantity.value}"  />
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText id="unit" value="#{item.quantity.unit}" />
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}"  rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText  id="unitPrice" styleClass="tiny" value="#{item.unitPrice.value}" converter="bigDecimalConverter" />
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText  id="amount" value="#{item.amount.value}" />
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText id="taxExcludedTotal" value="#{item.taxExcludedTotalAmount.value}" disabled="true" styleClass="amountField" converter="bigDecimalConverter"/>
+                            <s:div id="taxRate" styleClass="hidden"><h:outputText value="#{item.taxRate}" /></s:div>
+                            <s:div id="taxIncluded" styleClass="hidden"><h:outputText rendered="#{item.type ne 'ServiceItem'}"
+                            	value="#{item.product.taxIncluded}" /><h:outputText rendered="#{item.type eq 'ServiceItem'}"
+                            	value="#{item.service.taxIncluded}" /></s:div>
+                        </r:column>
+                        <r:column styleClass="codeField InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}" >
+                            <h:outputText value="#{item.discount.code}" styleClass="codeField"/>
+                        </r:column>
+                        <r:column colspan="5" styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:outputText value="#{item.discount.info}" />
+                        </r:column>
+                        <r:column styleClass="amountField InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:outputText value="#{item.discount.rate}" styleClass="amountField"/>
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:outputText value="#{item.discount.currency.code}" styleClass="ccyField"/>
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <s:decorate>
+                                <h:outputText value="#{item.amount.currency}" styleClass="ccyField">
+                                    <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                                </h:outputText>
+                            </s:decorate>
+                        </r:column>
+				</r:dataTable>
+
+                 <h:panelGrid columns="4" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+                        <s:div style="margin-right:4px;">
+
+                            <r:dataTable id="ccyRates"
+                                         var="item"
+                                         value="#{purchaseInvoice.currencyRates}"
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['purchaseInvoice.caption.CcyRates']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.currencyPair.caption}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.ask}"/>
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+                        <s:div style="margin-left:4px;margin-right:4px;">
+
+                            <r:dataTable id="ccyTotals"
+                                         var="item"
+                                         value="#{purchaseInvoice.currencySummaries}"
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['purchaseInvoice.caption.CcySummary']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.amount}" />
+                                </r:column>
+                                <r:column>
+                               		<h:outputText value="#{item.amount.localAmount}" converter="bigDecimalConverter" />
+
+                                    <h:outputText value=" #{currencyManager.getLocaleCurrency()}" />
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+
+                        <s:div style="margin-left:4px;margin-right:4px;">
+                            <r:dataTable id="taxTotal"
+                                         var="item"
+                                         value="#{purchaseInvoice.taxSummaries}"
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['purchaseInvoice.caption.TaxSummary']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.tax.name}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.rate}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.amount}" />
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+
+                        <s:div style="margin-left:4px;">
+                            <r:panel>
+                                <f:facet name="header">
+
+                                    <s:div>
+                                        <h:outputText value="#{messages['purchaseInvoice.caption.GrandTotal']}" />
+                                    </s:div>
+                                </f:facet>
+
+                                <h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+                                    <h:outputText value="#{messages['purchaseInvoice.label.BeforeTax']} :" />
+                                    <h:outputText value="#{purchaseInvoice.beforeTax}" />
+
+                                    <h:outputText value="#{messages['purchaseInvoice.label.TaxTotal']} :" />
+                                    <h:outputText value="#{purchaseInvoice.totalTax}" />
+
+                                    <h:outputText value="#{messages['purchaseInvoice.label.InvoiceTotal']} :" />
+                                    <h:outputText value="#{purchaseInvoice.invoiceTotal}" />
+                                </h:panelGrid>
+                            </r:panel>
+                        </s:div>
+                    </h:panelGrid>
+
+			</r:panel>
+
+			<div class="actionButtons">
+
+<ui:remove>
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{purchaseInvoiceHome.print()}" styleClass="button" />
+</ui:remove>
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{purchaseInvoiceHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{purchaseInvoiceHome.close()}" styleClass="button" />
+			</div>
+
+		</h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,171 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+
+
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.PriceItemReport']}" /></h1>
+    </ui:define>
+
+    <ui:define name="body">
+
+    
+        <r:dataTable id="browseList"
+                     var="prItem"
+                     value="#{generalSuggestion.priceItemDetail}">
+
+
+
+
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.Active']}" />
+                </f:facet>
+                    <h:outputText value="Evet" rendered="#{prItem.owner.active eq true}"/>
+                    <h:outputText value="Hayır" rendered="#{prItem.owner.active eq false}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.DefaultItem']}" />
+                </f:facet>
+                    <h:outputText value="Evet" rendered="#{prItem.owner.defaultItem eq true}"/>
+                    <h:outputText value="Hayır" rendered="#{prItem.owner.defaultItem eq false}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.Code']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.owner.code}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.PriceList']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.owner.owner.listName}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['product.label.ProductGroup']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.owner.group.name}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.BeginDate']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.owner.beginDate}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.EndDate']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.owner.endDate}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.ProductService']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.product.name}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.Unit']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.product.unit}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.GrossPrice']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.grossPrice.value} #{prItem.grossPrice.currency}"/>
+
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.NetPrice']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.netPrice.value} #{prItem.netPrice.currency}"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.Discount']}" />
+                </f:facet>
+                    <h:outputText rendered="#{prItem.hasDiscount ne false}" value="Var"/>
+                    <h:outputText rendered="#{prItem.hasDiscount eq false}" value="Yok"/>
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.DiscountType']}" />
+                </f:facet>
+                    <h:outputText rendered="#{prItem.discountType eq true}" value="Oran"/>
+                    <h:outputText rendered="#{prItem.discountType eq false}" value="Tutar"/>
+            </r:column>
+            <r:column styleClass="codeField"   >
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.Discount']}" />
+                </f:facet>
+                    <h:outputText  rendered="#{prItem.discountType eq true}" value="% #{prItem.discountRate}"/>
+                    <h:outputText value="#{prItem.discountPrice.value}"  rendered="#{prItem.discountType eq false}"/>
+            </r:column>
+<ui:remove>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.DefaultItem']}" />
+                </f:facet>
+                 <h:outputText value="Evet" rendered="#{prItem.defaultItem eq true}" />
+                 <h:outputText value="Hayır" rendered="#{prItem.defaultItem eq false}" />
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.Active']}" />
+                </f:facet>
+                <h:outputText value="Evet" rendered="#{prItem.active eq true}" />
+                 <h:outputText value="Hayır" rendered="#{prItem.active eq false}" />
+            </r:column>
+
+            <r:column styleClass="codeField">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.Code']}" />
+                </f:facet>
+                    <h:outputText value="#{prItem.code}"/>
+            </r:column>
+
+            <r:column>
+                <f:facet name="header">
+                    <h:outputText value="#{messages['priceItem.label.PriceList']}" />
+                </f:facet>
+                <h:outputText value="#{prItem.ownerCode} - #{prItem.ownerListName}"/>
+            </r:column>
+
+            <r:column>
+                <f:facet name="header">
+                    <h:outputText value="#{messages['product.label.ProductGroup']}" />
+                </f:facet>
+                <h:outputText value="#{prItem.group.code} - #{prItem.group.name}"/>
+            </r:column>
+
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['priceItem.label.Info']}" /></f:facet>
+                <h:outputText value="#{prItem.info}"/>
+            </r:column>
+
+            <r:column styleClass="dateField">
+                <f:facet name="header"><h:outputText value="#{messages['priceItem.label.BeginDate']}" /></f:facet>
+                <h:outputText value="#{prItem.beginDate}"/>
+            </r:column>
+
+            <r:column styleClass="dateField">
+                <f:facet name="header"><h:outputText value="#{messages['priceItem.label.EndDate']}" /></f:facet>
+                <h:outputText value="#{prItem.endDate}"/>
+            </r:column>
+</ui:remove>
+        </r:dataTable>
+    </ui:define>
+</ui:composition>

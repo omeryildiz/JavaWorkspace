@@ -1,0 +1,135 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="expenseNote"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/countNoteEntryBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.CountNoteEntryBrowse']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="body">
+        <script type="text/javascript"> 
+        	jQuery(document).ready(function(){
+				focusToField('#{r:clientId('barcodeInput')}');
+			});
+        </script>
+        <h1><h:outputText value="#{messages['module.caption.CountNoteEntry']}" /></h1>
+
+		<s:div id="messagesDiv">
+	        <ui:include src="/layout/messages.xhtml"/>
+		</s:div>
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+        <ui:include src="/stock/productSelectPopup.xhtml" />
+
+        <h:form id="form">
+     
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/lorry.gif" alt="#{messages['countNoteEntry.img.Form']}"/> 
+                        <h:outputText value="#{messages['countNoteEntry.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+				<a:region>
+                <h:panelGrid columns="1">
+                
+	                <s:decorate template="/layout/edit.xhtml" >
+	                    <ui:define name="label">
+	                    	<h:outputText value="#{messages['general.label.Serial']}" accesskey="Q"/>
+	                    </ui:define>
+	                    <h:outputText value="#{countNote.serial}" styleClass="middle" />
+	                </s:decorate>
+	
+	                <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['countNote.label.Enumerator']}"/>
+                            </ui:define>
+                            <h:selectOneMenu id="user" value="#{countNoteHome.inputModel.user}" styleClass="middle"
+                                required="true">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.userList}" var="acc"
+                                	label="#{acc.fullName} - #{acc.userName}"
+                                	noSelectionLabel="#{messages['general.value.SelectOne']}"
+                                	hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu>
+					</s:decorate>
+						
+	                <s:decorate template="/layout/edit.xhtml" >
+                        <ui:define name="label">
+                        	<h:outputText value="#{messages['general.label.Info']}"/>
+                        </ui:define>
+						<h:inputText id="info" value="#{countNoteHome.inputModel.info}" styleClass="middle">
+						</h:inputText>
+                    </s:decorate>
+                </h:panelGrid>
+
+                <h:panelGrid columns="1" id="inputPanel">
+
+
+                    <s:decorate template="/layout/edit.xhtml" >
+                        <ui:define name="label">
+                        	<h:outputText value="#{messages['general.label.Quantity']}"/>
+                        </ui:define>
+						<h:inputText value="#{countNoteHome.inputModel.quantity}" styleClass="amountFieldTiny"
+							 alt="integer"/>
+		
+						<r:spacer width="2"/>
+
+                        <h:selectOneMenu value="#{countNoteHome.inputModel.addition}" styleClass="tiny">
+                        	<f:selectItem itemLabel="#{messages['general.label.Add']}" itemValue="true"/>
+                        	<f:selectItem itemLabel="#{messages['general.label.Subtract']}" itemValue="false"/>
+                        </h:selectOneMenu>
+                    </s:decorate>
+
+
+                    <s:decorate template="/layout/edit.xhtml" >
+                        <ui:define name="label">
+                        	<h:outputText value="#{messages['general.label.Barcode']}"/>
+                        </ui:define>
+						<h:inputText id="barcodeInput" value="#{countNoteHome.inputModel.barcode}" styleClass="middle"
+							onkeypress="if (event.keyCode==13) {document.getElementById('#{r:clientId('addItem')}').click()}">
+						</h:inputText>
+                    </s:decorate>
+                                
+                                        
+                </h:panelGrid>
+				</a:region>
+
+            </r:panel>
+            
+            <div class="actionButtons">
+                <a:commandButton id="addItem" reRender="inputPanel,messagesDiv" action="#{countNoteHome.addItemByScanner()}" 
+                	value="#{messages['general.label.Add']}" style="margin-top:19px;"
+                	oncomplete="setMasks(); focusToField('#{r:clientId('barcodeInput')}');" status="commonAjaxStatus" styleClass="button">
+                </a:commandButton>
+                
+                <s:button id="done" value="#{messages['general.button.Close']}"
+                	action="#{countNoteHome.close()}" styleClass="button"/>
+                
+            </div>
+            
+        </h:form>
+        
+    </ui:define> 
+    
+</ui:composition>

@@ -1,0 +1,728 @@
+/* UTech Style 
+
+Inspried from Sinorcaish and Seam Default
+
+*/
+
+
+/*Global Styles*/
+
+/* Used for content that should be displayed by non-stylesheet-aware browsers   */
+.hidden {			
+   display:         none !important;
+}
+
+/* Used for content that should not be printed to paper */
+.notprinted {
+}				
+
+
+
+h1,				/* Headings (H1-H6) should only be used in */
+h2,				/* the main content area                   */
+h3 {
+   font-weight:     bold;
+   text-align:      left;
+   margin:          1.5em 0 0.5em 0;
+   padding:         0;
+   border-bottom:   1px solid #CCCCCC;
+}
+
+
+h4,
+h5,
+h6 {
+   font-weight:     bold;
+   text-align:      left;
+   margin:          1.25em 0 0 0;
+   padding:         0;
+}
+
+h1 { font-size:     175% }
+h2 { font-size:     145% }
+h3 { font-size:     120% }
+h4 { font-size:     105% }
+h5 { font-size:     80%  }
+h6 { font-size:     65%  }
+
+/*
+h1 {
+	font-family: Arial,sans-serif;
+	color: #578BB8;
+	font-size: 1.6em;
+	margin-top: 0;
+}
+
+*/
+
+html {
+    background: #F2F5FE;
+}
+
+body {
+        margin: 0px;
+	font-family: Arial,sans-serif;
+	color: #616161;
+        clear: both;
+}
+
+.wrap{
+        margin-left: auto;
+        margin-right: auto;
+}
+
+.headerwrap{
+        margin-left: auto;
+        margin-right: auto;
+}
+
+.body {
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-height: 0;
+}
+
+.body2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-height: 0;
+}
+
+img{
+    border: none;
+    vertical-align: middle;
+}
+
+
+
+table {
+    width: 100%;
+}
+
+li {
+    list-style: none;
+}
+/********** Styles for Header **********/
+
+/* In this style sheet, headers are composed */
+/* of three parts: left, right and subheader */
+/* Left part is ideally an image.            */
+
+#header {			
+    display:         none !important;
+}
+
+.sitelogo {
+   display:         none !important;
+}
+
+.sitecompany {
+   display:         none !important;
+}
+
+.siteuser {
+   display:         none !important;
+}
+
+/********************************/
+
+/* Tool Bar */
+
+.toolbar{
+    display:         none !important;
+}
+
+.toolgroup-right{
+    display:         none !important;
+}
+
+.pathgroup{
+    display:         none !important;
+}
+
+.toolgroup-left{
+    display:         none !important;
+}
+
+.toolbutton{
+    background: #303030
+}
+
+.buttonbar{
+    /*display: inline;*/
+    clear: right;
+    float: right;
+    margin: 0px; /* 4px 4px 4px;*/
+}
+
+.buttonbar img{
+    margin: 0px 2px 0px 2px;
+    border: 0px;
+}
+
+.toolbar img{
+    margin: 0px 2px 0px 2px;
+    border: 0px;
+}
+
+
+/******************************/
+
+/*Sidebar*/
+
+#sidebar {
+        float: left;
+        width: 21%;
+	margin: 0;	
+        padding: 0; 
+        display: inline;
+}
+#sidebar ul.sidemenu {
+	list-style: none;
+	text-align: left;
+	margin: 0 0 8px 0;	
+	padding-right: 0;		
+	text-decoration: none;
+}
+#sidebar ul.sidemenu li {
+	border-bottom: 1px solid #EFF0F1;
+	background: url(../img/arrow.gif) no-repeat 2px 5px;
+	padding: 2px 5px 2px 20px;	
+}
+
+
+/**************************/
+
+
+
+a:active, a:link, a:visited {
+	color: #0D5798;
+        text-decoration: none;
+}
+a:hover {
+	/* color: #8CAFCD; */
+        color : orangered;
+}
+
+td{
+    vertical-align:  top;
+}
+
+label {
+	margin: 8px 0 0px 0;
+        display: block;
+}
+
+input, textarea {
+	border: 1px solid #BBBBBB;
+	font-size: 10px;
+	background: #F0F8FF;
+	color: black;
+}
+
+.detailTable input, .detailTable textarea {
+	border: 0px solid #BBBBBB;
+	font-size: 10px;
+	background: white;
+	color: black;
+        width: 120px;
+}
+
+/*
+input[type='submit'], input[type='button'] {
+	background: #4477AA;
+	color: white;
+	margin: 5px;
+	border-color: gray;
+}
+*/
+
+.button { 
+        display:none!important;
+}
+
+.button:hover{ 
+        width: 10em;
+        background: url('../img/backimg.gif') repeat-x;
+        margin: 0px 2px 0px 2px; 
+	font: bold 1em Arial, Sans-serif; 
+	border: 1px solid #053b8b;
+	padding: 2px 3px; 
+	color: orangered;	
+}
+
+
+.checkbox { 
+        width: 1em;
+	margin: 0; 
+	font: bold 1em Arial, Sans-serif; 
+	border: 0px solid #999999;
+	background: #FFF; 
+	color: #333;	
+}
+
+.radio { 
+        border: 0px solid #999999;
+}
+
+.checkboxLabel{
+    margin: 0px 8px 0px 4px;
+    display: inline;
+}
+
+.actionButtons {
+    display: none!important;
+	
+}
+
+.tableControl {
+        width: 100%;
+	text-align: right;
+}
+
+.footer {
+	
+        
+}
+
+.rich-table {
+    width: 100%;
+}
+
+
+.detailTable{
+    width: 100%;
+}
+
+.columnHeader:hover
+{
+    color: #FF6600;
+}
+
+
+.disprop .name{
+        display: inline;
+	vertical-align: top;
+	font-weight: bold;
+	width: 115px;
+	float: none;
+	padding: 3px 4px 2px 5px;
+	margin-top: 3px;
+	clear: left;
+}
+
+.disprop .value {
+	float: none;
+	padding: 0px 5px 2px 5px;
+        clear: left;
+}
+
+.name {
+        display: block;
+	vertical-align: top;
+	font-weight: bold;
+	width: 115px;
+	float: left;
+	padding: 3px 4px 2px 5px;
+	margin-top: 3px;
+	clear: left;
+}
+.value {
+	float: left;
+	padding: 0px 5px 2px 5px;
+        clear: left;
+}
+.error {
+	margin-left: 20px;
+	margin-top: 5px;
+	float: left;
+	padding: 5px;
+	border: 1px solid red;
+}
+
+.errors {
+	color: red;
+}
+.errors input {
+	border: 1px solid red;
+}
+.errors textarea {
+	border: 1px solid red;
+}
+.required {
+	color: red;
+	padding-left: 2px;
+}
+
+
+
+
+.tiny {
+    width: 5em;
+}
+
+.small {
+    width: 10em;
+}
+
+.middle {
+    width: 15em;
+}
+
+.large {
+    width: 20em;
+}
+
+
+.exlarge {
+    width: 25em;
+}
+
+.eexxlarge {
+    width: 45em;
+}
+
+.rowOdd{
+    background: white;
+}
+
+.rowEven{
+    background: #dddddd;
+}
+
+.amountField{
+    width:100px;
+    text-align:right;
+}
+
+.ccyField{
+    width:60px;
+}
+
+.codeField{
+    width:50px;
+}
+
+.dateField{
+    width:50px;
+}
+
+.serialField{
+    width:50px;
+}
+
+.red{
+    background: #ffcccc;
+    border: 1px solid red;
+}
+
+.blue{
+    background: #ccccff;
+    border: 1px solid navy;
+}
+
+
+.green{
+    background: #eeffdd;
+    border: 1px solid green;
+}
+
+
+.yellow{
+    background: #ffffdd;
+    border: 1px solid yellow;
+}
+
+
+.orange{
+    background: #ffddbb;
+    border: 1px solid orangered;
+}
+
+.gridCol{
+    width: 20em;
+    border: 0px;
+}
+
+/* date picker style */
+div.seam-date 
+{
+  margin-top: 5px;
+  border: 1px solid #AAAAAA;
+  background-color: #FFFFFF;  
+  color: #505050;
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+table.seam-date {
+    width: auto;
+}
+
+table.seam-date td {
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: 12px; 
+}
+
+.seam-date-monthNames
+{
+  width: 70px;
+  border: 1px solid #dddddd;
+  border-right: 3px solid #444444;
+  border-bottom: 3px solid #444444;
+  background-color: #ffffff; 
+  font-size: 12px;
+  cursor: pointer;	
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: normal;
+}
+
+a.seam-date-monthNameLink, a.seam-date-monthNameLink:visited
+{
+  text-align: center;
+  display: block;
+  color: #555555;  
+}
+
+a.seam-date-monthNameLink:hover
+{ 
+  background-color: #CCCCCC;
+  color: red;  
+}
+
+.seam-date-years
+{
+  height: 10em;
+  overflow: auto;
+  width: 60px;
+  border: 1px solid #dddddd;
+  border-right: 3px solid #444444;
+  border-bottom: 3px solid #444444;
+  background-color: #ffffff; 
+  font-size: 12px;
+  cursor: pointer;	
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: normal;
+}
+
+a.seam-date-yearLink, a.seam-date-yearLink:visited
+{
+  text-align: center;
+  display: block;
+  color: #555555;    
+}
+
+a.seam-date-yearLink:hover
+{
+  background-color: #CCCCCC;
+  color: red;    
+}  
+
+tr.seam-date-header
+{
+  padding: 2px 0px 2px 0px;
+}
+  
+td.seam-date-header
+{
+  padding: 0px 8px 0px 8px;
+  text-align: center;
+  color: gray;
+  font-family: Tahoma, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 12px;  
+}
+
+td.seam-date-header-prevMonth
+{
+  background-image: url("../img/cal-prev.gif");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0px 2px 0px 2px;
+  width: 17px;
+  height: 16px;
+  margin-left: 2px;
+}
+
+td.seam-date-header-nextMonth
+{
+  background-image: url("../img/cal-next.gif");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0px 2px 0px 2px;
+  width: 17px;
+  height: 16px;
+  margin-right: 2px;
+}
+
+tr.seam-date-headerDays
+{
+  color: white;
+  font-weight: normal;
+}
+
+tr.seam-date-headerDays > td
+{
+  background-color: #CCCCCC;
+  border: 1px solid #AAAAAA;
+  color: white;
+  text-align: center;
+  width: 26px;   
+}
+
+tr.seam-date-footer
+{
+  background-color: white; 
+  color: #505050;
+  font-weight: bold;
+}
+
+tr.seam-date-footer > td
+{
+  text-align: center;
+}
+
+td.seam-date-inMonth
+{
+  background-color: white; 
+  color: black;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-outMonth
+{
+  background-color: white; 
+  color: #999999;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-selected
+{
+  background-color: #CCCCCC;        
+  border: 1px solid #AAAAAA; 
+  color: black;
+  font-weight: normal;
+}
+
+td.seam-date-dayOff-inMonth
+{
+  background-color: #efefef;
+  color: black;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-dayOff-outMonth
+{
+  background-color: #efefef;
+  color: #999999;
+  font-weight: normal;
+  cursor: pointer;
+  border: 1px solid #ece9d8;
+}
+
+td.seam-date-hover 
+{
+  background-color: #CCCCCC;
+  border: 1px solid #AAAAAA;
+  cursor: pointer;
+  color: red;
+} 
+
+.rich-panel-header{
+  padding: 4px;
+  vertical-align: middle;
+  border: 0px;
+  border-bottom: 1px solid #C0C0C0;
+}
+
+.rich-panel-header img{
+  padding: 0px 4px 0px 0px;
+  /*vertical-align: middle;*/
+  border: 0px;
+}
+
+.rich-panel{
+  padding: 0px;
+  border: 1px solid #C0C0C0;
+}
+
+
+.rich-tabpanel table{
+  width: auto;
+}
+
+.rich-tabpanel-content-position{
+  width: 100%;
+}
+
+
+.rich-dtascroller-table{
+  width: auto;
+}
+
+.rich-calendar-exterior{
+  width: auto;
+}
+
+.rich-tool-tip{
+  color: black;
+}
+
+.paramlist{
+    width: 25%;
+}
+.paramform{
+    width: 75%;
+}
+
+.warning{
+    background-image: url("../img/exclamation.gif");
+    background-repeat: no-repeat;
+    color: red;
+    padding-left: 16px;
+    float: left;
+    clear: left;
+}
+
+.hint{
+    background-image: url("../img/hint.gif");
+    background-repeat: no-repeat;
+    color: gray;
+    padding-left: 16px;
+    float: left;
+    clear: left;
+}
+
+.info{
+    background-image: url("../img/information.gif");
+    background-repeat: no-repeat;
+    color: gray;
+    padding-left: 16px;
+    float: left;
+    clear: left;
+}
+
+.message {
+	border: 1px solid #FFCC00;
+	padding: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background-color: #F0F8FF;
+	font-size: 12px;
+}
+
+.message li{
+    list-style: none;
+}
+
+.numberColumn{
+    text-align: right;
+}

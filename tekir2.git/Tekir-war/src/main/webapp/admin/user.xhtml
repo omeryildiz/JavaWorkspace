@@ -1,0 +1,302 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="admin" />
+			<ui:param name="curpage" value="user" />
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="toolbar">
+		<div class="pathgroup">
+			<s:link view="/admin/adminFront.xhtml" propagation="none">
+				<h:outputText value="#{messages['module.caption.Admin']}" />
+			</s:link>
+			<h:outputText value=" » " />
+			<s:link view="/admin/user.xhtml">
+				<h:outputText value="#{messages['module.caption.User']}" />
+			</s:link>
+		</div>
+
+		<div class="toolgroup-left">
+			<s:link action="#{userHome.createNew()}"
+				rendered="#{s:hasPermission('user', 'insert')}">
+				<h:graphicImage url="/img/add.gif" />
+				<h:outputText value="#{messages['user.action.Add']}" />
+			</s:link>
+		</div>
+
+	</ui:define>
+
+	<ui:define name="body">
+
+		<h1>
+			<h:outputText value="#{messages['module.caption.User']}" />
+		</h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<ui:include src="/contact/contactSelectPopup.xhtml" />
+
+		<h:form id="form">
+			<h:panelGrid columns="2" columnClasses="paramlist,paramform">
+				<s:fragment>
+					<r:dataTable id="curlist" var="cty" value="#{userList}"
+						onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+						<f:facet name="header">
+							<r:columnGroup>
+								<r:column>
+									<h:outputText value="#{messages['user.caption.List']}" />
+								</r:column>
+								<r:column styleClass="actionColumn">
+									<h:graphicImage url="/img/exec.gif"
+										alt="#{messages['general.img.Exec']}" />
+								</r:column>
+							</r:columnGroup>
+						</f:facet>
+						<r:column>
+							<s:link action="#{userHome.edit(cty)}">
+								<h:graphicImage url="/img/NOTACT.gif"
+									title="#{messages['general.button.NoActDesc']}"
+									rendered="#{not cty.active}" />
+								<h:outputText value="#{cty.userName} - #{cty.fullName}" />
+							</s:link>
+						</r:column>
+
+						<r:column styleClass="actionColumn">
+							<s:link action="#{userHome.edit(cty)}">
+								<h:graphicImage url="/img/edit.gif"
+									alt="#{messages['general.img.Edit']}"
+									title="#{messages['general.button.EditDesc']}" />
+							</s:link>
+						</r:column>
+
+					</r:dataTable>
+
+					<h:outputText value="#{messages['user.hint.EmptyList']}"
+						rendered="#{userList.size eq 0}" styleClass="info" />
+				</s:fragment>
+
+				<r:panel>
+					<f:facet name="header">
+						<s:fragment>
+							<h:graphicImage url="/img/user.gif"
+								alt="#{messages['user.img.Form']}" />
+							<h:outputText value="#{messages['user.caption.Form']}" />
+						</s:fragment>
+					</f:facet>
+
+					<h:panelGrid columns="2">
+
+						<s:div>
+
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['user.label.UserName']}" />
+								</ui:define>
+								<h:inputText value="#{user.userName}" styleClass="small"
+									required="true" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['user.label.Password']}" />
+								</ui:define>
+								<h:inputSecret value="#{userHome.pass1}" styleClass="small" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['user.label.CheckPassword']}" />
+								</ui:define>
+								<h:inputSecret value="#{userHome.pass2}" styleClass="small" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['user.label.Status']}" />
+								</ui:define>
+								<h:selectBooleanCheckbox id="active" value="#{user.active}"
+									styleClass="checkbox" />
+								<h:outputLabel value="#{messages['user.label.Active']}"
+									for="active" styleClass="checkboxLabel" />
+							</s:decorate>
+
+						</s:div>
+
+						<s:div>
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['user.label.FullName']}" />
+								</ui:define>
+								<h:inputText value="#{user.fullName}" styleClass="large"
+									required="true" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['user.label.EMail']}" />
+								</ui:define>
+								<h:inputText value="#{user.email}" styleClass="large email" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.Account']}" />
+								</ui:define>
+								<h:selectOneMenu id="acc" value="#{user.account}"
+									styleClass="middle" required="false">
+									<s:convertEntity />
+									<s:selectItems value="#{generalSuggestion.accountList}"
+										var="acc" label="#{acc.code}"
+										noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false" />
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['saleShipment.label.Warehouse']}" />
+								</ui:define>
+								<h:selectOneMenu id="ware" value="#{user.warehouse}"
+									styleClass="middle" required="false">
+									<s:convertEntity />
+									<s:selectItems value="#{generalSuggestion.warehouseList}"
+										var="acc" label="#{acc.code}"
+										noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false" />
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['user.label.Contact']}" />
+								</ui:define>
+								<h:inputText id="contID" value="#{user.contact}"
+									converter="contactCaptionConverter" styleClass="middle" />
+
+								<a
+									href="javascript:contactSelectPopup( '#{r:clientId('contID')}' )">
+									<h:graphicImage url="/img/selectBox.gif" /> </a>
+
+								<r:suggestionbox for="contID" rules="all" ajaxSingle="true"
+									suggestionAction="#{contactSuggestion.suggestPersonnel}"
+									var="citem" fetchValue="#{citem.caption}">
+									<ui:include src="/contact/contactSuggestionView.xhtml" />
+								</r:suggestionbox>
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText
+										value="#{messages['general.label.DiscountPermission']}" />
+								</ui:define>
+
+								<h:selectBooleanCheckbox value="#{user.hasDiscount}" label="Var">
+									<a:support reRender="kindAndRateAndAmount" event="onchange"
+										ajaxSingle="true" oncomplete="setMasks();" />
+								</h:selectBooleanCheckbox>
+
+								<br />
+
+								<s:span id="kindAndRateAndAmount">
+									<s:fragment rendered="#{user.hasDiscount}">
+										<ui:remove>
+											<h:selectOneMenu id="kind"
+												value="#{user.discount.percentage}" title="Select one"
+												border="0" styleClass="radio">
+												<f:selectItem itemLabel="#{messages['tax.label.Rate']}"
+													itemValue="true" />
+												<f:selectItem itemLabel="#{messages['tax.label.Amount']}"
+													itemValue="false" />
+
+												<a:support reRender="discountInput" event="onchange"
+													ajaxSingle="true" oncomplete="setMasks();" />
+											</h:selectOneMenu>
+
+											<r:spacer width="2" />
+										</ui:remove>
+
+										<s:span id="discountInput">
+											<h:outputText value="#{messages['tax.label.Rate']}" />
+											<r:spacer width="2" />
+											<h:inputText value="#{user.discount.rate}"
+												styleClass="amountField rate" />
+
+											<br />
+											<br />
+
+											<h:outputText value="#{messages['tax.label.Amount']}" />
+											<r:spacer width="2" />
+
+											<h:inputText value="#{user.discount.value}"
+												styleClass="amountField" alt="decimal"
+												converter="bigDecimalConverter" />
+
+											<h:outputText value="#{user.discount.currency}" />
+										</s:span>
+									</s:fragment>
+								</s:span>
+
+							</s:decorate>
+
+						</s:div>
+
+					</h:panelGrid>
+
+					<r:dataTable id="rolelist" var="role" value="#{userHome.roleList}">
+						<r:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['user.caption.RoleList']}" />
+							</f:facet>
+							<h:selectBooleanCheckbox id="selected"
+								value="#{userHome.roleMap[role]}" />
+							<h:outputLabel for="selected" value="#{role.info}"
+								style="display:inline;" />
+						</r:column>
+					</r:dataTable>
+
+					<div class="actionButtons">
+						<h:commandButton id="saveAndNew"
+							value="#{messages['general.button.SaveAndNew']}"
+							action="#{userHome.saveAndNew()}"
+							rendered="#{s:hasPermission('user', 'update') }"
+							styleClass="button" />
+
+						<h:commandButton id="save"
+							value="#{messages['general.button.Save']}"
+							action="#{userHome.save()}"
+							rendered="#{s:hasPermission('user', 'insert')}"
+							styleClass="button" />
+
+
+						<s:button id="delete" value="#{messages['general.button.Delete']}"
+							action="#{userHome.delete()}"
+							rendered="#{not empty user.id and s:hasPermission('user', 'delete') }"
+							onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+							styleClass="button" />
+
+						<s:button id="done" value="#{messages['general.button.Close']}"
+							action="#{userHome.close()}" styleClass="button" />
+
+					</div>
+
+				</r:panel>
+
+			</h:panelGrid>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

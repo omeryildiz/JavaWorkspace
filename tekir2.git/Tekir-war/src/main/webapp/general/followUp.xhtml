@@ -1,0 +1,275 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="bankMenu"/>
+            <ui:param name="curitem" value="bank"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+                <s:link view="/general/bank.xhtml" rendered="#{s:hasPermission('followUp', 'select')}" >
+                    <h:outputText value="#{messages['module.caption.FollowUp']}"/>
+                </s:link>
+            </div>
+            
+            <div class="toolgroup-left">
+                <s:link action="#{followUpHome.createNew()}" rendered="#{s:hasPermission('followUp', 'insert')}"  propagation="begin">
+                    <h:graphicImage url="/img/add.gif" /> 
+                    <h:outputText value="#{messages['followUp.action.Add']}"/>
+                </s:link>
+            </div>
+            
+    </ui:define>
+
+
+
+
+
+
+
+    <ui:define name="body">
+		<link type="text/css" rel="stylesheet" href="../stylesheet/jquery.treeTable.css"/>
+        
+        <script type="text/javascript" src="../js/jquery.treeTable.js" />
+
+        <script type="text/javascript">
+        	jQuery(function(){
+			  jQuery("#permissionTable").treeTable({
+			  	 initialState:'expanded'
+			  });
+			});
+		</script>
+        <h1><h:outputText value="#{messages['module.caption.FollowUp']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <h:panelGrid columns="3" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    
+					<table id="permissionTable" cellspacing="0" cellpadding="0" border="0" class="rich-table">
+						<thead class="rich-table-thead">
+							<tr class="rich-table-header">
+								<th colspan="2" class="rich-table-headercell ">#{messages['followUp.caption.List']}</th>
+								<th class="rich-table-headercell actionColumn">
+									<h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<ui:remove>
+								Edit linklerinin duzgun calismasi icin dataModelSelection parametresinin gecilmesi gerekiyor. 
+							</ui:remove>
+							<ui:repeat var="ful" value="#{followUpList}">
+								<tr id="node-#{ful.index}" class="rich-table-row #{ful.lineClass()}">
+									<td class="rich-table-cell" style="padding-left:19px">
+			                            <s:link action="#{followUpHome.edit(ful.cat)}">
+			                            	<f:param name="dataModelSelection" value="ful:followUpList[#{ful.index}]" />
+			                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}"
+			                                	rendered="#{not ful.cat.active}" />
+			                                <h:outputText value="#{ful.cat.code}" />
+			                            </s:link>
+									</td>							
+									<td class="rich-table-cell">
+			                            <h:outputText value="#{ful.cat.weight}" />
+									</td>							
+
+									<td class="rich-table-cell actionColumn">
+			                            <s:link action="#{followUpHome.edit(ful.cat)}">
+			                            	<f:param name="dataModelSelection" value="ful:followUpList[#{ful.index}]" />
+			                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}" />
+			                            </s:link>
+									</td>							
+								</tr>
+							</ui:repeat>
+						</tbody>
+					</table>
+
+                    <h:outputText value="#{messages['general.hint.EmptyList']}" 
+                    	rendered="#{followUpList.size eq 0}" styleClass="info"/>
+
+                </s:fragment>
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/folder.gif" alt="#{messages['followUp.img.Form']}"/> 
+                            <h:outputText value="#{messages['followUp.caption.Form']}" />
+        					
+        					<h:commandLink action="#{followUpHome.createIdenticalCat()}"
+        						style="float:right" rendered="#{followUp.id ne null}">
+        						<h:graphicImage url="#{theme.arrowRight}" title="#{messages['category.button.CreateIdenticalCategory']}"/>
+        					</h:commandLink>
+
+					        <h:commandLink action="#{followUpHome.createSubCat()}" style="float:right"
+					        	rendered="#{followUp.id ne null}">
+					        	<h:graphicImage url="#{theme.arrowDown}" title="#{messages['category.button.CreateSubCategory']}"/>
+					        </h:commandLink>
+                        </s:fragment>
+                    </f:facet>
+
+                    <h:panelGrid columns="2">
+						<s:fragment>
+	                        <s:decorate template="/layout/edit.xhtml" >
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.Code']}"/>
+	                            </ui:define>
+	                            <h:inputText value="#{followUp.code}" styleClass="small" required="true"/>
+	                        </s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['followUp.label.Name']}" />
+                                </ui:define>
+                                <h:inputText value="#{followUp.name}" styleClass="small" />
+                            </s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label"><h:outputText value="#{messages['followUp.label.Info']}"/></ui:define>
+	                            <h:inputTextarea value="#{followUp.info}" styleClass="exlarge" rows="4"/>
+	                        </s:decorate>
+
+	                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.Contact']}"/>
+	                            </ui:define>
+	
+	                            <s:div >
+		                            <h:inputText id="contact" value="#{followUp.contact}" styleClass="middle" 
+		                            	style="float:left" converter="contactCaptionConverter" />
+		                            
+		                            <a href="javascript:contactSelectPopup( '#{r:clientId('contact')}' )" style="float:left">
+		                                <h:graphicImage url="/img/selectBox.gif" /> 
+		                            </a>
+		                            
+		                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+										suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+										fetchValue="#{citem.caption}">
+										<ui:include src="/contact/contactSuggestionView.xhtml" />
+									</r:suggestionbox>
+								</s:div>
+	                        </s:decorate>
+	                        
+						</s:fragment>
+
+						<s:fragment>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.StartDate']}" />
+								</ui:define>
+								<r:calendar value="#{followUp.beginDate}" enableManualInput="true"
+									datePattern="#{messages['general.format.Date']}" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.EndDate']}" />
+								</ui:define>
+								<r:calendar value="#{followUp.endDate}" enableManualInput="true"
+									datePattern="#{messages['general.format.Date']}" />
+							</s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['followUp.label.Weight']}" />
+                                </ui:define>
+                                <h:inputText value="#{followUp.weight}" styleClass="small" />
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['followUp.label.Status']}"/></ui:define>
+                                <h:selectBooleanCheckbox id="active" value="#{followUp.active}" 
+                                	styleClass="checkbox"/>
+                                <h:outputLabel value="#{messages['followUp.label.Active']}" for="active" 
+                                	styleClass="checkboxLabel" />
+                            </s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['followUp.label.Status']}" />
+								</ui:define>
+								<h:selectOneMenu value="#{followUp.followupStatus}">
+									<s:convertEnum />
+									<s:enumItem enumValue="Draft"
+										label="#{messages['followUp.status.Draft']}" />
+									<s:enumItem enumValue="Open"
+										label="#{messages['followUp.status.Open']}" />
+									<s:enumItem enumValue="Close"
+										label="#{messages['followUp.status.Close']}" />
+									<s:enumItem enumValue="Suspended"
+										label="#{messages['followUp.status.Suspended']}" />
+									<s:enumItem enumValue="Canceled"
+										label="#{messages['followUp.status.Canceled']}" />
+								</h:selectOneMenu>
+							</s:decorate>
+	                        
+						</s:fragment>
+						
+                    </h:panelGrid> 
+                    <ui:remove>
+						<ut:actionButtons home="#{followUpHome}" entity="#{followUp}" permission="followUp" />
+                    </ui:remove>
+
+
+
+
+
+				    <div class="actionButtons">
+				        <h:commandButton id="saveAndNew"
+				                         value="#{messages['general.button.SaveAndNew']}"
+				                         action="#{followUpHome.saveAndNew()}"
+				                         rendered="#{s:hasPermission( 'followUp', 'insert') and s:hasPermission( 'followUp', 'update')}"
+				                         styleClass="button"/>
+				
+				        <h:commandButton id="save"
+				                         value="#{messages['general.button.Save']}"
+				                         action="#{followUpHome.save()}" styleClass="button"
+				                         rendered="#{(not empty followUp.id and s:hasPermission('followUp', 'update')) or (empty followUp.id and s:hasPermission('followUp', 'insert'))}"/>
+				
+						<h:commandButton id="delete" action="#{followUpHome.delete()}" value="#{messages['general.button.Delete']}"
+							rendered="#{not empty followUp.id and s:hasPermission('followUp', 'delete')}"
+							onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+							immediate="true" styleClass="button"/>
+				
+						<h:commandButton id="done" action="#{followUpHome.close()}" 
+							value="#{messages['general.button.Close']}" styleClass="button" 
+							immediate="true"/>
+				
+				    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+    </ui:define> 
+</ui:composition>
+ 

@@ -1,0 +1,568 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="showPrice"/>
+            <ui:param name="curitem" value="productShowPrices"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/showProductPrices.xhtml">
+                <h:outputText value="#{messages['module.caption.ProductShowPrices']}" rendered="#{s:hasPermission('productTxnReport', 'select')}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ProductShowPrices']}" /></h1>
+        
+        <s:div id="messagesDiv">
+		        <ui:include src="/layout/messages.xhtml"/>
+        </s:div>
+        
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/stock/productSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                   <s:fragment>
+                        <a:region>
+	                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+		                            <ui:define name="label">
+		                            	<h:outputText value="#{messages['productTxnReport.label.ProductName']}"/>
+		                            </ui:define>
+		                            <s:div >
+			                            <h:inputText id="product" value="#{productTxnReport.filterModel.product}" >
+	                                <f:converter converterId="productCaptionConverter"/>
+	                                <a:support event="onblur" ajaxSingle="true"/>
+	                            </h:inputText>
+	                            <a href="javascript:productSelectPopup( 'form:sdc:product' )">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            <r:suggestionbox id="productSuggest" for="product" rules="all"  ajaxSingle="true" 
+	                            	suggestionAction="#{stockSuggestion.suggestWithBarcode}" var="it" 
+	                            	fetchValue="#{it.caption}" eventsQueue="productSuggestion" >
+	                                <h:column>
+	                                    <h:outputText value="#{it.code}"/>
+	                                </h:column>
+	                                <h:column>
+	                                    <h:outputText value="#{it.name}"/>
+	                                </h:column>
+	                                <h:column>
+	                                    <h:outputText value="#{it.barcode1}"/>
+	                                </h:column>
+	                                
+	                            </r:suggestionbox>
+										
+			                    	</s:div>
+		                        </s:decorate>
+						</a:region>
+                    </s:fragment>
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['product.label.Barcode']}"/>
+                            </ui:define>
+	                            <h:inputText value="#{productTxnReport.filterModel.barcode}" />
+                        </s:decorate>
+                   </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{productTxnReport.getPrices()}"
+                                     styleClass="button"
+                                     reRender="results,messagesDiv"/>  
+                    
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+            
+            <h:panelGrid columns="2" columnClasses="half,half" rendered="#{not empty productTxnReport.productList}"  >
+				<s:fragment>
+            
+		            <s:div style="padding:1px;">
+		            	<r:panel  rendered="#{s:hasPermission('productShowPrices', 'productInfo')}">
+		                	<f:facet name="header">
+								<s:fragment>
+									<h:outputText value="#{messages['general.label.ProductInfo']}" />
+								</s:fragment>
+						  	</f:facet>
+		            	
+			            	<h:panelGrid columns="1">
+			            		<s:decorate template="/layout/longinlineedit.xhtml"  rendered="#{not empty productTxnReport.productList.get(0).prodCode}">
+									<ui:define name="label">
+										<h:outputText value="#{messages['general.label.Code']}" styleClass="boldLabel" />
+									</ui:define>	
+										<h:outputText value="#{productTxnReport.productList.get(0).prodCode}"/>
+								</s:decorate>
+
+								<s:decorate template="/layout/longinlineedit.xhtml"  rendered="#{not empty productTxnReport.productList.get(0).prodName}">
+									<ui:define name="label">
+										<h:outputText value="#{messages['general.label.Name']}" styleClass="boldLabel" />
+									</ui:define>	
+										<h:outputText value="#{productTxnReport.productList.get(0).prodName}"/>
+								</s:decorate>										            
+			            	
+		                   		<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).barcode}">
+									<ui:define name="label">
+										<h:outputText value="#{messages['general.label.Barcode1']}"	styleClass="boldLabel" />
+									</ui:define>
+									<h:outputText value="#{productTxnReport.productList.get(0).barcode}"/>
+								</s:decorate>
+								
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).barcode2}">
+									<ui:define name="label">
+										<h:outputText value="#{messages['general.label.Barcode2']}"	styleClass="boldLabel" />
+									</ui:define>	
+										<h:outputText value="#{productTxnReport.productList.get(0).barcode2}"/>
+								</s:decorate>
+	
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).barcode3}">
+									<ui:define name="label">
+										<h:outputText value="#{messages['general.label.Barcode3']}"	styleClass="boldLabel" />
+									</ui:define>	
+										<h:outputText value="#{productTxnReport.productList.get(0).barcode3}"/>
+								</s:decorate>
+								
+		                        <s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).labelName}">
+		                        	<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.LabelName']}"	styleClass="boldLabel" />
+		                            </ui:define>    
+		                            	<h:outputText value="#{productTxnReport.productList.get(0).labelName}"/>
+		                        </s:decorate>
+								
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).quantityUnit}">
+		                        	<ui:define name="label">
+		                                <h:outputText value="#{messages['product.label.Unit']}"	styleClass="boldLabel" />
+		                            </ui:define>    
+		                            	<h:outputText value="#{productTxnReport.productList.get(0).quantityUnit}"/>
+		                        </s:decorate>
+									
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).buyTax1.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.BuyTax1']}" styleClass="boldLabel" />
+		                            </ui:define>    
+		                            <h:outputText value="#{productTxnReport.productList.get(0).buyTax1.name}"/>
+		                        </s:decorate>
+		
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).buyTax2.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.BuyTax2']}" styleClass="boldLabel" />
+		                            </ui:define>    
+		                            <h:outputText value="#{productTxnReport.productList.get(0).buyTax2.name}" />
+		                        </s:decorate>
+
+		                        <s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).buyTax3.name}">
+		                        	<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.BuyTax3']}" styleClass="boldLabel" />
+		                            </ui:define>    
+		                            <h:outputText value="#{productTxnReport.productList.get(0).buyTax3.name}"/>
+		                        </s:decorate>
+
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).buyTax4.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.BuyTax4']}" styleClass="boldLabel" />
+		                            </ui:define>    
+		                            <h:outputText value="#{productTxnReport.productList.get(0).buyTax4.name}"/>
+		                        </s:decorate>
+
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).buyTax5.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.BuyTax5']}" styleClass="boldLabel" />
+		                            </ui:define>    
+		                            <h:outputText value="#{productTxnReport.productList.get(0).buyTax5.name}"/>
+		                        </s:decorate>
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).sellTax1.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.SaleTax1']}" styleClass="boldLabel" />
+		                            </ui:define>
+		                            <h:outputText value="#{productTxnReport.productList.get(0).sellTax1.name}"/>
+		                        </s:decorate>
+								<s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).sellTax2.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.SaleTax2']}" styleClass="boldLabel" />
+		                            </ui:define>
+		                            <h:outputText value="#{productTxnReport.productList.get(0).sellTax2.name}"/>
+		                        </s:decorate>
+		                        <s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).sellTax3.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.SaleTax3']}" styleClass="boldLabel" />
+		                            </ui:define>    
+		                            <h:outputText value="#{productTxnReport.productList.get(0).sellTax3.name}"/>
+		                        </s:decorate>
+		                        <s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).sellTax4.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.SaleTax4']}" styleClass="boldLabel" />
+		                            </ui:define>
+		                            <h:outputText value="#{productTxnReport.productList.get(0).sellTax4.name}"/>
+		                        </s:decorate>
+		                        <s:decorate template="/layout/longinlineedit.xhtml" rendered="#{not empty productTxnReport.productList.get(0).sellTax5.name}">
+									<ui:define name="label">
+		                                <h:outputText value="#{messages['general.label.SaleTax5']}" styleClass="boldLabel" />
+		                            </ui:define>    
+		                            <h:outputText value="#{productTxnReport.productList.get(0).sellTax5.name}"/>
+		                        </s:decorate>
+								
+			            	</h:panelGrid>
+		            	</r:panel>
+		                </s:div>
+            	</s:fragment>
+				<s:fragment>
+		            <s:div style="padding:1px;">    
+		                 <r:dataTable id="warehouseList" 
+		                                 var="warerowItem"
+		                                 rows="4"
+		                                 rowKeyVar="rowKey"
+		                                 rendered="#{s:hasPermission('productShowPrices', 'warehouse')}"
+		                                 value="#{productTxnReport.warehouseResult}">
+		                                 
+		                        <f:facet name="header">
+		                            <h:panelGroup>
+		                                <h:outputText value="#{messages['general.label.StockInfo']}"/>
+		                            </h:panelGroup>
+		                        </f:facet>                                                
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.Warehouse']}" /></f:facet>
+		                            <h:outputText value="[#{warerowItem['warecode']}] #{warerowItem['warename']}" />
+		                        </r:column>
+		                                       
+		                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+		                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.ReadyToShipment']}" /></f:facet>
+		                            <h:outputText value="#{warerowItem['resqty'] - warerowItem['delqty']}">
+		                                <f:convertNumber pattern="#,##0.00" />
+		                            </h:outputText>
+		                        </r:column>        
+		               
+		                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+		                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.AvailableToSale']}" /></f:facet>
+		                            
+		                            <h:outputText value="#{warerowItem['balance']}" styleClass="negativeNumber" rendered="#{warerowItem['balance'] lt 0}">
+		                                <f:convertNumber pattern="#,##0.00" />
+		                            </h:outputText>
+		                            
+		                            <h:outputText value="#{warerowItem['balance']}" rendered="#{warerowItem['balance'] ge 0}">
+		                                <f:convertNumber pattern="#,##0.00" />
+		                            </h:outputText>
+		                            
+		                        </r:column>
+		                        
+		                      
+		                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+		                            <f:facet name="header"><h:outputText value="#{messages['productStatusReport.label.RemainStock']}" /></f:facet>
+		                            
+		                            <h:outputText value="#{warerowItem['remainStock']}" styleClass="negativeNumber" rendered="#{warerowItem['remainStock'] lt 0}">
+		                                <f:convertNumber pattern="#,##0.00" />
+		                            </h:outputText>
+		                            
+		                            <h:outputText value="#{warerowItem['remainStock']}" rendered="#{warerowItem['remainStock'] ge 0}">
+		                                <f:convertNumber pattern="#,##0.00" />
+		                            </h:outputText>
+		                            
+		                        </r:column>                     
+		                        
+		                        <f:facet name="footer">
+		                            <r:datascroller for="warehouseList" maxPages="10" /> 
+		                        </f:facet>
+		                        
+		                    </r:dataTable>
+		               </s:div> 
+                </s:fragment>
+           </h:panelGrid>
+           
+           <h:panelGrid columns="2" columnClasses="half,half" rendered="#{not empty productTxnReport.productList and s:hasPermission('productShowPrices', 'salePrices')}">
+			   <s:fragment> 
+		             <s:div style="padding:1px;">
+  					 <r:panel>		                    
+						<f:facet name="header">
+							<s:fragment>
+								<h:outputText value="#{messages['general.label.SalePrices']}" />
+							</s:fragment>
+						</f:facet>
+						
+						<h:panelGrid columns="1">
+								<s:decorate template="/layout/longinlineedit.xhtml">
+									<ui:define name="label">
+			                            <h:outputText value="#{messages['general.label.ValidPrice']}" styleClass="boldLabel" />
+			                        </ui:define>
+			                        <h:outputText value="#{priceProvider.findSalePriceItemDetailForProduct(productTxnReport.productList.get(0).prodId).grossPrice.value}" rendered="#{not empty productTxnReport.salePriceListResult}">
+											<f:convertNumber pattern="#,##0.00" />
+			                        </h:outputText>
+			                        <h:outputText value=" #{priceProvider.findSalePriceItemDetailForProduct(productTxnReport.productList.get(0).prodId).grossPrice.currency}" rendered="#{not empty productTxnReport.salePriceListResult}"/>
+			                        <h:outputText value="#{priceProvider.findSalePriceItemDetailForProduct(productTxnReport.productList.get(0).prodId).owner.code}" rendered="#{not empty productTxnReport.salePriceListResult}" style="padding-left:60px;"/>
+			                    </s:decorate>
+			                    
+								<s:decorate template="/layout/longinlineedit.xhtml">
+									<ui:define name="label">
+			                            <h:outputText value="#{messages['general.label.FirstPrice']}" styleClass="boldLabel" />
+			                        </ui:define>
+			                        <h:outputText value="#{priceProvider.getPrice(productTxnReport.saleEntityList.get(0).prodId,'asc',productTxnReport.saleEntityList.get(0).action).get(0)}" rendered="#{not empty productTxnReport.saleEntityList}">
+			                        	<f:convertNumber pattern="#,##0.00" />
+			                        </h:outputText>
+			                        <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.saleEntityList.get(0).prodId,'asc',productTxnReport.saleEntityList.get(0).action).get(0)}" rendered="#{not empty productTxnReport.saleEntityList}"/>	
+			                    </s:decorate>
+						                    
+								<s:decorate template="/layout/longinlineedit.xhtml">
+									<ui:define name="label">
+			                        	<h:outputText value="#{messages['general.label.LastPrice']}" styleClass="boldLabel" />
+			                        </ui:define>	
+			                        <h:outputText value="#{priceProvider.getPrice(productTxnReport.saleEntityList.get(0).prodId,'desc',productTxnReport.saleEntityList.get(0).action).get(0)}" rendered="#{not empty productTxnReport.saleEntityList}">
+			                        	<f:convertNumber pattern="#,##0.00" />
+			                        </h:outputText>	
+			                        <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.saleEntityList.get(0).prodId,'desc',productTxnReport.saleEntityList.get(0).action).get(0)}" rendered="#{not empty productTxnReport.saleEntityList}"/>
+			                    </s:decorate>
+								
+								<s:decorate template="/layout/longinlineedit.xhtml">
+									<ui:define name="label">
+			                            <h:outputText value="#{messages['general.label.MinimumPrice']}" styleClass="boldLabel" />
+			                        </ui:define>    
+			                        <h:outputText value="#{priceProvider.getPrice(productTxnReport.saleEntityList.get(0).prodId,productTxnReport.saleEntityList.get(0).action,'min')}" rendered="#{not empty productTxnReport.saleEntityList}">
+			                        	<f:convertNumber pattern="#,##0.00" />
+			                        </h:outputText>
+			                        <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.saleEntityList.get(0).prodId,productTxnReport.saleEntityList.get(0).action,'min')}" rendered="#{not empty productTxnReport.saleEntityList}"/>
+			                    </s:decorate>
+			                    
+			                    <s:decorate template="/layout/longinlineedit.xhtml">
+									<ui:define name="label">
+			                            <h:outputText value="#{messages['general.label.AveragePrice']}" styleClass="boldLabel" />
+			                        </ui:define>    
+			                        <h:outputText value="#{priceProvider.getPrice(productTxnReport.saleEntityList.get(0).prodId,productTxnReport.saleEntityList.get(0).action,'avg')}" rendered="#{not empty productTxnReport.saleEntityList}">
+			                        	<f:convertNumber pattern="#,##0.00" />
+			                        </h:outputText>
+			                        <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.saleEntityList.get(0).prodId,productTxnReport.saleEntityList.get(0).action,'min')}" rendered="#{not empty productTxnReport.saleEntityList}"/>	
+			                    </s:decorate>
+			                    
+			                    <s:decorate template="/layout/longinlineedit.xhtml">
+									<ui:define name="label">
+			                            <h:outputText value="#{messages['general.label.MaximumPrice']}" styleClass="boldLabel" />
+			                        </ui:define>    
+			                        <h:outputText value="#{priceProvider.getPrice(productTxnReport.saleEntityList.get(0).prodId,productTxnReport.saleEntityList.get(0).action,'max')}" rendered="#{not empty productTxnReport.saleEntityList}">
+			                        	<f:convertNumber pattern="#,##0.00" />
+			                        </h:outputText>
+			                        <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.saleEntityList.get(0).prodId,productTxnReport.saleEntityList.get(0).action,'max')}" rendered="#{not empty productTxnReport.saleEntityList}"/>	
+			                    </s:decorate>
+						
+						</h:panelGrid>
+					</r:panel>	      
+		            </s:div>
+               </s:fragment>
+               <s:fragment>
+               		<s:div style="padding:1px;">    
+		                 <r:dataTable id="salePriceListResult" 
+		                                 var="saleRowItem"
+		                                 rows="4"
+		                                 rowKeyVar="rowKey"
+		                                 rendered="#{not empty productTxnReport.productList and s:hasPermission('productShowPrices', 'salePriceList')}"
+		                                 value="#{productTxnReport.salePriceListResult}">
+		                                 
+		                        <f:facet name="header">
+		                            <h:panelGroup>
+		                                <h:outputText value="#{messages['general.label.SalePriceList']}"/>
+		                            </h:panelGroup>
+		                        </f:facet>                                                
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.ListCode']}" /></f:facet>
+		                            <h:outputText value="#{saleRowItem.ownerCode}" />
+		                        </r:column>
+		               			
+		               			<r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.Info']}" /></f:facet>
+		                            <h:outputText value="#{saleRowItem.priceListName}" />
+		                        </r:column>
+		               			
+		                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.Price']}" /></f:facet>
+		                            <h:outputText value="#{saleRowItem.grossPriceValue}">
+		                                <f:convertNumber pattern="#,##0.00" />
+		                            </h:outputText>
+		                        </r:column>
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.Currency']}" /></f:facet>
+		                            <h:outputText value="#{saleRowItem.grossPriceCurrency}" />
+		                        </r:column>
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.BeginDate']}" /></f:facet>
+		                            <h:outputText value="#{saleRowItem.ownerBeginDate}">
+		                            	<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+		                            </h:outputText>	
+		                        </r:column>
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.EndDate']}" /></f:facet>
+		                            <h:outputText value="#{saleRowItem.ownerEndDate}">
+		                            	<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+		                            </h:outputText>	
+		                        </r:column>
+		                        <r:column styleClass="codeField">
+		                            <f:facet name="header">
+		                            	<h:outputText value="#{messages['general.label.Active']}" />
+		                            </f:facet>
+		                            <h:selectBooleanCheckbox value="#{saleRowItem.ownerIsActive}" disabled="true"/>
+		                        </r:column>
+		                        		                        
+		                        <f:facet name="footer">
+		                            <r:datascroller for="salePriceListResult" maxPages="10" /> 
+		                        </f:facet>
+		                        
+		                    </r:dataTable>
+		               </s:div> 
+               </s:fragment>
+            </h:panelGrid>   
+            <h:panelGrid columns="2" columnClasses="half,half" rendered="#{not empty productTxnReport.productList}" >   
+			   <s:fragment>     
+	                <s:div style="padding:1px;">
+	                <r:panel rendered="#{s:hasPermission('productShowPrices', 'purchasePrices')}">         
+					<f:facet name="header">
+						<s:fragment>
+							<h:outputText value="#{messages['general.label.PurchasePrices']}" />
+						</s:fragment>
+					</f:facet>
+					
+					<h:panelGrid columns="1">
+							<s:decorate template="/layout/longinlineedit.xhtml">
+								<ui:define name="label">
+                                	<h:outputText value="#{messages['general.label.FirstPrice']}" styleClass="boldLabel" />
+                                </ui:define>
+	                            <h:outputText value="#{priceProvider.getPrice(productTxnReport.purchaseEntityList.get(0).prodId,'asc',productTxnReport.purchaseEntityList.get(0).action).get(0)}"  rendered="#{not empty productTxnReport.purchaseEntityList}">
+	                            	<f:convertNumber pattern="#,##0.00" />
+	                            </h:outputText>
+	                            <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.purchaseEntityList.get(0).prodId,'asc',productTxnReport.purchaseEntityList.get(0).action).get(0)}"  rendered="#{not empty productTxnReport.purchaseEntityList}"/>
+	                        </s:decorate>
+	                        
+							<s:decorate template="/layout/longinlineedit.xhtml">
+								<ui:define name="label">
+                                	<h:outputText value="#{messages['general.label.LastPrice']}" styleClass="boldLabel" />
+                                </ui:define>
+	                            <h:outputText value="#{priceProvider.getPrice(productTxnReport.purchaseEntityList.get(0).prodId,'desc',productTxnReport.purchaseEntityList.get(0).action).get(0)}" rendered="#{not empty productTxnReport.purchaseEntityList}">
+	                            	<f:convertNumber pattern="#,##0.00" />
+	                            </h:outputText>
+	                            <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.purchaseEntityList.get(0).prodId,'desc',productTxnReport.purchaseEntityList.get(0).action).get(0)}" rendered="#{not empty productTxnReport.purchaseEntityList}"/>	
+	                        </s:decorate>
+							
+							<s:decorate template="/layout/longinlineedit.xhtml">
+								<ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.MinimumPrice']}" styleClass="boldLabel" />
+	                            </ui:define>	
+	                            <h:outputText value="#{priceProvider.getPrice(productTxnReport.purchaseEntityList.get(0).prodId,productTxnReport.purchaseEntityList.get(0).action,'min')}" rendered="#{not empty productTxnReport.purchaseEntityList}">
+	                            	<f:convertNumber pattern="#,##0.00" />
+	                            </h:outputText>	
+	                            <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.purchaseEntityList.get(0).prodId,productTxnReport.purchaseEntityList.get(0).action,'min')}" rendered="#{not empty productTxnReport.purchaseEntityList}"/>
+	                        </s:decorate>
+	                        
+	                        <s:decorate template="/layout/longinlineedit.xhtml">
+								<ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.AveragePrice']}" styleClass="boldLabel" />
+	                            </ui:define>	
+	                            <h:outputText value="#{priceProvider.getPrice(productTxnReport.purchaseEntityList.get(0).prodId,productTxnReport.purchaseEntityList.get(0).action,'avg')}" rendered="#{not empty productTxnReport.purchaseEntityList}">
+	                            	<f:convertNumber pattern="#,##0.00" />
+	                            </h:outputText>
+	                            <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.purchaseEntityList.get(0).prodId,productTxnReport.purchaseEntityList.get(0).action,'min')}" rendered="#{not empty productTxnReport.purchaseEntityList}"/>	
+	                        </s:decorate>
+	                        
+	                        <s:decorate template="/layout/longinlineedit.xhtml">
+								<ui:define name="label">
+	                                <h:outputText value="#{messages['general.label.MaximumPrice']}" styleClass="boldLabel" />
+	                            </ui:define>    
+	                            <h:outputText value="#{priceProvider.getPrice(productTxnReport.purchaseEntityList.get(0).prodId,productTxnReport.purchaseEntityList.get(0).action,'max')}" rendered="#{not empty productTxnReport.purchaseEntityList}">
+	                            	<f:convertNumber pattern="#,##0.00" />
+	                            </h:outputText>	
+	                            <h:outputText value=" #{priceProvider.getCurrency(productTxnReport.purchaseEntityList.get(0).prodId,productTxnReport.purchaseEntityList.get(0).action,'max')}" rendered="#{not empty productTxnReport.purchaseEntityList}"/>
+	                        </s:decorate>
+	
+						</h:panelGrid>
+						</r:panel>
+             
+	                </s:div>
+               </s:fragment>
+               <s:fragment>
+               		<s:div style="padding:1px;">    
+		                 <r:dataTable id="purchasePriceListResult" 
+		                                 var="purchaseRowItem"
+		                                 rows="4"
+		                                 rowKeyVar="rowKey"
+		                                 rendered="#{s:hasPermission('productShowPrices', 'purchasePriceList')}"
+		                                 value="#{productTxnReport.purchasePriceListResult}">
+		                                 
+		                        <f:facet name="header">
+		                            <h:panelGroup>
+		                                <h:outputText value="#{messages['general.label.PurchasePriceList']}"/>
+		                            </h:panelGroup>
+		                        </f:facet>                                                
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.ListCode']}" /></f:facet>
+		                            <h:outputText value="#{purchaseRowItem.ownerCode}" />
+		                        </r:column>
+		               			
+		               			<r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.Info']}" /></f:facet>
+		                            <h:outputText value="#{purchaseRowItem.priceListName}" />
+		                        </r:column>
+		               			
+		                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.Price']}" /></f:facet>
+		                            <h:outputText value="#{purchaseRowItem.grossPriceValue}">
+		                                <f:convertNumber pattern="#,##0.00" />
+		                            </h:outputText>
+		                        </r:column>
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.Currency']}" /></f:facet>
+		                            <h:outputText value="#{purchaseRowItem.grossPriceCurrency}" />
+		                        </r:column>
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.BeginDate']}" /></f:facet>
+		                            <h:outputText value="#{purchaseRowItem.ownerBeginDate}">
+		                            	<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+		                            </h:outputText>	
+		                        </r:column>
+		                        <r:column>
+		                            <f:facet name="header"><h:outputText value="#{messages['general.label.EndDate']}" /></f:facet>
+		                            <h:outputText value="#{purchaseRowItem.ownerEndDate}">
+		                            	<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+		                            </h:outputText>	
+		                        </r:column>
+		                        <r:column styleClass="codeField">
+		                            <f:facet name="header">
+		                            	<h:outputText value="#{messages['general.label.Active']}" />
+		                            </f:facet>
+		                            <h:selectBooleanCheckbox value="#{purchaseRowItem.ownerIsActive}" disabled="true"/>
+		                        </r:column>
+		                        		                        
+		                        <f:facet name="footer">
+		                            <r:datascroller for="purchasePriceListResult" maxPages="10" /> 
+		                        </f:facet>
+		                        
+		                    </r:dataTable>
+		               </s:div>
+               </s:fragment>
+              </h:panelGrid>     
+                <r:panel id="msg" rendered="#{empty productTxnReport.productList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

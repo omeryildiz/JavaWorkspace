@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:r="http://richfaces.ajax4jsf.org/rich" xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<s:decorate template="/layout/edit.xhtml">
+		<ui:define name="label">
+			<h:outputText value="#{messages['general.label.Account']}" />
+		</ui:define>
+		<h:selectOneMenu id="acc" value="#{value}" 
+			styleClass="#{styleClass ne null ? styleClass : 'middle'}" 
+			required="#{required != null ? required : false}">
+			<s:convertEntity />
+			<s:selectItems value="#{generalSuggestion.accountList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}"
+				hideNoSelectionLabel="true" />
+		</h:selectOneMenu>
+	</s:decorate>
+
+</ui:composition>

@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ut="http://utech.com/jsf/comps">
+    
+    <h1>Tanım Ekranları Genel Özellikleri</h1>
+    
+    <h2>Liste Alanı</h2>
+    <p>
+        Tanım ekranlarının hepsinde genel yapı ve fonksiyonlar aynıdır. Tüm ekranlarda girilmiş olan bilgiler ekranın sol tarafında liste olarak gösterilir. 
+    </p>
+    
+    <h2>Değiştirme</h2>
+    <p>Bir kayıt değiştirilmek isteniyorsa, bu listeden tıklanarak yapılır.</p>
+    <h:graphicImage url="#{helpManager.helpImagePath}genList.png" />
+    <p>Örneğin “Döviz Tanım” ekranında; girilmiş olan döviz bilgileri üzerinde değişiklik yapmak istiyorsanız, solda görüntülenen liste üzerinde kayda tıkladığınızda kayıt mevcut haliyle sağ taraftaki “Döviz Tanımı” alanına yazılır. Burada istenen değişiklikler yapıldıktan sonra “Sakla” düğmesine tıklandığında kayıt değiştirilmiş olur.</p>
+    
+    <h2>Kayıt Silme</h2>
+    <h:graphicImage url="#{helpManager.helpImagePath}delButton.png" />
+    <p>Listelenen bir kaydı silmek istiyorsanız kaydı tıkladığınızda aşağıda “Sil” düğmesi görülür. Bu düğme tıklandığında kayıt silinir.</p>
+    
+    <h2>Giriş Alanı</h2>
+    <h:graphicImage url="#{helpManager.helpImagePath}genForm.png" />
+    <p>Genel Ayarlardaki tüm tanım ekranlarında sağ ortada o ayar için giriş alanı bulunmaktadır. Örneğin “Döviz Tanımı” ekranında;</p>
+    
+    <p>
+        Bu ekranda “Döviz Tanımı” alanının içerisine ilgili dövizin bilgilerini girdikten sonra
+        “Sakla” düğmesine tıklanır ise girilmiş olan bilgiler kaydedilir,
+        “Sakla ve Yeni” düğmesine tıklayarak girilmiş olan bilgiler kaydedilir ve yeni bir giriş için ekran hazırlanır.
+        “Kapat” düğmesine tıklanır ise, ekrandaki bilgiler kaydedilmeden form kapatılır, Genel Ayarlar ekranına dönülür.
+    </p>
+    <p>
+        Tüm tanım giriş ekranlarında o kaydın aktif olup olmadığını gösteren bir “Durum” alanı vardır. Bu alanda eğer “Aktif” işareti tıklanmış ise, bu tanım kaydı diğer ekranlarda kayıt girerken görülür olur. Eğer “Aktif”  kutucuğundaki işaret kaldırılmışsa bu kayıt kullanılamaz durumda yani pasiftir.
+        Örneğin Döviz Tanımlarında EUR girilirken eğer “Aktif” kutucuğundaki işaret kaldırılmışsa, EUR döviz türü olarak hiçbir giriş ekranında gelmeyecektir.
+    </p> 
+</ui:composition>

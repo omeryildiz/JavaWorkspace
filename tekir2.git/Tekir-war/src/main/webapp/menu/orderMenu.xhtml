@@ -1,0 +1,11 @@
+<ul xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+    
+    <li class="#{curpage eq 'purchaseOrder' ? 'current' : '' }"><s:link view="/stock/purchaseOrderBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.PurchaseOrderBrowse']}" /></s:link></li>
+    <li class="#{curpage eq 'saleOrder' ? 'current' : '' }"><s:link view="/stock/saleOrderBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.SaleOrderBrowse']}" /></s:link></li>
+    
+</ul>

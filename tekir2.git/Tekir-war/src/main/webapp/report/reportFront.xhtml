@@ -1,0 +1,119 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="reportFront"/>
+        </ui:include>
+    </ui:define>
+    
+    
+    
+    <ui:define name="body">
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h1><h:outputText value="Raporlar" /></h1>
+        <p><h:outputText value="Rapor ve analizler..." /></p>
+        <h:panelGrid columns="2">
+            <s:div>
+                <h2><h:outputText value="Hareket Raporları" /></h2>
+                <p><h:outputText value="Yapılan işlemlerin detaylı dökümleri" /></p>
+                <div>
+                    <ul>
+                        <li>
+                            <s:link view="/report/accountTxnReport.xhtml" propagationBegin="true">
+                                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.AccountTxnReport']}"/>
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link view="/finance/financeTxnReport.xhtml" >
+                                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.FinanceTxnReport']}"/>
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link view="/report/bankTxnReport.xhtml" >
+                                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.BankTxnReport']}"/>
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link view="/stock/productTxnReport.xhtml" >
+                                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.ProductTxnReport']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/report/serviceTxnReport.xhtml" >
+                                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                                <h:outputText value="#{messages['module.caption.ServiceTxnReport']}"/>
+                            </s:link>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </s:div>
+            <s:div>
+                <h2><h:outputText value="Durum Raporları" /></h2>
+                <p><h:outputText value="Genel toplamlar halinde durum raporları" /></p>
+                <div>
+                    <ul>
+                        <li>
+                            <s:link view="/report/accountStatusReport.xhtml" propagationBegin="true">
+                                <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.AccountStatusReport']}"/>
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link view="/report/contactStatusReport.xhtml" >
+                                <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.ContactStatusReport']}"/>
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link view="/report/bankStatusReport.xhtml" >
+                                <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.BankStatusReport']}"/>
+                            </s:link>
+                        </li>
+                        
+                        <li>
+                            <s:link view="/report/productStatusReport.xhtml" >
+                                <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/> 
+                                <h:outputText value="#{messages['module.caption.ProductStatusReport']}"/>
+                            </s:link>
+                        </li>
+                        <li>
+                            <s:link view="/report/serviceStatusReport.xhtml" >
+                                <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+                                <h:outputText value="#{messages['module.caption.ServiceStatusReport']}"/>
+                            </s:link>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </s:div>
+            
+           
+            
+        </h:panelGrid>
+        
+        
+    </ui:define> 
+</ui:composition>

@@ -1,0 +1,125 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="loadTypeReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/report/reportFront.xhtml">
+                <h:outputText value="#{messages['module.caption.Report']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    <ui:remove>
+    <ui:define name="rightBar">
+        <s:link view="/stock/productTxnReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/stock/productTxnReportPrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    </ui:remove>
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.LoadTypeReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="3">
+                     
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['loadTypeReport.label.Code']}" /></ui:define>
+                            <h:inputText value="#{loadTypeReport.code}" styleClass="large"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['loadTypeReport.label.Name']}" /></ui:define>
+                            <h:inputText value="#{loadTypeReport.name}" styleClass="large"/>
+                        </s:decorate>
+                     
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{loadTypeReport.executeReport()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{loadTypeReport.pdf()}"
+                                     styleClass="button"/>
+                    
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="rowItem"
+                                 value="#{loadTypeReport.resultList}" 
+                                 rows="20"
+                                 rowKeyVar="rowKey">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['loadTypeReport.caption.LoadTypeList']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['loadTypeReport.label.Code']}" /></f:facet>
+                            <h:outputText value="#{rowItem.code}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['loadTypeReport.label.Name']}" /></f:facet>
+                            <h:outputText value="#{rowItem.name}" />
+                            
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['loadTypeReport.label.Info']}" /></f:facet>
+                            <h:outputText value="#{rowItem.info}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty loadTypeReport.resultList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

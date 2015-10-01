@@ -1,0 +1,9 @@
+ID,CODE,DOC_TYPE,INFO,NAME,TEMPLATE_NAME,ORGANIZATION_ID,ISACTIVE,ISDEFAULT
+1,F1,6,TL için Türkçe irsaliyeli fatura,irsaliye fat. TR TL,irsaliyeli_satis_faturasi.jrxml,1,TRUE,TRUE
+2,F2,6,TL için İngilizce irsaliyeli fatura,irsaliyeli fat. EN TL,irsaliyeli_satis_faturasi_EN.jrxml,1,TRUE,FALSE
+3,F3,6,Döviz için Türkçe irsaliyeli fatura,irsaliyeli fat. TR Döviz,irsaliyeli_satis_faturasi_doviz.jrxml,1,TRUE,FALSE
+4,F4,6,Döviz için İngilizce irsaliyeli fatura,irsaliyeli fat. EN Döviz,irsaliyeli_satis_faturasi_doviz_EN.jrxml,1,TRUE,FALSE
+5,P1,78,TL için Türkçe proforma fatura,proforma fat. TR TL,irsaliyeli_satis_proforma.jrxml,1,TRUE,TRUE
+6,P2,78,TL için İngilizce proforma fatura,proforma fat. EN TL,irsaliyeli_satis_proforma_EN.jrxml,1,TRUE,FALSE
+7,P3,78,Döviz için Türkçe proforma fatura,proforma fat. TR Döviz,irsaliyeli_satis_proforma_doviz.jrxml,1,TRUE,FALSE
+8,P4,78,Döviz için İngilizce proforma fatura,proforma fat. EN Döviz,irsaliyeli_satis_proforma_doviz_EN.jrxml,1,TRUE,FALSE

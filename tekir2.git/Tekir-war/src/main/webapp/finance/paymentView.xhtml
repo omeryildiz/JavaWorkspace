@@ -1,0 +1,58 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="payment"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/paymentBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PaymentBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/payment.xhtml">
+                <h:outputText value="#{messages['module.caption.Payment']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{paymentHome.createNew()}" view="/finance/payment.xhtml" rendered="#{s:hasPermission('payment', 'insert')}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['payment.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+	<ui:define name="body">
+		<ui:include src="/finance/paymentViewBase.xhtml">
+	       	<ui:param name="currentHome" value="${paymentHome}" />
+	       	<ui:param name="currentEntity" value="${payment}" />
+		</ui:include>                
+
+		<h:form id="form">
+			<div class="actionButtons">
+				<s:button id="print" value="#{messages['general.button.Print']}" action="#{paymentHome.print()}"
+					styleClass="button">
+					<f:param name="eid" value="#{paymentHome.id}" />
+				</s:button> 
+				<s:button id="edit" value="#{messages['general.button.EditDesc']}" action="#{paymentHome.edit()}" styleClass="button">
+					<f:param name="eid" value="#{paymentHome.id}" />
+				</s:button> 
+				<s:button id="done" value="#{messages['general.button.Close']}" action="#{paymentHome.close()}" styleClass="button" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

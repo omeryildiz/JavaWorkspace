@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+    <h:form id="companyInfoPaneForm">
+        <h:panelGrid columns="2">
+            <s:fragment>
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.Name']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_NAME').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.Title']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_TITLE').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.TaxOffice']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_TAXOFFICE').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.TaxNumber']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_TAX_NUMBER').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+            </s:fragment>
+
+            <s:fragment>
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.Phone']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_PHONE').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.Fax']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_FAX').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.Email']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_EMAIL').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.Web']}"/></ui:define>
+                    <h:inputText value="#{companyInfoOptionPane.getOption('COMPANY_WEB').asString}" styleClass="large" required="true"/>
+                </s:decorate>
+            </s:fragment>
+            
+            <s:fragment>
+                <s:decorate template="/layout/edit.xhtml" >
+                    <ui:define name="label"><h:outputText value="#{messages['optionEditor.company.Adress']}"/></ui:define>
+                    <h:inputTextarea value="#{companyInfoOptionPane.getOption('COMPANY_ADDRESS').asString}" 
+                    	style="width:279%;" required="true" rows="5"/>
+                </s:decorate>
+            </s:fragment>
+        </h:panelGrid>
+
+        <s:div styleClass="actionButtons">
+
+            <a:commandButton id="save"
+                             value="#{messages['general.button.Save']}"
+                             action="#{companyInfoOptionPane.save()}"
+                             reRender="companyInfoPaneForm"
+                             styleClass="button"/>
+
+            <s:button id="done"
+                      value="#{messages['general.button.Close']}"
+                      action="#{companyInfoOptionPane.cancel()}"
+                      styleClass="button"/>
+
+        </s:div>
+    </h:form>
+</ui:composition>

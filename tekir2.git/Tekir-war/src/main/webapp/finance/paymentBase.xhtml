@@ -1,0 +1,337 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax" 
+	xmlns:ut="http://utech.com/jsf/comps"
+	xmlns:c="http://java.sun.com/jstl/core">
+
+	<r:panel>
+		<f:facet name="header">
+			<s:fragment>
+				<h:graphicImage url="/img/coins_add.gif" alt="#{messages[ut:concat(currentEntity.documentType.camelCaseName(),'.img.Form')]}" />
+				<h:outputText value="#{messages[ut:concat(currentEntity.documentType.camelCaseName(),'.caption.Form')]}" />
+			</s:fragment>
+		</f:facet>
+
+		<s:fragment rendered="#{not currentHome.isEditable}">
+			<h:outputText value="#{messages[ut:concat(currentEntity.documentType.camelCaseName(),'.hint.NotEditable')]}" styleClass="hint" />
+		</s:fragment>
+
+		<h:panelGrid columns="3">
+			<s:fragment>
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Serial']}" accesskey="Q" />
+					</ui:define>
+					<h:inputText value="#{currentEntity.serial}" styleClass="middle" required="true" accesskey="Q"
+						disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}" />
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Reference']}" />
+					</ui:define>
+					<h:inputText value="#{currentEntity.reference}" styleClass="middle" required="false" />
+				</s:decorate>
+
+				<a:region renderRegionOnly="true">
+					<ut:contact value="#{currentEntity.contact}" required="true" />
+				</a:region>
+
+				<ut:account value="#{currentEntity.account}" required="true" />
+			</s:fragment>
+
+			<s:fragment>
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Code']}" />
+					</ui:define>
+					<h:inputText value="#{currentEntity.code}" styleClass="middle" />
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Date']}" />
+					</ui:define>
+					<r:calendar value="#{currentEntity.date}" enableManualInput="true" datePattern="#{messages['general.format.Date']}" required="true" />
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Status']}" />
+					</ui:define>
+					<h:selectBooleanCheckbox id="active" value="#{currentEntity.active}" styleClass="checkbox" />
+					<h:outputLabel value="#{messages['general.label.Active']}" for="active" styleClass="checkboxLabel" />
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Advance']}" />
+					</ui:define>
+					<h:selectOneMenu id="processType" value="#{currentEntity.processType}" styleClass="middle">
+						<f:selectItem itemLabel="#{messages['paymentProcessType.label.Normal']}" itemValue="Normal"/>
+						<f:selectItem itemLabel="#{messages['paymentProcessType.label.Advance']}" itemValue="Advance"/>
+						<f:selectItem itemLabel="#{messages['paymentProcessType.label.AdvanceReturn']}" itemValue="AdvanceReturn"/>
+						<a:support event="onchange" reRender="processType" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+			</s:fragment>
+
+			<s:fragment>
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Info']}" />
+					</ui:define>
+					<h:inputTextarea value="#{currentEntity.info}" styleClass="exlarge" rows="4" />
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Deliverer']}" />
+					</ui:define>
+					<h:inputText value="#{currentEntity.deliverer}" styleClass="middle" />
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Recepient']}" />
+					</ui:define>
+					<h:inputText value="#{currentEntity.recepient}" styleClass="middle" />
+				</s:decorate>
+			</s:fragment>
+		</h:panelGrid>
+
+		<script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+
+		<a:region>
+			<r:dataTable id="its" var="item" value="#{currentEntity.items}" rowKeyVar="rowKey" styleClass="detailTable"
+				onRowMouseOver="this.style.backgroundColor='#F8F8F8'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+				<f:facet name="header">
+					<r:columnGroup>
+						<r:column colspan="5">
+							<h:outputText value="#{messages['general.label.Details']}" />
+						</r:column>
+						<r:column styleClass="actionColumnDouble">
+							<div>
+								<r:dropDownMenu value="Menu">
+									<f:facet name="label">
+										<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+									</f:facet>
+	
+									<r:menuItem action="#{currentHome.createNewLine()}" value="#{messages['general.label.Cash']}" submitMode="ajax" reRender="its" />
+	
+									<r:menuItem action="#{currentHome.popupChequeCreate()}" oncomplete="Richfaces.showModalPanel('customerCheAddSelectPop')"
+										submitMode="ajax" value="#{messages['collection.label.CreateClientCheque']}" 
+										rendered="#{currentEntity.documentType eq 'Collection'}"
+										reRender="customerCheAddSelectPop">
+										<a:actionparam value="true" assignTo="#{chequePopupHome.isClient}" />
+									</r:menuItem>
+	
+									<r:menuItem action="#{currentHome.popupPromissoryCreate()}" oncomplete="Richfaces.showModalPanel('customerPromissoryAddSelectPop')"
+										submitMode="ajax" value="#{messages['collection.label.CreateClientPromissory']}"
+										rendered="#{currentEntity.documentType eq 'Collection'}"
+										reRender="customerPromissoryAddSelectPop">
+										<a:actionparam value="true" assignTo="#{promissoryPopupHome.isClient}" />
+									</r:menuItem>
+
+                           			<r:menuItem action="#{paymentHome.popupChequeSelect(0)}"
+                           				oncomplete="Richfaces.showModalPanel('cheSelectPop')" 
+                           				submitMode="ajax"
+                           				reRender="cheSelectPop"
+                           				value="#{messages['collection.label.SelectClientCheque']}" 
+                           				rendered="#{currentEntity.documentType eq 'Payment'}">
+                           			</r:menuItem>
+                           	
+                           			<r:menuItem action="#{paymentHome.popupPromissorySelect(0)}"
+                           				oncomplete="Richfaces.showModalPanel('promissorySelectPop')" 
+                           				submitMode="ajax"
+                           				reRender="promissorySelectPop"
+                           				value="#{messages['collection.label.SelectClientPromissory']}"
+                           				rendered="#{currentEntity.documentType eq 'Payment'}">
+                           			</r:menuItem>
+
+                           			<r:menuItem action="#{paymentHome.popupChequeCreate()}"
+										oncomplete="Richfaces.showModalPanel('firmCheAddSelectPop')"
+										submitMode="ajax"
+										reRender="firmCheAddSelectPop"
+										value="#{messages['collection.label.CreateFirmCheque']}"
+										rendered="#{currentEntity.documentType eq 'Payment'}">
+										<a:actionparam value="false" assignTo="#{chequePopupHome.isClient}" />
+									</r:menuItem>
+
+									<r:menuItem action="#{paymentHome.popupPromissoryCreate()}"
+										oncomplete="Richfaces.showModalPanel('firmPromissoryAddSelectPop')"
+										submitMode="ajax"
+										reRender="firmPromissoryAddSelectPop"
+										value="#{messages['collection.label.CreateFirmPromissory']}"
+										rendered="#{currentEntity.documentType eq 'Payment'}">
+										<a:actionparam value="false" assignTo="#{promissoryPopupHome.isClient}" />
+									</r:menuItem>
+								</r:dropDownMenu>
+							</div>
+						</r:column>
+
+						<r:column breakBefore="true" styleClass="codeField">
+							<h:outputText value="#{messages['general.label.Code']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.Info']}" />
+						</r:column>
+						<r:column styleClass="amountField">
+							<h:outputText value="#{messages['general.label.Amount']}" />
+						</r:column>
+						<r:column styleClass="ccyField">
+							<h:outputText value="#{messages['general.label.Currency']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.FollowUp']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="" />
+						</r:column>
+					</r:columnGroup>
+				</f:facet>
+
+				<r:column>
+					<h:inputText value="#{item.lineCode}" styleClass="codeField utdff" />
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.info}" style="width:500px;" disabled="#{currentHome.cekMi(rowKey) or currentHome.senetMi(rowKey)}" />
+					
+					<s:fragment rendered="#{currentEntity.documentType eq 'Collection'}">
+						<a:commandLink action="#{currentHome.findCheque(rowKey)}" oncomplete="Richfaces.showModalPanel('customerCheAddSelectPop')"
+							rendered="#{currentHome.cekMi(rowKey) and currentHome.firmaCekiMi}" reRender="customerCheAddSelectPopDiv">
+							<h:graphicImage url="/img/edit.gif" />
+						</a:commandLink>
+	
+						<a:commandLink action="#{currentHome.findPromissory(rowKey)}" oncomplete="Richfaces.showModalPanel('customerPromissoryAddSelectPop')"
+							rendered="#{currentHome.senetMi(rowKey) and currentHome.firmaSenediMi}">
+							<h:graphicImage url="/img/edit.gif" />
+						</a:commandLink>
+					</s:fragment>
+					
+					<s:fragment rendered="#{currentEntity.documentType eq 'Payment'}">
+						<a:commandLink action="#{paymentHome.findCheque(rowKey)}"
+							oncomplete="Richfaces.showModalPanel('firmCheAddSelectPop')"
+							reRender="firmCheAddSelectPop"
+							rendered="#{paymentHome.cekMi(rowKey) and !paymentHome.firmaCekiMi}">
+							<h:graphicImage url="/img/edit.gif" />
+						</a:commandLink>
+						
+						<a:commandLink action="#{paymentHome.findPromissory(rowKey)}"
+							oncomplete="Richfaces.showModalPanel('customerPromissoryAddSelectPop')"
+							reRender="customerPromissoryAddSelectPop"
+							rendered="#{paymentHome.senetMi(rowKey) and paymentHome.firmaSenediMi}">
+							<h:graphicImage url="/img/edit.gif" />
+						</a:commandLink>
+	
+						<a:commandLink action="#{paymentHome.findCheque(rowKey)}"
+							oncomplete="Richfaces.showModalPanel('customerCheAddSelectPop')"
+							reRender="customerCheAddSelectPop"
+							rendered="#{paymentHome.cekMi(rowKey) and paymentHome.firmaCekiMi}">
+							<h:graphicImage url="/img/edit.gif" />
+						</a:commandLink>
+	
+						<a:commandLink action="#{paymentHome.findPromissory(rowKey)}"
+							oncomplete="Richfaces.showModalPanel('firmPromissoryAddSelectPop')"
+							reRender="firmPromissoryAddSelectPop"
+							rendered="#{paymentHome.senetMi(rowKey) and !paymentHome.firmaSenediMi}">
+							<h:graphicImage url="/img/edit.gif" />
+						</a:commandLink>
+					</s:fragment>
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.amount.value}" styleClass="amountField" alt="decimal" onfocus="setMasks();" converter="bigDecimalConverter"
+						disabled="#{currentHome.cekMi(rowKey) or currentHome.senetMi(rowKey)}" />
+				</r:column>
+
+				<r:column>
+					<h:selectOneMenu value="#{item.amount.currency}" styleClass="ccyField"
+						disabled="#{currentHome.cekMi(rowKey) or currentHome.senetMi(rowKey)}">
+						<s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}"
+							noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true" />
+					</h:selectOneMenu>
+				</r:column>
+
+				<r:column>
+					<a:region id="regFollowUp">
+						<s:decorate>
+							<h:inputText id="followUpTxt" value="#{item.workBunch}" styleClass="small" style="float:left" converter="workBunchCaptionConverter" />
+
+							<a href="javascript:workBunchSelectPopup('#{r:clientId('followUpTxt')}')" style="float: left"> 
+								<h:graphicImage url="/img/selectBox.gif" /> 
+							</a>
+
+							<r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true" 
+								suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+								fetchValue="#{fitem.caption}">
+								<h:column>
+									<h:outputText value="#{fitem.code}" />
+								</h:column>
+								<h:column>
+									<h:outputText value="#{fitem.name}" />
+									<h:outputText value=" "/>
+									<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+								</h:column>
+							</r:suggestionbox>
+						</s:decorate>
+					</a:region>
+				</r:column>
+
+				<r:column styleClass="actionColumnDouble">
+					<a:commandLink reRender="matches" action="#{currentHome.setLineIndex(rowKey)}"
+						oncomplete="Richfaces.showModalPanel('docMatchEditPopup');setMasks();">
+						<h:graphicImage url="#{theme.documentMatchIcon}" title="#{messages['general.label.DocumentMatches']}" />
+					</a:commandLink>
+
+					<a:commandLink reRender="its" action="#{currentHome.deleteLine(rowKey)}">
+						<h:graphicImage url="/img/delete.gif" />
+					</a:commandLink>
+				</r:column>
+			</r:dataTable>
+
+			<h:panelGrid columns="4" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+				<s:div style="margin-right:4px;">
+					<r:dataTable id="ccyRates" var="item" value="#{currentEntity.currencyRates}" rowKeyVar="rowKey" styleClass="detailTable">
+						<f:facet name="header">
+							<h:outputText value="#{messages['general.label.CcyRates']}" />
+						</f:facet>
+						<r:column>
+							<h:outputText value="#{item.currencyPair.caption}" />
+						</r:column>
+						<r:column>
+							<h:inputText value="#{item.ask}" styleClass="tiny" alt="decimal_rate" converter="currencyConverter" />
+						</r:column>
+					</r:dataTable>
+				</s:div>
+
+				<s:div style="margin-left:4px;">
+					<r:panel>
+						<f:facet name="header">
+							<s:div>
+								<s:div style="float:right;">
+									<a:commandLink reRender="its,ccyRates,grandTotal,messagesDiv" action="#{currentHome.recalculate()}" accesskey="C"
+										oncomplete="focusLastRow(); setMasks();">
+										<h:graphicImage url="/img/reload.gif" />
+										<h:outputText value="#{messages['general.button.Calculate']}" />
+									</a:commandLink>
+								</s:div>
+
+								<h:outputText value="#{messages['general.label.GrandTotal']}" />
+							</s:div>
+						</f:facet>
+
+						<h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+							<h:outputText value="#{messages['general.label.Total']} :" />
+							<h:outputText value="#{currentEntity.totalAmount}" />
+						</h:panelGrid>
+					</r:panel>
+				</s:div>
+			</h:panelGrid>
+
+		</a:region>
+	</r:panel>
+</ui:composition>

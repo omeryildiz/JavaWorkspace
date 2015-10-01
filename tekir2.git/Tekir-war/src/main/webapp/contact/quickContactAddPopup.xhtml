@@ -1,0 +1,28 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+    
+    <r:modalPanel  id="quickContactAddPop" minHeight="400" minWidth="800" 
+                   height="400" width="850" zindex="100" onshow="saveContactReturnPoint(event.parameters.retpoint);setMasks();" 
+                   onhide="selectValue( event.parameters.retpoint, event.parameters.result );">
+        <f:facet name="header">
+            <s:fragment>
+                <h:graphicImage url="/img/vcard.gif" /> 
+                <h:outputText value="#{messages['contact.addBox.Caption']}" />
+            </s:fragment>
+        </f:facet>
+        <f:facet name="controls">
+            <h:graphicImage value="/img/exit.gif" style="cursor:pointer" onclick="closeQuickContactAdd('')" />
+        </f:facet>
+        
+        
+        <a:include styleClass="innerpop" viewId="/contact/quickContactAdd.xhtml" />
+        
+    </r:modalPanel>
+</ui:composition>

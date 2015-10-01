@@ -1,0 +1,273 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" 
+	template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="toolbar">
+		<div class="pathgroup">
+			<s:link view="/finance/finance.xhtml" propagation="none">
+				<h:outputText value="#{messages['module.caption.Finance']}" />
+			</s:link> 
+			<h:outputText value=" » " />
+			<s:link view="/finance/countNoteEntryBrowse.xhtml" propagation="none">
+				<h:outputText value="#{messages['module.caption.CountNoteEntryBrowse']}" />
+			</s:link>
+		</div>
+	</ui:define>
+
+    <ui:define name="rightBar">
+        <s:link view="/stock/countNoteComparePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+    </ui:define>
+    
+	<ui:define name="body">
+
+		<h1><h:outputText value="#{messages['module.caption.CountNoteCompare']}" /></h1>
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+		<s:div id="messagesDiv">
+			<ui:include src="/layout/messages.xhtml" />
+		</s:div>
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif" alt="#{messages['countNoteCompare.img.Form']}" />
+						<h:outputText value="#{messages['countNoteDefinition.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Serial']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.serial ? messages['general.value.None'] : countNote.serial}"/>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Reference']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.reference ? messages['general.value.None'] : countNote.reference}"/>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Code']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.code ? messages['general.value.None'] : countNote.code}"/>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Info']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.info ? messages['general.value.None'] : countNote.info}"/>
+						</s:decorate>
+
+					</s:fragment>
+
+					<s:fragment>
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Date']}"/>
+							</ui:define>
+							<h:outputText value="#{messages['general.value.None']}" rendered="#{countNote.date eq null}" />
+							<h:outputText value="#{countNote.date}">
+								<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+							</h:outputText>
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Warehouse']}"/>
+							</ui:define>
+							<h:outputText value="#{empty countNote.warehouse.code ? messages['general.value.None'] : countNote.warehouse.code}"/>
+						</s:decorate>
+					</s:fragment>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="3">
+					
+					<s:decorate template="/layout/edit.xhtml">
+                           <ui:define name="label">
+                           	<h:outputText value="#{messages['product.label.Category']}"/>
+                           </ui:define>
+                           <h:selectOneMenu value="#{countNoteHome.category}" 
+                                            styleClass="middle">
+                               <s:selectItems value="#{stockSuggestion.productCategoryList}" 
+                                   var="item"
+                                   label="#{item.code}"
+                                   noSelectionLabel="#{messages['general.value.All']}"
+                                   hideNoSelectionLabel="false"/>
+                               <s:convertEntity />
+							<a:support event="onchange" action="#{countNoteHome.applyFilter()}" reRender="its"
+								ajaxSingle="true"/>
+                           </h:selectOneMenu> 
+                       </s:decorate>
+
+                       <s:decorate template="/layout/edit.xhtml">
+                           <ui:define name="label">
+                           	<h:outputText value="#{messages['product.label.ProductGroup']}"/>
+                           </ui:define>
+                           
+                           <h:selectOneMenu value="#{countNoteHome.group}" 
+                                            styleClass="middle">
+                               <s:selectItems value="#{generalSuggestion.productGroupList}" 
+                                   var="item" label="#{item.code} - #{item.name}"
+                                   noSelectionLabel="#{messages['general.value.All']}"
+                                   hideNoSelectionLabel="false"/>
+                               <s:convertEntity />
+							<a:support event="onchange" action="#{countNoteHome.applyFilter()}" reRender="its"
+								ajaxSingle="true"/>
+                           </h:selectOneMenu> 
+                       </s:decorate>
+				
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['general.label.RowCount']}"/>
+						</ui:define>
+						<h:inputText value="#{countNoteHome.rowCount}" styleClass="small">
+							<a:support event="onblur" reRender="its" ajaxSingle="true" eventsQueue="cnQueue"/>
+						</h:inputText>
+					</s:decorate>
+				</h:panelGrid>
+				<a:region>
+				<r:dataTable id="its" var="item" value="#{countNoteHome.compareList}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0"
+					rows="#{countNoteHome.rowCount}" >
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Barcode']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.ProductCode']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.ProductName']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Counted']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Found']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Difference']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Correction']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Price']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.Currency']}" />
+							</r:column>
+							<r:column>
+								<h:selectBooleanCheckbox value="#{countNoteHome.checkboxSelected}">
+									<a:support event="onchange" reRender="its" 
+										ajaxSingle="true" ignoreDupResponses="true" status="commonAjaxStatus"/>
+								</h:selectBooleanCheckbox>
+							</r:column>
+						</r:columnGroup>
+					</f:facet>
+
+					<r:column style="border:0">
+						<h:outputText value="#{item.item.product.barcode1}" />
+					</r:column>
+
+					<r:column style="border:0" filterBy="#{item.item.product.code}" filterEvent="onkeyup">
+						<h:outputText value="#{item.item.product.code}" />
+					</r:column>
+
+					<r:column style="border:0" filterBy="#{item.item.product.name}" filterEvent="onkeyup" >
+						<h:outputText value="#{item.item.product.name}" />
+					</r:column>
+
+                    <r:column style="border:0" styleClass="amountFieldTiny">
+                        <h:outputText id="countedQuantity" value="#{item.counted}"
+			              styleClass="amountField" converter="doubleConverter" />
+                    </r:column>
+
+                    <r:column style="border:0" styleClass="amountFieldTiny">
+                        <h:outputText id="foundQuantity" value="#{item.found}"
+			              styleClass="amountField" converter="doubleConverter" />
+                    </r:column>
+
+                    <r:column style="border:0" styleClass="amountFieldTiny">
+                        <h:outputText id="differenceQuantity" value="#{item.difference}"
+			              styleClass="amountField" converter="doubleConverter" />
+                    </r:column>
+
+                    <r:column style="border:0" styleClass="amountFieldTiny">
+                        <h:outputText id="corrQuantity" value="#{item.item.corrQuantity.doubleValue()}"
+			              styleClass="amountField" converter="doubleConverter"/>
+                    </r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.item.price.value}" styleClass="amountField" 
+							alt="decimal" converter="bigDecimalConverter">
+						</h:outputText>
+					</r:column>
+
+					<r:column style="width:41px; border:0">
+						<h:outputText value="#{item.item.price.currency}" styleClass="ccyField" />
+					</r:column>
+
+					<r:column style="border:0" styleClass="actionColumn">
+						<h:selectBooleanCheckbox value="#{item.process}" />
+					</r:column>
+
+                    <f:facet name="footer">
+                        <r:datascroller for="its" renderIfSinglePage="false"/>          
+                    </f:facet>
+				</r:dataTable>
+				<a:queue ignoreDupResponses="true"/>
+				</a:region>
+			</r:panel>
+
+			<div class="actionButtons">
+				<a:commandButton action="#{countNoteHome.makeUpTheDifference()}" styleClass="button" 
+					value="#{messages['countNote.label.MakeUpTheDifference']}" reRender="messagesDiv,its,edit"
+					rendered="#{s:hasPermission('countNote', 'makeUpTheDifference')}">
+				</a:commandButton>
+
+				<a:commandButton action="#{countNoteHome.addUncountedProducts()}" styleClass="button" 
+					value="#{messages['countNote.label.AddUncountedItems']}" reRender="messagesDiv,its,edit"
+					ajaxSingle="true" rendered="#{s:hasPermission('countNote', 'addUncountedItems')}">
+				</a:commandButton>
+
+				<a:commandButton id="edit" action="#{countNoteHome.openForEditing()}" styleClass="button" 
+					value="#{messages['countNote.label.OpenForEditing']}" reRender="messagesDiv"
+					ajaxSingle="true" 
+					rendered="#{s:hasPermission('countNote', 'openForEditing') and countNote.status eq 'Finished'}">
+				</a:commandButton>
+
+				<s:button id="done" value="#{messages['general.button.Close']}"
+					action="#{countNoteHome.close()}" styleClass="button" />
+			</div>
+
+		</h:form>
+    </ui:define>
+
+</ui:composition>

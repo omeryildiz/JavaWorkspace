@@ -1,0 +1,16 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                 xmlns:s="http://jboss.com/products/seam/taglib">
+                 
+    <li>
+        <s:link view="#{view}" propagation="none" disabled="#{disabled}" styleClass="#{styleClass}">
+            <f:param name="eid" value="0"/>
+            <h:graphicImage url="#{img}" />
+            <h:outputText value="#{text}" />
+         </s:link>
+    </li>
+    
+</ui:composition>

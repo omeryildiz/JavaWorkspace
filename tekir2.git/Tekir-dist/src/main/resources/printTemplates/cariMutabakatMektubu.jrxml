@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cariMutabakatMektubu" pageWidth="594" pageHeight="842" whenNoDataType="BlankPage" columnWidth="536" leftMargin="29" rightMargin="29" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="214"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="pReportDate" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="totallcyval" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="person" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="pCompanyName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pCompanyAddress" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pCompanyTaxOffice" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pCompanyTaxNumber" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pLogopath" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new String("Hata: /sablonlar/logo2.gif bulunamadi")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pCompanyPhone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pCompanyFax" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pCompanyEmail" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pCompanyWeb" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pProductLabel" class="java.lang.String"/>
+	<parameter name="pReportCurrency" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="company" class="java.lang.String">
+		<fieldDescription><![CDATA[company]]></fieldDescription>
+	</field>
+	<field name="fullname" class="java.lang.String">
+		<fieldDescription><![CDATA[fullname]]></fieldDescription>
+	</field>
+	<field name="totallcyval" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[totallcyval]]></fieldDescription>
+	</field>
+	<field name="currency" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="146" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-1" x="430" y="81" width="92" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-2" x="24" y="94" width="350" height="26"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[($P{person}.intValue() == 0) ? $F{company} : $F{fullname}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-1" x="24" y="81" width="48" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Sayın,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-20" x="208" y="122" width="166" height="19"/>
+				<textElement>
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[MUTABAKAT MEKTUBU]]></text>
+			</staticText>
+			<image scaleImage="RetainShape">
+				<reportElement key="image-1" x="24" y="5" width="128" height="64"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{pLogopath}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="257" splitType="Stretch">
+			<line>
+				<reportElement key="line-1" x="24" y="255" width="503" height="1"/>
+			</line>
+			<staticText>
+				<reportElement key="staticText-13" x="23" y="11" width="83" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Sayın yetkili,]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="217" y="28" width="95" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{pReportDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-14" x="23" y="28" width="194" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Şirketimizde bulunan cari hesaplarınız ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-15" x="312" y="28" width="83" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[ tarihi itibari ile ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField-10" x="395" y="28" width="132" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{totallcyval}.compareTo( BigDecimal.ZERO ) < 0 ) ? $P{totallcyval}.concat(" " + $P{pReportCurrency}.concat( " Alacak " )) : $P{totallcyval}.concat(" " + $P{pReportCurrency}.concat( " Borç " ))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-16" x="23" y="41" width="504" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[bakiyesi vermektedir.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-17" x="23" y="57" width="504" height="26"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Mutabakat durumunuzu bu mektubun alt kısmını onaylayarak, aşağıdaki faks numaramıza geri göndermenizi rica ederiz.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-18" x="23" y="93" width="119" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Saygılarımızla]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-12" x="23" y="106" width="293" height="28"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pCompanyName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-19" x="23" y="187" width="504" height="66"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Notlar:
+		1. Bakiyede mutabık olmadığınız takdirde bir hesap ekstrenizin tarafımıza gönderilmesini rica ederiz.
+		2. İş bu yazımızın tarafınıza ulaştığı tarihten itibaren 10 (on) gün içinde  cevap verilmediği
+		    takdirde T.T.K. 92. maddesi gereğince bakiyede mutabık sayılacağımızı bildiririz.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-21" x="23" y="136" width="48" height="13"/>
+				<textElement>
+					<font fontName="Lucida Sans" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Telefon]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-22" x="71" y="136" width="9" height="13"/>
+				<textElement>
+					<font fontName="Lucida Sans" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-24" x="23" y="149" width="48" height="13"/>
+				<textElement>
+					<font fontName="Lucida Sans" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Faks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-25" x="71" y="149" width="9" height="13"/>
+				<textElement>
+					<font fontName="Lucida Sans" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="84" y="136" width="232" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pCompanyPhone}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="84" y="148" width="232" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pCompanyFax}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-18" x="407" y="93" width="119" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Kaşe / İmza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-25" x="71" y="162" width="9" height="13"/>
+				<textElement>
+					<font fontName="Lucida Sans" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="84" y="161" width="232" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pCompanyEmail}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-24" x="23" y="162" width="48" height="13"/>
+				<textElement>
+					<font fontName="Lucida Sans" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[E-Posta]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="0" y="0" width="239" height="13" forecolor="#666666"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="7" isBold="true" isItalic="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pProductLabel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="142" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-9" x="24" y="21" width="33" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Sayın ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-7" x="59" y="21" width="329" height="26"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pCompanyName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-10" x="24" y="59" width="83" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Kayıtlarımızda ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-8" x="107" y="59" width="95" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{pReportDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-11" x="202" y="59" width="74" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[tarihi itibari ile ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-12" x="24" y="96" width="300" height="46"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Lucida Sans" size="10" isBold="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[Mutabık olduğumuzu / olmadığımızı bildiririz.
+
+Kaşe / İmza
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-27" x="24" y="72" width="506" height="13"/>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[borcunuz / alacağınız bulunmaktadır.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-29" x="426" y="5" width="92" height="13"/>
+				<textElement/>
+				<text><![CDATA[....../....../............]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField-10" x="276" y="59" width="254" height="13"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="10" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["................................................ " + $P{pReportCurrency}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

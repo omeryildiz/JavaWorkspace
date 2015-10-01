@@ -1,0 +1,50 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:s="http://jboss.com/products/seam/taglib"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:c="http://java.sun.com/products/jsp/jstl/1.1/docs/tlddocs/index.html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich" 
+     class="toolbar">
+    
+    <ui:insert name="toolbar" />
+    
+    <ui:remove>
+        <div class="pathgroup">
+            
+            <h:form>
+                <h:outputText value="cid:#{conversation.id}" />
+                
+                <ui:repeat value="#{conversationList}" var="entry">
+                    
+                    
+                    <h:commandLink value="#{entry.description}" action="#{entry.select}"/>
+                    <h:outputText value=" [ #{entry.id} ] "/>
+                    <h:outputText value=" » " />
+                    <ui:remove>
+                        <h:outputText value=" » " rendered="#{not entry.current}"/>
+                    </ui:remove>
+                </ui:repeat>
+                
+                
+                <h:selectOneMenu value="#{switcher.conversationIdOrOutcome}">
+                    <f:selectItems value="#{switcher.selectItems}"/>
+                </h:selectOneMenu>
+                <h:commandButton action="#{switcher.select}" value="Switch"/>
+                
+            </h:form>
+            
+        </div>
+    </ui:remove>
+    
+    
+    <div class="toolgroup-right">
+        <ui:insert name="rightBar"/>
+        <s:link view="/help/help.xhtml" target="HelpWinId" onclick="openHelp();">
+            <f:param name="topic" value="#{conversation.viewId}"/>
+            <h:graphicImage url="/img/help.gif" />
+        </s:link>
+    </div>
+    
+    
+</div>

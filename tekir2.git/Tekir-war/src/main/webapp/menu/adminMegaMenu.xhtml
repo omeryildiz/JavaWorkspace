@@ -1,0 +1,37 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:ut="http://utech.com/jsf/comps"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<table>
+		<tr>
+			<td>
+	            <h3>#{messages['menu.admin.label.Settings']}</h3>
+			    <ul id="list-content">
+			        <ut:paramMenuItem view="/admin/user.xhtml" img="/img/add.gif" text="#{messages['module.caption.User']}"  disabled="#{not s:hasPermission('user', 'select')}"/>
+                                <ut:paramMenuItem view="/admin/role.xhtml" img="/img/add.gif" text="#{messages['module.caption.Role']}" />
+			        <ut:paramMenuItem view="/options/system.options.view.xhtml" img="/img/add.gif" text="#{messages['module.caption.SystemProperties']}"  disabled="#{not s:hasPermission('system', 'select')}"/>
+			        <ut:paramMenuItem view="/options/user.options.view.xhtml" img="/img/add.gif" text="#{messages['module.caption.UserProperties']}"  disabled="#{not s:hasPermission('useroptions', 'select')}"/>
+			    </ul>
+			</td>
+
+			<td>
+	            <h3>#{messages['menu.admin.label.Parameter']}</h3>
+	            <ul id="list-content">
+	                <ut:paramMenuItem view="/general/country.xhtml" img="/img/world.gif" text="#{messages['module.caption.Country']}"  disabled="#{not s:hasPermission('country', 'select')}"/>
+	                <ut:paramMenuItem view="/general/city.xhtml" img="/img/world.gif" text="#{messages['module.caption.City']}"  disabled="#{not s:hasPermission('city', 'select')}"/>
+	                <ut:paramMenuItem view="/general/province.xhtml" img="/img/world.gif" text="#{messages['module.caption.Province']}"  disabled="#{not s:hasPermission('province', 'select')}"/>
+	                <ut:paramMenuItem view="/general/unit.xhtml" img="/img/balance-unbalance.png" text="#{messages['module.caption.Unit']}"  disabled="#{not s:hasPermission('unit', 'select')}"/>
+	                <ut:paramMenuItem view="/general/tax.xhtml" img="/img/zone-money.png" text="#{messages['module.caption.Tax']}"  disabled="#{not s:hasPermission('tax', 'select')}"/>
+	                <ut:paramMenuItem view="/general/foundation.xhtml" img="/img/bank.png" text="#{messages['foundation.caption.Form']}"  disabled="#{not s:hasPermission('foundation', 'select')}"/>
+	                <ut:paramMenuItem view="/general/paymentPlan.xhtml" img="/img/table-money.png" text="#{messages['paymentPlan.caption.Form']}"  disabled="#{not s:hasPermission('paymentPlan', 'select')}"/>
+	                <ut:paramMenuItem view="/general/organizationBrowse.xhtml" img="/img/sitemap.png" text="#{messages['module.caption.OrganizationBrowse']}"  disabled="#{not s:hasPermission('organizationBrowse', 'select')}"/>
+	                <ut:paramMenuItem view="/general/printTemplates.xhtml" img="/img/script-export.png" text="#{messages['module.caption.printTemplates']}"  disabled="#{not s:hasPermission('printTemplates', 'select')}"/>
+				</ul>
+			</td>
+		</tr>
+	</table>
+</div>

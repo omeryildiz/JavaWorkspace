@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+    
+    
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.BankToAccountTransferBrowse']}" /></h1>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <r:dataTable id="browseList" 
+                     var="item"
+                     value="#{bankToAccountTransferBrowse.entityList}" >
+            <f:facet name="header">
+                <h:panelGroup>
+                    <h:outputText value="#{messages['general.label.Results']}"/>
+                </h:panelGroup>
+            </f:facet>
+            <r:column styleClass="serialField">
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Serial']}"/></f:facet>
+                
+                <h:outputText value="#{item.serial}"/>
+                
+            </r:column>
+            <r:column styleClass="serialField">
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Reference']}" /></f:facet>
+                
+                <h:outputText value="#{item.reference}"/>
+                
+            </r:column>
+            
+            
+            <r:column styleClass="dateField">
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Date']}" /></f:facet>
+                <h:outputText value="#{item.date}">
+                    <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                </h:outputText>
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Bank']}" /></f:facet>
+                <h:outputText value="#{item.bank.name}" />
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.BankBranch']}" /></f:facet>
+                <h:outputText value="#{item.bankBranch.name}" />
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.BankAccount']}" /></f:facet>
+                <h:outputText value="#{item.bankAccount.name}" />
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Account']}" /></f:facet>
+                <h:outputText value="#{item.account.code}" />
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Amount']}" /></f:facet>
+                <h:outputText value="#{item.amount.value} #{item.amount.currency}" />
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Cost']}" /></f:facet>
+                <h:outputText value="#{item.cost.value} #{item.cost.currency}" />
+            </r:column>
+            
+            <r:column styleClass="codeField">
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Code']}" /></f:facet>
+                <h:outputText value="#{item.code}" />
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['bankToAccountTransfer.label.Info']}" /></f:facet>
+                <h:outputText value="#{item.info}"/>
+            </r:column>
+            
+            
+        </r:dataTable>
+        
+    </ui:define> 
+</ui:composition>

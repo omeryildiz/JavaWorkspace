@@ -1,0 +1,787 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="admin"/>
+            <ui:param name="curpage" value="sysprop"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+
+        <div class="pathgroup">
+            <s:link view="/admin/adminFront.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Admin']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/admin/systemProperties.xhtml">
+                <h:outputText value="#{messages['module.caption.SystemProperties']}"/>
+            </s:link>
+        </div>
+
+
+    </ui:define>
+
+    <ui:define name="body" enctype="multipart/form-data">
+
+        <h1><h:outputText value="#{messages['module.caption.SystemProperties']}" /></h1>
+
+		<s:div id="messagesDiv">
+        	<ui:include src="/layout/messages.xhtml"/>
+        </s:div>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml"/>
+	
+        <h:form id="form" enctype="multipart/form-data">
+
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <r:panel >
+                    <f:facet name="header"><h:outputText value="Ayarlar Grupları"/></f:facet>
+                    <h:panelGrid columns="1" >
+
+
+                        <r:toggleControl for="optionPane" value="Şirket Bilgileri" switchToState="page1" />
+                        <r:toggleControl for="optionPane" value="Şirket Logo" switchToState="page5" />
+                        <r:toggleControl for="optionPane" value="Seri Numaralar" switchToState="page3" />
+                        <r:toggleControl for="optionPane" value="#{messages['module.caption.QuickLaunch']}" switchToState="page6" />
+                        <r:toggleControl for="optionPane" value="#{messages['selectbox.currencyAlertPopup.Caption']}" switchToState="page7" />
+
+                        <r:toggleControl for="optionPane" value="#{messages['selectbox.organizationLevel.Caption']}" switchToState="page8" />
+                        <r:toggleControl for="optionPane" value="Kısıtlamalar" switchToState="page9" />
+                        <r:toggleControl for="optionPane" value="#{messages['module.caption.UserSpecificSettings']}" switchToState="page10" />
+                        <r:toggleControl for="optionPane" value="#{messages['module.caption.RoundingSettings']}" switchToState="page11" />
+                        <ui:remove>
+                            <r:toggleControl for="optionPane" value="Varsayılan Değerler" switchToState="page2" />
+                            <r:toggleControl for="optionPane" value="Genel Ayarlar" switchToState="page4" />
+                        </ui:remove>
+                    </h:panelGrid>
+                </r:panel>
+
+                <r:togglePanel id="optionPane" value="page1" switchType="client" 
+                	stateOrder="page1,page2,page3,page4,page5,page6,page7,page8,page9,page10,page11">
+
+                    <f:facet name="page1">
+                        <r:panel >
+                            <f:facet name="header"><h:outputText value="Şirket Bilgileri"/></f:facet>
+                            <h:panelGrid columns="2">
+                                <s:fragment>
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Şirket Adı"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['company.Name'].value}" styleClass="large" required="true"/>
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Şirket Ünvanı"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['company.Title'].value}" styleClass="large" required="true"/>
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Vergi Dairesi"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['company.TaxOffice'].value}" styleClass="large" required="true"/>
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Vergi Sicil No"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['company.TaxNumber'].value}" styleClass="large" required="true"/>
+                                    </s:decorate>
+                                </s:fragment>
+                                <s:fragment>
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Fatura Adresi"/></ui:define>
+                                        <h:inputTextarea value="#{optionEditor.optionMap['company.Address'].value}" styleClass="exlarge" rows="10"/>
+                                    </s:decorate>
+                                </s:fragment>
+                            </h:panelGrid>
+                        </r:panel>
+                    </f:facet>
+
+                    <f:facet name="page2">
+                        <r:panel >
+                            <f:facet name="header"><h:outputText value="Varsayılan Değerler"/></f:facet>
+                            <h:panelGrid columns="2">
+                                <s:fragment>
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Sistem Dili"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['base.Lang'].value}" styleClass="small" enabled="false" required="true"/>
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Döviz"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['default.CCY'].value}" styleClass="small" required="true"/>
+                                    </s:decorate>
+                                </s:fragment>
+                                <s:fragment>
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Kasa"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['default.Account'].value}" styleClass="large" required="true"/>
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Depo"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['default.Warehouse'].value}" styleClass="large" required="true"/>
+                                    </s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label"><h:outputText value="Portföy"/></ui:define>
+                                        <h:inputText value="#{optionEditor.optionMap['default.Portfolio'].value}" styleClass="large" required="true"/>
+                                    </s:decorate>
+                                </s:fragment>
+                            </h:panelGrid>
+                        </r:panel>
+                    </f:facet>
+
+
+                    <f:facet name="page3">
+                        <r:panel >
+                            <f:facet name="header"><h:outputText value="Seri Numaralar"/></f:facet>
+                            <table class="dr-table rich-table" cellspacing="0" cellpadding="0" >
+                                <tr class="dr-table-subheader rich-table-subheader">
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" rowspan="2">Belge Türü</td>
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" colspan="2">Fiş No</td>
+                                </tr>
+                                <tr class="dr-table-subheader rich-table-subheader" >
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" >Seri</td>
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" >Sıra</td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Alış Faturası</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.invoice.Purchase'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.invoice.Purchase']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Satış Faturası</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.invoice.Sale'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.invoice.Sale']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Alış İrsaliyesi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.shipment.Purchase'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.shipment.Purchase']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Satış İrsaliyesi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.shipment.Sale'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.shipment.Sale']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Depo Sevk İrsaliyesi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.shipment.Transfer'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.shipment.Transfer']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Tahsilat Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.fund.Collection'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.fund.Collection']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Tediye Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.fund.Payment'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.fund.Payment']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Kasa Hareket Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.fund.Transfer'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.fund.Transfer']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Cari Virman Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.fund.DebitCredit'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.fund.DebitCredit']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Stok Virman Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.stock.ProductVirement'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.stock.ProductVirement']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Alacak Dekont Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.debitcreditnote.Collection'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.debitcreditnote.Collection']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Borç Dekont Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.debitcreditnote.Payment'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.debitcreditnote.Payment']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankadan Kasaya Transfer Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.banktoaccount.Transfer'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.banktoaccount.Transfer']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Kasadan Bankaya Transfer Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.accountToBank.Transfer'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.accountToBank.Transfer']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankadan Cariye Transfer Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.banktocontact.Transfer'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.banktocontact.Transfer']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Cariden Bankaya Transfer Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.contacttobank.Transfer'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.contacttobank.Transfer']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankadan Bankaya Transfer Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.banktobank.Transfer'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.banktobank.Transfer']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Vadeli Hesap İşlem Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.finance.DepositAccount'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.finance.DepositAccount']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bono Alış Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.bond.Purchase'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.bond.Purchase']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bono Satış Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.bond.Sale'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.bond.Sale']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Portföyden Portföye Transfer Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.finance.PortfolioToPortfolio'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.finance.PortfolioToPortfolio']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Çek Giriş Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.chequeFromContactPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.chequeFromContactPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Çek Çıkış Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.chequeToContactPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.chequeToContactPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankaya Çek Teminat Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.chequeToBankAssurancePayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.chequeToBankAssurancePayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankaya Çek Tahsilat Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.chequeToBankPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.chequeToBankPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankada Çek Tahsil Edildi Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.chequeCollectedAtBankPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.chequeCollectedAtBankPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Kasaya Çek Tahsilat Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.chequeToAccountCollectionPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.chequeToAccountCollectionPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Kasadan Çek Ödeme Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.chequeToAccountPaymentPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.chequeToAccountPaymentPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Senet Giriş Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.promissoryFromContactPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.promissoryFromContactPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Senet Çıkış Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.promissoryToContactPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.promissoryToContactPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankaya Senet Teminat Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.promissoryToBankAssurancePayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.promissoryToBankAssurancePayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankaya Senet Tahsilat Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.promissoryToBankPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.promissoryToBankPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Bankada Senet Tahsil Edildi Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.promissoryCollectedAtBankPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.promissoryCollectedAtBankPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Kasaya Senet Tahsilat Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.promissoryToAccountCollectionPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.promissoryToAccountCollectionPayroll']}" styleClass="small"/></td>
+                                </tr>
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Kasadan Senet Ödeme Bordrosu</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.promissoryToAccountPaymentPayroll'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.promissoryToAccountPaymentPayroll']}" styleClass="small"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Cari Kartı</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.cards.Contact'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.cards.Contact']}" styleClass="small"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Stok Kartı</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.cards.Stock'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.cards.Stock']}" styleClass="small"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Hizmet Kartı</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.cards.Service'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.cards.Service']}" styleClass="small"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="dr-table-cell rich-table-cell">Gider Fişi</td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText maxlength="3" value="#{optionEditor.optionMap['serial.expenseNote'].value}" styleClass="small"/></td>
+                                    <td class="dr-table-cell rich-table-cell"><h:inputText value="#{optionEditor.sequenceMap['serial.expenseNote']}" styleClass="small"/></td>
+                                </tr>
+
+                            </table>
+
+                        </r:panel>
+                    </f:facet>
+
+                    <f:facet name="page4">
+                        <r:panel >
+                            <f:facet name="header"><h:outputText value="Genel Ayarlar"/></f:facet>
+                            <r:dataTable id="list"
+                                         var="option"
+                                         value="#{optionEditor.optionList}"
+                                         rendered="#{not empty optionEditor.optionList}"
+                                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                                <r:column>
+                                    <f:facet name="header"><h:outputText value="Ayar"/></f:facet>
+                                    <h:outputText value="#{option.definition.key}" />
+                                </r:column>
+                                <r:column>
+                                    <f:facet name="header"><h:outputText value="Değer"/></f:facet>
+                                    <h:outputText value="#{option.value}" />
+                                </r:column>
+                            </r:dataTable>
+                        </r:panel>
+                    </f:facet>
+
+                    <f:facet name="page5">
+                        <r:panel >
+                            <f:facet name="header"><h:outputText value="Şirket Logo"/></f:facet>
+                            <h:panelGrid columns="2" >
+                                <s:fragment>
+                                    <h:graphicImage value="/img/company.logo.gif" title="Ana Sayfa" style="height:64px" rendered="#{logoManager.useDefaultLogo}"/>
+                                    <s:graphicImage value="#{logoManager.logo}" rendered="#{not logoManager.useDefaultLogo}">
+                                        <s:transformImageSize height="64" maintainRatio="true"/>
+                                    </s:graphicImage>
+                                </s:fragment>
+                                <h:outputText value="Şirket logosunu kurulum ayar dosyalarından değiştirebilirsiniz. Bunun için gerekli bilgiyi www.tekir.com.tr adresinde bulabilirsiniz." />
+                            </h:panelGrid>
+                        </r:panel>
+                    </f:facet>
+
+                    <f:facet name="page6">
+                        <r:panel>
+                            <f:facet name="header"><h:outputText value="#{messages['module.caption.QuickLaunch']}"/></f:facet>
+                            <r:dataTable id="quickList"
+                                         var="item"
+                                         value="#{quickLaunchHome.entityList}"
+                                         rendered="#{not empty quickLaunchHome.entityList}"
+                                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                                <r:column>
+                                    <f:facet name="header"><h:outputText value="#{messages['quickLaunch.label.PageName']}"/></f:facet>
+                                    <h:outputText value="#{item.pageName}" />
+                                </r:column>
+                                <r:column>
+                                    <f:facet name="header"><h:outputText value="#{messages['quickLaunch.label.Key']}"/></f:facet>
+                                    <h:inputText value="#{item.launchKey}" />
+                                </r:column>
+                            </r:dataTable>
+                        </r:panel>
+                    </f:facet>
+
+                    <f:facet name="page7">
+                        <r:panel >
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['selectbox.currencyAlertPopup.Caption']}"/>
+                            </f:facet>
+                            <h:outputText value="#{messages['currencyAlertPopup.label.ShowPopupOnStart']}" />
+                            <h:selectBooleanCheckbox value="#{optionEditor.currencyAlertOption}" />
+                            
+                        </r:panel>
+                    </f:facet>
+
+                    <f:facet name="page8">
+                        <r:panel >
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['selectbox.organizationLevel.Caption']}"/>
+                            </f:facet>
+
+                            <a:region>
+                            	<h:panelGrid columns="2" columnClasses="orgLevelCol1,orgLevelCol2">
+                            		<s:fragment>
+			                            <h:outputText value="#{messages['organizationLevel.label.UseOrganizationScheme']}" />
+			                            <h:selectBooleanCheckbox value="#{optionEditor.organizationSchemeOption}" >
+			                            	<a:support event="onchange" reRender="tablo" ajaxSingle="true"
+			                            		action="#{organizationLevelHome.checkDefaultOrganization()}"/>
+			                            </h:selectBooleanCheckbox>
+                            		</s:fragment>
+
+	                            	<a:outputPanel id="tablo">
+	                            	
+	                            	<r:tabPanel switchType="ajax" contentStyle="width:100%;" 
+	                            		rendered="#{optionEditor.organizationSchemeOption}">
+	                            		<r:tab label="#{messages['organizationLevel.label.LevelName']}">
+	                            		
+											<r:dataTable var="item" id="levelTable"
+												value="#{organizationLevelHome.levelList}" rowKeyVar="rowKey"
+												styleClass="detailTable" rows="10"
+												onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+												onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+												<f:facet name="header">
+													<r:columnGroup>
+														<r:column style="width:400px;">
+															<h:outputText value="#{messages['organizationLevel.label.LevelName']}" />
+														</r:column>
+			
+														<r:column styleClass="actionColumn">
+															<a:commandLink action="#{organizationLevelHome.addNewOrganizationLevel()}"
+																reRender="levelTable" status="commonAjaxStatus">
+																<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+															</a:commandLink>
+														</r:column>
+			
+													</r:columnGroup>									
+												</f:facet>										
+			
+												<r:column>
+													<h:inputText value="#{item.name}" />
+												</r:column>
+												
+												<r:column>
+													<a:commandLink action="#{organizationLevelHome.deleteOrganizationLevel(rowKey)}"
+														reRender="levelTable" status="commonAjaxStatus" 
+														rendered="#{item.level ne 1}">
+														<h:graphicImage url="/img/delete.gif" />
+													</a:commandLink>
+												</r:column>
+												
+												<f:facet name="footer">
+													<r:datascroller for="levelTable" renderIfSinglePage="false" />
+												</f:facet>
+											</r:dataTable>
+									
+	                            		</r:tab>
+
+										<r:tab label="#{messages['organization.label.OrganizationSettings']}">
+											<table class="dr-table rich-table" cellspacing="0" cellpadding="0" >
+												<tr>
+													<td class="dr-table-cell rich-table-cell exlarge" >
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.Contact']}" 
+		                                    				styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.Contact'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>
+
+												<tr>
+													<td class="dr-table-cell rich-table-cell exlarge" >
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.Customer']}" 
+		                                    				styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.Customer'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>
+											
+												<tr>
+													<td class="dr-table-cell rich-table-cell">
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.Account']}" 
+		                                    				styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.Account'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>											
+
+												<tr>
+													<td class="dr-table-cell rich-table-cell">
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.Warehouse']}" styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.Warehouse'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>
+
+												<tr>
+													<td class="dr-table-cell rich-table-cell">
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.BankBranch']}" styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.BankBranch'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>
+												
+												<tr>
+													<td class="dr-table-cell rich-table-cell">
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.Personnel']}" styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.Personnel'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>
+
+												<tr>
+													<td class="dr-table-cell rich-table-cell">
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.Provider']}" styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.Provider'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>
+
+												<tr>
+													<td class="dr-table-cell rich-table-cell">
+		                                    			<h:outputText value="#{messages['organizationLevelOption.label.Agent']}" styleClass="small"/>
+													</td>
+													<td class="dr-table-cell rich-table-cell">
+														<h:selectOneMenu value="#{optionEditor.optionMap['organizationLevelOption.value.Agent'].value}">
+															<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" label="#{item.name}"/>
+														</h:selectOneMenu>
+													</td>
+												</tr>												
+											</table>	
+										</r:tab>	                            	
+	                            	</r:tabPanel>
+
+									<div class="actionButtons">
+										<a:commandButton action="#{organizationLevelHome.save()}" 
+											value="#{messages['organizationLevel.label.saveChanges']}" 
+											styleClass="button" reRender="messagesDiv" 
+											rendered="#{optionEditor.organizationSchemeOption}"/>
+	
+									</div>
+									</a:outputPanel>
+                            	</h:panelGrid>
+                            
+							</a:region>
+                        </r:panel>
+                    </f:facet>
+                    
+                    <f:facet name="page9">
+                    	<r:panel>
+                    	    <f:facet name="header">
+                            	<h:outputText value="#{messages['systemSettings.label.']}"/>
+                            </f:facet>
+							
+							<table class="dr-table rich-table" cellspacing="0" cellpadding="0" >
+                                <tr class="dr-table-subheader rich-table-subheader">
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" rowspan="2">#{messages['systemSettings.label.ControlType']}</td>
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" colspan="3">#{messages['systemSettings.label.ControlValue']}</td>
+                                </tr>
+                                <tr class="dr-table-subheader rich-table-subheader" >
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" style="text-align: left">#{messages['systemSettings.label.Required']}</td>
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" style="text-align: left">#{messages['systemSettings.label.Warning']}</td>
+                                    <td class="dr-table-subheadercell rich-table-subheadercell" style="text-align: left">#{messages['systemSettings.label.NoControl']}</td>
+                                </tr>
+							
+								<tr>
+									<td class="dr-table-cell rich-table-cell exlarge" >
+                                  		<h:outputText value="#{messages['systemSettings.label.StockLevelControl']}" 
+                                  			styleClass="small"/>
+									</td>
+									<td class="dr-table-cell rich-table-cell" colspan="3">
+										<h:selectOneRadio value="#{optionEditor.stockLevelControl}">
+											<s:convertEnum />
+											<s:enumItem enumValue="Required" itemLabel=""/>
+											<s:enumItem enumValue="Warning" itemLabel=""/>
+											<s:enumItem enumValue="NoControl" itemLabel=""/>
+												
+										</h:selectOneRadio>
+									</td>
+								</tr>
+								
+								<tr>
+									<td class="dr-table-cell rich-table-cell exlarge" >
+                                  		<h:outputText value="#{messages['systemSettings.label.AccountLevelControl']}" 
+                                  			styleClass="small"/>
+									</td>
+									<td class="dr-table-cell rich-table-cell" colspan="3">
+										<h:selectOneRadio value="#{optionEditor.accountLevelControl}">
+											<s:convertEnum />
+											<s:enumItem enumValue="Required" itemLabel=""/>
+											<s:enumItem enumValue="Warning" itemLabel=""/>
+											<s:enumItem enumValue="NoControl" itemLabel=""/>
+												
+										</h:selectOneRadio>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="dr-table-cell rich-table-cell exlarge" >
+                                  		<h:outputText value="#{messages['systemSettings.label.ContactRiskLimitControl']}" 
+                                  			styleClass="small"/>
+									</td>
+									<td class="dr-table-cell rich-table-cell" colspan="3">
+										<h:selectOneRadio value="#{optionEditor.contactRiskLimitControl}">
+											<s:convertEnum />
+											<s:enumItem enumValue="Required" itemLabel=""/>
+											<s:enumItem enumValue="Warning" itemLabel=""/>
+											<s:enumItem enumValue="NoControl" itemLabel=""/>
+												
+										</h:selectOneRadio>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="dr-table-cell rich-table-cell exlarge" >
+                                  		<h:outputText value="#{messages['systemSettings.label.ContactCreditLimitControl']}" 
+                                  			styleClass="small"/>
+									</td>
+									<td class="dr-table-cell rich-table-cell" colspan="3">
+										<h:selectOneRadio value="#{optionEditor.contactCreditLimitControl}">
+											<s:convertEnum />
+											<s:enumItem enumValue="Required" itemLabel=""/>
+											<s:enumItem enumValue="Warning" itemLabel=""/>
+											<s:enumItem enumValue="NoControl" itemLabel=""/>
+												
+										</h:selectOneRadio>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="dr-table-cell rich-table-cell exlarge" >
+                                  		<h:outputText value="#{messages['systemSettings.label.StockShelfLifeControl']}" 
+                                  			styleClass="small"/>
+									</td>
+									<td class="dr-table-cell rich-table-cell" colspan="3">
+										<h:selectOneRadio value="#{optionEditor.stockShelfLife}">
+											<s:convertEnum />
+											<s:enumItem enumValue="Required" itemLabel=""/>
+											<s:enumItem enumValue="Warning" itemLabel=""/>
+											<s:enumItem enumValue="NoControl" itemLabel=""/>
+												
+										</h:selectOneRadio>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="dr-table-cell rich-table-cell exlarge" >
+                                  		<h:outputText value="#{messages['systemSettings.label.PriceChangeControl']}" 
+                                  			styleClass="small"/>
+									</td>
+									<td class="dr-table-cell rich-table-cell" colspan="3">
+										<h:selectOneRadio value="#{optionEditor.priceChangeControl}">
+											<s:convertEnum />
+											<s:enumItem enumValue="Required" itemLabel=""/>
+											<s:enumItem enumValue="Warning" itemLabel=""/>
+											<s:enumItem enumValue="NoControl" itemLabel=""/>
+												
+										</h:selectOneRadio>
+									</td>
+								</tr>
+							</table>                    	
+                    	</r:panel>
+                    
+                    </f:facet>
+                    
+                    <f:facet name="page10">
+                        <r:panel>
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['module.caption.UserSpecificSettings']}"/>
+                            </f:facet>
+                      		<b><h:outputText value="Kullanıcı:"/></b>
+                      		<r:spacer width="3"/>
+                            <h:selectOneMenu value="#{optionEditor.userName}" styleClass="middle" >
+                                <s:selectItems value="#{generalSuggestion.userList}" var="acc" 
+                                	label="#{acc.fullName} - #{acc.userName}" itemValue="#{acc.userName}" noSelectionLabel="#{messages['general.value.SelectOne']}" 
+                                	hideNoSelectionLabel="true"/>
+                                <a:support event="onchange" reRender="userOptionList" 
+									ajaxSingle="true" action="#{optionEditor.prepareUserSpecificOptions()}"/>
+                            </h:selectOneMenu>
+							<br/>
+							<br/>
+                            <a:region >
+                            <r:dataTable id="userOptionList"
+                                         var="item"
+                                         value="#{optionEditor.userOptionMap.keySet().toArray()}">
+                                <r:column>
+                                    <f:facet name="header">
+                                    	<h:outputText value="#{messages['Anahtar']}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{messages[item]}" />
+                                </r:column>
+                                
+                                <r:column>
+                                    <f:facet name="header">
+                                    	<h:outputText value="#{messages['Deger']}"/>
+                                    </f:facet>
+                                    <h:inputText value="#{optionEditor.userOptionMap[item].value}" />
+                                </r:column>
+                            </r:dataTable>
+                            </a:region>
+                        </r:panel>
+                    </f:facet>
+                    
+                    <f:facet name="page11">
+                        <r:panel >
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['roundingSettings.label.MaxRoundingAmount']}"/>
+                            </f:facet>
+                            <h:outputText value="±" />
+                            <r:spacer width="2"/>
+                            <h:inputText value="#{optionEditor.optionMap['systemSettings.control.MaxRoundingAmount'].value}" 
+                            	alt="decimal"/>
+                        </r:panel>
+                    </f:facet>
+                    
+                </r:togglePanel>
+
+            </h:panelGrid>
+
+            <div class="actionButtons">
+
+                <h:commandButton id="save"
+                                 value="#{messages['general.button.Save']}"
+                                 action="#{optionEditor.save()}"
+                                 styleClass="button"/>
+
+                <s:button id="done"
+                          value="#{messages['general.button.Close']}"
+                          action="#{optionEditor.close()}"
+                          styleClass="button"/>
+
+            </div>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>

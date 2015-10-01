@@ -1,0 +1,55 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+    
+    
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.ChequeBrowse']}" /></h1>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <r:dataTable id="browseList" 
+                     var="cheque"
+                     value="#{chequeBrowse.entityList}" >
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.ReferenceNumber']}"/></f:facet>
+                                <h:outputText value="#{cheque.referenceNo}"/>
+                            
+                        </r:column>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.ChequeOwner']}"/></f:facet>
+                            
+                                <h:outputText value="#{cheque.chequeOwner}"/>
+                            
+                        </r:column>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Bank']}" /></f:facet>
+                            
+                                <h:outputText value="#{cheque.bankName}"/>
+                            
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Contact']}" /></f:facet>
+                            <h:outputText value="#{cheque.contact.caption}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Info']}" /></f:facet>
+                            <h:outputText value="#{cheque.info}"/>
+                        </r:column>
+                        
+                    </r:dataTable>
+        
+    </ui:define> 
+</ui:composition>

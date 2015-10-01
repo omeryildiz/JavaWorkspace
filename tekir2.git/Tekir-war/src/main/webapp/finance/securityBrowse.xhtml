@@ -1,0 +1,236 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="security"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/securityBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.SecurityBrowse']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/finance/security.xhtml">
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['security.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/finance/securityBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/finance/securityBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>	
+    
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.SecurityBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['security.label.Isin']}" /></ui:define>
+                            <h:inputText value="#{securityBrowse.filterModel.isin}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['security.label.Code']}" /></ui:define>
+                        	<h:inputText value="#{securityBrowse.filterModel.code}" />
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label">
+							<h:outputText value="#{messages['security.label.SecurityType']}" />
+						</ui:define>
+						<h:selectOneMenu value="#{securityBrowse.filterModel.securityType}" styleClass="middle">
+							<s:convertEnum />
+							<s:enumItem enumValue="All" 
+								label="#{messages['security.type.All']}"/>
+							<s:enumItem enumValue="DiscountBond" 
+								label="#{messages['security.type.DiscountBond']}"/>
+							<s:enumItem enumValue="CouponBond"
+								label="#{messages['security.type.CouponBond']}" />
+							<s:enumItem enumValue="IndexedBond"
+								label="#{messages['security.type.IndexedBond']}" />
+							<s:enumItem enumValue="EuroBond"
+								label="#{messages['security.type.EuroBond']}" />
+						</h:selectOneMenu>
+						</s:decorate>
+					</s:fragment>
+					<s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['security.label.BeginIssueDate']}" /></ui:define>
+                            <r:calendar value="#{securityBrowse.filterModel.beginIssueDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['security.label.EndIssueDate']}" /></ui:define>
+                            <r:calendar value="#{securityBrowse.filterModel.endIssueDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                    </s:fragment>    
+                    <s:fragment>    
+                    	<s:decorate template="/layout/edit.xhtml">
+                    	<ui:define name="label"><h:outputText value=""/></ui:define>
+                    	</s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['security.label.BeginMaturityDate']}" /></ui:define>
+                            <r:calendar value="#{securityBrowse.filterModel.beginMaturityDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['security.label.EndMaturityDate']}" /></ui:define>
+                            <r:calendar value="#{securityBrowse.filterModel.endMaturityDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                   </s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{securityBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    <ui:remove>
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{securityBrowse.pdf()}"
+                                     styleClass="button"/>
+                    
+                    <h:commandButton id="detailedPdf" 
+                                     value="#{messages['general.button.DetailedPDF']}" 
+                                     action="#{securityBrowse.detailedPdf()}"
+                                     styleClass="button"/>
+                    </ui:remove>
+                </div>
+            </r:panel>
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="security"
+                                 value="#{securityBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty securityBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['security.label.Isin']}"/></f:facet>
+                            
+                            <s:link view="/finance/security.xhtml">
+                                <f:param name="eid" value="#{security.id}"/>
+                                <h:outputText value="#{security.isin}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        <r:column styleClass="codeField">
+                            <f:facet name="header"><h:outputText value="#{messages['security.label.Code']}" /></f:facet>
+                            
+                            <s:link view="/finance/security.xhtml">
+                                <f:param name="eid" value="#{security.id}"/>
+                                <h:outputText value="#{security.code}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['security.label.IssueDate']}" /></f:facet>
+                            <h:outputText value="#{security.issueDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['security.label.MaturityDate']}" /></f:facet>
+                            <h:outputText value="#{security.maturityDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['security.label.SecurityType']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{messages['security.type.DiscountBond']}" rendered="#{security.securityType eq 'DiscountBond'}"/>
+                        	<h:outputText value="#{messages['security.type.CouponBond']}" rendered="#{security.securityType eq 'CouponBond'}"/>
+                        	<h:outputText value="#{messages['security.type.IndexedBond']}" rendered="#{security.securityType eq 'IndexedBond'}"/>
+                        	<h:outputText value="#{messages['security.type.EuroBond']}" rendered="#{security.securityType eq 'EuroBond'}"/>
+                        </r:column>
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['security.label.CouponCount']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{security.couponCount}" />
+                        </r:column>
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['security.label.Rate']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{security.rate}" />
+                        </r:column>
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['security.label.Unit']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{security.unit}" />
+                        </r:column>
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['security.label.Currency']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{security.currency.code}" />
+                        </r:column>
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['security.label.Info']}" /></f:facet>
+                            <h:outputText value="#{security.info}"/>
+                        </r:column>
+						<f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                    </r:dataTable>
+                </s:div>
+                <r:panel id="msg" rendered="#{empty securityBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+        </h:form>
+    </ui:define> 
+</ui:composition>

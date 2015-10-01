@@ -1,0 +1,368 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="paymentPlan"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/paymentPlan.xhtml">
+                <h:outputText value="#{messages['module.caption.PaymentPlan']}" rendered="#{s:hasPermission('paymentPlan', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{paymentPlanHome.createNew()}" rendered="#{s:hasPermission('paymentPlan', 'insert')}" >
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['paymentPlan.action.Add']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PaymentPlan']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="ppList" 
+                                 var="pp"
+                                 value="#{paymentPlanList}" 
+                                 rendered="#{s:hasPermission('paymentPlan', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['paymentPlan.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{paymentPlanHome.edit(pp)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not pp.active}"/>
+                                <h:outputText value="#{pp.code} - #{pp.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{paymentPlanHome.edit(pp)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['general.hint.EmptyList']}" 
+                    	rendered="#{paymentPlanList.size eq 0}" styleClass="info"/>
+
+                </s:fragment>
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/plugin.gif" alt="#{messages['paymentPlan.img.World']}"/> 
+                            <h:outputText value="#{messages['paymentPlan.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+						<s:fragment>
+							
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.Code']}" />
+								</ui:define>
+								<h:inputText value="#{paymentPlan.code}" maxlength="20" styleClass="medium"
+									required="true" />
+							</s:decorate>
+	
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.Name']}" />
+								</ui:define>
+								<h:inputText value="#{paymentPlan.name}" styleClass="medium" required="true" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.Info']}" />
+								</ui:define>
+								<h:inputTextarea value="#{paymentPlan.info}" styleClass="exlarge" rows="4">
+									<f:validateLength maximum="255"/>
+								</h:inputTextarea>
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['general.label.Status']}" />
+								</ui:define>
+								<h:selectBooleanCheckbox id="active" value="#{paymentPlan.active}"
+									styleClass="checkbox" />
+								<h:outputLabel value="#{messages['general.label.Active']}"
+									for="active" styleClass="checkboxLabel" />
+							</s:decorate>
+
+						</s:fragment>
+						
+						<s:fragment>
+							
+							<s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['paymentPlan.label.ValidityStartDate']}"/>
+	                            </ui:define>
+								<r:calendar value="#{paymentPlan.validityStartDate}" enableManualInput="true"
+									datePattern="#{messages['general.format.Date']}" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['paymentPlan.label.ValidityEndDate']}"/>
+	                            </ui:define>
+								<r:calendar value="#{paymentPlan.validityEndDate}" enableManualInput="true"
+									datePattern="#{messages['general.format.Date']}" />
+							</s:decorate>
+	
+	                        <s:decorate template="/layout/edit.xhtml" >
+	                            <ui:define name="label">
+                                    <h:outputText value="#{messages['paymentContract.label.PaymentDay']}" />
+	                            </ui:define>
+								<s:div styleClass="middle">
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel  value="#{messages['shortday.label.Mon']}" for="firstDay" />
+										<h:selectBooleanCheckbox id="firstDay" value="#{paymentPlan.firstDay}" />
+									</s:div>
+
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel value="#{messages['shortday.label.Tue']}" for="secondDay" />
+										<h:selectBooleanCheckbox id="secondDay" value="#{paymentPlan.secondDay}" />
+									</s:div>
+
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel value="#{messages['shortday.label.Wed']}" for="thirdDay"/>
+										<h:selectBooleanCheckbox id="thirdDay" value="#{paymentPlan.thirdDay}" />
+									</s:div>
+									
+									<s:div  style="width:23px;float:left">
+			                            <h:outputLabel value="#{messages['shortday.label.Thu']}" for="fourthDay"/>
+										<h:selectBooleanCheckbox id="fourthDay" value="#{paymentPlan.fourthDay}" />
+									</s:div>
+
+									<s:div  style="width:26px;float:left">
+			                            <h:outputLabel value="#{messages['shortday.label.Fri']}" for="fifthDay"/>
+										<h:selectBooleanCheckbox id="fifthDay" value="#{paymentPlan.fifthDay}" />
+									</s:div>
+
+									<s:div  style="width:23px;float:left">
+			                            <h:outputLabel value="#{messages['shortday.label.Sat']}" for="sixthDay"/>
+										<h:selectBooleanCheckbox id="sixthDay" value="#{paymentPlan.sixthDay}" />
+									</s:div>
+
+									<s:div  style="width:23px;float:left">
+			                            <h:outputLabel value="#{messages['shortday.label.Sun']}" for="seventhDay"/>
+										<h:selectBooleanCheckbox id="seventhDay" value="#{paymentPlan.seventhDay}" />
+									</s:div>
+								</s:div>
+	                        </s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml" >
+	                            <ui:define name="label">
+                                    <h:outputText value="#{messages['paymentPlan.label.PaymentWeek']}" />
+	                            </ui:define>
+								<s:div styleClass="middle">
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel  value="I." for="firstWeek" />
+										<h:selectBooleanCheckbox id="firstWeek" value="#{paymentPlan.firstWeek}" />
+									</s:div>
+
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel  value="II." for="secondWeek" />
+										<h:selectBooleanCheckbox id="secondWeek" value="#{paymentPlan.secondWeek}" />
+									</s:div>
+
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel  value="III." for="thirdWeek" />
+										<h:selectBooleanCheckbox id="thirdWeek" value="#{paymentPlan.thirdWeek}" />
+									</s:div>
+
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel  value="IV." for="fourthWeek" />
+										<h:selectBooleanCheckbox id="fourthWeek" value="#{paymentPlan.fourthWeek}" />
+									</s:div>
+
+									<s:div style="width:23px;float:left">
+			                            <h:outputLabel  value="V." for="fifthWeek" />
+										<h:selectBooleanCheckbox id="fifthWeek" value="#{paymentPlan.fifthWeek}" />
+									</s:div>
+
+								</s:div>
+
+								<ui:remove>
+								<h:selectOneMenu value="#{paymentPlan.paymentWeek}" styleClass="middle">
+									<f:selectItem itemValue="1" itemLabel="#{messages['general.label.First']} #{messages['general.label.Week']}"/>
+									<f:selectItem itemValue="2" itemLabel="#{messages['general.label.Second']} #{messages['general.label.Week']}"/>
+									<f:selectItem itemValue="3" itemLabel="#{messages['general.label.Third']} #{messages['general.label.Week']}"/>
+									<f:selectItem itemValue="4" itemLabel="#{messages['general.label.Fourth']} #{messages['general.label.Week']}"/>
+								</h:selectOneMenu>
+								</ui:remove>
+	                        </s:decorate>
+						
+						</s:fragment>
+
+                    </h:panelGrid>
+                    
+	                <r:spacer width="1" height="15" title="Here is a spacer..."/>
+                
+                    <a:region renderRegionOnly="true">
+
+                	<r:dataTable id="its" 
+                                 var="item"
+                                 value="#{paymentPlan.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                                 
+                     	<f:facet name="header">
+                     		<r:columnGroup>
+                     			<r:column colspan="4">
+                                    <h:outputText value="#{messages['general.label.Details']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{paymentPlanHome.createNewLine()}" accesskey="N" oncomplete="focusLastRow(); setMasks();">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+
+								<r:column breakBefore="true" style="width:25%;">
+									<h:outputText value="#{messages['general.label.day']}" />
+								</r:column>
+	
+								<r:column style="width:25%;">
+									<h:outputText value="#{messages['paymentPlan.label.DestType']}" />
+								</r:column>
+
+								<r:column style="width:25%;">
+									<h:outputText value="#{messages['paymentPlan.label.CalcType']}" />
+								</r:column>
+
+								<r:column style="width:25%;">
+									<h:outputText value="#{messages['paymentPlan.label.RateOrAmount']}" />
+								</r:column>
+	
+                                <r:column style="actionColumn">
+                                    <h:outputText value="" />
+                                </r:column>
+                     		</r:columnGroup>
+                     	</f:facet>
+
+						<r:column>
+							<h:inputText value="#{item.day}" styleClass="numeric" style="text-align:right"/>						
+						</r:column>
+
+						<r:column>
+							<h:selectOneMenu value="#{item.destType}" style="width:95%;">
+	                        	<s:convertEnum />
+	                            <s:enumItem enumValue="Total" label="#{messages['paymentPlan.descType.Total']}"/>
+	                            <s:enumItem enumValue="Tax" label="#{messages['paymentPlan.descType.Tax']}"/>
+	                            <s:enumItem enumValue="Cost" label="#{messages['paymentPlan.descType.Cost']}"/>
+	                            <s:enumItem enumValue="Fee" label="#{messages['paymentPlan.descType.Fee']}"/>
+	                            <s:enumItem enumValue="TaxBase" label="#{messages['paymentPlan.descType.TaxBase']}"/>
+	                        </h:selectOneMenu> 
+						</r:column>
+						
+						<r:column>
+							 <h:selectOneMenu value="#{item.calcType}" style="width:95%;">
+                                <s:convertEnum />
+                                <s:enumItem enumValue="Rate" label="#{messages['paymentPlan.calcType.Rate']}"/>
+                                <s:enumItem enumValue="Amount" label="#{messages['paymentPlan.calcType.Amount']}"/>
+                                <s:enumItem enumValue="Remaining" label="#{messages['paymentPlan.calcType.Remaining']}"/>
+                                <a:support reRender="rateOrAmount" event="onchange" 
+                                	ajaxSingle="true" oncomplete="setMasks();"/>
+                            </h:selectOneMenu> 
+						</r:column>
+						
+						<r:column id="rateOrAmount">
+						
+							<s:decorate id="rate" rendered="#{item.calcType eq 'Rate'}" template="/layout/inlineedit.xhtml">
+								<h:inputText value="#{item.rate}" style="text-align: right;" 
+									alt="decimal" converter="bigDecimalConverter" />
+							</s:decorate>
+							
+							<s:decorate id="sum" rendered="#{item.calcType eq 'Amount'}" template="/layout/inlineedit.xhtml">
+								<h:inputText value="#{item.rate}" alt="decimal" converter="bigDecimalConverter" />	
+							</s:decorate>
+							
+						</r:column>
+						
+                        <r:column styleClass="actionColumn">
+                           <a:commandLink reRender="its" action="#{paymentPlanHome.deleteLine(rowKey)}" >
+                               <h:graphicImage url="/img/delete.gif" /> 
+                           </a:commandLink>
+                     	</r:column>
+	                    
+	                    <f:facet name="footer">
+	                    	<r:datascroller for="its" maxPages="20" />
+	                    </f:facet>            
+	            	</r:dataTable>
+                     
+                </a:region>
+                
+                <div class="actionButtons">
+                    <h:commandButton id="saveAndNew" 
+                                     value="#{messages['general.button.SaveAndNew']}" 
+                                     action="#{paymentPlanHome.saveAndNew()}"
+                                     rendered="#{s:hasPermission('paymentPlan', 'insert') and s:hasPermission('paymentPlan', 'update')}" 
+                                     styleClass="button"/>  
+                    
+                    <h:commandButton id="save" 
+                                     value="#{messages['general.button.Save']}" 
+                                     action="#{paymentPlanHome.save()}"
+                                     rendered="#{s:hasPermission('paymentPlan', 'insert')}" 
+                                     styleClass="button"/>  
+                    
+                    <s:button id="delete" 
+                              value="#{messages['general.button.Delete']}" 
+                              action="#{paymentPlanHome.delete()}"
+                              rendered="#{not empty paymentPlan.id and s:hasPermission('paymentPlan', 'delete')}"
+                              onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                              styleClass="button"/>
+                    
+                    <s:button id="done" 
+                              value="#{messages['general.button.Close']}"
+                              action="#{paymentPlanHome.close()}"
+                              styleClass="button"/>
+                    
+                </div>
+                    
+            </r:panel>
+                
+	        </h:panelGrid>
+
+        </h:form>
+        
+    </ui:define> 
+
+</ui:composition>

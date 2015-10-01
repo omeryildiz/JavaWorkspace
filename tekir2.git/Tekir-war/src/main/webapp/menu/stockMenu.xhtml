@@ -1,0 +1,129 @@
+<ul xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <li class="#{curpage eq 'stocknew' ? 'current' : '' }">
+        <a href="#"><h:outputText value="#{messages['general.button.New']}" /></a>
+        <ul>
+            <li  class="#{curitem eq 'purchaseShipment' ? 'current' : '' }">
+                <s:link view="/stock/newpurchaseShipment.xhtml" propagation="none">
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['purchaseShipment.action.Add']}" />
+                </s:link>
+            </li>
+            <li  class="#{curitem eq 'saleShipment' ? 'current' : '' }">
+                <s:link view="/stock/newsaleShipment.xhtml" propagation="none">
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['saleShipment.action.Add']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productTransfer' ? 'current' : '' }">
+                <s:link view="/stock/productTransfer.xhtml" propagation="none">
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['productTransfer.action.Add']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productVirement' ? 'current' : '' }">
+                <s:link view="/stock/productVirement.xhtml" propagation="none">
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['productVirement.action.Add']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'purchaseOrder' ? 'current' : '' }">
+                <s:link view="/stock/purchaseOrder.xhtml" propagation="none">
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['purchaseOrder.action.Add']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'saleOrder' ? 'current' : '' }">
+                <s:link view="/stock/saleOrder.xhtml" propagation="none">
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['saleOrder.action.Add']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+    <li class="#{curpage eq 'stockShipment' ? 'current' : '' }">
+        <a href="#">Hareket Fişleri</a>
+        <ul>
+            <li class="#{curitem eq 'purchaseShipmentBrowse' ? 'current' : '' }">
+                <s:link view="/stock/newpurchaseShipmentBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/lorry.gif"
+                                    alt="#{messages['country.img.CurrencyRate']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.PurchaseShipmentBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'saleShipmentBrowse' ? 'current' : '' }">
+                <s:link view="/stock/newsaleShipmentBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/lorry.gif"
+                                    alt="#{messages['country.img.CurrencyRate']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.SaleShipmentBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productTransferBrowse' ? 'current' : '' }">
+                <s:link view="/stock/productTransferBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/lorry.gif"
+                                    alt="#{messages['city.img.World']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.ProductTransferBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productVirementBrowse' ? 'current' : '' }">
+                <s:link view="/stock/productVirementBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/lorry.gif"
+                                    alt="#{messages['city.img.World']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.ProductVirementBrowse']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'stockOrder' ? 'current' : '' }">
+        <a href="#">Sipariş Fişleri</a>
+        <ul>
+            <li class="#{curitem eq 'purchaseOrderBrowse' ? 'current' : '' }">
+                <s:link view="/stock/purchaseOrderBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/lorry.gif"
+                                    alt="#{messages['country.img.CurrencyRate']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.PurchaseOrderBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'saleOrderBrowse' ? 'current' : '' }">
+                <s:link view="/stock/newsaleOrderBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/lorry.gif"
+                                    alt="#{messages['country.img.CurrencyRate']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.SaleOrderBrowse']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'barcodePrintBrowse' ? 'current' : '' }">
+    	<s:link styleClass="sf-not-with-ul"  view="/stock/barcodePrintBrowse.xhtml" >
+    		<h:outputText value="#{messages['general.label.BarcodeSpool']}" />
+    	</s:link>
+    </li>
+
+    <ui:remove>
+        <li class="#{curpage eq 'purchaseShipment' ? 'current' : '' }"><s:link view="/stock/purchaseShipmentBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.PurchaseShipmentBrowse']}" /></s:link></li>
+        <li class="#{curpage eq 'saleShipment' ? 'current' : '' }"><s:link view="/stock/saleShipmentBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.SaleShipmentBrowse']}" /></s:link></li>
+        <li class="#{curpage eq 'productTransfer' ? 'current' : '' }"><s:link view="/stock/productTransferBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.ProductTransferBrowse']}" /></s:link></li>
+        <li class="#{curpage eq 'productVirement' ? 'current' : '' }"><s:link view="/stock/productVirementBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.ProductVirementBrowse']}" /></s:link></li>
+        <li class="#{curpage eq 'purchaseOrder' ? 'current' : '' }"><s:link view="/stock/purchaseOrderBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.PurchaseOrderBrowse']}" /></s:link></li>
+        <li class="#{curpage eq 'saleOrder' ? 'current' : '' }"><s:link view="/stock/saleOrderBrowse.xhtml" propagation="none" ><h:outputText value="#{messages['module.caption.SaleOrderBrowse']}" /></s:link></li>
+    </ui:remove>
+</ul>

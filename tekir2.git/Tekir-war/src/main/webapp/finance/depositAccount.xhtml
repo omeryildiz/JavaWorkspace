@@ -1,0 +1,288 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="depositAccount"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/depositAccountBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.depositAccountBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/depositAccount.xhtml">
+                <h:outputText value="#{messages['module.caption.depositAccount']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{depositAccountHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['depositAccount.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.DepositAccount']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['depositAccount.img.Form']}"/> 
+                        <h:outputText value="#{messages['depositAccount.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:fragment>
+                    	<s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:inputText value="#{depositAccount.serial}" styleClass="middle" 
+                            	required="true" accesskey="Q" 
+                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Reference']}"/></ui:define>
+                            <h:inputText value="#{depositAccount.reference}" styleClass="middle" required="false"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Code']}"/></ui:define>
+                            <h:inputText value="#{depositAccount.code}" styleClass="middle" />
+                        </s:decorate>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Date']}"/></ui:define>
+                            <r:calendar value="#{depositAccount.date}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>                        
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.DepositBeginDate']}"/></ui:define>
+                            <r:calendar value="#{depositAccount.depositBeginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.DepositEndDate']}"/></ui:define>
+                            <r:calendar value="#{depositAccount.depositEndDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{depositAccount.info}" styleClass="exlarge" rows="5"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{depositAccount.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['depositAccount.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <a:region immediate="true" ajaxSingle="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['depositAccount.label.Bank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu value="#{depositAccount.bank}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankBranchBox,bankAccountBox" action="#{depositAccountHome.clearBankAccount()}" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['depositAccount.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBranchBox"
+                                                 value="#{depositAccount.bankBranch}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankBranches(depositAccount.bank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['depositAccount.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankAccountBox"
+                                                 value="#{depositAccount.bankAccount}"
+                                                 required="true"                                                 
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(depositAccount.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo}- #{item.name}-#{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <a:region immediate="true" ajaxSingle="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['depositAccount.label.DepositBank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu value="#{depositAccount.depositBank}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="depositBankBranchBox,depositBankAccountBox" action="#{depositAccountHome.clearDepositBankAccount()}" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['depositAccount.label.DepositBankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="depositBankBranchBox"
+                                                 value="#{depositAccount.depositBankBranch}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankBranches(depositAccount.depositBank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="depositBankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['depositAccount.label.DepositBankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="depositBankAccountBox"
+                                                 value="#{depositAccount.depositBankAccount}"
+                                                 required="true"                                                 
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(depositAccount.depositBankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo}- #{item.name}-#{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="amountCurrency, profitCurrency, taxCurrency" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Rate']}"/></ui:define>
+                            <h:inputText value="#{depositAccount.rate}" styleClass="amountField" required="true" />
+                            <h:outputText value=" %"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Amount']}"/></ui:define>
+                            <h:inputText value="#{depositAccount.amount.value}"  styleClass="amountField" required="true"
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="amountCurrency" value=" #{depositAccount.depositBankAccount.currency }" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                        	<ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Profit']}"/></ui:define>
+                            <h:inputText value="#{depositAccount.profit}" styleClass="amountField" 
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            
+                            <h:outputText value=" " />
+                            <h:outputText id="profitCurrency" value=" #{depositAccount.depositBankAccount.currency }" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['depositAccount.label.Tax']}"/></ui:define>
+                            <h:inputText value="#{depositAccount.tax}" styleClass="amountField" 
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="taxCurrency" value=" #{depositAccount.depositBankAccount.currency }" />
+                        </s:decorate>
+                    </s:fragment>
+                </h:panelGrid>
+                
+                
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{depositAccountHome.save()}"
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{depositAccountHome.delete()}"
+                          rendered="#{not empty depositAccount.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{depositAccountHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

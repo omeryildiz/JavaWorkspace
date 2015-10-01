@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:r="http://richfaces.ajax4jsf.org/rich"
+      xmlns:s="http://jboss.com/products/seam/taglib">
+    <head>    
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Tekir - Yazıcı</title>
+        <link href="../stylesheet/print.css" rel="stylesheet" type="text/css" />
+    </head>
+    
+    <body>
+        <div style="margin:10px;clear:both">
+            <div class="wrap body">
+                <ui:insert name="header"/>
+                <ui:insert name="body"/>
+            </div>
+        </div>
+                
+        <div class="footer" style="margin:10px;">
+            <p style="border-top: 1px solid silver;">
+                Tekir Ticari Otomasyon #{systemProperties.properties['application.version']} - Lisans :
+                <s:link view="/help/help.xhtml" propagation="none" target="HelpWinId" onclick="openHelp();">
+                    <f:param name="topic" value="license.xhtml"/>
+                    GNU LGPL
+                </s:link> - Copyleft 2008-2012 - Bir <!--<img src="/tekir/img/oy.pin.mini.png" />--><a href="http://www.ozguryazilim.com.tr" target="_blank">Özgür Yazılım A.Ş.</a> ürünüdür.
+            </p>          
+        </div>	
+        <ui:debug hotkey="d" rendered="#{true}"/>
+    </body>
+</html>

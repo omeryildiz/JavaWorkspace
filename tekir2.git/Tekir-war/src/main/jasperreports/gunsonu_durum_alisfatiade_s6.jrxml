@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gunsonu_durum_alisfatiade_s6" pageWidth="765" pageHeight="311" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="765" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="pCode" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pBDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date("1900/01/01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pEDate" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new Date("9999/01/01")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pWare" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pUser" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new String("")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pClerk" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pOrgLevel" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pAccount" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select txn.SERIAL,txn.REFERENCE,txn.CODE
+,txn.SHIPPING_DATE,txn.DELIVERY_DATE, txn.TXNDATE,txn.TXNTIME
+,txn.INFO,txn.INFO1,txn.INFO2
+,txn.CREATE_DATE,txn.CREATE_USER,txn.UPDATE_DATE,txn.UPDATE_USER
+,txn.TOTAL_TAX_EXCLUDED_AMOUNT_LCYVAL as VergisizAraToplam
+,txn.TOTAL_DISCOUNT_LCYVAL as SatirIndirimi
+,txn.TOTAL_DOCUMENT_DISCOUNT_LCYVAL as BelgeIndirimi
+,txn.TOTAL_BEFORE_TAX_LCYVAL as OTVMatrah
+,txn.TAX_EXCLUDED_TOTAL_LCYVAL as KDVMatrah
+,txn.TOTAL_TAX_LCYVAL as VergiToplami
+,txn.TOTAL_FEE_LCYVAL as Harc
+,txn.TOTAL_EXPENSE_LCYVAL as Masraf
+,txn.TOTAL_AMOUNT_LCYVAL as VergiliSonToplam
+,txn.ACCOUNT_ID,txn.CONTACT_ID,txn.WAREHOUSE_ID
+,c.FULLNAME as Musteriadi,c.COMPANY as Sirket,c.CODE as Carikod,c.PERSON
+,w.CODE as Depokod,w.NAME as Depoadi
+,usr.FULL_NAME as Tezgahtar
+,org.NAME as Organizasyon, org.ID as ORGID
+from TEKIR_INVOICE txn
+inner join CONTACT c on c.ID = txn.CONTACT_ID
+inner join WAREHOUSE w on w.ID = txn.WAREHOUSE_ID
+inner join ACCOUNT acc on acc.id = txn.account_id
+left outer join USERS usr on usr.ID = txn.CLERK_ID
+left outer join ORGANIZATION org on org.ID = w.ORGANIZATION_ID
+where (txn.TRADE_ACTION = 2) and
+ ( ( $P{pWare} = 0 ) or ( w.ID = $P{pWare} ) ) and
+ ( ( $P{pOrgLevel} = 0 ) or ( org.ID = $P{pOrgLevel} ) ) and
+ ( ( $P{pAccount} = 0 ) or ( txn.ACCOUNT_ID = $P{pAccount} ) ) and
+ ( txn.TXNDATE >= $P{pBDate} and txn.TXNDATE  <= $P{pEDate} )
+
+order by  org.ID, txn.WAREHOUSE_ID, txn.TXNDATE,  txn.TXNTIME]]>
+	</queryString>
+	<field name="SERIAL" class="java.lang.String"/>
+	<field name="REFERENCE" class="java.lang.String"/>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="SHIPPING_DATE" class="java.sql.Date"/>
+	<field name="DELIVERY_DATE" class="java.sql.Timestamp"/>
+	<field name="TXNDATE" class="java.sql.Date"/>
+	<field name="TXNTIME" class="java.sql.Time"/>
+	<field name="INFO" class="java.lang.String"/>
+	<field name="INFO1" class="java.lang.String"/>
+	<field name="INFO2" class="java.lang.String"/>
+	<field name="CREATE_DATE" class="java.sql.Timestamp"/>
+	<field name="CREATE_USER" class="java.lang.String"/>
+	<field name="UPDATE_DATE" class="java.sql.Timestamp"/>
+	<field name="UPDATE_USER" class="java.lang.String"/>
+	<field name="VergisizAraToplam" class="java.math.BigDecimal"/>
+	<field name="SatirIndirimi" class="java.math.BigDecimal"/>
+	<field name="BelgeIndirimi" class="java.math.BigDecimal"/>
+	<field name="OTVMatrah" class="java.math.BigDecimal"/>
+	<field name="KDVMatrah" class="java.math.BigDecimal"/>
+	<field name="VergiToplami" class="java.math.BigDecimal"/>
+	<field name="Harc" class="java.math.BigDecimal"/>
+	<field name="Masraf" class="java.math.BigDecimal"/>
+	<field name="VergiliSonToplam" class="java.math.BigDecimal"/>
+	<field name="ACCOUNT_ID" class="java.lang.Long"/>
+	<field name="CONTACT_ID" class="java.lang.Long"/>
+	<field name="WAREHOUSE_ID" class="java.lang.Long"/>
+	<field name="Musteriadi" class="java.lang.String"/>
+	<field name="Sirket" class="java.lang.String"/>
+	<field name="Carikod" class="java.lang.String"/>
+	<field name="PERSON" class="java.lang.Boolean"/>
+	<field name="Depokod" class="java.lang.String"/>
+	<field name="Depoadi" class="java.lang.String"/>
+	<field name="Tezgahtar" class="java.lang.String"/>
+	<field name="Organizasyon" class="java.lang.String"/>
+	<field name="ORGID" class="java.lang.Long"/>
+	<variable name="SUMGKDVMatrah" class="java.math.BigDecimal" resetType="Group" resetGroup="WARE" calculation="Sum">
+		<variableExpression><![CDATA[$F{KDVMatrah}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMGVergiToplam" class="java.math.BigDecimal" resetType="Group" resetGroup="WARE" calculation="Sum">
+		<variableExpression><![CDATA[$F{VergiToplami}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMGVergiliSonToplam" class="java.math.BigDecimal" resetType="Group" resetGroup="WARE" calculation="Sum">
+		<variableExpression><![CDATA[$F{VergiliSonToplam}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMOKDVMatrah" class="java.math.BigDecimal" resetType="Group" resetGroup="ORGLEVEL" calculation="Sum">
+		<variableExpression><![CDATA[$F{KDVMatrah}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMOVergiToplam" class="java.math.BigDecimal" resetType="Group" resetGroup="ORGLEVEL" calculation="Sum">
+		<variableExpression><![CDATA[$F{VergiToplami}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMOVergiliSonToplam" class="java.math.BigDecimal" resetType="Group" resetGroup="ORGLEVEL" calculation="Sum">
+		<variableExpression><![CDATA[$F{VergiliSonToplam}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMKDVMatrah" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{KDVMatrah}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMVergiToplam" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{VergiToplami}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMVergiliSonToplam" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{VergiliSonToplam}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="TopIndirim" class="java.math.BigDecimal" resetType="Group" resetGroup="ORGLEVEL">
+		<variableExpression><![CDATA[$F{SatirIndirimi}.add( $F{BelgeIndirimi} )]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMTopIndirim" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{TopIndirim}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMOTopIndirim" class="java.math.BigDecimal" resetType="Group" resetGroup="ORGLEVEL" calculation="Sum">
+		<variableExpression><![CDATA[$V{TopIndirim}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="SUMGTopIndirim" class="java.math.BigDecimal" resetType="Group" resetGroup="WARE" calculation="Sum">
+		<variableExpression><![CDATA[$V{TopIndirim}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<group name="ORGLEVEL">
+		<groupExpression><![CDATA[$F{ORGID}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<textField isBlankWhenNull="true">
+					<reportElement key="textField" x="7" y="0" width="100" height="16"/>
+					<textElement>
+						<font size="10" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Organizasyon}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16" splitType="Stretch">
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-1" x="540" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMOKDVMatrah}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-2" x="618" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMOVergiToplam}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-3" x="697" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMOVergiliSonToplam}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="element-99" x="365" y="0" width="100" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+					</textElement>
+					<text><![CDATA[ŞUBE TOPLAM]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-10" x="470" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMOTopIndirim}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="WARE">
+		<groupExpression><![CDATA[$F{WAREHOUSE_ID}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<textField isBlankWhenNull="true">
+					<reportElement key="textField" x="22" y="0" width="101" height="16"/>
+					<textElement>
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Depoadi}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16" splitType="Stretch">
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" x="540" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMGKDVMatrah}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" x="618" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMGVergiToplam}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField" x="697" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMGVergiliSonToplam}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="element-98" x="365" y="0" width="100" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+					</textElement>
+					<text><![CDATA[DEPO TOPLAM]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-9" x="470" y="0" width="66" height="16"/>
+					<textElement textAlignment="Right">
+						<font pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMGTopIndirim}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" x="7" y="5" width="412" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="14" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[ALIŞ İADE FATURALARI]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<line>
+				<reportElement key="line" positionType="FixRelativeToBottom" x="7" y="16" width="754" height="1" forecolor="#808080"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement key="element-90" x="153" y="0" width="63" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[BELGE NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-90" x="217" y="0" width="67" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[TEDARİKÇİ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-91" x="386" y="0" width="60" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[SATICI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-92" x="696" y="0" width="66" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[TOPLAM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-94" x="617" y="0" width="66" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[KDV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-95" x="539" y="0" width="66" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[MATRAH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-96" x="326" y="0" width="60" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[KASİYER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-97" x="99" y="0" width="54" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[FİŞ NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-100" x="26" y="0" width="72" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[TARİH/SAAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-101" x="469" y="0" width="66" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[İNDİRİM]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Prevent">
+			<textField pattern="##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="696" y="0" width="66" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VergiliSonToplam}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="617" y="0" width="67" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VergiToplami}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="540" y="0" width="66" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{KDVMatrah}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="99" y="0" width="54" height="16"/>
+				<textElement>
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SERIAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="153" y="0" width="63" height="16"/>
+				<textElement>
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{REFERENCE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField" x="7" y="0" width="55" height="16"/>
+				<textElement>
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TXNDATE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" x="217" y="0" width="110" height="16"/>
+				<textElement>
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PERSON}.booleanValue() == false ?  $F{Sirket} : $F{Musteriadi}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" x="327" y="0" width="58" height="16"/>
+				<textElement>
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{UPDATE_USER}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" x="386" y="0" width="84" height="16"/>
+				<textElement>
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Tezgahtar}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm" isBlankWhenNull="true">
+				<reportElement key="textField-7" x="62" y="0" width="37" height="16"/>
+				<textElement>
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{TXNTIME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-8" x="470" y="0" width="66" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{TopIndirim}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement key="element-93" x="365" y="2" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[GENEL TOPLAM]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField-4" x="540" y="2" width="66" height="16"/>
+				<textElement textAlignment="Right">
+					<font pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMKDVMatrah}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField-5" x="618" y="2" width="66" height="16"/>
+				<textElement textAlignment="Right">
+					<font pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMVergiToplam}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField-6" x="697" y="2" width="66" height="16"/>
+				<textElement textAlignment="Right">
+					<font pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMVergiliSonToplam}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-1" x="374" y="1" width="388" height="1"/>
+			</line>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement key="textField-11" x="470" y="2" width="66" height="16"/>
+				<textElement textAlignment="Right">
+					<font pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SUMTopIndirim}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

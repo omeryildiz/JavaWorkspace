@@ -1,0 +1,305 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:ut="http://utech.com/jsf/comps"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="discountOrExpenseForm">
+		
+	    <h:messages globalOnly="false" styleClass="message"/>
+
+			<r:panel>
+				<f:facet name="header">
+	                <s:div>
+						<h:graphicImage url="/img/house.gif" alt="#{messages['bankAccount.img.World']}" />
+	                    <h:outputText value="#{messages[ut:concat('selectbox.label.', tenderHome.selectedDiscountOrExpense.productType )]}" />
+	                    <h:outputText value="#{messages['tenderDiscountOrExpense.label.Information']}" />
+	                </s:div>
+				</f:facet>
+	
+				<h:panelGrid columns="2">
+					<h:outputText value="#{messages['tenderDiscountOrExpense.label.DistibutionType']}" 
+						rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense' or
+									tenderHome.selectedDiscountOrExpense.productType eq 'DocumentDiscount'}"
+						styleClass="boldFont"/>
+
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense' or
+										tenderHome.selectedDiscountOrExpense.productType eq 'DocumentDiscount'}">
+						<h:selectOneMenu value="#{tenderHome.selectedDiscountOrExpense.expenseStyle}" 
+							rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}">
+							<f:selectItem itemValue="Equally" itemLabel="#{messages['tender.label.Equally']}"/>
+							<f:selectItem itemValue="AmountBased" itemLabel="#{messages['tender.label.AmountBased']}"/>
+							<f:selectItem itemValue="UnitBased" itemLabel="#{messages['tender.label.UnitBased']}"/>
+						</h:selectOneMenu>
+
+						<h:selectOneMenu value="#{tenderHome.selectedDiscountOrExpense.discountStyle}" 
+							rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'DocumentDiscount'}">
+							<f:selectItem itemValue="Equally" itemLabel="#{messages['tender.label.Equally']}"/>
+							<f:selectItem itemValue="AmountBased" itemLabel="#{messages['tender.label.AmountBased']}"/>
+							<f:selectItem itemValue="UnitBased" itemLabel="#{messages['tender.label.UnitBased']}"/>
+						</h:selectOneMenu>
+					</s:span>
+					
+					<h:outputText value="#{messages['tenderDiscountOrExpense.label.AmountOrRate']}" styleClass="boldFont"/>
+					
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+									   tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}">
+						
+						<s:decorate id="expAmountAndRate" template="/layout/inlineedit.xhtml" styleClass="exlarge">
+							<h:selectOneMenu id ="expenseCheckbox" value="#{tenderHome.selectedDiscountOrExpense.expense.percentage}" 
+								rendered="#{tenderHome.selectedDiscountOrExpense.expense ne null}"
+								styleClass="small">
+								<f:selectItem itemValue="true" itemLabel="#{messages['tenderDetail.label.Rate']}"/>
+								<f:selectItem itemValue="false" itemLabel="#{messages['tenderDetail.label.Amount']}"/>
+								<a:support event="onchange" reRender="expAmountAndRate"
+									oncomplete="setMasks();"/>
+							</h:selectOneMenu>
+						
+							<r:spacer width="5" />
+	
+	                        <h:inputText id="expAmount" rendered="#{tenderHome.selectedDiscountOrExpense.expense ne null and 
+		                       	not tenderHome.selectedDiscountOrExpense.expense.percentage}" 
+		                       	value="#{tenderHome.selectedDiscountOrExpense.expense.value}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+							
+	                        <h:inputText id="expPercentage" rendered="#{tenderHome.selectedDiscountOrExpense.expense ne null and 
+		                       	tenderHome.selectedDiscountOrExpense.expense.percentage}" 
+		                       	value="#{tenderHome.selectedDiscountOrExpense.expense.rate}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+						</s:decorate>
+					</s:span>
+
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Discount' or 
+									   tenderHome.selectedDiscountOrExpense.productType eq 'DocumentDiscount'}">
+						
+						<s:decorate id="discAmountAndRate" template="/layout/inlineedit.xhtml" styleClass="exlarge">
+							<h:selectOneMenu id ="discCheckbox" value="#{tenderHome.selectedDiscountOrExpense.discount.percentage}" 
+								rendered="#{tenderHome.selectedDiscountOrExpense.discount ne null}"
+								styleClass="small">
+								<f:selectItem itemValue="true" itemLabel="#{messages['tenderDetail.label.Rate']}"/>
+								<f:selectItem itemValue="false" itemLabel="#{messages['tenderDetail.label.Amount']}"/>
+								<a:support event="onchange" reRender="discAmountAndRate"
+									oncomplete="setMasks();"/>
+							</h:selectOneMenu>
+						
+							<r:spacer width="5" />
+	
+	                        <h:inputText id="discAmount" rendered="#{tenderHome.selectedDiscountOrExpense.discount ne null and 
+		                       	not tenderHome.selectedDiscountOrExpense.discount.percentage}" 
+		                       	value="#{tenderHome.selectedDiscountOrExpense.discount.value}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+							
+	                        <h:inputText id="discPercentage" rendered="#{tenderHome.selectedDiscountOrExpense.discount ne null and 
+		                       	tenderHome.selectedDiscountOrExpense.discount.percentage}" 
+		                       	value="#{tenderHome.selectedDiscountOrExpense.discount.rate}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+						</s:decorate>
+					</s:span>
+
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Fee' or 
+									   tenderHome.selectedDiscountOrExpense.productType eq 'DocumentFee'}">
+						
+						<s:decorate id="feeAmountAndRate" template="/layout/inlineedit.xhtml" styleClass="exlarge">
+							<h:selectOneMenu id ="feeCheckbox" value="#{tenderHome.selectedDiscountOrExpense.fee.percentage}" 
+								rendered="#{tenderHome.selectedDiscountOrExpense.fee ne null}"
+								styleClass="small">
+								<f:selectItem itemValue="true" itemLabel="#{messages['tenderDetail.label.Rate']}"/>
+								<f:selectItem itemValue="false" itemLabel="#{messages['tenderDetail.label.Amount']}"/>
+								<a:support event="onchange" reRender="feeAmountAndRate"
+									oncomplete="setMasks();"/>
+							</h:selectOneMenu>
+						
+							<r:spacer width="5" />
+	
+	                        <h:inputText id="feeAmount" rendered="#{tenderHome.selectedDiscountOrExpense.fee ne null and 
+		                       	not tenderHome.selectedDiscountOrExpense.fee.percentage}" 
+		                       	value="#{tenderHome.selectedDiscountOrExpense.fee.value}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+							
+	                        <h:inputText id="feePercentage" rendered="#{tenderHome.selectedDiscountOrExpense.fee ne null and 
+		                       	tenderHome.selectedDiscountOrExpense.fee.percentage}" 
+		                       	value="#{tenderHome.selectedDiscountOrExpense.fee.rate}" 
+		                       	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+						</s:decorate>
+					</s:span>
+
+                    
+					<h:outputText value="#{messages['product.label.SellTax']} :" 
+						rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+									tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}"
+						styleClass="boldFont"/>
+									
+
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+									   tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}">
+									   
+						<s:div styleClass="exlarge">
+                            <h:selectOneMenu value="#{tenderHome.selectedDiscountOrExpense.tax1.tax}" 
+                            	styleClass="small" >
+                                <s:selectItems value="#{generalSuggestion.taxList}" var="tax" 
+                                	label="#{tax.code}" noSelectionLabel="#{messages['general.value.None']}" 
+                                	hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+
+	                        <r:spacer width="5"/>
+	
+	                        <h:selectBooleanCheckbox id="tax1Inc" value="#{tenderHome.selectedDiscountOrExpense.tax1.taxIncluded}" 
+	                        	styleClass="checkbox" />
+	                        <h:outputLabel value="#{messages['product.label.TaxIncluded']}" 
+	                        	for="tax1Inc" styleClass="checkboxLabel" />
+						</s:div>
+					</s:span>					
+
+                   	<h:outputText value="#{messages['product.label.SellTax2']} :" 
+                   		rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+							        tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" 
+						styleClass="boldFont"/>
+
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+							        	tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" >
+
+						<s:div styleClass="exlarge">
+                            <h:selectOneMenu value="#{tenderHome.selectedDiscountOrExpense.tax2.tax}" 
+                            	styleClass="small" >
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax" 
+                                	label="#{tax.code}" noSelectionLabel="#{messages['general.value.None']}" 
+                                	hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                            
+                            <r:spacer width="5"/>
+                            
+                            <h:selectBooleanCheckbox id="tax2Inc" value="#{tenderHome.selectedDiscountOrExpense.tax2.taxIncluded}" 
+                            	styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['product.label.Tax2Included']}" 
+                            	for="tax2Inc" styleClass="checkboxLabel" />
+						</s:div>
+					</s:span>
+					
+                   	<h:outputText value="#{messages['product.label.SellTax3']} :" 
+                   		rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+									tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" 
+						styleClass="boldFont"/>
+						
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+							            tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" >
+
+						<s:div styleClass="exlarge">
+                            <h:selectOneMenu value="#{tenderHome.selectedDiscountOrExpense.tax3.tax}" 
+                            	styleClass="small" >
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax" 
+                                	label="#{tax.code}" noSelectionLabel="#{messages['general.value.None']}" 
+                                	hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                            
+                            <r:spacer width="5"/>
+                            
+                            <h:selectBooleanCheckbox id="tax3Inc" value="#{tenderHome.selectedDiscountOrExpense.tax3.taxIncluded}" 
+                            	styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['product.label.Tax3Included']}" 
+                            	for="tax3Inc" styleClass="checkboxLabel" />
+						</s:div>	
+					</s:span>
+
+
+                	<h:outputText value="#{messages['product.label.SellTax4']} :"  
+                		rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+									tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" 
+						styleClass="boldFont"/>
+
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+									    tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" >
+
+						<s:div styleClass="exlarge">
+                            <h:selectOneMenu value="#{tenderHome.selectedDiscountOrExpense.tax4.tax}" 
+                            	styleClass="small">
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax" 
+                                	label="#{tax.code}" noSelectionLabel="#{messages['general.value.None']}" 
+                                	hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                            
+                            <r:spacer width="5"/>
+                            
+                            <h:selectBooleanCheckbox id="tax4Inc" value="#{tenderHome.selectedDiscountOrExpense.tax4.taxIncluded}" 
+                            	styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['product.label.Tax4Included']}" 
+                            	for="tax4Inc" styleClass="checkboxLabel" />
+						</s:div>
+					</s:span>
+
+
+                   	<h:outputText value="#{messages['product.label.SellTax5']} :" 
+                   		rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+									tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" 
+						styleClass="boldFont"/>
+
+					<s:span rendered="#{tenderHome.selectedDiscountOrExpense.productType eq 'Expense' or 
+										tenderHome.selectedDiscountOrExpense.productType eq 'DocumentExpense'}" >
+
+						<s:div styleClass="exlarge">
+                            <h:selectOneMenu value="#{tenderHome.selectedDiscountOrExpense.tax5.tax}" 
+                            	styleClass="small">
+                                <s:selectItems value="#{generalSuggestion.tax2List}" var="tax" 
+                                	label="#{tax.code}" noSelectionLabel="#{messages['general.value.None']}" 
+                                	hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                            
+                            <r:spacer width="5"/>
+                            
+                            <h:selectBooleanCheckbox id="tax5Inc" value="#{tenderHome.selectedDiscountOrExpense.tax5.taxIncluded}" 
+                            	styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['product.label.Tax5Included']}" 
+                            	for="tax5Inc" styleClass="checkboxLabel" />
+						</s:div>
+					</s:span>
+					
+					<h:outputText value="Açıklama : " styleClass="boldFont"/>
+					
+					<s:span>
+						<h:inputTextarea value="#{tenderHome.selectedDiscountOrExpense.info}" rows="2" 
+							styleClass="exlarge"/>
+					</s:span>
+				</h:panelGrid>
+			</r:panel>
+
+		<div class="actionButtons">
+			<a:commandButton action="#{tenderHome.addToDiscountOrExpenseItems()}" 
+				styleClass="button" value="#{messages['general.label.Add']}" 
+				reRender="feeList,expenseList,discountList" 
+				rendered="#{not tenderHome.isDiscountOrExpenseEdit and not tenderHome.selectedDiscountOrExpense.isDocumentLine() }"
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('tenderDiscountOrExpensePopup');setMasks();" />
+
+			<a:commandButton action="#{tenderHome.endDiscountOrExpenseEdit()}" reRender="feeList,expenseList,discountList" 
+				value="#{messages['general.button.Ok']}"
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('tenderDiscountOrExpensePopup');setMasks();"
+				styleClass="button" rendered="#{tenderHome.isDiscountOrExpenseEdit and not tenderHome.selectedDiscountOrExpense.isDocumentLine()}" /> 
+
+			<a:commandButton action="#{tenderHome.addDocumentDiscountOrExpenseToItems()}" 
+				styleClass="button" value="#{messages['general.label.Add']}" 
+				reRender="its" rendered="#{not tenderHome.isDiscountOrExpenseEdit and 
+											   tenderHome.selectedDiscountOrExpense.isDocumentLine()}"
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('tenderDiscountOrExpensePopup');setMasks();" />
+
+			<a:commandButton action="#{tenderHome.endDocumentDiscountOrExpenseEdit()}" reRender="its" 
+				value="#{messages['general.button.Ok']}"
+				oncomplete="if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('tenderDiscountOrExpensePopup');setMasks();"
+				styleClass="button" rendered="#{tenderHome.isDiscountOrExpenseEdit and 
+												tenderHome.selectedDiscountOrExpense.isDocumentLine()}" /> 
+			
+			<a:commandButton value="#{messages['general.button.Cancel']}"
+				oncomplete="Richfaces.hideModalPanel('tenderDiscountOrExpensePopup');"
+				styleClass="button" ajaxSingle="true" />
+		
+		</div>
+
+
+	</h:form>
+
+</ui:composition>

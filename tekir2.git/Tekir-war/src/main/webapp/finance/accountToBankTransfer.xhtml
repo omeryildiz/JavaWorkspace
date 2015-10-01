@@ -1,0 +1,277 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewTransfer"/>
+            <ui:param name="cursubitem" value="accountToBankTransfer"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/accountToBankTransferBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.AccountToBankTransferBrowse']}" rendered="#{s:hasPermission('accountToBankTransfer', 'select')}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/accountToBankTransfer.xhtml">
+                <h:outputText value="#{messages['module.caption.AccountToBankTransfer']}" rendered="#{s:hasPermission('accountToBankTransfer', 'update')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{accountToBankTransferHome.createNew()}" rendered="#{s:hasPermission('accountToBankTransfer', 'insert')}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['accountToBankTransfer.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.AccountToBankTransfer']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['accountToBankTransfer.img.Form']}"/> 
+                        <h:outputText value="#{messages['accountToBankTransfer.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                 <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:inputText value="#{accountToBankTransfer.serial}" styleClass="middle" 
+                            	required="true" accesskey="Q"
+                            	 disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Reference']}"/></ui:define>
+                            <h:inputText value="#{accountToBankTransfer.reference}" styleClass="middle" required="false"/>
+                        </s:decorate>   
+
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Code']}"/></ui:define>
+                            <h:inputText value="#{accountToBankTransfer.code}" styleClass="middle" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Date']}"/></ui:define>
+                            <r:calendar value="#{accountToBankTransfer.date}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+                        
+                        <a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['saleInvoice.label.followUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{accountToBankTransfer.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                        
+                        
+                        
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{accountToBankTransfer.info}" styleClass="exlarge" rows="3"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{accountToBankTransfer.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['bankToAccountTransfer.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                        
+                        
+                    </s:div>
+					
+					<s:div>
+						
+						<h2><h:outputText value="#{messages['general.label.payer']}" /></h2>
+						
+					    <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Account']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{accountToBankTransfer.account}" styleClass="middle" required="true">
+                                    <s:convertEntity />
+                                    <s:selectItems value="#{generalSuggestion.accountList}" var="acc" 
+                                    label="#{acc.code} - #{acc.name}" 
+                                    noSelectionLabel="#{messages['general.value.SelectOne']}" 
+                                    hideNoSelectionLabel="true"/>
+                                </h:selectOneMenu>
+                        </s:decorate>
+					
+					</s:div>
+
+					<s:div>
+
+						<h2><h:outputText value="#{messages['general.label.receiver']}" /></h2>
+					
+						<a:region immediate="true" ajaxSingle="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToAccountTransfer.label.Bank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBox"
+                                                 value="#{accountToBankTransfer.bank}"
+                                                 required="true"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.ourBankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.SelectOne']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankBranchBox, bankAccountBox, bankAccountCurrency" action="#{accountToBankTransferHome.clearBankAccount()}" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToAccountTransfer.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBranchBox"
+                                                 value="#{accountToBankTransfer.bankBranch}"
+                                                 required="true"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getOurBankBranches(accountToBankTransfer.bank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.SelectOne']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToAccountTransfer.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankAccountBox"
+                                                 value="#{accountToBankTransfer.bankAccount}"
+                                                 required="true"                                                 
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getOurBankAccounts(accountToBankTransfer.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo} - #{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.SelectOne']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountCurrency,costCurrency" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+					
+					</s:div>
+					
+					<s:div>
+					
+						<h2><h:outputText value="#{messages['general.label.AmountAndCost']}" /></h2>
+					
+					    <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Amount']}"/></ui:define>
+                            <h:inputText value="#{accountToBankTransfer.amount.value}" styleClass="amountField" required="True"
+                            	alt="decimal" converter="bigDecimalConverter" oncomplete="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="bankAccountCurrency" value="#{accountToBankTransfer.bankAccount.currency}" />
+                        </s:decorate>  
+                                                
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bankToAccountTransfer.label.Cost']}"/></ui:define>
+                            <h:inputText id="cost" value="#{accountToBankTransfer.cost.value}" styleClass="amountField"
+                            	alt="decimal" converter="bigDecimalConverter" oncomplete="setMasks();">
+                                    <r:toolTip>
+                                        <h:outputText value="#{messages['moneyTransfers.label.CostWarning']}"/>
+                                    </r:toolTip>
+                            </h:inputText>
+                            <h:outputText value=" " />
+                            <h:outputText id="costCurrency" value="#{accountToBankTransfer.bankAccount.currency}" />
+                        </s:decorate>    
+					
+					</s:div>
+                </h:panelGrid>
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{accountToBankTransferHome.save()}"
+                                 rendered="#{s:hasPermission('accountToBankTransfer', 'insert')}"
+                                 styleClass="button checkRequired"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{accountToBankTransferHome.delete()}"
+                          rendered="#{not empty accountToBankTransfer.id and s:hasPermission('accountToBankTransfer', 'delete')}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{accountToBankTransferHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

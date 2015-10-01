@@ -1,0 +1,137 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="contact"/>
+            <ui:param name="curpage" value="contactStatus"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/contact/contactFront.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Cards']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/contact/contactBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ContactBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/contact/contactStatus.xhtml">
+                <h:outputText value="#{messages['module.caption.ContactStatus']}"/>
+            </s:link>
+        </div>
+        <ui:remove>
+            <div class="toolgroup-left">
+                <r:inputNumberSpinner value="#{contactStatus.year}" style="width:40px;"/>
+            </div>
+            <div class="toolgroup-left">
+                <h:selectOneMenu value="#{contactStatus.currency}" styleClass="small">
+                    <f:selectItem itemValue="ALL" itemLabel="ALL" />                
+                    <f:selectItem itemValue="LCY" itemLabel="LCY" />                
+                    <s:selectItems value="#{currencyList}" var="ccy" label="#{ccy.code}" />
+                </h:selectOneMenu> 
+            </div>
+            <div class="toolgroup-left">
+                
+                <s:link action="#{contactStatus.calculateStatus}">
+                    <h:graphicImage url="/img/reload.gif" /> 
+                    <h:outputText value="#{messages['general.button.Refresh']}"/>
+                </s:link>
+            </div>
+        </ui:remove>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{contactStatus.contact.caption} - #{messages['module.caption.ContactStatus']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            
+            
+            
+            
+            <r:dataTable id="resultList" 
+                         var="txn"
+                         value="#{contactStatus.statusRows}" 
+                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                <f:facet name="header">
+                    <r:columnGroup>
+                        <r:column>
+                            <h:outputText value="2008" />
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="Döviz" />
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="Borç" />
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="Alacak" />
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="Bakiye" />
+                        </r:column>
+                    </r:columnGroup>
+                    
+                    
+                </f:facet>
+                
+                <r:column colspan="5">
+                    <h:outputText value="#{messages[ut:concat( 'general.value.Status.',txn.key)]}" />
+                </r:column>
+                
+                <r:subTable var="row" value="#{txn.dataCells}">
+                    <r:column>
+                        <h:outputText value=" " />
+                    </r:column>
+                    <r:column>
+                        <h:outputText value="#{row.ccy}" />
+                        
+                    </r:column>
+                    <r:column style="text-align:right;">
+                        <h:outputText value="#{row.debit}" >
+                            <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </r:column>
+                    <r:column style="text-align:right;">
+                        <h:outputText value="#{row.credit}" >
+                            <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </r:column>
+                    <r:column style="text-align:right;">
+                        <h:outputText value="#{row.balance}" >
+                            <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </r:column>
+                    
+                </r:subTable>
+                
+                
+                <f:facet name="footer">
+                    
+                </f:facet>
+                
+            </r:dataTable>
+            
+        </h:form>
+        
+        <s:div>
+            <br />
+            <h:outputText value="LCY yerel döviz türünden ( #{currencyManager.localeCurrency} ) çevrim toplamlarını gösterir." styleClass="hint" />
+        </s:div>
+        
+    </ui:define> 
+</ui:composition>

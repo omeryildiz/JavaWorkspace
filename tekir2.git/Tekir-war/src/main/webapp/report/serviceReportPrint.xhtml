@@ -1,0 +1,165 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+
+
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.StockReport']}" /></h1>
+    </ui:define>
+
+    <ui:define name="body">
+
+
+        <r:dataTable id="browseList"
+                     var="product"
+                     value="#{productBrowse.entityList}">
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Code']}"/></f:facet>
+                <h:outputText value="#{product.code}"/>
+
+            </r:column>
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Name']}" /></f:facet>
+                <h:outputText value="#{product.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Category']}" /></f:facet>
+                <h:outputText value="#{product.category.code}"/>
+            </r:column>
+
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Info']}" /></f:facet>
+                <h:outputText value="#{product.info}"/>
+            </r:column>
+
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode1']}" /></f:facet>
+                <h:outputText value="#{product.barcode1}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode2']}" /></f:facet>
+                <h:outputText value="#{product.barcode2}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode3']}" /></f:facet>
+                <h:outputText value="#{product.barcode3}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Unit']}" /></f:facet>
+                <h:outputText value="#{product.unit}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Açılış Tarihi" /></f:facet>
+                <h:outputText value="#{product.openDate}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Aktif" /></f:facet>
+                <h:outputText rendered="#{product.active eq true}" value="Evet"/>
+                <h:outputText rendered="#{product.active eq false}" value="Hayır"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Raf Yeri" /></f:facet>
+                <h:outputText value="#{product.shelfPlace}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Alış Vergisi" /></f:facet>
+                <h:outputText value="#{product.buyTax.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Satış Vergisi" /></f:facet>
+                <h:outputText value="#{product.sellTax.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Vergi Dahil" /></f:facet>
+                <h:outputText rendered="#{product.taxIncluded eq true}" value="Evet"/>
+                <h:outputText rendered="#{product.taxIncluded eq false}" value="Hayır"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="2. Alış Vergisi" /></f:facet>
+                <h:outputText value="#{product.buyTax2.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="2. Satış Vergisi" /></f:facet>
+                <h:outputText value="#{product.sellTax2.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Vergi Dahil" /></f:facet>
+                <h:outputText rendered="#{product.tax2Included eq true}" value="Evet"/>
+                <h:outputText rendered="#{product.tax2Included eq false}" value="Hayır"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="3. Alış Vergisi" /></f:facet>
+                <h:outputText value="#{product.buyTax3.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="3. Satış Vergisi" /></f:facet>
+                <h:outputText value="#{product.sellTax3.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Vergi Dahil" /></f:facet>
+                <h:outputText rendered="#{product.tax3Included eq true}" value="Evet"/>
+                <h:outputText rendered="#{product.tax3Included eq false}" value="Hayır"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="4. Alış Vergisi" /></f:facet>
+                <h:outputText value="#{product.buyTax4.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="4. Satış Vergisi" /></f:facet>
+                <h:outputText value="#{product.sellTax4.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Vergi Dahil" /></f:facet>
+                <h:outputText rendered="#{product.tax4Included eq true}" value="Evet"/>
+                <h:outputText rendered="#{product.tax4Included eq false}" value="Hayır"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="5. Alış Vergisi" /></f:facet>
+                <h:outputText value="#{product.buyTax5.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Vergi Dahil" /></f:facet>
+                <h:outputText rendered="#{product.tax5Included eq true}" value="Evet"/>
+                <h:outputText rendered="#{product.tax5Included eq false}" value="Hayır"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="5. Satış Vergisi" /></f:facet>
+                <h:outputText value="#{product.sellTax5.name}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Son Alış Fiyatı" /></f:facet>
+                <h:outputText value="#{product.lastPurchasePriceValue}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Son Satış Fiyatı" /></f:facet>
+                <h:outputText value="#{product.lastSalePriceValue}"/>
+            </r:column>
+
+            <r:column >
+                <f:facet name="header"><h:outputText value="Üretiliş Tarihi" /></f:facet>
+                <h:outputText value="#{product.createDate}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Üreten Kişi" /></f:facet>
+                <h:outputText value="#{product.createUser}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Değiştirilme Tarihi" /></f:facet>
+                <h:outputText value="#{product.updateDate}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="Değiştiren Kişi" /></f:facet>
+                <h:outputText value="#{product.updateUser}"/>
+            </r:column>
+        </r:dataTable>
+
+
+    </ui:define>
+</ui:composition>

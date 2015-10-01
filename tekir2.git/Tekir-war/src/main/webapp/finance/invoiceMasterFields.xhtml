@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:ut="http://utech.com/jsf/comps"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+    <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+	<h:panelGrid columns="3">
+		<s:fragment>
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['general.label.Serial']}" accesskey="Q" />
+				</ui:define>
+				<h:inputText value="#{currentEntity.serial}" styleClass="middle"
+					required="true" accesskey="Q"
+					disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}" />
+			</s:decorate>
+
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['general.label.Reference']}" />
+				</ui:define>
+				<h:inputText value="#{currentEntity.reference}" styleClass="middle"
+					required="false" />
+			</s:decorate>
+
+			<a:region >
+				<s:decorate id="sdc" template="/layout/edit.xhtml" rendered="#{currentEntity.tradeAction eq 'Sale' }">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Contact']}" />
+					</ui:define>
+					
+					<s:div>
+						<h:inputText id="masterContact" value="#{currentEntity.contact}"
+							styleClass="middle" style="float:left"
+							converter="contactCaptionConverter"
+							onblur="addDocumentDiscount()"
+							required="true" />
+
+						<a href="javascript:contactSelectPopup( '#{r:clientId('masterContact')}' )"
+							style="float: left"> 
+							<h:graphicImage url="/img/selectBox.gif" /> 
+						</a>
+
+						<a:commandLink action="#{quickContactAddHome.createNew(currentEntity.tradeAction)}"
+							oncomplete="javascript:quickContactAddPopup( '#{r:clientId('masterContact')}' )"
+							style="float:left" reRender="quickContactDiv" ajaxSingle="true">
+							<h:graphicImage url="/img/add.gif"
+								title="#{messages['general.button.QuickContactAdd']}"
+								rendered="#{s:hasPermission('contact', 'insert')}" />
+						</a:commandLink>
+
+						<ui:remove>//Satis masteri icin</ui:remove>
+						<r:suggestionbox for="masterContact" rules="all" ajaxSingle="true"
+							suggestionAction="#{contactSuggestion.suggestCustomer}"
+							var="citem" fetchValue="#{citem.caption}"
+							onselect="addDocumentDiscount()" >
+							<ui:include src="/contact/contactSuggestionView.xhtml" />
+						</r:suggestionbox>
+					</s:div>
+				</s:decorate>
+									
+				<s:decorate id="pdc" template="/layout/edit.xhtml" rendered="#{currentEntity.tradeAction eq 'Purchase' }">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Contact']}" />
+					</ui:define>					
+					<s:div>
+						<h:inputText id="masterContact" value="#{currentEntity.contact}"
+							styleClass="middle" style="float:left"
+							converter="contactCaptionConverter"
+							onblur="addDocumentDiscount()" 
+							required="true" />
+
+						<a href="javascript:contactSelectPopup( '#{r:clientId('masterContact')}' )"
+							style="float: left"> 
+							<h:graphicImage url="/img/selectBox.gif" /> 
+						</a>
+
+						<a:commandLink action="#{quickContactAddHome.createNew(currentEntity.tradeAction)}"
+							oncomplete="javascript:quickContactAddPopup( '#{r:clientId('masterContact')}' )"
+							style="float:left" reRender="quickContactDiv" ajaxSingle="true">
+							<h:graphicImage url="/img/add.gif"
+								title="#{messages['general.button.QuickContactAdd']}"
+								rendered="#{s:hasPermission('contact', 'insert')}" />
+						</a:commandLink>
+										
+						<ui:remove>//Alis masteri icin</ui:remove>
+						<r:suggestionbox for="masterContact" rules="all" ajaxSingle="true"
+							suggestionAction="#{contactSuggestion.suggestProvider}"
+							var="citem" fetchValue="#{citem.caption}"
+							onselect="addDocumentDiscount()" >
+							<ui:include src="/contact/contactSuggestionView.xhtml" />
+						</r:suggestionbox>
+					</s:div>														
+				</s:decorate>
+
+				<a:jsFunction name="addDocumentDiscount"
+					action="#{currentHome.addContactDocumentDiscount()}"
+					reRender="masterContact,messagesDiv,addressList,its,itsMini,paymentPlan,rateType"
+					eventsQueue="contactQueue" ignoreDupResponses="true"
+					oncomplete="$('#{r:clientId('addressList')}').focus()" />
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.AddressList']}" />
+					</ui:define>
+					<h:selectOneMenu id="addressList"
+						value="#{currentHome.selectedAddress}" styleClass="large">
+						<s:convertEntity />
+						<s:selectItems value="#{currentEntity.contact.activeAddressList}"
+							var="item"
+							label="#{item.address.province} / #{item.address.city}"
+							noSelectionLabel="#{messages['general.value.SelectOne']}"
+							hideNoSelectionLabel="false" />
+						<a:support event="onchange" reRender="addressArea"
+							ajaxSingle="true" action="#{currentHome.setAddress()}" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml" id="contAddress">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Address']}" />
+					</ui:define>
+					<h:inputTextarea id="addressArea"
+						value="#{currentEntity.deliveryAddress.description()}" rows="4"
+						disabled="true" style="width:20em;" />
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml" id="rateType">
+					<ui:define name="label">
+						<h:outputText
+							value="#{messages['general.label.CurrencyRateType']}" />
+					</ui:define>
+					<h:selectOneMenu value="#{currentEntity.rateType}"
+						styleClass="middle">
+						<f:selectItem itemValue="Bid" itemLabel="#{messages['currencyRateType.label.Bid']}" />
+						<f:selectItem itemValue="Ask" itemLabel="#{messages['currencyRateType.label.Ask']}" />
+						<a:support event="onchange" reRender="summary" ajaxSingle="true"
+							oncomplete="setMasks()" />
+					</h:selectOneMenu>
+				</s:decorate>
+			</a:region>
+
+			<s:fragment rendered="#{generalOptionPane.getOption('FOREIGN_INVOICING_ENABLED').asBoolean}">
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.DocumentCurrency']}" />
+					</ui:define>
+					<h:selectOneMenu id="docCurrency" value="#{currentEntity.docCurrency}" styleClass="middle">
+						<s:selectItems value="#{generalSuggestion.currencyList}"
+							var="ccy" label="#{ccy}" hideNoSelectionLabel="true" />
+						<a:support event="onchange" action="#{currentHome.updateDocumentCurrency()}"
+							ajaxSingle="true" reRender="its,itsMini,summary" oncomplete="setMasks();"/>
+					</h:selectOneMenu>
+				</s:decorate>
+			</s:fragment>
+		</s:fragment>
+
+		<s:fragment>
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['general.label.Code']}" />
+				</ui:define>
+				<h:inputText value="#{currentEntity.code}" styleClass="middle" />
+			</s:decorate>
+
+			<ut:warehouse value="#{currentEntity.warehouse}" styleClass="middle" required="true"/>
+			
+			<s:fragment rendered="#{currentEntity.documentType eq 'SaleShipmentInvoice'}">
+
+				<ut:account value="#{currentEntity.account}" styleClass="middle" required="true"/>
+
+				<ut:user value="#{currentEntity.clerk}" styleClass="middle" required="true" label="general.label.Clerk"/>
+	
+			</s:fragment>
+
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['general.label.Date']}" />
+				</ui:define>
+				<r:calendar value="#{currentEntity.date}" enableManualInput="true"
+					datePattern="#{messages['general.format.Date']}" required="true" />
+			</s:decorate>
+
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['general.label.ShippingDate']}" />
+				</ui:define>
+				<r:calendar value="#{currentEntity.shippingDate}"
+					enableManualInput="true"
+					datePattern="#{messages['general.format.Date']}" required="true" />
+			</s:decorate>
+
+			<s:decorate template="/layout/edit.xhtml">
+				<ui:define name="label">
+					<h:outputText value="#{messages['general.label.Time']}" />
+				</ui:define>
+				<h:inputText value="#{currentEntity.time}" required="true">
+					<s:convertDateTime pattern="#{messages['general.format.Time']}" />
+				</h:inputText>
+			</s:decorate>
+			
+			<a:region id="regFollowUp">
+				<s:decorate id="flwup" template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.FollowUp']}" />
+					</ui:define>
+					<h:inputText id="followUpTxt" value="#{currentEntity.workBunch}"
+						styleClass="middle" style="float:left"
+						converter="workBunchCaptionConverter" />
+					<a
+						href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )"
+						style="float: left"> <h:graphicImage url="/img/selectBox.gif" />
+					</a>
+
+					<r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+						suggestionAction="#{workBunchSuggestion.suggestWorkBunch}"
+						var="fitem" fetchValue="#{fitem.caption}">
+						<h:column>
+							<h:outputText value="#{fitem.code}" />
+						</h:column>
+						<h:column>
+							<h:outputText value="#{fitem.name}" />
+							<h:outputText value=" "/>
+							<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+						</h:column>
+					</r:suggestionbox>
+				</s:decorate>
+			</a:region>
+		</s:fragment>
+		
+        <s:fragment>
+			<table>
+				<tr>
+					<td>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Info']}" />
+							</ui:define>
+							<h:inputTextarea id="invInfo" value="#{currentEntity.info}"
+								rows="3" styleClass="exlarge" />
+						</s:decorate> 
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Info1']}" />
+							</ui:define>
+							<h:inputTextarea value="#{currentEntity.info1}" rows="3"
+								styleClass="exlarge" />
+						</s:decorate> 
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Info2']}" />
+							</ui:define>
+							<h:inputTextarea value="#{currentEntity.info2}" rows="3"
+								styleClass="exlarge" />
+						</s:decorate> 
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Status']}" />
+							</ui:define>
+							<h:selectBooleanCheckbox id="active"
+								value="#{currentEntity.active}" styleClass="checkbox" />
+							<h:outputLabel value="#{messages['general.label.Active']}"
+								for="active" styleClass="checkboxLabel" />
+						</s:decorate> 
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Deliverer']}" />
+							</ui:define>
+							<h:inputText value="#{currentEntity.deliverer}" styleClass="middle" />
+						</s:decorate> 
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Recepient']}" />
+							</ui:define>
+							<h:inputText value="#{currentEntity.recepient}" styleClass="middle" />
+						</s:decorate>
+					</td>
+				</tr>
+
+				<ui:remove>
+				<s:fragment rendered="#{currentEntity.documentType eq 'SaleShipmentInvoice'}">
+					<tr>
+						<td>
+							<ui:include src="/finance/invoiceOrderTable.xhtml" />
+						</td>
+					</tr>						
+				</s:fragment>
+				</ui:remove>
+			</table>                    
+        </s:fragment>
+		
+	</h:panelGrid>
+
+</ui:composition>

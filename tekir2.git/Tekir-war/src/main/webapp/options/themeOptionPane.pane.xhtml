@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+    <h:form id="themePaneForm">
+
+		<r:modalPanel id="previewPop" width="670" height="549" resizeable="true">
+			<f:facet name="header">
+				<s:fragment>
+					<h:graphicImage url="/img/picture.png" />
+                    <h:outputText value="#{messages['general.label.Preview']}" />
+				</s:fragment>
+			</f:facet>
+
+			<f:facet name="controls">
+				<h:graphicImage value="/img/exit.gif" style="cursor:pointer"
+					onclick="Richfaces.hideModalPanel('previewPop')" />
+			</f:facet>
+
+			<s:div>
+				<img id="popImage" src="/tekir/img/add.gif" style="width:100%;height:100%;"/>
+			</s:div>
+		</r:modalPanel>
+		
+        <h:panelGrid columns="1">
+
+			<a:region>
+				<r:dataTable id="themeTable" value="#{themeOptionPane.themeList}" 
+					var="item" rowKeyVar="rowKey" onRowClick="setThemeLineAttributes(this)">
+					<r:column style="border-right:0px;width:8px;vertical-align:middle;" styleClass="#{item.rowStyle}">
+						<h:graphicImage url="/img/checked.gif" rendered="#{item.selected}" />
+						<h:graphicImage url="/img/unchecked.gif" rendered="#{not item.selected}" />
+					</r:column>
+					<r:column id="themeRow" styleClass="#{item.rowStyle}">
+						<h:selectBooleanCheckbox id="checkbox" value="#{item.selected}" style="display:none"/>
+
+						<s:div id="themeDiv" style="margin-top:-20px;float:left;">
+							<h2><h:outputText value="#{messages[ut:concat('optionEditor.label.', item.themeName)]}" /></h2>
+							<s:div style="float:left">
+								<a onclick="openPreviewPopup('#{item.themeName}')" style="cursor:pointer">
+									<h:graphicImage url="/img/#{item.themeName}_screenshot.png" 
+										title="#{messages[ut:concat('optionEditor.description.', item.themeName)]}" alt="#{item.themeName} screenshot"
+										style="width:215px;height:170px;">
+									</h:graphicImage>
+								</a>
+							</s:div>
+							<s:div style="float:left;margin-left:20px;">
+								<h:outputText value="#{messages[ut:concat('optionEditor.description.', item.themeName)]}" style="font-size:18px;"/><br/>
+							</s:div>
+						</s:div>
+					</r:column>
+				</r:dataTable>
+			</a:region>
+        </h:panelGrid>
+
+        <s:div styleClass="actionButtons">
+
+            <h:commandButton id="save"
+                             value="#{messages['general.button.Save']}"
+                             action="#{themeOptionPane.save()}"
+                             styleClass="button"/>
+
+        </s:div>
+
+    </h:form>
+</ui:composition>

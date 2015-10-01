@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+				xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+    <h:form id="localeOptionPaneForm">
+
+		<div>
+			<h:selectOneMenu value="#{localeSelector.localeString}" styleClass="middle">
+                <c:forEach items="#{localeOptionPane.localeNames}" var="item">
+					<f:selectItem itemLabel="#{messages[ut:concat('locale.language.',item.label)]}" 
+						itemValue="#{item.value}"/>
+                </c:forEach>
+			</h:selectOneMenu>
+		</div>
+
+        <s:div styleClass="actionButtons">
+
+			<h:commandButton action="#{localeSelector.select}" 
+				value="#{messages['general.label.ChangeLanguage']}"
+				styleClass="button"/>
+
+        </s:div>
+
+    </h:form>
+</ui:composition>

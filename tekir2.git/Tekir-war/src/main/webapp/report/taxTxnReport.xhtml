@@ -1,0 +1,439 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="analysisReport"/>
+            <ui:param name="curitem" value="taxTxnReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+            <div class="pathgroup">
+            <s:link view="/report/taxTxnReport.xhtml">
+                <h:outputText value="#{messages['module.caption.TaxTxnReport']}" rendered="#{s:hasPermission('taxTxnReport', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/report/taxTxnReport.xhtml" rendered="#{s:hasPermission('taxTxnReport', 'select')}" >
+                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.TaxTxnReport']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+            
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.TaxTxnReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        
+        <h:form id="form" >
+            
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:fragment>
+						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['menu.generalSettings.browse.taxReturnType']}" /></ui:define>
+                            <h:selectOneMenu value="#{taxTxnReport.filterModel.taxReturnType}" styleClass="middle">
+                            	<s:convertEntity />
+								<s:selectItems var="taxReturn" value="#{generalSuggestion.taxReturnTypes}" 
+                                	label="#{taxReturn.code}- #{taxReturn.name}"
+                                	noSelectionLabel="#{messages['general.value.All']}" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu>                            
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.TaxType']}" /></ui:define>
+                            <h:selectOneMenu value="#{taxTxnReport.filterModel.taxType}" styleClass="middle">
+                                <f:selectItem itemLabel="#{messages['general.value.All']}"/>
+                                <f:selectItem itemValue="VAT" itemLabel="#{messages['tax.type.VAT']}"/>
+                                <f:selectItem itemValue="OTV" itemLabel="#{messages['tax.type.OTV']}"/>
+                                <f:selectItem itemValue="OIV" itemLabel="#{messages['tax.type.OIV']}"/>
+                                <f:selectItem itemValue="STOPAJ" itemLabel="#{messages['tax.type.STOPAJ']}"/>
+                                <f:selectItem itemValue="DAMGA" itemLabel="#{messages['tax.type.DAMGA']}"/>
+                                <f:selectItem itemValue="TK" itemLabel="#{messages['tax.type.TK']}"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.Action']}" /></ui:define>
+                            <h:selectOneMenu value="#{taxTxnReport.filterModel.action}" styleClass="middle">
+                                <f:selectItem itemLabel="#{messages['general.value.All']}"/>
+                                <f:selectItem itemValue="Debit" itemLabel="#{messages['general.value.financeAction.Debit']}"/>
+                                <f:selectItem itemValue="Credit" itemLabel="#{messages['general.value.financeAction.Credit']}"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+					</s:fragment>
+					
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.DocumentType']}" /></ui:define>
+                            <h:selectOneMenu value="#{taxTxnReport.filterModel.documentType}" styleClass="middle">
+                                <s:selectItems var="docType" value="#{taxTxnReport.documentTypes}" 
+                                	label="#{messages[ut:concat('general.value.DocumentType.',docType)]}"
+                                	noSelectionLabel="#{messages['general.value.All']}" hideNoSelectionLabel="false" />     
+                            </h:selectOneMenu>    	                       
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.Serial']}" /></ui:define>
+                            <h:inputText value="#{taxTxnReport.filterModel.serial}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.Reference']}" /></ui:define>
+                            <h:inputText value="#{taxTxnReport.filterModel.reference}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.Code']}" /></ui:define>
+                            <h:inputText value="#{taxTxnReport.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+            <a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.FollowUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{taxTxnReport.filterModel.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{taxTxnReport.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['taxTxnReport.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{taxTxnReport.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{taxTxnReport.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    
+                        <h:commandButton id="pdf"
+                                         value="#{messages['general.button.PDF']}"
+                                         action="#{taxTxnReport.pdf()}"
+                                         rendered="#{s:hasPermission('taxTxnReport', 'pdf')}" 
+                                         styleClass="button"/>
+                
+                        <h:commandButton id="xls"
+                                         value="#{messages['general.label.XLS']}"
+                                         action="#{taxTxnReport.xls()}"
+                                         rendered="#{s:hasPermission('taxTxnReport', 'xls')}" 
+                                         styleClass="button"/>
+                                         
+                </s:div>
+            </r:panel>
+            
+            
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:2px;">
+                    
+                    <r:dataTable id="browseList" 
+                                 var="rowItem"
+                                 rows="20"
+                                 rowKeyVar="rowKey"
+                                 value="#{taxTxnReport.resultList}">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.DocumentType']}" /></f:facet>
+                            <h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,rowItem.documentType)]}"/>
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.Serial']}" /></f:facet>
+                            <s:link view="/finance/newpurchaseShipmentInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'PurchaseInvoice'}" propagation="begin">
+			                    <f:param name="it" value="0" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.serial}" />
+			                </s:link>
+			                
+			                <s:link view="/finance/newsaleInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'SaleInvoice' }" propagation="begin">
+			                    <f:param name="it" value="0" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.serial}" />
+			                </s:link>
+			                
+			                <s:link view="/finance/newsaleShipmentInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'SaleShipmentInvoice' }" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.serial}" />
+			                </s:link>
+			                
+			                <s:link view="/finance/newpurchaseInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'PurchaseShipmentInvoice'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.serial}" />
+			                </s:link>
+
+                            <s:link view="/finance/retailSaleInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'RetailSaleShipmentInvoice' }" propagation="begin">
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.serial}" />
+			                </s:link>
+			                
+                         <ui:remove>
+                            <s:link view="/finance/purchaseInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'PurchaseInvoice' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/saleInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'SaleInvoice' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+
+                            <s:link view="/finance/purchaseShipmentInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'PurchaseShipmentInvoice' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+
+                            <s:link view="/finance/saleShipmentInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'SaleShipmentInvoice'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                        </ui:remove>
+                            <s:link view="/finance/paymentView.xhtml" rendered="#{rowItem.documentType eq 'Payment'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/collectionView.xhtml" rendered="#{rowItem.documentType eq 'Collection'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/expenseNote.xhtml" rendered="#{rowItem.documentType eq 'ExpenseNote' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+
+                            <s:link view="/finance/spendingNoteView.xhtml" rendered="#{rowItem.documentType eq 'SpendingNote' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/fixedAssetPurchaseInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'FixedAssetPurchaseInvoice' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/fixedAssetSaleInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'FixedAssetSaleInvoice' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.serial}" />
+                            </s:link>
+                            
+                            <s:link view="/finance/returnExpenseNote.xhtml" rendered="#{rowItem.documentType eq 'ReturnExpenseNote' }" propagation="begin">
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.serial}" />
+			                </s:link>
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.Reference']}" /></f:facet>
+                            
+                            <s:link view="/finance/newpurchaseShipmentInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'PurchaseInvoice'}" propagation="begin">
+			                    <f:param name="it" value="0" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.reference}" />
+			                </s:link>
+
+			                <s:link view="/finance/newsaleInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'SaleInvoice' }" propagation="begin">
+			                    <f:param name="it" value="0" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.reference}" />
+			                </s:link>
+
+			                <s:link view="/finance/newpurchaseInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'PurchaseShipmentInvoice'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.reference}" />
+			                </s:link>
+
+			                <s:link view="/finance/newsaleShipmentInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'SaleShipmentInvoice' }" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.reference}" />
+			                </s:link>
+
+			                <s:link view="/finance/retailSaleInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'RetailSaleShipmentInvoice' }" propagation="begin">
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.reference}" />
+			                </s:link>
+                            
+                            <s:link view="/finance/paymentView.xhtml" rendered="#{rowItem.documentType eq 'Payment'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/collectionView.xhtml" rendered="#{rowItem.documentType eq 'Collection'}" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/expenseNote.xhtml" rendered="#{rowItem.documentType eq 'ExpenseNote' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/spendingNoteView.xhtml" rendered="#{rowItem.documentType eq 'SpendingNote' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/fixedAssetPurchaseInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'FixedAssetPurchaseInvoice' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/fixedAssetSaleInvoiceView.xhtml" rendered="#{rowItem.documentType eq 'FixedAssetSaleInvoice' }" propagation="begin">
+                                <f:param name="eid" value="#{rowItem.documentId}" />
+                                <h:outputText value="#{rowItem.reference}" />
+                            </s:link>
+
+                            <s:link view="/finance/returnExpenseNote.xhtml" rendered="#{rowItem.documentType eq 'ReturnExpenseNote' }" propagation="begin">
+			                    <f:param name="eid" value="#{rowItem.documentId}" />
+			                    <h:outputText value="#{rowItem.reference}" />
+			                </s:link>
+
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.Date']}" /></f:facet>
+                            <h:outputText value="#{rowItem.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.Code']}" /></f:facet>
+                            <h:outputText value="#{rowItem.code}" />
+                        </r:column>
+
+                        <ui:remove>
+                            <r:column >
+                                <f:facet name="header"><h:outputText value="#{messages['general.label.Adverse']}" /></f:facet>
+                                <h:outputText value="#{rowItem.adverseCode} - #{rowItem.adverseName}" />
+                            </r:column>
+                        </ui:remove>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.Info']}" /></f:facet>
+                            <h:outputText value="#{rowItem.info}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.Action']}" /></f:facet>
+                            <h:outputText value="#{messages[ut:concat( 'general.value.financeAction.' , rowItem.action )]}"/>
+                        </r:column>
+
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['taxTxnReport.label.TaxType']}" /></f:facet>
+                            <h:outputText value="#{messages[ut:concat('general.label.',rowItem.taxType)]}" />
+                        </r:column>
+
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['general.label.TaxBase']}" />
+                            </f:facet>
+                            <h:outputText value="#{rowItem.basisValue}" styleClass="amountField"/>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['taxTxnReport.label.TaxRate']}" />
+                            </f:facet>
+                            <h:outputText value="#{rowItem.rate}" >
+                            	<f:convertNumber pattern="#,##0.00"/>
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['taxTxnReport.label.Amount']}" />
+                            </f:facet>
+                            <h:outputText value="#{rowItem.amount}" styleClass="amountField"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header">
+                            	<h:outputText value="#{messages['taxTxnReport.label.LocalAmount']}" />
+                            </f:facet>
+                            <h:outputText value="#{rowItem.amount.localAmount}" styleClass="amountField" >
+                            	<f:convertNumber pattern="#,##0.00"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" /> 
+                        </f:facet>
+                        
+                    </r:dataTable>
+                    
+                </s:div>
+                
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

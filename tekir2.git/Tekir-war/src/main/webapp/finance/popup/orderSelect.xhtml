@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+    
+    <h:form id="orderSelectForm" >
+        <s:div id="ordersSelectList" >
+            
+            <h:outputText value="#{messages['shipment.hint.SelectContact']}" styleClass="hint" 
+                          rendered="#{empty currentEntity.contact}"/>
+                          
+            <h:outputText value="#{messages['order.hint.NoOrderNote']}" styleClass="hint" 
+                          rendered="#{empty currentHome.orderList}"/>
+            
+            <r:dataTable var="order"
+            			 id="browseList"
+                         value="#{currentHome.orderList}" 
+                         rendered="#{not empty currentHome.orderList}"
+                         rowKeyVar="rowKey"
+                         rows="10"
+                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                <f:facet name="header">
+                    <h:panelGroup>
+                        <h:outputText value="#{messages['general.label.Results']}"/>
+                    </h:panelGroup>
+                </f:facet>
+                <r:column styleClass="serialField">
+                    <f:facet name="header">
+                    	<h:outputText value="#{messages['purchaseShipment.label.Serial']}"/>
+                    </f:facet>
+                    
+                    <a:commandLink reRender="orders,orderSelectList,itsDiv,itsMiniDiv,paymentTableList,ware,clerk,acc"
+                    	action="#{currentHome.selectOrderNote(rowKey)}"
+                        oncomplete="setMasks();">
+                        <h:outputText value="#{order.serial}"/>
+                    </a:commandLink>
+                </r:column>
+
+                <r:column styleClass="serialField">
+                    <f:facet name="header">
+                    	<h:outputText value="#{messages['purchaseShipment.label.Reference']}" />
+                    </f:facet>
+                    <h:outputText value="#{order.reference}"/>
+                </r:column>
+                
+                <r:column styleClass="dateField">
+                    <f:facet name="header">
+                    	<h:outputText value="#{messages['purchaseShipment.label.Date']}" />
+                    </f:facet>
+                    <h:outputText value="#{order.date}">
+                        <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                    </h:outputText>
+                </r:column>
+                <r:column>
+                    <f:facet name="header">
+                    	<h:outputText value="#{messages['purchaseShipment.label.Warehouse']}" />
+                    </f:facet>
+                    <h:outputText value="#{order.warehouse.code}" />
+                </r:column>
+                <r:column>
+                    <f:facet name="header">
+                    	<h:outputText value="#{messages['purchaseShipment.label.Contact']}" />
+                    </f:facet>
+                    <h:outputText value="#{order.contact.caption}" />
+                </r:column>
+                
+                <f:facet name="footer">
+                	<r:datascroller for="browseList" maxPages="5" />          
+				</f:facet>
+            </r:dataTable>
+        </s:div>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax" xmlns:ut="http://utech.com/jsf/comps">
+
+	<h1><h:outputText value="#{messages[ut:concat('module.caption.',currentEntity.documentType)]}" /></h1>
+
+	<ui:include src="/layout/messages.xhtml" />
+
+	<r:panel>
+		<f:facet name="header">
+			<s:fragment>
+				<h:graphicImage url="/img/coins_add.gif" alt="#{messages[ut:concat(currentEntity.documentType.camelCaseName(),'.img.Form')]}" />
+				<h:outputText value="#{messages[ut:concat(currentEntity.documentType.camelCaseName(),'.caption.Form')]}" />
+			</s:fragment>
+		</f:facet>
+
+		<s:fragment rendered="#{not currentHome.isEditable}">
+			<h:outputText value="#{messages[ut:concat(currentEntity.documentType.camelCaseName(),'.hint.NotEditable')]}" styleClass="hint" />
+		</s:fragment>
+
+		<h:panelGrid columns="2">
+			<s:fragment>
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Serial']}" />
+					</ui:define>
+					<h:outputText value="#{messages['general.value.None']}" rendered="#{currentEntity.serial.length() eq 0}" />
+					<h:outputText value="#{currentEntity.serial}" styleClass="middle" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Reference']}" />
+					</ui:define>
+					<h:outputText value="#{messages['general.value.None']}" rendered="#{currentEntity.reference.length() eq 0}" />
+					<h:outputText value="#{currentEntity.reference}" styleClass="middle" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Contact']}" />
+					</ui:define>
+					<h:outputText value="#{messages['general.value.None']}" rendered="#{currentEntity.contact eq null}" />
+					<h:outputText id="contact" value="#{currentEntity.contact.caption}" styleClass="middle">
+					</h:outputText>
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Account']}" />
+					</ui:define>
+					<h:outputText value="#{messages['general.value.None']}" rendered="#{currentEntity.account eq null}" />
+					<h:outputText value="#{currentEntity.account.name}" styleClass="middle" />
+				</s:decorate>
+			</s:fragment>
+
+			<s:fragment>
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Code']}" />
+					</ui:define>
+					<h:outputText value="#{messages['general.value.None']}" rendered="#{currentEntity.code.length() eq 0}" />
+					<h:outputText value="#{currentEntity.code}" styleClass="middle" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Date']}" />
+					</ui:define>
+					<h:outputText value="#{messages['general.value.None']}" rendered="#{currentEntity.date eq null}" />
+					<h:outputText value="#{currentEntity.date}">
+						<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+					</h:outputText>
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Status']}" />
+					</ui:define>
+					<h:outputText value="#{messages[currentEntity.active ? 'general.label.Active':'general.label.Disabled']}" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Info']}" />
+					</ui:define>
+					<h:outputText value="#{messages['general.value.None']}" rendered="#{currentEntity.info.length() eq 0}" />
+					<h:outputText value="#{currentEntity.info}" styleClass="exlarge" />
+				</s:decorate>
+			</s:fragment>
+		</h:panelGrid>
+
+		<r:dataTable id="its" var="item" value="#{currentEntity.items}" rowKeyVar="rowKey" styleClass="detailTable" style="border:0"
+			onRowMouseOver="this.style.backgroundColor='#F8F8F8'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+			<f:facet name="header">
+				<r:columnGroup>
+					<r:column colspan="5">
+						<h:outputText value="#{messages['general.label.Details']}" />
+					</r:column>
+					<r:column breakBefore="true">
+						<h:outputText value="#{messages['general.label.Code']}" />
+					</r:column>
+					<r:column>
+						<h:outputText value="#{messages['general.label.Info']}" />
+					</r:column>
+					<r:column styleClass="amountField">
+						<h:outputText value="#{messages['general.label.Amount']}" />
+					</r:column>
+					<r:column styleClass="ccyField">
+						<h:outputText value="#{messages['general.label.Currency']}" />
+					</r:column>
+					<r:column styleClass="ccyField">
+						<h:outputText value="#{messages['general.label.FollowUp']}" />
+					</r:column>
+				</r:columnGroup>
+			</f:facet>
+
+			<r:column style="border:0">
+				<h:outputText value="#{item.lineCode}" styleClass="codeFieldLarge" />
+			</r:column>
+
+			<r:column style="border:0">
+				<h:outputText value="#{item.info}" style="width:600px;" />
+			</r:column>
+
+			<r:column style="border:0">
+				<h:outputText value="#{item.amount.value}" alt="decimal" converter="bigDecimalConverter" />
+			</r:column>
+
+			<r:column style="border:0">
+				<h:outputText value="#{item.amount.currency}" />
+			</r:column>
+
+			<r:column style="border:0">
+				<h:outputText value="#{item.workBunch.caption}" />
+			</r:column>
+		</r:dataTable>
+
+		<h:panelGrid columns="4" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+			<s:div style="margin-right:4px;">
+
+				<r:dataTable id="ccyRates" var="item" value="#{currentEntity.currencyRates}" rowKeyVar="rowKey" styleClass="detailTable">
+					<f:facet name="header">
+						<h:outputText value="#{messages['general.label.CcyRates']}" />
+					</f:facet>
+					<r:column>
+						<h:outputText value="#{item.currencyPair.caption}" />
+					</r:column>
+					<r:column>
+						<h:inputText value="#{item.ask}" styleClass="tiny" alt="decimal" converter="bigDecimalConverter" />
+					</r:column>
+				</r:dataTable>
+			</s:div>
+
+			<s:div style="margin-left:4px;">
+				<r:panel>
+					<f:facet name="header">
+						<s:div>
+							<h:outputText value="#{messages['general.label.GrandTotal']}" />
+						</s:div>
+					</f:facet>
+
+					<h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+						<h:outputText value="#{messages['general.label.Total']} :" />
+						<h:outputText value="#{currentEntity.totalAmount}" />
+					</h:panelGrid>
+
+				</r:panel>
+			</s:div>
+		</h:panelGrid>
+	</r:panel>
+
+</ui:composition>

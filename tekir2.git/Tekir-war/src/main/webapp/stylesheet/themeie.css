@@ -1,0 +1,61 @@
+/* UTech Style 
+
+Inspried from Sinorcaish and Seam Default
+for IE Browsers
+
+*/
+
+h1,				/* Headings (H1-H6) should only be used in */
+h2,				/* the main content area                   */
+h3 {
+   font-weight:     bold;
+   text-align:      left;
+   margin:          2.5em 0 0.5em 0;
+   padding:         0;
+   border-bottom:   1px solid #CCCCCC;
+}
+
+#header div.subheader {
+   color:           white;
+   background:      #97D0ED;
+   margin:          0;
+   padding:         5px 1.5em 4px 0.5em; /* For IE/Win */
+   clear:           both;
+}
+
+#header div.subheader2 {
+   color:           white;
+   background:      #C8E9FA;
+   margin:          0;
+   padding:         10px 1.5em 4px 0.5em; /* For IE/Win */
+   clear:           both;
+}
+
+.toolgroup-left a{
+    border: 0px;
+}
+
+.toolgroup-left a:hover{
+    background-color: #d7e7ff;
+    border: 0px;
+    padding-top: 2px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    padding-right: 2px;
+    
+}
+
+.toolgroup-right a{
+    border: 0px;
+}
+
+
+.toolgroup-right a:hover{
+    background-color: #FFEBDA;
+    border: 0px;
+    padding-top: 2px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    padding-right: 2px;
+    
+}

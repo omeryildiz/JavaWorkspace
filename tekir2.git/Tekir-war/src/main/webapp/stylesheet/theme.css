@@ -1,0 +1,943 @@
+
+/* UTech Style
+
+Inspried from Sinorcaish and Seam Default
+
+*/
+
+
+/*Global Styles*/
+
+/* Used for content that should be displayed by non-stylesheet-aware browsers   */
+.hidden {
+    display:         none !important;
+}
+
+/* Used for content that should not be printed to paper */
+.notprinted {
+}
+
+
+
+h1,				/* Headings (H1-H6) should only be used in */
+h2,				/* the main content area                   */
+h3 {
+    font-weight:     bold;
+    text-align:      left;
+    margin:          1.5em 0 0.5em 0;
+    padding:         0;
+}
+
+
+h4,
+h5,
+h6 {
+    font-weight:     bold;
+    text-align:      left;
+    margin:          1.25em 0 0 0;
+    padding:         0;
+}
+
+
+h1 { font-size:     145% }
+h2 { font-size:     125% }
+h3 { font-size:     110% }
+h4 { font-size:     105% }
+h5 { font-size:     80%  }
+h6 { font-size:     65%  }
+
+
+body {
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 0px;
+    font-family: Arial,sans-serif;
+    clear: both;
+    font-size:12px;
+}
+
+.help-body{
+    margin: 0px;
+    padding: 10px;
+    font-family: Arial,sans-serif;
+    clear: both;
+    font-size:12px;
+}
+
+#help-header{
+}
+
+.wrap{
+
+    width: 958px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.headerwrap{
+
+    width: 978px;
+    margin-left: auto;
+    margin-right: auto;
+    border-left: 1px solid navy;
+    border-right: 1px solid navy;
+}
+
+.body {
+    padding: 10px;
+    min-height: 500px;
+}
+
+.body2 {
+    padding: 10px;
+    min-height: 600px;
+}
+
+img{
+    border: none;
+    vertical-align: middle;
+    padding-right:4px;
+
+}
+
+
+
+table {
+    width: 100%;
+}
+
+li {
+    list-style: none;
+}
+/********** Styles for Header **********/
+
+/* In this style sheet, headers are composed */
+/* of three parts: left, right and subheader */
+/* Left part is ideally an image.            */
+
+#header {			/* Warning: not printed out on paper */
+    padding: 0px;
+}
+
+/* Left part of header (ideally an image but may be a link) */
+
+#header div.left {
+    float:           left;
+    clear:           left;
+}
+
+#header div.left img {
+    display:         inline;	/* Otherwise IMG is an inline, causing gaps */
+}
+
+#header div.left,
+#header div.left a:link,
+#header div.left a:visited {
+    font-size:       200%;
+    font-weight:     bold;
+    text-decoration: none;
+}
+
+#header div.left p {
+    margin:          0 0 0 0.25em;
+    padding:         0;
+}
+
+#header div.left .alt {
+}
+
+
+.sitelogo {
+
+}
+
+.sitecompany {
+    font-size:       100%;
+    font-weight:     bold;
+    text-decoration: none;
+}
+
+.siteuser {
+    font-size:       50%;
+    font-weight:     bold;
+    text-decoration: none;
+}
+
+/* Right part of header is for external/global links, search, etc */
+
+#header div.right {
+    font-size:       90%;
+    text-align:      right;
+    margin:          0;
+    padding:         0.5em 1.67em 0 1em;
+    float:           right;
+    clear:           right;
+}
+
+#header div.right a:link,
+#header div.right a:visited {
+    margin:          0;
+    padding:         0 0.5em;
+}
+
+#header div.right form {
+    margin:          0;
+    padding:         0.25em 0 0 0;
+}
+
+#header div.right form input {
+    font-size:       95%;
+    vertical-align:  middle;
+}
+
+/* Subheader for global links */
+
+#header div.subheader {
+    margin:          0;
+    padding:         0; /*10px 1.5em 4px 0.5em; */ /* For IE/Win */
+    clear:           both;
+    height: 39px;
+}
+
+/********************************/
+
+/* Tool Bar */
+
+.toolbar{
+    vertical-align:  middle;
+}
+
+.toolgroup-right{
+    display: inline;
+    float: right;
+    margin: 0 0 0 4px;
+    padding: 0 0 0 12px;
+    vertical-align:  middle;
+}
+
+.pathgroup{
+    display: inline;
+    float: left;
+    margin: 0px; /* 4px 4px 4px;*/
+}
+
+.toolgroup-left{
+    display: inline;
+    float: left;
+    padding: 0 0 0 12px;
+    margin: 0 0 0 4px;
+    vertical-align:  middle;
+}
+
+.toolbutton{
+}
+
+.buttonbar{
+    /*display: inline;*/
+    clear: right;
+    float: right;
+    margin: 0px; /* 4px 4px 4px;*/
+}
+
+.buttonbar img{
+    margin: 0px 2px 0px 2px;
+    padding: 0px;
+    border: 0px;
+}
+
+.toolbar img{
+    margin: 0px 2px 0px 2px;
+    padding: 0px;
+    border: 0px;
+}
+
+
+/******************************/
+
+/*Sidebar*/
+
+#sidebar {
+    float: left;
+    width: 21%;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+#sidebar ul.sidemenu {
+    list-style: none;
+    text-align: left;
+    margin: 0 0 8px 0;
+    padding-right: 0;
+    text-decoration: none;
+}
+#sidebar ul.sidemenu li {
+    padding: 2px 5px 2px 20px;
+}
+
+
+/**************************/
+
+
+
+a:active, a:link, a:visited {
+    text-decoration: none;
+}
+a:hover {
+}
+
+td{
+    vertical-align:  top;
+}
+
+label {
+    margin: 8px 0 0px 0;
+    display: block;
+    font-size: 12px;
+}
+
+.longinline label {
+	display:inline;
+	float:left;
+	margin: 0px;
+	width: 210px;
+}
+
+.dr-table-cell{
+    font-size: 12px;
+}
+
+.dr-pnl-b{
+    font-size: 12px;
+}
+
+input, textarea, select {
+    font-size: 12px;
+}
+
+input[disabled] {
+}
+
+.detailTable input, .detailTable textarea, .detailTable select {
+    font-size: 12px;
+}
+
+.detailTable img{
+    padding:0px;
+}
+
+.button {
+}
+
+.button:hover{
+}
+
+
+.checkbox {
+    width: 1em;
+    margin: 0;
+    font: bold 1em Arial, Sans-serif;
+}
+
+.radio {
+}
+
+.radio label {
+    margin: 8px 0 0px 0;
+    display: inline;
+    font-size: 12px;
+}
+
+.checkboxLabel{
+    margin: 0px 8px 0px 4px;
+    display: inline;
+}
+
+.actionButtons {
+    width: 100%;
+    margin-top: 10px;
+    text-align: right;
+
+}
+
+.tableControl {
+    width: 100%;
+    text-align: right;
+}
+
+.footer {
+    text-align: center;
+    font-size: 10px;
+    clear: both;
+
+}
+
+.rich-table {
+    width: 100%;
+}
+
+
+.detailTable{
+    width: 100%;
+}
+
+.columnHeader:hover
+{
+}
+.disprop {
+	margin :8px 0 8px 0;
+}
+
+.disprop .name{
+    display: inline;
+    vertical-align: top;
+    font-weight: bold;
+    width: 115px;
+    float: none;
+    padding: 3px 4px 2px 5px;
+    clear: left;
+}
+
+.disprop .value {
+    float: none;
+    padding: 0px 5px 2px 5px;
+    clear: left;
+}
+
+.name {
+    display: block;
+    vertical-align: top;
+    font-weight: bold;
+    /*width: 115px;*/
+    float: left;
+    padding: 3px 4px 2px 5px;
+    margin-top: 3px;
+    clear: left;
+}
+
+.value {
+    float: left;
+    padding: 0px 5px 2px 5px;
+    clear: left;
+    width:210px;
+}
+
+.value img {
+    float: none;
+    clear: none;
+}
+
+.valueExtend {
+    float: left;
+    padding: 0px 5px 2px 0px;
+    clear: left;
+    width:230px;
+}
+
+.error {
+    margin-left: 20px;
+    margin-top: 5px;
+    float: left;
+    padding: 5px;
+    border: 1px solid red;
+}
+
+.errors {
+}
+.errors input {
+}
+.errors textarea {
+}
+.required {
+    padding-left: 2px;
+}
+
+
+
+
+.tiny {
+    width: 5em;
+}
+
+.small {
+    width: 10em;
+}
+
+.smallX {
+    width: 12em;
+}
+
+.middle {
+    width: 14em;
+}
+
+.large {
+    width: 20em;
+}
+
+
+.exlarge {
+    width: 25em;
+}
+
+.eexxlarge {
+    width: 45em;
+}
+
+.rowOdd{
+}
+
+.rowEven{
+}
+
+.amountField{
+    width:95px;
+    text-align:right;
+}
+.amountFieldTiny{
+    width: 75px;
+    text-align:right;
+}
+
+.quantityField {
+    width:95px;
+    text-align:right;
+}
+.quantityFieldTiny {
+    width: 4.5em;
+    text-align:right;
+}
+
+.amountFieldTotal{
+    width:115px;
+    text-align:right;
+}
+
+
+.ccyField{
+    width:45px;
+}
+
+.codeField{
+    width:48px;
+}
+
+.codeFieldLarge{
+    width:80px;
+}
+
+.dateField{
+    width:50px;
+}
+
+.serialField{
+    width:70px;
+}
+
+.actionColumn{
+    width:16px;
+}
+
+.actionColumnDouble{
+    width:32px;
+}
+
+.imagePadded2px img{
+    padding-left: 2px;
+}
+
+.imagePadded3px img{
+    padding-left: 3px;
+}
+
+.red{
+    /*    border: 1px solid red;*/
+}
+
+.blue{
+}
+
+
+.green{
+}
+
+
+.yellow{
+}
+
+
+.orange{
+}
+
+.gridCol{
+    width: 20em;
+    border: 0px;
+}
+
+.rich-panel-header{
+    padding: 4px;
+    vertical-align: middle;
+    border: 0px;
+}
+
+.rich-panel-header img{
+    padding: 0px 4px 0px 0px;
+    /*vertical-align: middle;*/
+    border: 0px;
+}
+
+.rich-panel{
+    padding: 0px;
+}
+
+
+.rich-tabpanel table{
+    width: auto;
+}
+
+.rich-tabpanel-content-position{
+    width: 100%;
+}
+
+
+.rich-dtascroller-table{
+    width: auto;
+}
+
+.rich-calendar-exterior{
+    width: auto;
+}
+
+.rich-tool-tip{
+    color: black;
+}
+
+.paramlist{
+    width: 25%;
+}
+.paramform{
+    width: 75%;
+}
+
+.warning{
+    background-repeat: no-repeat;
+    padding-left: 16px;
+    float: left;
+    clear: left;
+}
+
+.hint{
+    background-repeat: no-repeat;
+    padding-left: 16px;
+    float: left;
+    clear: left;
+}
+
+.info{
+    background-repeat: no-repeat;
+    padding-left: 16px;
+    float: left;
+    clear: left;
+}
+
+.message {
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.message li{
+    list-style: none;
+}
+
+.propkey{
+    width: 160px;
+    font-weight: bold;
+
+}
+
+.propval{
+    width: 160px;
+}
+
+.propvalView{
+    width: 160px;
+    text-align:right;
+}
+
+
+.DebitNumber{
+    text-align:right;
+}
+
+.CreditNumber{
+    text-align:right;
+}
+
+.toolgroup-left a{
+    padding-top: 2px;
+    padding-bottom: 4px;
+    padding-left: 1px;
+    padding-right: 3px;
+
+}
+
+.toolgroup-left a:hover{
+    padding-top: 2px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    padding-right: 2px;
+
+}
+
+.toolgroup-right a{
+    padding-top: 2px;
+    padding-bottom: 4px;
+    padding-left: 1px;
+    padding-right: 3px;
+
+}
+
+.toolgroup-right a:hover{
+    padding-top: 2px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    padding-right: 2px;
+
+}
+
+.InvRowOdd{
+}
+
+.InvRowEven{
+}
+
+.InvRowOdd input, .InvRowOdd select{
+}
+
+.InvRowEven input, .InvRowEven select{
+}
+
+.numberColumn{
+    text-align: right;
+}
+
+.negativeNumber{
+}
+
+.boldLabel {
+    font-weight: bold;
+}
+
+.halfWidth {
+    width:50%;
+}
+
+.emptyLabel {
+    /* margin: 8px 0 0px 0;*/
+    display: block;
+    font-size: 12px;
+    color: white;
+}
+.emptyInputValue {
+    display: block;
+    font-size: 15px;
+}
+.emptyInputDate {
+    display: block;
+    font-size: 19px;
+}
+
+.mainTab{}
+
+.mainTab .sf-sub-indicator{
+    background:none;
+}
+
+.orgLevelCol1 {
+	width:40%;
+}
+
+.orgLevelCol2 {
+	width:60%;
+}
+
+.organizationLevel {
+}
+
+.organizationLevel2 {
+}
+
+.organizationLevel3 {
+}
+
+.organizationLevel4 {
+}
+
+.boldFont {
+	font-weight: bold;
+}
+.warningStyle {
+	font-weight:bold;
+}
+.barcodeWidth {
+	width:82px;
+}
+.productWidth {
+	width:165px;
+}
+.productWidthExt {
+	width:190px;
+}
+.leftIndent10px {
+	padding-left: 10px;
+}
+.drawLineBlueDot {
+    background-repeat: repeat-x;
+}
+.drawLineBlackDot {
+    background-repeat: repeat-x;
+}
+
+.treeOne{ width: 30%; }
+.treeTwo{ width: 70%; }
+.half{ width: 50%; }
+
+.tableBottomLine {
+	border-bottom: 1px solid #C0C0C0;
+}
+
+.noTableBottomLine {
+	border-bottom: 0px;
+}
+
+.tableAction {
+	float:right;
+	padding:0px 2px 0;
+	position:relative;
+	right:-8px;
+	top:-14px;
+	width:50px;
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-color: transparent;
+}
+
+.tableAction img {
+	float:right;
+}
+
+.bankAccountHeight {
+	height:25px;
+}
+
+.dash-wrap{
+
+    width: 978px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dash-body {
+    background: white;
+    padding-bottom: 10px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-left: 1px solid navy;
+    border-right: 1px solid navy;
+    border-bottom: 1px solid navy;
+    min-height: 500px;
+}
+
+.dash-tabpanel{
+    background-image: url(../img/backimg.gif);
+    background-repeat: repeat-x;
+    background-position: 0px 0px;
+    background-color: navy;
+    height: 29px;
+    color: white;
+    list-style: none;
+    border-bottom: 1px solid #C0C0C0;
+}
+
+.dash-tabpanel li{
+    position: relative;
+    float: left;
+    display: inline;
+}
+
+.dash-tab{
+    margin-top: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-bottom: 0px;
+    padding-top: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+    border-left: 1px solid transparent;
+    border-right:  1px solid transparent;
+    border-top:  1px solid transparent;
+    border-bottom:  1px solid transparent;
+}
+
+.dash-tab-rigth li{
+    float: right;
+    margin-top: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-bottom: 0px;
+    padding-top: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 6px;
+}
+
+.dash-tab a{
+    color: #003399;
+}
+
+.dash-tab-selected{
+    background-color: white;
+    border-left: 1px solid #C0C0C0;
+    border-right:  1px solid #C0C0C0;
+    border-top:  1px solid #C0C0C0;
+    border-bottom:  1px solid transparent;
+}
+
+.dash-tab-selected a{
+    background-color: white;
+    color: #003399;
+}
+
+.toggler{
+    float: left;
+    display: inline;
+    background: url(../img/toggle-small.png) no-repeat;
+    width: 16px;
+    height: 16px;
+    text-indent: -9999em;
+    /*margin: 8px 0 8px 4px;*/
+    outline: none;
+}
+
+#permissionTable.collapsed {
+    background: url(../img/toggle-small-expand.png) no-repeat;
+}
+
+.warningIcon {
+    background: url(../img/exclamation-octagon.png) no-repeat;
+}
+
+.stopIcon {
+    background: url(../img/stop-octagon.png) no-repeat;
+}
+
+.limitationPopupLine {
+
+}

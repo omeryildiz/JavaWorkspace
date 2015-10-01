@@ -1,0 +1,119 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich"
+     xmlns:ut="http://utech.com/jsf/comps"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<table>
+		<tr>
+			<td>
+	            <h3>#{messages['menu.report.label.Contact']}</h3>
+	            <ul id="list-content">
+	                <ut:browseMenuItem view="/finance/financeTxnReport.xhtml" text="#{messages['menu.report.contact.FinanceTxnReport']}" img="/img/report.gif" disabled="#{not s:hasPermission('financeTxnReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/contactStatusReport.xhtml" text="#{messages['menu.report.contact.ContactStatusReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('contactStatusReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/debtorContactReport.xhtml" text="#{messages['menu.report.contact.DebtorContactReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('debtorContactReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/retrospectiveDebtorContactReport.xhtml" text="#{messages['menu.report.contact.RetrospectiveDebtorContactReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('retrospectiveDebtorContactReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/payeeContactReport.xhtml" text="#{messages['menu.report.contact.PayeeContactReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('payeeContactReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/reconciliationContactReport.xhtml" text="#{messages['menu.report.contact.ReconciliationContactReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('reconciliationContactReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/extractAccountReport.xhtml" text="#{messages['menu.report.contact.ExtractAccountReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('extractAccountReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/contactServicesAcquiredReport.xhtml" text="#{messages['menu.report.contact.ContactServicesAcquiredReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('contactServicesAcquiredReport', 'select')}"/>
+	            </ul>
+			</td>
+
+			<td>
+	            <h3>#{messages['menu.report.label.Account']}</h3>
+	            <ul id="list-content">
+	                <ut:browseMenuItem view="/report/accountTxnReport.xhtml" text="#{messages['menu.report.account.AccountTxnReport']}" img="/img/report.gif" disabled="#{not s:hasPermission('accountTxnReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/accountStatusReport.xhtml" text="#{messages['menu.report.account.AccountStatusReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('accountStatusReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/detailedAccountReport.xhtml" text="#{messages['menu.report.account.DetailedAccountReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('detailedAccountReport', 'select')}"/>
+	            </ul>
+			</td>
+
+			<td>
+	            <h3>#{messages['menu.report.label.Stock']}</h3>
+	            <ul id="list-content">
+	                <ut:browseMenuItem view="/stock/productTxnReport.xhtml" text="#{messages['menu.report.product.ProductTxnReport']}" img="/img/report.gif" disabled="#{not s:hasPermission('productTxnReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/productStatusReport.xhtml" text="#{messages['menu.report.product.ProductStatusReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('productStatusReport', 'select')}"/>
+	                <ut:browseMenuItem view="/stock/productShowPrices.xhtml" text="#{messages['menu.report.product.ProductShowPrices']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('productShowPrices', 'select')}"/>
+	            </ul>
+			</td>
+
+			<td>
+	            <h3>#{messages['menu.report.label.Bank']}</h3>
+	            <ul id="list-content">
+	                <ut:browseMenuItem view="/report/bankTxnReport.xhtml" text="#{messages['menu.report.bank.BankTxnReport']}" img="/img/report.gif" disabled="#{not s:hasPermission('bankTxnReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/bankStatusReport.xhtml" text="#{messages['menu.report.bank.BankStatusReport']}" img="/img/chart_pie.gif" disabled="#{not s:hasPermission('bankStatusReport', 'select')}"/>
+	            </ul>
+			</td>
+
+			<td>
+	            <h3>#{messages['menu.report.label.Analysis']}</h3>
+	            <ul id="list-content">
+	                <ut:browseMenuItem view="/report/clerkReport.xhtml" text="#{messages['menu.report.analysis.ClerkReport']}" img="/img/report.gif" disabled="#{not s:hasPermission('clerkReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/endOfDayReport.xhtml" text="#{messages['menu.report.analysis.EndOfDayReport']}" img="/img/report.gif" disabled="#{not s:hasPermission('endOfDayReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/taxTxnReport.xhtml" text="#{messages['menu.report.analysis.TaxTxnReport']}" img="/img/report.gif" disabled="#{not s:hasPermission('taxTxnReport', 'select')}"/>
+	            </ul>
+			</td>
+
+			<td>
+	            <h3>#{messages['menu.report.label.Export']}</h3>
+	            <ul id="list-content">
+	                <ut:browseMenuItem view="/stock/productBrowse.xhtml" text="#{messages['menu.report.export.ProductBrowse']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('product', 'select')}"/>
+	                <ut:browseMenuItem view="/finance/newpurchaseInvoiceBrowse.xhtml" text="#{messages['menu.report.export.PurchaseInvoiceBrowse']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('purchaseInvoice', 'select')}"/>
+	                <ut:browseMenuItem view="/finance/newsaleInvoiceBrowse.xhtml" text="#{messages['menu.report.export.SaleInvoiceBrowse']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('saleInvoice', 'select')}"/>
+	                <ut:browseMenuItem view="/report/priceItemReport.xhtml" text="#{messages['menu.report.export.PriceItemReport']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('priceItemReport', 'select')}"/>
+	                <ut:browseMenuItem view="/contact/contactBrowse.xhtml" text="#{messages['menu.report.export.ContactBrowse']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('contact', 'select')}"/>
+	                <ut:browseMenuItem view="/report/purchaseSaleReport.xhtml" text="#{messages['menu.report.export.PurchaseSaleReport']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('purchaseSaleReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/creditCardPosCommissionReport.xhtml" text="#{messages['menu.report.export.CreditCardPosCommissionReport']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('purchaseSaleReport', 'select')}"/>
+	                <ut:browseMenuItem view="/report/monthlyTurnoverReport.xhtml" text="#{messages['menu.report.export.MonthlyTurnoverReport']}" img="/img/report.gif" param1="exid" param1value="1"  disabled="#{not s:hasPermission('monthlyTurnoverReport', 'select')}"/>
+	            </ul>
+			</td>
+		</tr>
+	</table>
+    
+    <ui:remove>
+        <li class="#{curitem eq 'taxTxnReport' ? 'current' : '' }">
+        <s:link view="/report/taxTxnReport.xhtml" propagation="none" >
+            <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+            <h:outputText value="#{messages['module.caption.TaxTxnReport']}" />
+        </s:link>
+        </li>
+
+        <li class="#{curitem eq 'taxStatusReport' ? 'current' : '' }">
+        <s:link view="/report/taxStatusReport.xhtml" >
+            <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+            <h:outputText value="#{messages['module.caption.TaxStatusReport']}"/>
+        </s:link>
+        </li>
+    </ui:remove>
+
+    <ui:remove>
+        <li class="#{curpage eq 'serviceReport' ? 'current' : '' }">
+            <a href="#">Hizmet Raporları</a>
+            <ul>
+                <li class="#{curitem eq 'serviceTxnReport' ? 'current' : '' }">
+                <s:link view="/report/serviceTxnReport.xhtml" propagation="none" >
+                    <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ServiceTxnReport']}" />
+                </s:link>
+        </li>
+        <li class="#{curitem eq 'serviceStatusReport' ? 'current' : '' }">
+        <s:link view="/report/serviceStatusReport.xhtml" >
+            <h:graphicImage url="/img/chart_pie.gif" alt="#{messages['currency.img.Currency']}"/>
+            <h:outputText value="#{messages['module.caption.ServiceStatusReport']}"/>
+        </s:link>
+        </li>
+        </ul>
+        </li>
+    </ui:remove>
+    <ui:remove>
+        <li class="#{curitem eq 'purchaseInvoiceReport' ? 'current' : '' }">
+        <s:link view="/report/purchaseInvoiceReport.xhtml" propagation="none" >
+            <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/>
+            <h:outputText value="#{messages['module.caption.PurchaseInvoiceReport']}" />
+        </s:link>
+        </li>
+    </ui:remove>
+</div>

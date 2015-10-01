@@ -1,0 +1,279 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeOther"/>
+            <ui:param name="curitem" value="foundationRefunding"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/foundationRefunding.xhtml" propagation="begin">
+                <h:outputText value="#{messages['module.caption.FoundationRefunding']}" rendered="#{s:hasPermission('foreignExchange', 'update')}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.FoundationRefunding']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:panelGrid columns="2">
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.TxnBeginDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{foundationRefundingHome.filterModel.txnBeginDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.TxnEndDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{foundationRefundingHome.filterModel.txnEndDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Foundation']}" />
+                            </ui:define>
+                            <h:selectOneMenu value="#{foundationRefundingHome.filterModel.foundation}" styleClass="middle">
+								<s:convertEntity />
+                            	<s:selectItems var="item" value="#{generalSuggestion.foundationList}" 
+                            		label="#{item.code} / #{item.name}"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                    </s:fragment>
+
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.MaturityBeginDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{foundationRefundingHome.filterModel.maturityBeginDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.MaturityEndDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{foundationRefundingHome.filterModel.maturityEndDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Repaid']}" />
+							</ui:define>
+							<h:selectOneMenu value="#{foundationRefundingHome.filterModel.repaidStatus}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}" />
+								<f:selectItem itemValue="true" itemLabel="#{messages['general.label.yes']}" />
+								<f:selectItem itemValue="false" itemLabel="#{messages['general.label.no']}" />
+							</h:selectOneMenu>
+						</s:decorate>
+
+					</s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{foundationRefundingHome.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+					<h:commandButton action="#{foundationRefundingHome.pdf()}" 
+									 value="#{messages['general.button.PDF']}"
+									 rendered="#{s:hasPermission('foundationRefunding', 'pdf')}"
+									 styleClass="button" />
+					<h:commandButton action="#{foundationRefundingHome.xls()}" 
+									 value="#{messages['general.label.XLS']}"
+									 rendered="#{s:hasPermission('foundationRefunding', 'xls')}" 
+									 styleClass="button" />
+					
+					                                     
+                </div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+            	<s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="it"
+                                 value="#{foundationRefundingHome.entityList}" 
+                                 rendered="#{not empty foundationRefundingHome.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rows="30">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+						<r:column>
+                        	<f:facet name="header">
+                        		<s:div>
+					                <h:graphicImage url="/img/information.gif"/> 
+                        		</s:div>
+                        	</f:facet>
+			                <h:graphicImage url="/img/button_ok.gif" rendered="#{it.repaidStatus}" 
+			                	title="#{messages['general.label.Repaid']}"/> 
+
+			                <h:graphicImage url="/img/NOTACT.gif" rendered="#{not it.repaidStatus}" 
+			                	title="#{messages['general.label.UnRepaid']}" />  
+						</r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.AdverseCode']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.adverseCode}" />
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.AdverseName']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.adverseName}" />
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.MaturityDate']}" />
+                        	</f:facet>
+                            <h:outputText value="#{it.maturityDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.TaxBase']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.baseAmount.value}" alt="decimal"/>
+                        </r:column>
+
+						<r:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['general.label.Valor']}" />
+							</f:facet>
+							<h:outputText value="#{it.valor}" />
+						</r:column>
+
+						<r:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['general.label.Rate']}" />
+							</f:facet>
+							<h:outputText value="#{it.rate}" />
+						</r:column>
+
+						<r:column styleClass="amountFieldTiny">
+							<f:facet name="header">
+								<h:outputText value="#{messages['general.label.Discount']}" />
+							</f:facet>
+							<h:outputText value="#{it.discount}" alt="decimal" converter="bigDecimalConverter"/>
+						</r:column>
+
+						<r:column styleClass="amountFieldTiny">
+							<f:facet name="header">
+								<h:outputText value="#{messages['general.label.Added']}" />
+							</f:facet>
+							<h:outputText value="#{it.added}" alt="decimal" converter="bigDecimalConverter"/>
+						</r:column>
+
+						<r:column styleClass="serialField">
+							<f:facet name="header">
+								<h:outputText value="#{messages['general.label.PaymentActionType']}" />
+							</f:facet>
+							<h:outputText value="#{it.paymentActionType.code} - #{it.paymentActionType.name}" />
+						</r:column>
+
+                        <r:column styleClass="amountFieldTiny">
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Amount']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.amount.value}" alt="decimal" converter="bigDecimalConverter"/>
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Info']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.info}" />
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Reference']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.reference}" />
+                        </r:column>
+
+                        <r:column>
+                        	<f:facet name="header">
+                        		<h:outputText value="#{messages['general.label.Foundation']}" />
+                        	</f:facet>
+                        	<h:outputText value="#{it.foundation.code} - #{it.foundation.name}" />
+                        </r:column>
+
+                        <r:column styleClass="actionColumn">
+                            <f:facet name="header">
+                            	<h:selectBooleanCheckbox id="checkAll" value="false" onchange="toggleCheckAll();" styleClass="checkbox" />
+							</f:facet>
+                            
+                            <h:selectBooleanCheckbox id="active" value="#{it.active}" 
+                            	styleClass="checkbox" disabled="#{it.repaidStatus}"/>
+                        </r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" ajaxSingle="false"/>          
+                        </f:facet>
+
+                    </r:dataTable>
+
+                    <r:panel id="msg" rendered="#{empty foundationRefundingHome.entityList}" styleClass="message">
+                    	<h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                	</r:panel>
+               </s:div>
+
+	           <s:div styleClass="actionButtons">
+	     			<a:commandButton action="#{foundationRefundingHome.createInvoiceFromSelectedItems()}"
+	     				value="#{messages['general.label.CreateInvoice']}" 
+	     				styleClass="button" reRender="results" 
+	     				rendered="#{foundationRefundingHome.filterModel.foundation ne null and s:hasPermission('foundationRefunding', 'createInvoice')}"/>
+
+	     	   </s:div>
+                
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

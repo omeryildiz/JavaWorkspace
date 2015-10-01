@@ -1,0 +1,402 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="contactReport"/>
+            <ui:param name="curitem" value="debtorContactReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/report/debtorContactReport.xhtml">
+                <h:outputText value="#{messages['module.caption.DebtorContactReport']}" rendered="#{s:hasPermission('debtorContactReport', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/report/payeeContactReport.xhtml"  rendered="#{s:hasPermission('payeeContactReport', 'select')}">
+                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.PayeeContactReport']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.DebtorContactReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:panelGrid columns="4">
+                    <s:fragment>
+
+						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['debtorContactReport.label.ContactCode']}" /></ui:define>
+                            <h:inputText value="#{debtorContactReport.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['debtorContactReport.label.ContactName']}" /></ui:define>
+                            <h:inputText value="#{debtorContactReport.filterModel.name}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <a:region>
+			            	<s:decorate id="sdc" template="/layout/edit.xhtml">
+			            		<ui:define name="label"><h:outputText value="#{messages['general.label.Contact']}" /></ui:define>
+			            		<h:inputText id="con" value="#{debtorContactReport.filterModel.contact}" styleClass="middle" >
+			            			<f:converter converterId="contactCaptionConverter"/>
+			            		</h:inputText>
+			            		
+			            		<a href="javascript:contactSelectPopup ( 'form:sdc:con' )">
+			            			<h:graphicImage url="/img/selectBox.gif" />
+			            		</a>
+			            		
+			            		<r:suggestionbox for="con" rules="all" ajaxSingle="true" 
+			            			suggestionAction="#{contactSuggestion.suggestContact}" var="citem" 
+			            			fetchValue="#{citem.caption}">
+									<ui:include src="/contact/contactSuggestionView.xhtml" />
+			            		</r:suggestionbox>
+			            	</s:decorate>
+			            </a:region>  
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.ContactType']}" /></ui:define>
+                            <h:selectOneMenu value="#{debtorContactReport.filterModel.companyType}"  styleClass="middle">
+
+                                <f:selectItem itemValue="All" itemLabel="#{messages['Hepsi']}"/>
+                                <f:selectItem itemValue="Person" itemLabel="#{messages['Kişi']}" />
+                                <f:selectItem itemValue="Firm" itemLabel="#{messages['Şirket']}" />
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['contact.label.Type']}" /></ui:define>
+                        	<h:selectOneMenu value="#{debtorContactReport.filterModel.type}"  styleClass="middle">
+                        		<s:convertEnum />
+                        			<s:enumItem enumValue="All" label="#{messages['contact.type.All']}"/>
+                        			<s:enumItem enumValue="Customer" label="#{messages['contact.type.Customer']}" />
+                        			<s:enumItem enumValue="Provider" label="#{messages['contact.type.Provider']}" />
+                        			<s:enumItem enumValue="Agent" label="#{messages['contact.type.Agent']}" />
+                        			<s:enumItem enumValue="Personnel" label="#{messages['contact.type.Personnel']}" />
+                        			<s:enumItem enumValue="Branch" label="#{messages['contact.type.Branch']}" />
+                        	</h:selectOneMenu>
+                        </s:decorate>
+                        
+                    </s:fragment>
+					
+					<s:fragment>
+						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['debtorContactReport.label.Category']}"/>
+                            </ui:define>
+                            <h:selectOneMenu id="fldCategory"
+                                             value="#{debtorContactReport.filterModel.category}" 
+                                             styleClass="middle">
+                                <s:convertEntity/>
+                                <s:selectItems value="#{contactSuggestion.contactCategoryList}" 
+                                               var="item" 
+                                               label="#{item.code}"
+                                               noSelectionLabel="#{messages['general.value.None']}"
+                                               hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.Code1']}" /></ui:define>
+                            <h:inputText value="#{debtorContactReport.filterModel.exCode1}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contact.label.Code2']}" /></ui:define>
+                            <h:inputText value="#{debtorContactReport.filterModel.exCode2}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.FollowUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{debtorContactReport.filterModel.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+					</s:fragment>
+					
+					<s:fragment>
+						<s:decorate template="/layout/edit.xhtml">
+			                <ui:define name="label"><h:outputText value="#{messages['financeTxnReport.label.DocumentType']}"/></ui:define>
+			                <h:selectOneMenu value="#{debtorContactReport.filterModel.documentType}" styleClass="middle">
+			                    <s:convertEnum />
+			                    <s:enumItem enumValue="Unknown" label="#{messages['general.value.All']}"/>
+			                    <s:enumItem enumValue="DebitCreditVirement" label="#{messages['general.value.DocumentType.DebitCreditVirement']}"/>
+			                    <s:enumItem enumValue="Payment" label="#{messages['general.value.DocumentType.Payment']}"/>
+			                
+			                    <s:enumItem enumValue="DebitCreditNotePayment" label="#{messages['general.value.DocumentType.DebitCreditNotePayment']}"/>
+
+			                    <s:enumItem enumValue="SaleInvoice" label="#{messages['general.value.DocumentType.SaleInvoice']}"/>
+			                    <s:enumItem enumValue="SaleShipmentInvoice" label="#{messages['general.value.DocumentType.SaleShipmentInvoice']}"/>
+			                    <s:enumItem enumValue="RetailSaleShipmentInvoice" label="#{messages['general.value.DocumentType.RetailSaleShipmentInvoice']}"/>
+			                    <s:enumItem enumValue="BankToContactTransfer" label="#{messages['general.value.DocumentType.BankToContactTransfer']}"/>
+			                
+			                    <s:enumItem enumValue="ChequePaymentPayroll" label="#{messages['general.value.DocumentType.ChequePaymentPayroll']}"/>
+			                
+			                    <s:enumItem enumValue="PromissoryPaymentPayroll" label="#{messages['general.value.DocumentType.PromissoryPaymentPayroll']}"/>
+			                    
+			                
+			                </h:selectOneMenu> 
+			                
+			                <ui:remove>
+			                	<s:enumItem enumValue="Collection" label="#{messages['general.value.DocumentType.Collection']}"/>
+				                <s:enumItem enumValue="DebitCreditNoteCollection" label="#{messages['general.value.DocumentType.DebitCreditNoteCollection']}"/>
+				                <s:enumItem enumValue="PurchaseInvoice" label="#{messages['general.value.DocumentType.PurchaseInvoice']}"/>
+				                <s:enumItem enumValue="PurchaseShipmentInvoice" label="#{messages['general.value.DocumentType.PurchaseShipmentInvoice']}"/>
+			                	<s:enumItem enumValue="ContactToBankTransfer" label="#{messages['general.value.DocumentType.ContactToBankTransfer']}"/>
+			                	<s:enumItem enumValue="ChequeFromContactPayroll" label="#{messages['general.value.DocumentType.ChequeFromContactPayroll']}"/>
+			                	<s:enumItem enumValue="PromissoryFromContactPayroll" label="#{messages['general.value.DocumentType.PromissoryFromContactPayroll']}"/>
+			                	<s:enumItem enumValue="ExpenseNote" label="#{messages['general.value.DocumentType.ExpenseNote']}"/>
+			                	<s:enumItem enumValue="ReturnExpenseNote" label="#{messages['general.value.DocumentType.ReturnExpenseNote']}"/>
+			                </ui:remove>
+			            </s:decorate>
+				            
+           				<s:decorate template="/layout/edit.xhtml">
+			                <ui:define name="label"><h:outputText value="#{messages['financeTxnReport.label.Code']}"/></ui:define>
+			                <h:inputText value="#{debtorContactReport.filterModel.docCode}" styleClass="middle"/>
+			            </s:decorate>
+				            
+				        <s:decorate template="/layout/edit.xhtml" >
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Organization']}" />
+							</ui:define>
+							<h:selectOneMenu value="#{debtorContactReport.filterModel.organization}" styleClass="middle" >
+								<s:convertEntity />
+								<s:selectItems value="#{generalSuggestion.organizationList}"
+									var="item" label="#{item.code}"
+									noSelectionLabel="#{messages['general.value.All']}"
+									hideNoSelectionLabel="false" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+					</s:fragment>
+					
+					
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['debtorContactReport.label.BeginDate']}" />
+                            </ui:define>
+                            <r:calendar value="#{debtorContactReport.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['debtorContactReport.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{debtorContactReport.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+			                <ui:define name="label">
+			                	<h:outputText value="#{messages['general.label.ActiveOrPassive']}"/>
+			                </ui:define>
+							<h:selectOneMenu value="#{debtorContactReport.filterModel.active}" styleClass="middle">
+								<f:selectItem itemLabel="#{messages['general.value.All']}" itemValue=""/>
+								<f:selectItem itemLabel="#{messages['general.label.yes']}" itemValue="true"/>
+								<f:selectItem itemLabel="#{messages['general.label.no']}" itemValue="false"/>
+							</h:selectOneMenu>
+			            </s:decorate>
+			            
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Advance']}" />
+							</ui:define>
+							<h:selectOneMenu id="processType" value="#{debtorContactReport.filterModel.processType}" styleClass="middle">
+								<f:selectItem itemLabel="#{messages['general.value.All']}" />
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Normal']}" itemValue="Normal"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.Advance']}" itemValue="Advance"/>
+								<f:selectItem itemLabel="#{messages['paymentProcessType.label.AdvanceReturn']}" itemValue="AdvanceReturn"/>
+							</h:selectOneMenu>
+						</s:decorate>
+                        
+                    </s:fragment>
+ 
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{debtorContactReport.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{debtorContactReport.pdf()}"
+                                     rendered="#{s:hasPermission('debtorContactReport', 'pdf')}"
+                                     styleClass="button"/>
+                    
+                    <h:commandButton id="xls" 
+                                     value="#{messages['general.label.XLS']}" 
+                                     action="#{debtorContactReport.xls()}"
+                                     rendered="#{s:hasPermission('debtorContactReport', 'xls')}"
+                                     styleClass="button"/>    
+                    
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                <s:div style="padding:2px;">
+                    <r:dataTable id="browseList" 
+                                 var="rowItem"
+                                 rows="20"
+                                 rowKeyVar="rowKey"
+                                 value="#{debtorContactReport.debtorContacts}">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['debtorContactReport.caption.ContactList']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.Contact']}" /></f:facet>
+                            <h:outputText value="[#{rowItem['contactCode']}] #{rowItem['contactName']}" rendered="#{debtorContactReport.renderContact(rowKey) and rowItem['person']}"/>
+                            <h:outputText value="[#{rowItem['contactCode']}] #{rowItem['company']}" rendered="#{debtorContactReport.renderContact(rowKey) and rowItem['person'] eq false}"/>
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.Currency']}" /></f:facet>
+                            <h:outputText value="#{rowItem['ccy']}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.Debit']}" /></f:facet>
+                            <h:outputText value="#{rowItem['totalval']}" styleClass="negativeNumber" rendered="#{rowItem['totalval'] lt 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                            
+                            <h:outputText value="#{rowItem['totalval']}" rendered="#{rowItem['totalval'] ge 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.AvgRate']}" /></f:facet>
+                            <h:outputText value="#{rowItem['avgrate']}">
+                                <f:convertNumber pattern="#.0000" />
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.DebitLocal']}" /></f:facet>
+                            <h:outputText value="#{rowItem['lcyval']}" styleClass="negativeNumber" rendered="#{rowItem['lcyval'] lt 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                            
+                            <h:outputText value="#{rowItem['lcyval']}" rendered="#{rowItem['lcyval'] ge 0}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" /> 
+                        </f:facet>
+                    </r:dataTable>
+                    
+                    <r:spacer size="2" />
+                    
+                    <r:dataTable id="sumList" 
+                                 var="rowItem"
+                                 value="#{debtorContactReport.debtorContactSummary}" 
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['debtorContactReport.caption.CurrencyList']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.Currency']}" /></f:facet>
+                            <h:outputText value="#{rowItem['ccy']}"/>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.DebitAmount']}" /></f:facet>
+                            <h:outputText value="#{rowItem['ccyval']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="numberColumn" footerClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['debtorContactReport.label.DebitLocalAmount']}" /></f:facet>
+                            <h:outputText value="#{rowItem['lcyval']}">
+                                <f:convertNumber pattern="#,##0.00" />
+                            </h:outputText>
+                        </r:column>
+                        <f:facet name="footer">
+                            <r:columnGroup >
+                                <r:column colspan="2" style="background-color:#E0E0E0;font-weight:bold;">
+                                    <h:outputText value="#{messages['general.label.GrandTotal']}" />
+                                </r:column>
+                                <r:column styleClass="numberColumn" style="background-color:#E0E0E0;font-weight:bold;">
+                                    <h:outputText value="#{debtorContactReport.grandTotal}">
+                                        <f:convertNumber pattern="#,##0.00" />
+                                    </h:outputText>
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                    </r:dataTable>
+                    
+                </s:div>
+                
+                
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+
+</ui:composition>

@@ -1,0 +1,336 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/menu/menu.xhtml">
+			<ui:param name="curmodul" value="general" />
+			<ui:param name="curpage" value="organizationMenu" />
+			<ui:param name="curitem" value="organization" />
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="toolbar">
+		<div class="pathgroup">
+			<s:link view="/general/general.xhtml" propagation="none">
+				<h:outputText value="#{messages['module.caption.General']}" />
+			</s:link> 
+			
+			<h:outputText value=" » " /> 
+
+			<s:link view="/general/organizationBrowse.xhtml" propagation="none">
+				<h:outputText value="#{messages['module.caption.OrganizationBrowse']}" />
+			</s:link> 
+			
+			<h:outputText value=" » " /> 
+			
+			<s:link view="/general/organization.xhtml">
+				<h:outputText value="#{messages['module.caption.Organization']}" />
+			</s:link>
+		</div>
+
+		<div class="toolgroup-left"><s:link
+			action="#{organizationHome.createNew()}">
+			<h:graphicImage url="/img/add.gif" />
+			<h:outputText value="#{messages['organization.action.Add']}" />
+		</s:link></div>
+
+	</ui:define>
+
+	<ui:define name="body">
+
+		<h1><h:outputText value="#{messages['module.caption.Organization']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+		<ui:include src="/general/ajaxLoadingPopup.xhtml" />
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/house.gif"
+							alt="#{messages['bank.img.World']}" />
+						<h:outputText value="#{messages['organization.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+
+				<h:panelGrid columns="2">
+					<s:fragment>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['organization.label.Name']}" />
+							</ui:define>
+							<h:inputText value="#{organization.name}" styleClass="middle"
+								required="true" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['organization.label.Code']}" />
+							</ui:define>
+							<h:inputText value="#{organization.code}" styleClass="middle"
+								required="true" />
+						</s:decorate>
+
+						<a:region renderRegionOnly="true">
+
+							<s:decorate template="/layout/edit.xhtml" >
+								<ui:define name="label">
+									<h:outputText value="#{messages['organization.label.OrganizationLevel']}" />
+								</ui:define>
+								<h:selectOneMenu value="#{organizationHome.level}" styleClass="middle"
+									required="true" 
+									disabled="#{not (organizationHome.showOrganizationCombobox and organization.parentOrganization eq null)}">
+									<s:convertEntity />
+									<s:selectItems value="#{generalSuggestion.organizationLevelList}" var="item"
+										label="#{item.name}" noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false"/>
+									<a:support event="onchange" reRender="parentList" ajaxSingle="true" />
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<a:outputPanel id="parentList">
+
+								<s:decorate template="/layout/edit.xhtml" 
+									rendered="#{organizationHome.level.level ne 1}">
+									<ui:define name="label">
+										<h:outputText value="#{messages['organization.label.ParentOrganization']}" />
+									</ui:define>
+									<h:selectOneMenu value="#{organization.parentOrganization}" styleClass="middle" 
+										required="true">
+										<s:convertEntity />
+										<s:selectItems value="#{organizationHome.findParentList()}" var="item"
+											label="#{item.name}" noSelectionLabel="#{messages['general.value.None']}"
+											hideNoSelectionLabel="false" />
+									</h:selectOneMenu>
+								</s:decorate>
+
+							</a:outputPanel>
+
+						</a:region>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Status']}" />
+							</ui:define>
+							<h:selectBooleanCheckbox id="active" value="#{organization.active}"
+								styleClass="checkbox" />
+							<h:outputLabel value="#{messages['general.label.Active']}"
+								for="active" styleClass="checkboxLabel" />
+						</s:decorate>
+
+					</s:fragment>
+
+					<s:fragment>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['organization.label.Info']}" />
+							</ui:define>
+							<h:inputTextarea value="#{organization.info}" styleClass="exlarge"
+								rows="4" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<h:selectBooleanCheckbox id="active" value="#{organization.hasPrivateAddress}"
+								styleClass="checkbox" >
+								<a:support event="onchange" ajaxSingle="true" reRender="addressPanel"/>
+							</h:selectBooleanCheckbox>
+							<h:outputLabel value="#{messages['organization.label.HasPrivateAddress']}"
+								for="active" styleClass="checkboxLabel" />
+						</s:decorate>
+					
+					</s:fragment>
+
+				</h:panelGrid>
+
+				<a:outputPanel id="addressPanel">
+					<s:div rendered="#{organization.hasPrivateAddress}">
+					<h3><h:outputText value="#{messages['organization.label.firmAddress']}" /></h3>
+					</s:div>
+
+					<h:panelGrid columns="2" rendered="#{organization.hasPrivateAddress}">
+
+						<s:fragment>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['organization.label.Title']}" />
+								</ui:define>
+								<h:inputText value="#{organization.firmTitle}" styleClass="middle" />
+							</s:decorate>
+
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['address.label.Zip']}" />
+								</ui:define>					
+								<h:inputText value="#{organization.address.zip}" styleClass="middle"/>
+							</s:decorate>
+						
+						    <s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['address.label.Country']}" />
+								</ui:define>					
+								<h:selectOneMenu value="#{organization.address.country}" 
+									styleClass="middle" required="true">
+									<s:selectItems value="#{generalSuggestion.countryList}"
+										var="it" label="#{it.name}" 
+										noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false" 
+										itemValue="#{it.name}"/>
+									<a:support event="onchange" reRender="cityDec,provinceDec" ajaxSingle="true" status="commonAjaxStatus"/>
+								</h:selectOneMenu>
+							</s:decorate>
+					
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['address.label.City']}" />
+								</ui:define>					
+								<h:selectOneMenu id="cityDec" value="#{organization.city}" styleClass="middle"
+									required="true">
+									<s:convertEntity />
+									<s:selectItems value="#{generalSuggestion.getCityList(organization.address.country)}"
+										var="it" label="#{it.name}" 
+										noSelectionLabel="#{messages['general.value.None']}"
+										hideNoSelectionLabel="false" />
+									<a:support event="onchange" reRender="provinceDec"
+										ajaxSingle="true" status="commonAjaxStatus"/>
+								</h:selectOneMenu>
+							</s:decorate>
+			
+							<s:div id="provinceDec">
+								<s:decorate template="/layout/edit.xhtml"
+									rendered="#{organization.address.country eq messages['country.label.Turkey']}" >
+									<ui:define name="label">
+										<h:outputText value="#{messages['address.label.Province']}" />
+									</ui:define>					
+									<h:selectOneMenu id="province" value="#{organization.province}" 
+										styleClass="middle" required="true">
+										<s:convertEntity />
+										<s:selectItems value="#{generalSuggestion.getProvinceList(organization.city)}"
+											var="it" label="#{it.name}" 
+											noSelectionLabel="#{messages['general.value.None']}"
+											hideNoSelectionLabel="false" />
+									</h:selectOneMenu>
+								</s:decorate>
+							</s:div>
+
+							<ui:remove>
+								<s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['organization.label.TaxOffice']}" />
+									</ui:define>
+									<h:inputText value="#{organization.taxOffice}" styleClass="middle"/>
+								</s:decorate>
+			
+								<s:decorate template="/layout/edit.xhtml">
+									<ui:define name="label">
+										<h:outputText value="#{messages['organization.label.TaxNumber']}" />
+									</ui:define>
+									<h:inputText value="#{organization.taxNumber}" styleClass="middle"/>
+								</s:decorate>
+							</ui:remove>	
+						
+						</s:fragment>
+
+						<s:fragment>
+									
+							<s:decorate template="/layout/edit.xhtml">
+								<ui:define name="label">
+									<h:outputText value="#{messages['address.label.Address']}" />
+								</ui:define>					
+								<h:inputTextarea value="#{organization.address.street}" styleClass="exlarge" 
+									rows="6"/>
+							</s:decorate>
+						
+						</s:fragment>
+
+					</h:panelGrid>
+				
+				</a:outputPanel>
+				
+				<h3><h:outputText value="#{messages['bankBranch.label.Representative']}" /></h3>
+
+				<h:panelGrid columns="2">
+					<s:div>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['bankBranch.label.FirstName']}" />
+							</ui:define>
+							<h:inputText value="#{organization.contactPerson.firstName}"
+								styleClass="middle" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['bankBranch.label.LastName']}" />
+							</ui:define>
+							<h:inputText value="#{organization.contactPerson.lastName}"
+								styleClass="middle" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['bankBranch.label.Title']}" />
+							</ui:define>
+							<h:inputText value="#{organization.contactPerson.title}"
+								styleClass="middle" />
+						</s:decorate>
+					</s:div>
+					<s:div>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['bankBranch.label.Phone']}" />
+							</ui:define>
+							<h:inputText value="#{organization.contactPerson.phone.fullNumber}"
+								styleClass="middle phone" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['bankBranch.label.Fax']}" />
+							</ui:define>
+							<h:inputText value="#{organization.contactPerson.fax.fullNumber}"
+								styleClass="middle phone" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['contact.label.Email']}" />
+							</ui:define>
+							<h:inputText value="#{organization.contactPerson.email}"
+								styleClass="middle email" />
+						</s:decorate>
+					</s:div>
+				</h:panelGrid>
+
+				<div class="actionButtons">
+				
+					<h:commandButton id="save" value="#{messages['general.button.Save']}"
+						action="#{organizationHome.save()}" styleClass="button" /> 
+					
+					<s:button id="delete" value="#{messages['general.button.Delete']}"
+						action="#{organizationHome.delete()}" rendered="#{not empty organization.id}"
+						onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+						styleClass="button" /> 
+					
+					<s:button id="done" value="#{messages['general.button.Close']}"
+						action="#{organizationHome.close()}" styleClass="button" />
+				
+				</div>
+
+			</r:panel>
+
+		</h:form>
+
+	</ui:define>
+	
+</ui:composition>

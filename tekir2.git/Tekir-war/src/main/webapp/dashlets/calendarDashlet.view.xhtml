@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/dashlet.xhtml">
+
+<ui:define name="view">
+    <h:outputText value="Takvim Gelecek!" />
+
+    <link rel="stylesheet" type="text/css" href="#{facesContext.externalContext.requestContextPath}/stylesheet/jMonthCalendar.css" media="screen" />
+    <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/jMonthCalendar.js"></script>
+
+        <script type="text/javascript">
+        jQuery(function() {
+			var options = {
+
+                                onMonthChanging: function(dateIn) {
+					//this could be an Ajax call to the backend to get this months events
+					//var events = [ 	{ "EventID": 7, "StartDate": new Date(2009, 1, 1), "Title": "10:00 pm - EventTitle1", "URL": "#", "Description": "This is a sample event description", "CssClass": "Birthday" },
+					//				{ "EventID": 8, "StartDate": new Date(2009, 1, 2), "Title": "9:30 pm - this is a much longer title", "URL": "#", "Description": "This is a sample event description", "CssClass": "Meeting" }
+					//];
+					//$.jMonthCalendar.ReplaceEventCollection(events);
+					return true;
+				}
+                                /*,
+				onEventLinkClick: function(event) {
+					alert("event link click");
+					return true;
+				},
+				onEventBlockClick: function(event) {
+					alert("block clicked");
+					return true;
+				},
+				onEventBlockOver: function(event) {
+					//alert(event.Title + " - " + event.Description);
+					return true;
+				},
+				onEventBlockOut: function(event) {
+					return true;
+				},
+				onDayLinkClick: function(date) {
+					alert(date.toLocaleDateString());
+					return true;
+				},
+				onDayCellClick: function(date) {
+					alert(date.toLocaleDateString());
+					return true;
+				}*/
+			};
+
+
+			var events = [ 	{ "EventID": 1, "StartDateTime": "new Date(2009, 9, 29)", "EndDateTime": "new Date(2009, 10, 3)", "Title": "10:00 pm - EventTitle1", "URL": "#", "Description": "This is a sample event description" },
+                                        { "EventID": 6, "StartDateTime": "new Date(2009, 9, 29)", "EndDateTime": "new Date(2009, 10, 3)", "Title": "10:00 pm - EventTitle6", "URL": "#", "Description": "This is a sample event description" },
+					{ "EventID": 7, "StartDateTime": new Date(2009, 9, 12), "Title": "10:00 pm - EventTitle7", "URL": "#", "Description": "This is a sample event description" },
+					{ "EventID": 3, "StartDateTime": "2009-09-28T12:30:00.0000000", "Title": "This is a much longer title", "URL": "#", "Description": "This is a sample event description", "CssClass": "Meeting" },
+					{ "EventID": 4, "StartDateTime": new Date(2009, 9, 13), "Title": "This is a much longer title", "URL": "#", "Description": "This is a sample event description", "CssClass": "Meeting" },
+					{ "EventID": 5, "StartDateTime": "2009-09-03", "EndDateTime": "2009-10-14", "Title": "This is a much longer title", "URL": "#", "Description": "This is a sample event description", "CssClass": "Meeting" }
+			];
+
+
+			jQuery.jMonthCalendar.Initialize(options, events);
+
+
+
+
+			var extraEvents = [	{ "EventID": 8, "StartDateTime": new Date(2009, 3, 11), "Title": "10:00 pm - EventTitle1", "URL": "#", "Description": "This is a sample event description", "CssClass": "Birthday" },
+								{ "EventID": 9, "StartDateTime": new Date(2009, 3, 20), "Title": "9:30 pm - this is a much longer title", "URL": "#", "Description": "This is a sample event description", "CssClass": "Meeting" }
+			];
+
+			jQuery("#Button").click(function() {
+				$.jMonthCalendar.AddEvents(extraEvents);
+			});
+
+			jQuery("#ChangeMonth").click(function() {
+				$.jMonthCalendar.ChangeMonth(new Date(2009, 7, 7));
+			});
+        });
+    </script>
+
+
+    <div id="jMonthCalendar"></div>
+    <ui:remove>
+    <r:calendar id="basecalendar" popup="false" dataModel="#{dashlet.model}" readonly="false" mode="ajax" ondateselected="alert( Richfaces.getComponent('calendar',this).getSelectedDate()  )"/>
+    </ui:remove>
+</ui:define>
+</ui:composition>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="Normal" isDefault="true" pdfEncoding="Cp1254"/>
+	<queryString>
+		<![CDATA[select * from invoice i
+Inner Join (
+select si.invoice_id, sr.name, si.unit, QUANTITY, TAXCCY, TAXVALUE, tax_Rate, TOTALCCY, TOTALVALUE, PRICECCY, PRICEVALUE from Invoice_Service_Item si
+INNER JOIN Service sr on sr.id = si.service_id
+UNION
+select sn.invoice_id, pr.name, si.unit, si.QUANTITY, si.TAX_CCY, si.TAX_VALUE, si.tax_Rate, si.TOTAL_CCY, si.TOTAL_VALUE, si.PRICE_CCY, si.PRICE_VALUE from Shipment_Note sn
+INNER JOIN Shipment_Item si on sn.id = si.owner_id
+INNER JOIN Product pr on si.product_id = pr.id ) det on i.id = det.invoice_id
+INNER JOIN Contact c on i.contact_id = c.id]]>
+	</queryString>
+	<field name="ID" class="java.lang.Long"/>
+	<field name="CREATE_DATE" class="java.sql.Date"/>
+	<field name="UPDATE_DATE" class="java.sql.Date"/>
+	<field name="CREATE_USER" class="java.lang.String"/>
+	<field name="UPDATE_USER" class="java.lang.String"/>
+	<field name="SERIAL" class="java.lang.String"/>
+	<field name="CODE" class="java.lang.String"/>
+	<field name="INFO" class="java.lang.String"/>
+	<field name="REFERENCE" class="java.lang.String"/>
+	<field name="ISACTIVE" class="java.lang.Boolean"/>
+	<field name="TXNDATE" class="java.sql.Date"/>
+	<field name="INTEGRATION_DATE" class="java.sql.Timestamp"/>
+	<field name="INTEGRATION_DOCUMENTID" class="java.lang.Long"/>
+	<field name="INTEGRATION_SERIAL" class="java.lang.String"/>
+	<field name="INTEGRATION_TEMPLATE_NAME" class="java.lang.String"/>
+	<field name="TRADE_ACTION" class="java.lang.Integer"/>
+	<field name="BEFORETAXCCY" class="java.lang.String"/>
+	<field name="BEFORETAXVALUE" class="java.math.BigDecimal"/>
+	<field name="TAXCCY" class="java.lang.String"/>
+	<field name="TAXVALUE" class="java.math.BigDecimal"/>
+	<field name="TOTALCCY" class="java.lang.String"/>
+	<field name="TOTALVALUE" class="java.math.BigDecimal"/>
+	<field name="CLOSED" class="java.lang.Boolean"/>
+	<field name="SHIPMENT_INVOICE" class="java.lang.Boolean"/>
+	<field name="WAREHOUSE_ID" class="java.lang.Long"/>
+	<field name="CONTACT_ID" class="java.lang.Long"/>
+	<field name="ACCOUNT_ID" class="java.lang.Long"/>
+	<field name="TXNTIME" class="java.sql.Time"/>
+	<field name="SHIPPING_DATE" class="java.sql.Date"/>
+	<field name="INVOICE_ID" class="java.lang.Long"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="UNIT" class="java.lang.String"/>
+	<field name="QUANTITY" class="java.lang.Double"/>
+	<field name="TAX_RATE" class="java.math.BigDecimal"/>
+	<field name="PRICECCY" class="java.lang.String"/>
+	<field name="PRICEVALUE" class="java.math.BigDecimal"/>
+	<field name="CONTACT_TYPE" class="java.lang.Integer"/>
+	<field name="SYSTEM" class="java.lang.Boolean"/>
+	<field name="PERSON" class="java.lang.Boolean"/>
+	<field name="REPRESENTATIVE" class="java.lang.String"/>
+	<field name="COMPANY" class="java.lang.String"/>
+	<field name="TITLE" class="java.lang.String"/>
+	<field name="PHONE1" class="java.lang.String"/>
+	<field name="PHONE2" class="java.lang.String"/>
+	<field name="PHONE3" class="java.lang.String"/>
+	<field name="PHONE_MOBILE" class="java.lang.String"/>
+	<field name="FAX" class="java.lang.String"/>
+	<field name="ADDRESS1_STREET" class="java.lang.String"/>
+	<field name="ADDRESS1_PROVINCE" class="java.lang.String"/>
+	<field name="ADDRESS1_CITY" class="java.lang.String"/>
+	<field name="ADDRESS1_COUNTRT" class="java.lang.String"/>
+	<field name="ADDRESS1_ZIP" class="java.lang.String"/>
+	<field name="ADDRESS2_STREET" class="java.lang.String"/>
+	<field name="ADDRESS2_PROVINCE" class="java.lang.String"/>
+	<field name="ADDRESS2_CITY" class="java.lang.String"/>
+	<field name="ADDRESS2_COUNTRT" class="java.lang.String"/>
+	<field name="ADDRESS2_ZIP" class="java.lang.String"/>
+	<field name="INVOICE_ADDRESS" class="java.lang.Integer"/>
+	<field name="DELIVERY_ADDRESS" class="java.lang.Integer"/>
+	<field name="EMAIL1" class="java.lang.String"/>
+	<field name="EMAIL2" class="java.lang.String"/>
+	<field name="WEB" class="java.lang.String"/>
+	<field name="TAX_NUMBER" class="java.lang.String"/>
+	<field name="TAX_OFFICE" class="java.lang.String"/>
+	<field name="SSN" class="java.lang.String"/>
+	<field name="PREF_CURRENCY" class="java.lang.String"/>
+	<field name="EXCODE1" class="java.lang.String"/>
+	<field name="EXCODE2" class="java.lang.String"/>
+	<field name="DEBIT_LIMIT" class="java.math.BigDecimal"/>
+	<field name="RISK_LIMIT" class="java.math.BigDecimal"/>
+	<field name="START_WORKING_DATE" class="java.sql.Date"/>
+	<field name="END_WORKING_DATE" class="java.sql.Date"/>
+	<field name="ISACTIVE_PERSONEL" class="java.lang.Boolean"/>
+	<field name="SGK_NUMBER" class="java.lang.String"/>
+	<field name="BIRTH_DATE" class="java.sql.Date"/>
+	<field name="BLOOD_GROUP" class="java.lang.String"/>
+	<field name="FATHER_NAME" class="java.lang.String"/>
+	<field name="GENDER" class="java.lang.Integer"/>
+	<field name="BANK_NAME" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="ACCOUNT" class="java.lang.String"/>
+	<field name="IBAN" class="java.lang.String"/>
+	<field name="SWIFT_CODE" class="java.lang.String"/>
+	<field name="CONTACT_CATEGORY_ID" class="java.lang.Long"/>
+	<field name="LOAD_PRICE_LIST_ID" class="java.lang.Long"/>
+	<field name="OWN_COMPANY_ID" class="java.lang.Long"/>
+	<field name="ADDRESS1_COUNTRY" class="java.lang.String"/>
+	<field name="CITY1" class="java.lang.Object"/>
+	<field name="PROVINCE1" class="java.lang.Object"/>
+	<field name="ADDRESS2_COUNTRY" class="java.lang.String"/>
+	<field name="CITY2" class="java.lang.Object"/>
+	<field name="PROVINCE2" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="78" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="6" y="7" width="100" height="40"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ADDRESS1_STREET}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="106" y="47" width="100" height="18"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ADDRESS1_CITY}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="6" y="47" width="100" height="18"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ADDRESS1_PROVINCE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="0" width="100" height="18"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="231" y="0" width="100" height="18"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{UNIT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="131" y="0" width="100" height="18"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{QUANTITY}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="331" y="0" width="100" height="18"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PRICEVALUE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##0.00" isBlankWhenNull="false">
+				<reportElement key="textField" x="431" y="0" width="100" height="18"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TOTALVALUE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="30" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="50" splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="50" splitType="Stretch"/>
+	</lastPageFooter>
+	<summary>
+		<band height="50" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+
+    <ui:include src="/layout/messages.xhtml"/>
+
+    <h:form id="selectform" >
+        <input type="hidden" id="retpoint" value="" />
+        <a:region renderRegionOnly="true">
+            <r:panel>
+                <f:facet name="header">
+                    <h:outputText value="#{messages['selectbox.contact.Filter']}" />
+                </f:facet>
+
+                <h:panelGrid columns="3">
+                    <s:fragment>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.Code']}" /></ui:define>
+                            <h:inputText value="#{workBunchSuggestion.code}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['followUp.label.Name']}" /></ui:define>
+                            <h:inputText value="#{workBunchSuggestion.name}" styleClass="middle"/>
+                        </s:decorate>
+                    </s:fragment>
+
+                    <s:fragment>
+                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Contact']}"/>
+                            </ui:define>
+
+                            <s:div >
+	                            <h:inputText id="contact" value="#{workBunchSuggestion.contact}" styleClass="middle" 
+	                            	style="float:left" converter="contactCaptionConverter" />
+	                            
+	                            <a href="javascript:contactSelectPopup( '#{r:clientId('contact')}' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+									suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+									fetchValue="#{citem.caption}">
+									<ui:include src="/contact/contactSuggestionView.xhtml" />
+								</r:suggestionbox>
+							</s:div>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['followUp.label.Status']}" />
+							</ui:define>
+							<h:selectOneMenu value="#{workBunchSuggestion.workBunchStatus}">
+								<s:convertEnum />
+                                <s:enumItem enumValue="All" label="#{messages['contact.type.All']}" />
+								<s:enumItem enumValue="Draft" label="#{messages['workBunch.status.Draft']}" />
+								<s:enumItem enumValue="Open" label="#{messages['workBunch.status.Open']}" />
+								<s:enumItem enumValue="Close" label="#{messages['workBunch.status.Close']}" />
+								<s:enumItem enumValue="Suspended" label="#{messages['workBunch.status.Suspended']}" />
+								<s:enumItem enumValue="Canceled" label="#{messages['workBunch.status.Canceled']}" />
+							</h:selectOneMenu>
+						</s:decorate>
+                    </s:fragment>
+
+                    <s:fragment>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.StartDate']}" />
+							</ui:define>
+							<r:calendar value="#{workBunchSuggestion.beginDate}" enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.EndDate']}" />
+							</ui:define>
+							<r:calendar value="#{workBunchSuggestion.endDate}" enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+                    </s:fragment>
+
+                </h:panelGrid>
+                <div class="actionButtons">
+                    <div style="margin-top:5px;">
+                        <a:commandLink id="select_search"
+                                       action="#{workBunchSuggestion.selectWorkBunchList()}"
+                                       styleClass="button"
+                                       reRender="selectList">
+                            <h:outputText value="#{messages['general.button.Search']}" />
+                        </a:commandLink>
+                    </div>
+                </div>
+                
+            </r:panel>
+            <s:div style="overflow: auto;height:195px;"  id="selectList" >
+                <r:dataTable var="item"
+                             id="browseList"
+                             value="#{workBunchSuggestion.workBunchList}"
+                             rowKeyVar="rowKey"
+                             rows="10"
+                             rendered="#{not empty workBunchSuggestion.workBunchList}"
+                             onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                             onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                    <f:facet name="header">
+                        <h:panelGroup>
+                            <h:outputText value="#{messages['general.label.Results']}"/>
+                        </h:panelGroup>
+                    </f:facet>
+
+                    <r:column >
+                        <f:facet name="header"><h:outputText value="#{messages['followUp.label.Name']}" /></f:facet>
+                        <a href="javascript:void(0);" onclick="closeWorkBunchSelect( '[#{item[0]}] #{item[1]}' )" >
+                            <h:outputText value="[#{item[0]}] #{item[1]}" />
+                        </a>
+                    </r:column>
+
+                    <r:column>
+                        <f:facet name="header"><h:outputText value="#{messages['general.label.Contact']}" /></f:facet>
+                        <h:outputText value="#{item[2].name}" />
+                    </r:column>
+
+                    <r:column>
+                        <f:facet name="header">
+                        	<h:outputText value="#{messages['followUp.label.Status']}" />
+                        </f:facet>                        
+                        <h:outputText value="#{messages[ ut:concat( 'workBunch.status.' ,item[3])]}" />
+                    </r:column>
+
+                    <r:column styleClass="dateField">
+                        <f:facet name="header"><h:outputText value="#{messages['general.label.StartDate']}" /></f:facet>
+                        <h:outputText value="#{item[4]}">
+                        	<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                        </h:outputText>
+                    </r:column>
+
+                    <r:column styleClass="dateField">
+                        <f:facet name="header"><h:outputText value="#{messages['general.label.EndDate']}" /></f:facet>
+                        <h:outputText value="#{item[5]}">
+                        	<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                        </h:outputText>
+                    </r:column>
+                    <f:facet name="footer">
+                        <r:datascroller for="browseList" maxPages="5" />
+                    </f:facet>
+                </r:dataTable>
+
+	            <r:panel id="msg" rendered="#{empty workBunchSuggestion.workBunchList}" styleClass="message">
+	                <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+	            </r:panel>
+            </s:div>
+        </a:region>
+    </h:form>
+</ui:composition>

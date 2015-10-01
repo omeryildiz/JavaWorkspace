@@ -1,0 +1,14 @@
+/exploded-archives/
+/dist/
+**/*/target/**
+**/*/*.settings/**
+**/*/*.project*
+**/*/*.classpath*
+**/*.buildpath/**
+*/*.settings/**
+*/*.project*
+*/*.classpath*
+**/*/nbproject/**
+**/*/nbactions.xml
+/Tekir-dist/target/
+/Tekir-liqui/target/

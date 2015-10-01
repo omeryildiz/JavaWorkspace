@@ -1,0 +1,196 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewCheque"/>
+            <ui:param name="cursubitem" value="chequeStub"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/chequeStubBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ChequeStubBrowse']}" rendered="#{s:hasPermission('chequeStub', 'select')}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/chequeStub.xhtml">
+                <h:outputText value="#{messages['module.caption.ChequeStub']}" rendered="#{s:hasPermission('chequeStub', 'update')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{chequeStubHome.createNew()}" rendered="#{s:hasPermission('chequeStub', 'insert')}" >
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['chequeStub.action.Add']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ChequeStub']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['collection.img.Form']}"/> 
+                        <h:outputText value="#{messages['chequeStub.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:div>
+                        
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['chequeStub.label.Code']}"/></ui:define>
+                            <h:inputText value="#{chequeStub.code}" styleClass="middle" required="true"/>
+                        </s:decorate>
+
+                        <a:region immediate="true" ajaxSingle="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToContactTransfer.label.Bank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBox"
+                                                 value="#{chequeStubHome.bank}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange"
+                                                reRender="bankBranchBox, bankAccountBox, bankAccountCurrency,bankCostCurrency"
+                                                action="#{chequeStubHome.clearBankAccount()}"
+                                                ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToContactTransfer.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBranchBox"
+                                                 value="#{chequeStubHome.bankBranch}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankBranches(chequeStubHome.bank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['bankToContactTransfer.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankAccountBox"
+                                                 value="#{chequeStub.bankAccount}"
+                                                 required="true"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(chequeStubHome.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo}-#{item.currency} / #{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" 
+                                                reRender="bankAccountCurrency,bankCostCurrency,bankAccountIban"
+                                                ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Currency']}"/>
+                            </ui:define>
+                            <h:outputText id="bankAccountCurrency" value="#{chequeStub.bankAccount.currency}" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Iban']}"/>
+                            </ui:define>
+                            <h:outputText id="bankAccountIban" value="#{chequeStub.bankAccount.iban}" />
+                        </s:decorate>
+                    </s:div>
+                    
+                    <s:div>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['chequeStub.label.PaymentPlace']}" />
+							</ui:define>
+							<h:inputText value="#{chequeStub.paymentPlace}"
+								styleClass="middle" required="true" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['chequeStub.label.Owner']}" />
+							</ui:define>
+							<h:inputText value="#{chequeStub.chequeOwner}"
+								styleClass="exlarge" required="true" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['chequeStub.label.Info']}" />
+							</ui:define>
+							<h:inputTextarea value="#{chequeStub.info}" styleClass="exlarge"
+								rows="6" />
+						</s:decorate>
+
+					</s:div>
+                </h:panelGrid>
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{chequeStubHome.save()}"
+                                 rendered="#{s:hasPermission('chequeStub', 'insert')}"
+                                 styleClass="button checkRequired"/>  
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{chequeStubHome.delete()}"
+                          rendered="#{not empty chequeStub.id and s:hasPermission('chequeStub', 'delete')}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{chequeStubHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

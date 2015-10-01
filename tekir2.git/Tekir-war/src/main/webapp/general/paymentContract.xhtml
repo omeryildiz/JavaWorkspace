@@ -1,0 +1,479 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="paymentContract"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/general.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.General']}"/>
+            </s:link>
+
+            <h:outputText value=" » "/>
+            <s:link view="/general/priceItemBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PaymentContractBrowse']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{paymentContractHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['paymentContract.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PaymentContract']}" /></h1>
+        
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <s:div id="messagesDiv">
+	        <ui:include src="/layout/messages.xhtml"/>
+        </s:div>
+
+	    <ui:include src="/general/contractCommisionSelectPopup.xhtml"/>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/lorry.gif" alt="#{messages['priceItem.img.Form']}"/> 
+                        <h:outputText value="#{messages['paymentContract.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="2">
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Code']}"/>
+                            </ui:define>
+                            <h:inputText value="#{paymentContract.code}" styleClass="middle" 
+                            	required="true"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Name']}"/>
+                            </ui:define>
+                            <h:inputText value="#{paymentContract.name}" styleClass="middle" 
+                            	required="true"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.PaymentOwnerType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{paymentContract.ownerType}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>                                
+								<f:selectItem itemValue="Pos" itemLabel="#{messages['paymentOwnerType.label.Pos']}"/>                                
+								<f:selectItem itemValue="Foundation" itemLabel="#{messages['paymentOwnerType.label.Foundation']}"/>                                
+                            	<a:support event="onchange" reRender="posAndFoundation" ajaxSingle="true"/>
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+						<s:div id="posAndFoundation">
+						
+	                        <s:decorate template="/layout/edit.xhtml" rendered="#{paymentContract.ownerType eq 'Pos'}">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.Pos']}" />
+	                            </ui:define>
+	                            <h:selectOneMenu value="#{paymentContract.ownerId}" styleClass="middle">
+	                            	<s:selectItems var="item" value="#{generalSuggestion.posList}" 
+	                            		label="#{item.code} / #{item.name}"
+	                                    noSelectionLabel="#{messages['general.value.SelectOne']}"
+	                                    hideNoSelectionLabel="false"
+	                                    itemValue="#{item.id}"/>
+	                            </h:selectOneMenu>
+	                        </s:decorate>
+
+	                        <s:decorate template="/layout/edit.xhtml" rendered="#{paymentContract.ownerType eq 'Foundation'}">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.Foundation']}" />
+	                            </ui:define>
+	                            <h:selectOneMenu value="#{paymentContract.ownerId}" styleClass="middle">
+	                            	<s:selectItems var="item" value="#{generalSuggestion.foundationList}" 
+	                            		label="#{item.code} / #{item.name}"
+	                                    noSelectionLabel="#{messages['general.value.SelectOne']}"
+	                                    hideNoSelectionLabel="false"
+	                                    itemValue="#{item.id}"/>
+	                            </h:selectOneMenu>
+	                        </s:decorate>
+						
+						</s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.CardOwnerType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{paymentContract.cardOwnerType}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>                                
+								<f:selectItem itemValue="Own" itemLabel="#{messages['cardOwnerType.label.Own']}"/>                                
+								<f:selectItem itemValue="Domestic" itemLabel="#{messages['cardOwnerType.label.Domestic']}"/>                                
+								<f:selectItem itemValue="International" itemLabel="#{messages['cardOwnerType.label.International']}"/>                                
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.PaymentType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{paymentContract.paymentType}" styleClass="middle">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>                                
+								<f:selectItem itemValue="Cash" itemLabel="#{messages['paymentType.label.Cash']}"/>                                
+								<f:selectItem itemValue="Cheque" itemLabel="#{messages['paymentType.label.Cheque']}"/>                                
+								<f:selectItem itemValue="PromissoryNote" itemLabel="#{messages['paymentType.label.PromissoryNote']}"/>                                
+								<f:selectItem itemValue="CreditCard" itemLabel="#{messages['paymentType.label.CreditCard']}"/>                                
+								<f:selectItem itemValue="Instalment" itemLabel="#{messages['paymentType.label.Instalment']}"/>                                
+								<f:selectItem itemValue="DebitCard" itemLabel="#{messages['paymentType.label.DebitCard']}"/>                                
+								<f:selectItem itemValue="GiftCheque" itemLabel="#{messages['paymentType.label.GiftCheque']}"/>                                
+								<f:selectItem itemValue="Contribution" itemLabel="#{messages['paymentType.label.Contribution']}"/>                                
+								<f:selectItem itemValue="BonusPay" itemLabel="#{messages['paymentType.label.BonusPay']}"/>                                
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.StartDate']}"/>
+                            </ui:define>
+                            <r:calendar value="#{paymentContract.beginDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.EndDate']}"/>
+                            </ui:define>
+                            <r:calendar value="#{paymentContract.endDate}" enableManualInput="true"
+                            	datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Info']}"/>
+                            </ui:define>
+                            <h:inputTextarea value="#{paymentContract.info}" styleClass="exlarge" 
+                            	rows="3"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.Status']}"/>
+                            </ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{paymentContract.active}" 
+                            	styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['general.label.Active']}" for="active" 
+                            	styleClass="checkboxLabel" />
+                        </s:decorate>
+
+                    </s:div>
+
+                </h:panelGrid>
+                
+                <a:region renderRegionOnly="true">
+
+                    <r:dataTable id="its" 
+                                 var="item"
+                                 value="#{paymentContract.periodList}" 
+                                 rowKeyVar="rowKey"
+                                 rows="30">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['general.label.Periods']}" />
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{paymentContractHome.createNewLine()}" 
+                                        	accesskey="N" oncomplete="focusLastRow(); setMasks();">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+
+						<r:column>
+							<table>
+								<tr>
+									<td style="width:33%;">
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label">
+			                                    <h:outputText value="#{messages['paymentContract.label.Period']}" />
+				                            </ui:define>
+				                            <h:inputText value="#{item.period}" styleClass="middle,DebitNumber"/>
+				                        </s:decorate>
+			
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label">
+			                                    <h:outputText value="#{messages['paymentContract.label.CollectionType']}" />
+				                            </ui:define>
+											<h:selectOneMenu value="#{item.collectionType}" styleClass="middle">
+												<f:selectItem itemValue="false" itemLabel="#{messages['collectionType.label.Cash']}"/>
+												<f:selectItem itemValue="true" itemLabel="#{messages['collectionType.label.Instalment']}"/>
+												<a:support event="onchange" reRender="maturityType"/>
+											</h:selectOneMenu>
+				                        </s:decorate>
+			
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label">
+			                                    <h:outputText value="#{messages['paymentContract.label.BlockingType']}" />
+				                            </ui:define>
+				                            <s:div style="width:270px;">
+												<h:selectOneMenu value="#{item.blockingType}" style="width:230px;">
+													<f:selectItem itemValue="false" itemLabel="#{messages['blockingType.label.ExtraDaysAfterTransaction']}"/>
+													<f:selectItem itemValue="true" itemLabel="#{messages['blockingType.label.ConstantDaysAfterTransaction']}"/>
+												</h:selectOneMenu>
+												
+												<r:spacer width="1"/>
+	
+												<h:inputText value="#{item.blockingDay}" style="width:30px;"
+													styleClass="DebitNumber"/>
+				                            </s:div>
+				                        </s:decorate>
+	
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label">
+			                                    <h:outputText value="#{messages['paymentContract.label.MaturityType']}" />
+				                            </ui:define>
+											<s:div style="width:270px;" id="maturityType">
+												<h:selectOneMenu value="#{item.maturityType}" style="width:230px;" 
+													disabled="#{item.collectionType eq false}">
+													<f:selectItem itemValue="false" itemLabel="#{messages['maturityType.label.ExtraDaysAfterBlockage']}"/>
+													<f:selectItem itemValue="true" itemLabel="#{messages['maturityType.label.ConstantDaysAfterBlockage']}"/>
+												</h:selectOneMenu>
+		
+												<r:spacer width="1"/>
+	
+												<h:inputText value="#{item.maturityDay}" style="width:30px;"
+													styleClass="DebitNumber" disabled="#{item.collectionType eq false}"/>
+											</s:div>
+				                        </s:decorate>
+
+									</td>
+
+									<td style="width:25%;">
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label">
+			                                    <h:outputText value="#{messages['paymentContract.label.PaymentDay']}" />
+				                            </ui:define>
+											<s:div styleClass="middle">
+												<s:div style="width:23px;float:left">
+						                            <h:outputLabel  value="#{messages['shortday.label.Mon']}" for="firstDay" />
+													<h:selectBooleanCheckbox id="firstDay" value="#{item.firstDay}" />
+												</s:div>
+		
+												<s:div style="width:23px;float:left">
+						                            <h:outputLabel value="#{messages['shortday.label.Tue']}" for="secondDay" />
+													<h:selectBooleanCheckbox id="secondDay" value="#{item.secondDay}" />
+												</s:div>
+	
+												<s:div style="width:23px;float:left">
+						                            <h:outputLabel value="#{messages['shortday.label.Wed']}" for="thirdDay"/>
+													<h:selectBooleanCheckbox id="thirdDay" value="#{item.thirdDay}" />
+												</s:div>
+												
+												<s:div  style="width:23px;float:left">
+						                            <h:outputLabel value="#{messages['shortday.label.Thu']}" for="fourthDay"/>
+													<h:selectBooleanCheckbox id="fourthDay" value="#{item.fourthDay}" />
+												</s:div>
+	
+												<s:div  style="width:26px;float:left">
+						                            <h:outputLabel value="#{messages['shortday.label.Fri']}" for="fifthDay"/>
+													<h:selectBooleanCheckbox id="fifthDay" value="#{item.fifthDay}" />
+												</s:div>
+	
+												<s:div  style="width:23px;float:left">
+						                            <h:outputLabel value="#{messages['shortday.label.Sat']}" for="sixthDay"/>
+													<h:selectBooleanCheckbox id="sixthDay" value="#{item.sixthDay}" />
+												</s:div>
+	
+												<s:div  style="width:23px;float:left">
+						                            <h:outputLabel value="#{messages['shortday.label.Sun']}" for="seventhDay"/>
+													<h:selectBooleanCheckbox id="seventhDay" value="#{item.seventhDay}" />
+												</s:div>
+											</s:div>
+				                        </s:decorate>
+	
+				                        <s:decorate template="/layout/edit.xhtml" >
+				                            <ui:define name="label">
+			                                    <h:outputText value="#{messages['paymentContract.label.Campain']}" />
+				                            </ui:define>
+											<h:selectBooleanCheckbox value="#{item.campain}" />
+										</s:decorate>
+										<ui:remove>
+					                        <s:decorate template="/layout/edit.xhtml" >
+					                            <ui:define name="label">
+				                                    <h:outputText value="#{messages['paymentContract.label.AddingAmount']}" />
+					                            </ui:define>
+		
+					                            <h:inputText id="addingAmount" value="#{item.addingAmount.value}" 
+					                            	styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+		
+				                                <h:selectOneMenu value="#{item.addingAmount.currency}" styleClass="ccyField">
+				                                    <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" 
+				                                    	label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" 
+				                                    	hideNoSelectionLabel="true"/>
+				                                </h:selectOneMenu> 
+											</s:decorate>
+										</ui:remove>
+
+									</td>
+
+									<td>
+					                    <r:dataTable id="cits" 
+					                                 var="citem"
+					                                 value="#{item.commisionList}" 
+					                                 rowKeyVar="crowKey"
+					                                 rows="30"
+					                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+					                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+					                        <f:facet name="header">
+					                            <r:columnGroup>
+					                                <r:column styleClass="middle">
+					                                    <h:outputText value="#{messages['general.label.Commissions']}" />
+					                                </r:column>
+					                                <r:column >
+					                                	<h:outputText value="#{messages['general.label.RateOrAmount']}"/>
+					                                </r:column>
+					                                <r:column styleClass="actionColumn">
+					                                    <div>
+					                                        <a:commandLink reRender="cits" action="#{paymentContractHome.createNewCommisionLine(rowKey)}" 
+					                                        	oncomplete="setMasks();">
+					                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+					                                        </a:commandLink>
+					                                    </div>
+					                                </r:column>
+					                            </r:columnGroup>
+					                        </f:facet>
+	
+					                        <r:column>
+					                        	<s:fragment>
+					                            	<div>
+							                            <h:inputText id="commision" value="#{citem.commission}" styleClass="small">
+							                                <f:converter converterId="paymentCommissionConverter"/>
+							                            </h:inputText>
+							                            <a href="javascript:contractCommisionSelectPopup( '#{r:clientId('commision')}' )">
+							                                <h:graphicImage url="/img/selectBox.gif" /> 
+							                            </a>
+													</div>
+					                            
+						                            <r:suggestionbox for="commision" rules="all" ajaxSingle="true" 
+						                            	suggestionAction="#{paymentCommisionSuggestion.suggestPaymentCommission}" 
+						                            	var="it" fetchValue="#{it.caption}">
+						                                <h:column>
+						                                    <h:outputText value="#{it.code}"/>
+						                                </h:column>
+						                                <h:column>
+						                                    <h:outputText value="#{it.name}"/>
+						                                </h:column>
+						                            </r:suggestionbox>
+					                            </s:fragment>
+					                        </r:column>
+	
+											<r:column>
+					                            <s:div>
+					                                <h:selectOneMenu value="#{citem.kind}" styleClass="tiny">
+					                                    <s:convertEnum />
+					                                    <s:enumItem enumValue="Rate"
+					                                        label="#{messages['taxKind.Type.Rate']}" />
+					                                    <s:enumItem enumValue="Amount"
+					                                        label="#{messages['taxKind.Type.Amount']}" />
+					
+					                                    <a:support event="onchange" oncomplete="setMasks()" reRender="kind" ajaxSingle="true"/>
+					                                </h:selectOneMenu>
+	
+													<s:span id="kind">
+														
+														<r:spacer width="2"/>
+														
+					                                    <h:inputText value="#{citem.rate}" styleClass="tiny amountField" 
+					                                    	alt="decimal_rate" converter="currencyConverter"
+					                                    	rendered="#{citem.kind eq 'Rate'}"/>
+		
+					                                    <h:inputText value="#{citem.amount}" styleClass="tiny amountField" 
+					                                    	alt="decimal_rate" converter="currencyConverter"
+					                                    	rendered="#{citem.kind eq 'Amount'}"/>
+													</s:span>
+												</s:div>
+											</r:column>				                        
+	
+					                        <r:column>
+		                                        <a:commandLink reRender="cits" action="#{paymentContractHome.deleteCommisionLine(crowKey)}"
+		                                        	oncomplete="setMasks();">
+					                               <h:graphicImage url="/img/delete.gif" /> 
+		                                        </a:commandLink>
+					                        </r:column>
+	
+					                        <f:facet name="footer">
+					                            <r:datascroller for="cits" ajaxSingle="false"/>
+					                        </f:facet>
+										</r:dataTable>
+
+									</td>
+								</tr>
+							</table>
+							
+						</r:column>
+						
+						<r:column styleClass="actionColumn">
+                           <a:commandLink reRender="its" action="#{paymentContractHome.deleteLine(rowKey)}" 
+                           		oncomplete="setMasks();">
+                               <h:graphicImage url="/img/delete.gif" /> 
+                           </a:commandLink>
+                     	</r:column>
+
+                        <f:facet name="footer">
+                            <r:datascroller for="its" ajaxSingle="false"/>
+                        </f:facet>
+						
+                    </r:dataTable>
+                </a:region>
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{paymentContractHome.save()}"
+                                 styleClass="button"/>  
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{paymentContractHome.delete()}"
+                          rendered="#{not empty paymentContract.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{paymentContractHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

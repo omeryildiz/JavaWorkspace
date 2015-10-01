@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:r="http://richfaces.ajax4jsf.org/rich"
+      xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+      xmlns:s="http://jboss.com/products/seam/taglib">
+    <head>    
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Tekir - #{conversation.description}</title>
+
+        <ui:remove>
+        <link rel="stylesheet" type="text/css" href="../stylesheet/superfish.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="../stylesheet/superfish-navbar.css" media="screen" />
+        </ui:remove>
+
+        <link rel="stylesheet" type="text/css" href="../stylesheet/jquery.megamenu.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="../stylesheet/megamenu.css" media="screen" />
+
+        
+        <link href="#{theme.baseCss}" rel="stylesheet" type="text/css" />
+        <!--[if IE]>
+            <link href="#{theme.baseCssIE}" rel="stylesheet" type="text/css" />
+        <![endif]-->
+        <link href="#{theme.css}" rel="stylesheet" type="text/css" />
+
+        <link href="../stylesheet/print.css" rel="stylesheet" type="text/css" media="print"/>
+        <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+
+        
+        
+        <a:loadScript src="resource://jquery.js"/>
+
+        <script type="text/javascript" src="../js/tekir.js" />
+        <script type="text/javascript" src="../js/meiomask.js" />
+        <script type="text/javascript" src="../js/csv4seam.js" />
+
+        <ui:remove>
+        <script type="text/javascript" src="../js/hoverIntent.js"></script>
+		<script type="text/javascript" src="../js/superfish.js"></script>
+
+        <script type="text/javascript">
+            // initialise plugins
+            jQuery(function(){
+                jQuery('ul.sf-menu').superfish({
+                    pathClass:  'current'
+                });
+            });
+		</script>
+         </ui:remove>
+
+        <script type="text/javascript" src="../js/jquery.megamenu.js"></script>
+
+        <script type="text/javascript">
+            // initialise plugins
+            jQuery(function(){
+
+                jQuery(".megamenu").megamenu();
+
+            });
+		</script>
+
+    </head>
+    
+    <body>
+        
+        <ui:include src="header.xhtml"/>
+        
+        <div style="clear:both">
+            <div class="wrap body">
+                <ui:include src="/layout/toolbar.xhtml" />
+                
+                <ui:insert name="body"/>
+                
+                
+                <s:div id="debug" rendered="#{false}">
+                    <h:form>
+                        #{localeSelector.localeString} | 
+                        <h:outputText value="cid:#{conversation.id}" />
+                        
+                        <h:outputText value=" nested" rendered="#{conversation.nested}"/>
+                        
+                        <h:outputText value=" | " />
+                        
+                        <ui:repeat value="#{conversationList}" var="entry">
+                            
+                            
+                            <h:commandLink value="#{entry.description}" action="#{entry.select}"/>
+                            <h:outputText value=" [ #{entry.id} ] "/>
+                            <h:outputText value=" » " />
+                            
+                        </ui:repeat>
+                        
+                        <h:outputText value=" | " />
+                        
+                        <h:selectOneMenu value="#{switcher.conversationIdOrOutcome}">
+                            <f:selectItems value="#{switcher.selectItems}"/>
+                        </h:selectOneMenu>
+                        <h:commandButton action="#{switcher.select}" value="Switch"/>
+                        
+                    </h:form>
+                </s:div>
+            </div>
+        </div>
+        
+        
+        
+        
+        
+        <div class="footer">
+            <p>
+                Tekir Ticari Otomasyon #{systemProperties.properties['application.version']} - Lisans :
+                <s:link view="/help/help.xhtml" propagation="none" target="HelpWinId" onclick="openHelp();">
+                    <f:param name="topic" value="license.xhtml"/>
+                    GNU LGPL
+                </s:link> - Copyleft 2008-2012 <br/>
+                Bir <!--<img src="/tekir/img/oy.pin.mini.png" />--><a href="http://www.ozguryazilim.com.tr" target="_blank">Özgür Yazılım A.Ş.</a> ürünüdür.
+            </p>
+        </div>	
+        <ui:debug hotkey="d" rendered="#{false}"/>
+        
+        <r:jQuery selector=".length" query="keydown(function(e){ return checkLength(e) })"/>
+       	<r:jQuery selector=".length" query="blur(function(e){ return checkLength(e) })"/>
+       	<r:jQuery selector=".rangeMask" query="blur(function(e){ return checkRange(e) })"/>
+       	<r:jQuery selector=".email" query="blur(function(e){ return checkEmail(e) })"/>
+       	<r:jQuery selector=".tckimlik" query="blur(function(e){ return checkTcno(e) })"/>
+       	<r:jQuery selector=".rate" query="blur(function(e){ return checkRate(e) })"/>
+       	
+       	<r:jQuery selector=".plate" query="addClass('uppercase')"/>
+       	<r:jQuery selector=".uppercase" query="keyup(function(e){e.target.value=e.target.value.toUpperCase()})"/>
+       	
+    </body>
+</html>

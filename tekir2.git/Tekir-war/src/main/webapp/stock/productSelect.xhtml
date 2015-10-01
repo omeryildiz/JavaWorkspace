@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+    
+    <ui:include src="/layout/messages.xhtml"/>
+    
+    <h:form id="selectform" >
+        <input type="hidden" id="retpoint" value="" />
+        <a:region renderRegionOnly="true">
+        <r:panel>
+            <f:facet name="header">
+                <h:outputText value="#{messages['selectbox.product.Filter']}" />
+            </f:facet>
+            <table style="padding:0px;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Code']}" /></ui:define>
+                            <h:inputText value="#{stockSuggestion.code}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Name']}" /></ui:define>
+                            <h:inputText value="#{stockSuggestion.name}" styleClass="middle"/>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Barcode']}" /></ui:define>
+                            <h:inputText value="#{stockSuggestion.barcode}" styleClass="middle"/>
+                        </s:decorate>
+                    </td>
+                    <td>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.Category']}"/></ui:define>
+
+                            <h:selectOneMenu value="#{stockSuggestion.category}"
+                                             styleClass="middle">
+                                <s:selectItems value="#{stockSuggestion.productCategoryList}"
+                                        var="item" label="#{item.code}"
+                                        noSelectionLabel="#{messages['general.value.All']}"
+                                        hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['product.label.ProductGroup']}"/>
+                            </ui:define>
+
+                            <h:selectOneMenu value="#{stockSuggestion.group}"
+                                             styleClass="middle">
+                                <s:selectItems value="#{generalSuggestion.productGroupList}"
+                                    var="item" label="#{item.code} - #{item.name}"
+                                    noSelectionLabel="#{messages['general.value.None']}"
+                                    hideNoSelectionLabel="false"/>
+                                <s:convertEntity />
+                            </h:selectOneMenu>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml" rendered="#{not stockSuggestion.disableProductCombo}">
+                            <ui:define name="label"><h:outputText value="#{messages['product.label.ProductType']}" /></ui:define>
+                            <h:selectOneMenu value="#{stockSuggestion.productType}" styleClass="middle">
+                                <s:convertEnum />
+                                <s:enumItem enumValue="Unknown"
+									label="#{messages['product.productType.All']}" />
+                                <s:enumItem enumValue="Product"
+									label="#{messages['product.productType.Product']}" />
+                                <s:enumItem enumValue="Service"
+									label="#{messages['product.productType.Service']}" />
+                            </h:selectOneMenu>
+                        </s:decorate>
+                    </td>
+
+                    <td style="vertical-align:bottom;padding-bottom:4px;padding-top:4px; width:70px;">
+	                     <a:commandLink id="select_search" 
+	                                    action="#{stockSuggestion.selectProductList()}"
+	                                    styleClass="button"
+	                                    reRender="browseList"
+	                                    value="#{messages['general.button.Search']}" />
+                    </td>
+                </tr>
+            </table>
+        </r:panel>
+        
+        <s:div id="selectList" >
+            <r:dataTable var="item"
+            			 id="browseList"
+                         value="#{stockSuggestion.productList}" 
+                         rowKeyVar="rowKey"
+                         rows="10"
+                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                <f:facet name="header">
+                    <h:panelGroup>
+                        <h:outputText value="#{messages['general.label.Results']}"/>
+                    </h:panelGroup>                     
+                </f:facet>
+
+
+                <r:column >
+                    <f:facet name="header"><h:outputText value="#{messages['product.label.Code']}"/></f:facet>
+                    <a href="javascript:void(0);" onclick="closeProductSelect( '[#{item[0]}] #{item[1]}' )" >
+                        <h:outputText value="#{item[0]}" />
+                    </a>                   
+                </r:column>
+                <r:column >
+                    <f:facet name="header"><h:outputText value="#{messages['product.label.Name']}"/></f:facet>
+                    <a href="javascript:void(0);" onclick="closeProductSelect( '[#{item[0]}] #{item[1]}' )" >
+                        <h:outputText value="#{item[1]}" />
+                    </a>
+                </r:column>
+                <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Barcode']}"/></f:facet>
+                        <h:outputText value="#{item[3]}" />
+                </r:column>
+                <r:column >
+                    <f:facet name="header"><h:outputText value="#{messages['product.label.ProductType']}"/></f:facet>
+                        <h:outputText value="#{messages['product.productType.Service']}" rendered="#{item[2] eq 'Service'}" />
+                        <h:outputText value="#{messages['product.productType.Product']}" rendered="#{item[2] eq 'Product'}" />
+                        <h:outputText value="#{messages['product.productType.Discount']}" rendered="#{item[2] eq 'Discount'}" />
+                        <h:outputText value="#{messages['product.productType.Expense']}" rendered="#{item[2] eq 'Expense'}" />
+                </r:column>
+                <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.Category']}"/></f:facet>
+                        <h:outputText value="#{item[4].code}" />
+                </r:column>
+                <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['product.label.ProductGroup']}"/></f:facet>
+                        <h:outputText value="#{item[5].code} - #{item[5].name}" />
+                </r:column>
+                <f:facet name="footer">
+                	<r:datascroller for="browseList" maxPages="5" />          
+				</f:facet>
+            </r:dataTable>
+            
+        </s:div>
+        </a:region>
+    </h:form>
+</ui:composition>

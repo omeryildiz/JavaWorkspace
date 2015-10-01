@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+    <h:panelGrid id="summary" columns="4" cellspacing="0" cellpadding="0" 
+    	border="0" style="margin-top:4px;">
+    
+        <s:div style="margin-right:4px;">
+            <r:dataTable id="ccyRates"
+                         var="item"
+                         value="#{currentEntity.currencyRateList}" 
+                         rowKeyVar="rowKey"
+                         styleClass="detailTable">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['purchaseInvoice.caption.CcyRates']}" />
+                </f:facet>
+                <r:column>
+                    <h:outputText value="#{item.currencyPair.caption}" />
+                </r:column>
+                <r:column>
+                    <h:inputText value="#{item.bid}" styleClass="tiny" alt="decimal_rate" 
+                    	converter="currencyConverter" rendered="#{currentEntity.rateType eq 'Bid'}">
+						<a:support event="onblur" action="#{currentHome.updateDetailCurrencies()}" ajaxSingle="true"
+							reRender="its,itsMini" status="commonAjaxStatus"/>
+					</h:inputText>
+                    	
+                    <h:inputText value="#{item.ask}" styleClass="tiny" alt="decimal_rate" 
+                    	converter="currencyConverter" rendered="#{currentEntity.rateType eq 'Ask'}">
+						<a:support event="onblur" action="#{currentHome.updateDetailCurrencies()}" ajaxSingle="true"
+							reRender="its,itsMini" status="commonAjaxStatus"/>
+					</h:inputText>
+                </r:column>
+            </r:dataTable>
+        </s:div>
+
+        <s:div style="margin-left:4px;margin-right:4px;">
+            <r:dataTable id="ccyTotals"
+                         var="item"
+                         value="#{currentEntity.currencySummaryList}" 
+                         rowKeyVar="rowKey"
+                         styleClass="detailTable">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['purchaseInvoice.caption.CcySummary']}" />
+                </f:facet>
+                <r:column>
+                    <h:outputText value="#{item.amount.currency}" />
+                </r:column>
+                <r:column>
+               		<h:outputText value="#{item.amount.value}" converter="bigDecimalConverter" />
+                    <h:outputText value=" #{item.amount.currency}" />
+                </r:column>
+            </r:dataTable>
+        </s:div>
+    
+        <s:div style="margin-left:4px;margin-right:4px;">
+            <r:dataTable id="taxTotal"
+                         var="item"
+                         value="#{currentEntity.taxSummaryList}" 
+                         rowKeyVar="rowKey"
+                         styleClass="detailTable">
+                <f:facet name="header">
+                    <h:outputText value="#{messages['purchaseInvoice.caption.TaxSummary']}" />
+                </f:facet>
+                <r:column>
+                    <h:outputText value="#{messages[ut:concat('general.label.',item.type.name())]}" />
+                </r:column>
+                <r:column>
+                    <h:outputText value="#{item.sourceAmount}" rendered="#{item.kind eq 'Amount' }"/>
+                    <h:outputText value="% #{item.sourceRate}" rendered="#{item.kind eq 'Rate' }"/>
+                </r:column>
+                <r:column>
+                    <h:outputText value="#{item.amount}" />
+                </r:column>
+            </r:dataTable>
+        </s:div>
+    
+        <s:div style="margin-left:4px;">
+            <r:panel>
+                <f:facet name="header">
+                    <s:div>
+                        <s:div style="float:right;">
+                            <a:commandLink reRender="its,itsMini,ccyRates,ccyTotals,taxTotal,grandTotal" 
+                            	action="#{currentHome.calculateEverything()}" accesskey="C" 
+                            	oncomplete="setMasks();" status="commonAjaxStatus" 
+                            	rendered="#{showCalculateButton}">
+                                <h:graphicImage url="/img/reload.gif" /> 
+                                <h:outputText value="#{messages['general.button.Calculate']}" />
+                            </a:commandLink>
+                        </s:div>
+                        <h:outputText value="#{messages['purchaseInvoice.caption.GrandTotal']}" />
+                    </s:div>
+                </f:facet>
+                
+                <h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+
+                    <h:outputText value="#{messages['general.label.SubTotal']}" />
+                    <h:outputText value="#{currentEntity.totalTaxExcludedAmount.valueString()}" 
+                    	styleClass="boldFont"/>
+
+
+                    <h:outputText value="#{messages['general.label.LineDiscountTotal']}"  
+                    	rendered="#{currentEntity.totalDiscount.value ne 0}"
+                    	styleClass="leftIndent10px"/>
+                    <h:outputText value="#{currentEntity.totalDiscount.valueString()}"  rendered="#{currentEntity.totalDiscount.value ne 0}"/>
+
+
+                    <h:outputText value="#{messages['general.label.DocumentDiscountTotal']}" 
+                    	rendered="#{currentEntity.totalDocumentDiscount.value ne 0}"
+                    	styleClass="leftIndent10px"/>
+                    <h:outputText value="#{currentEntity.totalDocumentDiscount.valueString()}" rendered="#{currentEntity.totalDocumentDiscount.value ne 0}"/>
+
+
+                    <h:outputText value="#{messages['general.label.TotalBeforeTax']}" />
+                    <h:outputText value="#{currentEntity.taxExcludedTotal.valueString()}"/>
+
+
+                    <h:outputText value="#{messages['general.label.TaxTotal']}" 
+                    	styleClass="leftIndent10px"/>
+                    <h:outputText value="#{currentEntity.totalTax.valueString()}" />
+
+
+                    <h:outputText value="#{messages['general.label.LineExpenseTotal']}" 
+                    	rendered="#{currentEntity.totalExpense.value ne 0}"
+                    	styleClass="leftIndent10px"/>
+                    <h:outputText value="#{currentEntity.totalExpense.valueString()}" rendered="#{currentEntity.totalExpense.value ne 0}"/>
+
+
+                    <h:outputText value="#{messages['general.label.DocumentExpenseTotal']}" 
+                    	rendered="#{currentEntity.totalDocumentExpense.value ne 0}"
+                    	styleClass="leftIndent10px"/>
+                    <h:outputText value="#{currentEntity.totalDocumentExpense.valueString()}" rendered="#{currentEntity.totalDocumentExpense.value ne 0}"/>
+
+
+                    <h:outputText value="#{messages['general.label.SubTotal']}" 
+                    	rendered="#{currentEntity.totalDiscountAddition.localAmount ne 0 or currentEntity.totalExpenseAddition.value ne 0 }"/>
+                    <h:outputText value="#{currentEntity.totalAmount.valueString()}"
+                    	rendered="#{currentEntity.totalDiscountAddition.value ne 0 or currentEntity.totalExpenseAddition.value ne 0 }"
+                    	styleClass="boldFont"/>
+
+
+                    <h:outputText value="#{messages['general.label.TotalDiscountAddition']}" 
+                    	rendered="#{currentEntity.totalDiscountAddition.value ne 0}" 
+                    	styleClass="leftIndent10px"/>
+                    <h:outputText value="#{currentEntity.totalDiscountAddition.valueString()}" 
+                    	rendered="#{currentEntity.totalDiscountAddition.value ne 0}" />
+
+
+                    <h:outputText value="#{messages['general.label.TotalExpenseAddition']}" 
+                    	rendered="#{currentEntity.totalExpenseAddition.value ne 0 }"
+                    	styleClass="leftIndent10px"/>
+                    <h:outputText value="#{currentEntity.totalExpenseAddition.valueString()}" 
+                    	rendered="#{currentEntity.totalExpenseAddition.value ne 0}" />
+
+
+                    <h:outputText value="#{messages['general.label.DocumentTotal']}" 
+                    	styleClass="#{currentEntity.grandTotal.value le 0 ? 'warningStyle' : ''}" />
+                    <h:outputText value="#{currentEntity.grandTotal}" 
+                    	styleClass="#{currentEntity.grandTotal.value le 0 ? 'warningStyle' : 'boldFont'}" />
+                </h:panelGrid>
+            </r:panel>
+        </s:div>
+    </h:panelGrid>
+
+</ui:composition>

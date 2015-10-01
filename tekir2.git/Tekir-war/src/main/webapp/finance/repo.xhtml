@@ -1,0 +1,289 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="repo"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/repoBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.repoBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/repo.xhtml">
+                <h:outputText value="#{messages['module.caption.repo']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{repoHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['repo.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.repo']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['repo.img.Form']}"/> 
+                        <h:outputText value="#{messages['repo.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:div style="width:310px;">
+                    	<s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:inputText value="#{repo.serial}" styleClass="middle" required="true" accesskey="Q"
+                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Reference']}"/></ui:define>
+                            <h:inputText value="#{repo.reference}" styleClass="middle" required="false"/>
+                        </s:decorate>
+
+                        <!--  -->
+                        <a:region immediate="true" ajaxSingle="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['repo.label.RepoBankWithDraw']}"/>
+                                </ui:define>
+                                <h:selectOneMenu value="#{repo.bank}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankBranchBox,bankAccountBox" action="#{repoHome.clearBankAccount()}" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['repo.label.RepoBankBranchWithDraw']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBranchBox"
+                                                 value="#{repo.bankBranch}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankBranches(repo.bank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['repo.label.RepoBankAccountWithDraw']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankAccountBox"
+                                                 value="#{repo.bankAccount}"
+                                                 required="true"                                                 
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(repo.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo}- #{item.name}-#{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+                        <!--  -->
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.RepoBeginDate']}"/></ui:define>
+                            <r:calendar value="#{repo.repoBeginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.RepoEndDate']}"/></ui:define>
+                            <r:calendar value="#{repo.repoEndDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        
+                    </s:div>
+                    
+                    <s:div style="width:310px;">
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Code']}"/></ui:define>
+                            <h:inputText value="#{repo.code}" styleClass="middle" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Date']}"/></ui:define>
+                            <r:calendar value="#{repo.date}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>                        
+                        
+                        <!--  -->
+                        <a:region immediate="true" ajaxSingle="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['repo.label.RepoBank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu value="#{repo.repoBank}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="repoBankBranchBox,repoBankAccountBox" action="#{repoHome.clearRepoBankAccount()}" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['repo.label.RepoBankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="repoBankBranchBox"
+                                                 value="#{repo.repoBankBranch}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankBranches(repo.repoBank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="repoBankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['repo.label.RepoBankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="repoBankAccountBox"
+                                                 value="#{repo.repoBankAccount}"
+                                                 required="true"                                                 
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(repo.repoBankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo}- #{item.name}-#{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="amountCurrency, profitCurrency, taxCurrency" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+                        <!--  -->
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Rate']}"/></ui:define>
+                            <h:inputText value="#{repo.rate}" styleClass="amountField" required="true" />
+                            <h:outputText value=" %"/>
+                        </s:decorate>
+                        
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Amount']}"/></ui:define>
+                            <h:inputText value="#{repo.amount}"  styleClass="amountField" required="true" 
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="amountCurrency" value=" #{repo.repoBankAccount.currency }" />
+                        </s:decorate>
+                        
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                        	<ui:define name="label"><h:outputText value="#{messages['repo.label.Profit']}"/></ui:define>
+                            <h:inputText value="#{repo.profit}" styleClass="amountField" 
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="profitCurrency" value=" #{repo.repoBankAccount.currency }" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Tax']}"/></ui:define>
+                            <h:inputText value="#{repo.tax}" styleClass="amountField" 
+                            	alt="decimal" converter="bigDecimalConverter" onfocus="setMasks();" />
+                            <h:outputText value=" " />
+                            <h:outputText id="taxCurrency" value=" #{repo.repoBankAccount.currency }" />
+                        </s:decorate>
+                        
+                        
+                    </s:div>
+                    
+                    <s:div style="width:310px;">
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{repo.info}" styleClass="exlarge" rows="6"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['repo.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{repo.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['repo.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </s:div>
+                </h:panelGrid>
+                
+                
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{repoHome.save()}"
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{repoHome.delete()}"
+                          rendered="#{not empty repo.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{repoHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

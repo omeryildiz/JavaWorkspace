@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:rich="http://richfaces.org/rich">
+
+    <h:form id="organizationSchemeOptionPaneForm">
+
+        <a:region>
+			<h:panelGrid columns="2" columnClasses="orgLevelCol1,orgLevelCol2">
+				<s:fragment>
+					<h:outputText value="#{messages['optionEditor.organizationSchemeOption.UseScheme']}" />
+					<h:selectBooleanCheckbox value="#{organizationSchemeOptionPane.getOption('USE_SCHEME').asBoolean}">
+						<a:support event="onchange" reRender="table" ajaxSingle="true"
+							action="#{organizationSchemeOptionPane.checkDefaultOrganization()}" />
+					</h:selectBooleanCheckbox>
+				</s:fragment>
+
+				<a:outputPanel id="table">
+	               	<r:tabPanel switchType="ajax" contentStyle="width:100%;"
+	               		rendered="#{organizationSchemeOptionPane.getOption('USE_SCHEME').asBoolean}">
+	               		<r:tab label="#{messages['optionEditor.label.LevelName']}" >
+							<r:dataTable var="item" id="levelTable"
+								value="#{organizationSchemeOptionPane.levelList}" rowKeyVar="rowKey"
+								styleClass="detailTable" rows="10"
+								onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+								<f:facet name="header">
+									<r:columnGroup>
+										<r:column style="width:400px;">
+											<h:outputText value="#{messages['optionEditor.label.LevelName']}" />
+										</r:column>
+										<r:column styleClass="actionColumn">
+											<a:commandLink action="#{organizationSchemeOptionPane.addNewOrganizationLevel()}"
+												reRender="levelTable" status="commonAjaxStatus">
+												<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewOrganizationLevelLine']}" />
+											</a:commandLink>
+										</r:column>
+									</r:columnGroup>									
+								</f:facet>										
+	
+								<r:column>
+									<h:inputText value="#{item.name}" />
+								</r:column>
+								
+								<r:column>
+									<a:commandLink action="#{organizationSchemeOptionPane.deleteOrganizationLevel(rowKey)}"
+										reRender="levelTable" status="commonAjaxStatus" 
+										rendered="#{item.level ne 1}">
+										<h:graphicImage url="/img/delete.gif" />
+									</a:commandLink>
+								</r:column>
+								
+								<f:facet name="footer">
+									<r:datascroller for="levelTable" renderIfSinglePage="false" />
+								</f:facet>
+							</r:dataTable>
+						</r:tab>
+	
+						<r:tab label="#{messages['optionEditor.label.OrganizationSettings']}" style="width:100%;">
+					        <r:dataTable var="orgOpt" value="#{organizationSchemeOptionPane.organizationOptionList}" 
+						        onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+						        onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+						        styleClass="detailTable" rows="10">
+						
+								<r:column style="width:400px">
+					               	<h:outputText value="#{messages[ut:concat('optionEditor.', orgOpt.key)  ]}"/>
+								</r:column> 	
+								<r:column>
+									<h:selectOneMenu value="#{orgOpt.asString}" >
+										<s:selectItems var="item" value="#{generalSuggestion.organizationLevelList}" 
+											label="#{item.name}" />
+									</h:selectOneMenu>
+								</r:column> 	
+							</r:dataTable>
+						</r:tab>
+					</r:tabPanel>
+				</a:outputPanel>
+
+			</h:panelGrid>
+
+		</a:region>
+        
+        <s:div styleClass="actionButtons">
+
+            <a:commandButton id="save"
+                             value="#{messages['general.button.Save']}"
+                             action="#{organizationSchemeOptionPane.save()}"
+                             reRender="organizationSchemeOptionPaneForm"
+                             styleClass="button"/>
+
+            <s:button id="done"
+                      value="#{messages['general.button.Close']}"
+                      action="#{organizationSchemeOptionPane.cancel()}"
+                      styleClass="button"/>
+
+        </s:div>
+    </h:form>
+</ui:composition>

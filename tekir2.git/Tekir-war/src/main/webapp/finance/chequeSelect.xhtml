@@ -1,0 +1,166 @@
+ 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps">
+    
+    <ui:include src="/layout/messages.xhtml"/>
+    <ui:include src="/contact/contactSelectPopup.xhtml" />
+    
+    <h:form id="selectform" >
+
+        <a:region>
+        <r:panel id="chequeSelectPanel">
+            <f:facet name="header">
+             	<h:outputText value="#{chequeSuggestion.clientCheque eq true  ? messages['cheque.caption.Form.client'] : messages['cheque.caption.Form.firm']}"/>
+            </f:facet>
+            
+            <table id="chequeCriteria" style="padding:0px;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+
+						<s:decorate id="sdcm" template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['collection.label.Contact']}"/>
+                            </ui:define>
+                            <h:inputText id="contact" value="#{chequeSuggestion.contact}" 
+                            	styleClass="middle">
+                                <f:converter converterId="contactCaptionConverter"/>
+                            </h:inputText>
+                            <ui:remove>
+                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                            </ui:remove>
+                            <a href="javascript:contactSelectPopup('#{r:clientId('sdcm')}:contact')">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['cheque.label.ChequeNumber']}" />
+                            </ui:define>
+                            <h:inputText value="#{chequeSuggestion.referenceNo}" styleClass="middle"/>
+                        </s:decorate>
+                        
+  						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Bank']}" /></ui:define>
+                            <h:inputText value="#{chequeSuggestion.bankName}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Branch']}" /></ui:define>
+                            <h:inputText value="#{chequeSuggestion.bankBranch}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                    </td>
+                    <td>
+  						
+  						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.MaturityBeginDate']}" /></ui:define>
+                            <r:calendar value="#{chequeSuggestion.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.MaturityEndDate']}" /></ui:define>
+                            <r:calendar value="#{chequeSuggestion.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeOwner']}"/></ui:define>
+                            <h:inputText value="#{chequeSuggestion.chequeOwner}" styleClass="middle"/>
+                        </s:decorate>
+                                                
+                    </td>
+                    <td style="vertical-align:bottom;padding-bottom:4px;padding-top:4px;width:70px;">
+                        
+	                    <a:commandLink id="select_search" value="#{messages['general.button.Search']}"
+	                                   action="#{chequeSuggestion.selectChequeList()}"
+	                                   styleClass="button" reRender="selectList">  
+	                    </a:commandLink>
+                        
+                    </td>
+                </tr>
+            </table>
+        </r:panel>
+        
+        <s:div id="selectList" >
+            <r:dataTable var="item"
+            			 id="browseList"
+                         value="#{chequeSuggestion.chequeList}" 
+                         rowKeyVar="rowKey"
+                         rows="5"
+                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                <f:facet name="header">
+                    <h:panelGroup>
+                        <h:outputText value="#{messages['general.label.Results']}"/>
+                    </h:panelGroup>
+                </f:facet>
+                 <r:column styleClass="serialField">
+                     <f:facet name="header"><h:outputText value="#{messages['cheque.label.ChequeNumber']}"/></f:facet>
+                         <a:commandLink action="#{chequeSuggestion.selectedCheque(rowKey)}" reRender="selectList,its" 
+                    	oncomplete="Richfaces.hideModalPanel('cheSelectPop')">
+                         <h:outputText value="#{item.referenceNo}"/>
+                         </a:commandLink>
+                 </r:column>
+                 
+                 <r:column styleClass="serialField">
+                     <f:facet name="header"><h:outputText value="#{messages['cheque.label.ReferenceNumber']}"/></f:facet>
+                         <a:commandLink action="#{chequeSuggestion.selectedCheque(rowKey)}" reRender="selectList,its" 
+                    	oncomplete="Richfaces.hideModalPanel('cheSelectPop')">
+                         <h:outputText value="#{item.serialNo}"/>
+                         </a:commandLink>
+                 </r:column>
+                 
+                 <r:column>
+                    <f:facet name="header"><h:outputText value="#{messages['cheque.label.Contact']}"/></f:facet>
+                        <h:outputText value="#{item.contact.caption}"/>
+                </r:column>
+                
+                <r:column>
+                    <f:facet name="header"><h:outputText value="#{messages['cheque.label.ChequeOwner']}"/></f:facet>
+                        <h:outputText value="#{item.chequeOwner}"/>
+                </r:column>
+                
+                <r:column>
+                    <f:facet name="header"><h:outputText value="#{messages['cheque.label.ChequeAmount']}"/></f:facet>
+                        <h:outputText value="#{item.money}"/>
+                </r:column>
+                
+                <r:column>
+                    <f:facet name="header"><h:outputText value="#{messages['cheque.label.LastStatus']}"/></f:facet>
+                    <h:outputText value="#{item.lastStatus ne null ? messages[ut:concat('cheque.label.status.', item.lastStatus)] : ''}"/>
+                </r:column>
+                
+                 <r:column>
+                    <f:facet name="header"><h:outputText value="#{messages['cheque.label.PreviousStatus']}"/></f:facet>
+                        <h:outputText value="#{item.previousStatus ne null ? messages[ut:concat('cheque.label.status.', item.previousStatus)] : ''}"/>
+                </r:column>
+                
+                <r:column>
+                	<f:facet name="header"><h:outputText value="#{messages['cheque.label.MaturityDate']}"/></f:facet>
+                        <h:outputText value="#{item.maturityDate}">
+                        	<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+                        </h:outputText>
+                </r:column>
+                
+                <f:facet name="footer">
+                	<r:datascroller for="browseList" maxPages="5" />          
+				</f:facet>
+            </r:dataTable>
+            
+        </s:div>
+        </a:region>
+    </h:form>
+</ui:composition>

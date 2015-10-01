@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="popupForm">
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<a:region>
+			<h:panelGrid columns="1">
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['contactNetwork.label.UsageType']}" />
+					</ui:define>
+					<h:selectOneMenu value="#{contactHome.selectedNetwork.network}" required="true">
+						<f:selectItem itemValue="email" itemLabel="#{messages['contactNetwork.label.Email']}" />
+						<f:selectItem itemValue="web" itemLabel="#{messages['contactNetwork.label.Web']}"/>
+						<f:selectItem itemValue="skypeNetwork" itemLabel="#{messages['contactNetwork.label.SkypeNetwork']}"/>
+						<f:selectItem itemValue="mircNetwork" itemLabel="#{messages['contactNetwork.label.MircNetwork']}"/>
+						<f:selectItem itemValue="facebookNetwork" itemLabel="#{messages['contactNetwork.label.FacebookNetwork']}"/>
+						<f:selectItem itemValue="twitterNetwork" itemLabel="#{messages['contactNetwork.label.TwitterNetwork']}"/>
+						<f:selectItem itemValue="yahooNetwork" itemLabel="#{messages['contactNetwork.label.YahooNetwork']}"/>
+						<f:selectItem itemValue="msnNetwork" itemLabel="#{messages['contactNetwork.label.MsnNetwork']}"/>
+						<f:selectItem itemValue="gtalkNetwork" itemLabel="#{messages['contactNetwork.label.GtalkNetwork']}"/>
+						<f:selectItem itemValue="jabberNetwork" itemLabel="#{messages['contactNetwork.label.JabberNetwork']}"/>
+						<f:selectItem itemValue="friendFeedNetwork" itemLabel="#{messages['contactNetwork.label.FriendFeedNetwork']}"/>
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['contactNetwork.label.Value']}" />
+					</ui:define>
+					<h:inputText value="#{contactHome.selectedNetwork.value}" style="width:300px"/>
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['contact.label.Info']}" />
+					</ui:define>					
+					<h:inputTextarea value="#{contactHome.selectedNetwork.info}"
+						rows="3" style="width:300px"/>
+				</s:decorate>
+                
+                <s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages['general.label.Status']}" />
+					</ui:define>
+					<h:selectBooleanCheckbox id="active" value="#{contactHome.selectedNetwork.activeNetwork}"
+						styleClass="checkbox" />
+					<h:outputLabel value="#{messages['general.label.Active']}"
+						for="active" styleClass="checkboxLabel" />
+				</s:decorate>
+
+			</h:panelGrid>
+	
+			<div class="actionButtons">
+				<a:commandButton action="#{contactHome.addToNetworkList()}" 
+					styleClass="button" value="#{messages['general.label.Add']}" 
+					reRender="networks,messages" rendered="#{not contactHome.isEdit}"
+					oncomplete="setMasks();if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('contactNetworkAddPopup');" />
+	
+				<a:commandButton action="#{contactHome.endNetworkEdit()}" reRender="networks" 
+					value="#{messages['general.button.Ok']}"
+					oncomplete="setMasks();if (#{facesMessages.currentMessages.size eq 0}) Richfaces.hideModalPanel('contactNetworkAddPopup');"
+					styleClass="button" rendered="#{contactHome.isEdit}" /> 
+				
+				<a:commandButton value="#{messages['general.button.Cancel']}"
+					oncomplete="Richfaces.hideModalPanel('contactNetworkAddPopup');"
+					styleClass="button" ajaxSingle="true" />
+			
+			</div>
+		</a:region>
+	</h:form>
+
+</ui:composition>

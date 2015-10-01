@@ -1,0 +1,38 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="home"/>
+            <ui:param name="curpage" value="about"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1>Hata</h1>
+        
+        <ui:remove>
+            <ui:include src="/layout/messages.xhtml"/>
+            styleClass="message"
+        </ui:remove>
+        
+        <h:messages id="messages" />
+        
+        <ul class="hint">
+            <li>Hata nedeniyle yapıyor olduğunuz işlem iptal edildi.</li>
+            <li>Lütfen uygulama menüleri kullanarak işlemi yeniden deneyiniz.</li>
+            <li>Hata gelmeye devam eder ise  <a href='http://www.tekir.com.tr' target='_blank'>www.tekir.com.tr</a> adresinden hata kaydı açabilirsiniz.</li>
+        </ul>
+        
+        <h:outputText value="" />
+        
+    </ui:define> 
+</ui:composition>

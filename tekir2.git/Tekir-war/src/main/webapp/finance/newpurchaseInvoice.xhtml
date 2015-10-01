@@ -1,0 +1,123 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+
+    <!-- irsaliyeli alis faturasi -->
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewInvoice"/>
+            <ui:param name="cursubitem" value="purchaseInvoice"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/newpurchaseInvoiceBrowse.xhtml" propagation="none" rendered="#{s:hasPermission('purchaseInvoice', 'select')}">
+                <h:outputText value="#{messages['module.caption.PurchaseInvoiceBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/newpurchaseInvoice.xhtml" rendered="#{s:hasPermission('purchaseInvoice', 'update')}" >
+                <h:outputText value="#{messages['module.caption.PurchaseInvoice']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{purchaseInvoiceHome.createNew()}" rendered="#{s:hasPermission('purchaseInvoice', 'insert')}" propagation="begin">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['purchaseInvoice.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PurchaseInvoice']}" /></h1>
+
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+	    <s:div id="quickContactDiv">
+	        <ui:include src="/contact/quickContactAddPopup.xhtml" />
+		</s:div>
+
+		<s:div id="messagesDiv">
+	        <ui:include src="/layout/messages.xhtml"/>
+		</s:div>
+        
+        <ui:include src="/finance/popup/limitationWarningPopup.xhtml" >
+        	<ui:param name="currentHome" value="${purchaseInvoiceHome}" />
+        </ui:include>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/script_add.gif" alt="#{messages['purchaseInvoice.img.Form']}"/> 
+                        <h:outputText value="#{messages['purchaseInvoice.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+				<ui:include src="/finance/invoiceMasterFields.xhtml">
+		        	<ui:param name="currentHome" value="${purchaseInvoiceHome}" />
+		        	<ui:param name="currentEntity" value="${purchaseInvoice}" />
+				</ui:include>                
+
+				<ui:include src="/finance/invoiceDetailFields.xhtml">
+		        	<ui:param name="currentHome" value="${purchaseInvoiceHome}" />
+		        	<ui:param name="currentEntity" value="${purchaseInvoice}" />
+				</ui:include>
+            </r:panel>
+            
+            <div class="actionButtons">
+
+				<a:commandButton action="#{purchaseInvoiceHome.checkPurchasePrices()}" ajaxSingle="true"
+					value="#{messages['general.label.CheckPurchasePrices']}" styleClass="button"
+					reRender="messagesDiv,its,itsMini,ccyRates,ccyTotals,taxTotal,grandTotal"
+					oncomplete="setMasks();" rendered="#{s:hasPermission('purchaseInvoice', 'checkPurchasePrice')}"/>
+				                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{purchaseInvoiceHome.save()}"
+                                 styleClass="button checkRequired"
+                                 style="#{purchaseInvoiceHome.hasWarningOrRequiredLimitation() ? 'display:none':''}"/>  
+                
+				<a:commandButton id="warn" action="#{purchaseInvoiceHome.makeEntityValidations()}"
+	                oncomplete="if (#{purchaseInvoiceHome.limitationMessages.messages.size ne 0}) 
+	                				{Richfaces.showModalPanel('limitationWarningPopup')} 
+	                				else 
+	                				{ document.getElementById('form:save').click()}" reRender="limitationWarningPopup"
+	                styleClass="button"
+	                rendered="#{purchaseInvoiceHome.hasWarningOrRequiredLimitation()}"
+	                value="#{messages['general.button.Save']}">
+	            </a:commandButton>
+
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{purchaseInvoiceHome.delete()}"
+                          rendered="#{not empty purchaseInvoice.id and s:hasPermission('purchaseInvoice', 'delete')}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{purchaseInvoiceHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

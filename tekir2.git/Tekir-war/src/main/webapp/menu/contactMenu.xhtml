@@ -1,0 +1,117 @@
+<ul xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <li class="#{curpage eq 'new' ? 'current' : '' }">
+        <a href="#"><h:outputText value="#{messages['general.button.New']}" /></a>
+        <ul>
+            <li class="#{curitem eq 'newcontact' ? 'current' : '' }">
+                <s:link view="/contact/contact.xhtml" propagation="none" >
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['contact.action.Add']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'newproduct' ? 'current' : '' }">
+                <s:link view="/stock/product.xhtml" propagation="none" >
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['product.action.Add']}" />
+                </s:link>
+            </li>
+            
+            <li class="#{curitem eq 'newservice' ? 'current' : '' }">
+                <s:link view="/contact/service.xhtml" propagation="none" >
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['service.action.Add']}" />
+                </s:link>
+                
+            </li>
+            
+            <li class="#{curitem eq 'newexpense' ? 'current' : '' }">
+                <s:link view="/stock/expense.xhtml" propagation="none" >
+                    <f:param name="type" value="Expense"/>
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['expense.action.Add']}" />
+                </s:link>
+                
+            </li>
+			
+            <li class="#{curitem eq 'newdiscount' ? 'current' : '' }">
+                <s:link view="/stock/discount.xhtml" propagation="none" >
+                    <f:param name="type" value="Discount"/>
+                    <f:param name="eid" value="0"/>
+                    <h:graphicImage url="/img/add.gif" />
+                    <h:outputText value="#{messages['discount.action.Add']}" />
+                </s:link>
+                
+            </li>
+			
+        </ul>
+
+    </li>
+    <li class="#{curpage eq 'cards' ? 'current' : '' }">
+        <a href="#">Kartlar</a>
+        <ul>
+            <li class="#{curitem eq 'contactBrowse' ? 'current' : '' }">
+                <s:link view="/contact/contactBrowse.xhtml">
+                	<f:param name="exid" value="0" />
+                    <h:graphicImage url="/img/vcard.gif" alt="#{messages['contact.img.Form']}"/>
+                    <h:outputText value="#{messages['module.caption.ContactBrowse']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productBrowse' ? 'current' : '' }">
+                <s:link view="/stock/productBrowse.xhtml">
+                	<f:param name="exid" value="0"/>
+                    <h:graphicImage url="/img/package.gif" alt="#{messages['product.img.Icon']}"/>
+                    <h:outputText value="#{messages['module.caption.ProductBrowse']}"/>
+                </s:link>
+            </li>
+            
+            <li class="#{curitem eq 'expenseDiscBrowse' ? 'current' : '' }">
+                <s:link view="/stock/expenseDiscBrowse.xhtml" >
+                    <h:graphicImage url="/img/brick.gif" alt="#{messages['currency.img.Currency']}"/>
+                    <h:outputText value="#{messages['module.caption.ExpenseDiscBrowse']}"/>
+                </s:link>
+            </li>
+            
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'category' ? 'current' : '' }">
+        <a href="#">Kategoriler</a>
+        <ul>
+            <li class="#{curitem eq 'contactCategory' ? 'current' : '' }">
+                <s:link view="/contact/contactCategory.xhtml" propagation="begin">
+                    <h:graphicImage url="/img/folder.gif" alt="#{messages['currency.img.CurrencyPair']}"/>
+                    <h:outputText value="#{messages['module.caption.ContactCategory']}"/>
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'productCategory' ? 'current' : '' }">
+                <s:link view="/stock/productCategory.xhtml" propagation="begin">
+                    <h:graphicImage url="/img/folder.gif" alt="#{messages['currency.img.CurrencyPair']}"/>
+                    <h:outputText value="#{messages['module.caption.ProductCategory']}"/>
+                </s:link>
+            </li>
+            <ui:remove>
+	            <li class="#{curitem eq 'serviceCategory' ? 'current' : '' }">
+	                <s:link view="/contact/serviceCategory.xhtml" propagation="begin">
+	                    <h:graphicImage url="/img/folder.gif" alt="#{messages['currency.img.CurrencyPair']}"/>
+	                    <h:outputText value="#{messages['module.caption.ServiceCategory']}"/>
+	                </s:link>
+	            </li>
+            </ui:remove>
+        </ul>
+    </li>
+
+    <ui:remove>
+        <li class="#{curpage eq 'contact' ? 'current' : '' }"><s:link view="/contact/contactBrowse.xhtml" propagation="none"><h:outputText value="#{messages['module.caption.ContactBrowse']}" /></s:link></li>
+        <li class="#{curpage eq 'product' ? 'current' : '' }"><s:link view="/stock/productBrowse.xhtml" propagation="none"><h:outputText value="#{messages['module.caption.ProductBrowse']}" /></s:link></li>
+        <li class="#{curpage eq 'service' ? 'current' : '' }"><s:link view="/contact/serviceBrowse.xhtml" propagation="none"><h:outputText value="#{messages['module.caption.ServiceBrowse']}" /></s:link></li>
+    </ui:remove>
+</ul>

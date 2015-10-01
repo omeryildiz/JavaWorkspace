@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="warnForm">
+		
+		<div style="overflow: auto;height:140px;">
+			<ul>
+			<ui:repeat value="#{saleShipmentHome.zeroLineAmountWarnings}" var="item">
+				<li>#{item}</li>
+			</ui:repeat>
+			</ul>
+
+		</div>
+		<br/>
+		<br/>
+		<div style="padding-left:70px;">
+			<input type="button" onclick="document.getElementById('form:save').click()"
+				class="button" value="#{messages['general.label.Continue']}" />                
+				
+			<input type="button" onclick="Richfaces.hideModalPanel('warnPopup')"
+				class="button" value="#{messages['general.label.Cancel']}" />                
+		</div>
+	</h:form>
+</ui:composition>

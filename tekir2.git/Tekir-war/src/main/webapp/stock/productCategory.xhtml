@@ -1,0 +1,130 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="contact"/>
+            <ui:param name="curpage" value="category"/>
+            <ui:param name="curitem" value="productCategory"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/productCategory.xhtml" rendered="#{s:hasPermission('productCategory', 'select')}" >
+                <h:outputText value="#{messages['module.caption.ProductCategory']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{productCategoryHome.createNew()}" rendered="#{s:hasPermission('productCategory', 'insert')}"  propagation="begin">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['productCategory.action.Add']}" />
+            </s:link>
+            <s:link view="/stock/productBrowse.xhtml" propagation="none" rendered="#{s:hasPermission('product', 'select')}" >
+                <h:graphicImage url="/img/package.gif" alt="#{messages['product.img.Icon']}"/> 
+                <h:outputText value="#{messages['module.caption.ProductBrowse']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ProductCategory']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="3" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{productCategoryList}"
+                                 rendered="#{s:hasPermission('productCategory', 'update')}" 
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="2">
+                                    <h:outputText value="#{messages['productCategory.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{productCategoryHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code}" />
+                            </s:link>
+                        </r:column>
+                        <r:column>
+                            <h:outputText value="#{cty.weight}" />
+                        </r:column>
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{productCategoryHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}" />
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['productCategory.hint.EmptyList']}" rendered="#{productCategoryList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/folder.gif" alt="#{messages['productCategory.img.Form']}"/> 
+                            <h:outputText value="#{messages['productCategory.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:fragment>
+                            <s:decorate template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['productCategory.label.Code']}"/></ui:define>
+                                <h:inputText value="#{productCategory.code}" styleClass="small" required="true"/>
+                            </s:decorate>
+                            
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['productCategory.label.Status']}"/></ui:define>
+                                <h:selectBooleanCheckbox id="active" value="#{productCategory.active}" styleClass="checkbox" />
+                                <h:outputLabel value="#{messages['productCategory.label.Active']}" for="active" styleClass="checkboxLabel" />
+                            </s:decorate>
+                        </s:fragment>
+                        <s:fragment>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['productCategory.label.Weight']}" />
+                                </ui:define>
+                                <h:inputText value="#{productCategory.weight}" styleClass="small" />
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label"><h:outputText value="#{messages['productCategory.label.Info']}"/></ui:define>
+                                <h:inputTextarea value="#{productCategory.info}" styleClass="exlarge" rows="4"/>
+                            </s:decorate>
+                        </s:fragment>
+
+                    </h:panelGrid>
+
+					<ut:actionButtons home="#{productCategoryHome}" entity="#{productCategory}" permission="productCategory" />
+
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

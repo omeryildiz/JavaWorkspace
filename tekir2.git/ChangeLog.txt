@@ -1,0 +1,175 @@
+-----------------
+Tekir ChangeLog
+-----------------
+
+Sürüm 1.5.0.1
+-----------
+06.02.2009
+	* cek senet eklendigi anda durumu set edilsin
+	* çek/senet bordrolarında düzenleme ise deleteLine metodunda vt den siliniyor.
+	* bankaya çek tahsilat bordrosunda detay satırı silinince db den de siliniyor.
+	* * deleteLine metodunda da delete metodu içindeki kod bloğu kullanılacağından bu blok ayrı bir metod içine alındı.
+	* tahsilat fişinde düzenleme sırasında çek/senet silinirse veritabanında da siliniyor.
+	* tahsilat, tediye fişlerinde history yansımaları düzeltildi.
+	* tahsilat fişi silinince detay satırında girilen çek/senet db tablosundan siliniyor.
+	* kullanıcı eklerken kullanıcı adı tekrarı kontrolü casesensitive olmasın
+
+05.02.2009
+	* irsaliyeli alış ve satış faturalarında satırların kolon genişliklerinde IE6 ve FF3 için düzeltme yapıldı.
+	* bankaya odeme/tahsilat fişlerinde banka ve banka şubesinin zorunluluğu kaldırıldı.
+	* senet bordrolarında yeni kayıt ekleme ve silme yöntemi uyarlandı.
+	* çek bordrolarında yeni kayıt ekleme ve silme yöntemi uyarlandı.
+	* txnler içinde banka ve kasa borç alacak hataları düzeltildi..
+	* tahsilat/tediye fişlerinde Çek senet satırına eklenen bilgiler düzenlendi.(evrak,no,sahibi,tarih,açıklama)
+	* borç ve alacak dekontu yönlendirme ve txn raporunda düzenleme..
+	* borç alacak dekontları ve virman fişi yerel tutarları setlendi..
+	* documenttype 'a borç alacak dekontları eklendi..
+	* PromissoryToAccountCollectionPayrollHomeBean çek-senet doküman tipi değişikliği
+	* çek çıkış bordrosunda kayıt ekleme ve düzenleme düzeltildi.
+	* bankaya çek çıkış bordrosu kayıt ekleme, düzenleme ve silme düzeltildi.
+	* banka senet tahsilat bordrosunda da kayıt ekleme ve silme metodlarında düzenleme yapıldı.
+	* senet kasa ödeme bordrosu silinince history ve senet durum değişikliği işlemleri iptal ediliyor.
+	* senet banka teminatı bordrosu silinince history ve senet durum değişikliği işlemleri iptal ediliyor.
+	* senet bankada tahsil edildi bordrosu silinince history ve senet durum değişikliği işlemleri iptal ediliyor.
+	* senet kasa ödeme bordrosu silinince history ve senet durum değişikliği işlemleri iptal ediliyor.
+	* senet kasa tahsilatı bordrosu silinince history ve senet durum değişikliği işlemleri iptal ediliyor.
+	* çekin son ve önceki durumları default olarak portföy atandı.
+	* Satış faturası ve view da kurlarda virgulden sonra 4 rakam gelir hale getirildi.
+	* Çek kasa tahsilatında silme işlemi yapıldığında çeklerin historysinin düzenlenmesi sağlandı ve çek statüsü eski haline getirildi.
+	* bordro silinince yeni oluşturulan senetlerin de silinmesi için düzenlendi.
+	* Çek bordrolarında silme işlemi yapıldığında çeklerin historysinin düzenlenmesi sağlandı ve çek statüsü eski haline getirildi.
+	* Cariden çek girişi entitysinin detaylarında cascade type değiştirildi.
+	* bankaya senet tahsilat bordrosunda düzenleme kontrolü ve history kaydı için düzenleme yapıldı.
+	* senet çıkış bordrosunda düzenleme kontrolü ve history kaydı için düzenleme yapıldı.
+	* çek banka tahsilatta bordrosuna düzenlenip düzenlenemeyeceğine dair eklemeler yapıldı. Ayrıca cheque history ile ilgili değişiklikler yapıldı.
+	* senet bankada tahsil edildi bordrosunda düzenleme kontrolü ve history kaydı için düzenleme yapıldı.
+	* senet banka teminata gönderme bordrosunda düzenleme kontrolü ve history kaydı için düzenleme yapıldı.
+	* çek banka teminatta bordrosuna düzenlenip düzenlemeyeceğine dair eklemeler yapıldı. History kaydı için düzenlemeler yapıldı.
+	* senet kasa tahsilat bordrosunda düzenleme kontrolü ve history kaydı için düzenleme yapıldı.
+	* çek kasa ödeme bordrosuna düzenlenip düzenlemeyeceğine dair eklemeler yapıldı. History kaydı için düzenlemeler yapıldı.
+	* senet kasa ödeme bordrosunda düzenleme kontrolü ve history kaydı için düzenleme yapıldı.
+	* çek kasa tahsilatı bordrosuna düzenlenip düzenlemeyeceğine dair eklemeler yapıldı. History kaydı için düzenlemeler yapıldı.
+	* Cariden çek girişi bordrosuna düzenlenip düzenlemeyeceğine dair eklemeler yapıldı. History kaydı için düzenlemeler yapıldı.
+	* senet giriş bordrosunda düzenleme kontrolü ve history kaydı için düzenleme yapıldı.
+	* çek ve senetin daha önce kaydedilip edilmediğini kontrol eden metotlar eklendi
+
+04.02.2009
+	* satış faturasında kayıttan sonra yazdır butonunda çağrılan print metodundaki hata giderildi.
+	* satış faturasında da kaydettikten sonra önizleme sayfasına gidiyor.
+	* çek/senet ekleme popup larında aynı nesnenin eklenmesi kontrolü sadece veritabanın da kayıtlı nesneler için yapılsın.
+	* cari kartında TC Kimlik No ve Vergi No var mı?,  yok mu? kontrolleri ile ilgili düzeltme yapıldı
+	* cari hareket raporunda Alacak Borç dekontları döküman tipi eklendi.
+	* çek/senet çıkış bordrosunda action sınıfına gönderilen nesnede carinin setlenmesi eklendi.
+	* çek ve senet giriş bordroları finance_txn de tutar değeri hesaplaması yapıldı.
+	
+03.02.2009
+	* tahsilat ve tediye sayfalarında financeTxn kaydı için yeni eklenen metod kullanılmaya başlandı.
+	* Faturalarda önce lokal degerler hesaplanır yapıldı.
+	* Senet in history kaydını getiren metod eklendi.
+	* tahsilat ve tediye düzenleme için çek senet durum kontrolü yapılan sınıfta düzenleme yapıldı ve bu metodun çağrıldığı yer değiştirildi.
+	* Banka durum ve cari hareket raporlarında düzenleme yapıldı.
+	* Tahsilat ve tediye fişleri düzenlemede çek/senet history tablosuna tekrar kayıt atma sorunu düzeltildi.
+	* Senet ekleme popup larında keşide yeri alanı zorunlu hale getirildi.
+	* Çek/senet ekleme popup larında serial-reference no alanlarının ters olarak kaydedilmesi düzeltildi.
+	
+02.02.2009
+	* Müşteri çeki ekleme popup ında banka, banka şubesi, keşide yeri gibi alanlar zorunlu hale getirildi.
+	* Tahsilat, tediye fişlerinde financeTxn tablosu yansımaları düzeltildi.
+	* financeTxn de çek/senet kayıtlarında delete metodu çağrılıyor.
+	* Detay sayfalarında a:include ile eklenen popupların içinde de boş alan kontrolu yapılıyordu. 
+		Sayfa içide cağırılan popuplara innerpop classı eklendi. SORUN COZULDU. 
+		Finans altındaki tüm giriş sayfalarında kaydet butonlarına checkRequired style eklendi. 
+		Diğer modullerde de eksik olanların tamamlanması lazım.
+	* Bankaya çek ve senet işlemleri silinirse bank_txn den de silinmesi yapıldı.
+	* Bank_txn account_txn de debit işlemleri credit olarak setleniyordu, düzeltildi. Moneyset değerinin value değeride setlendi, yerel değeri almak mümkün oldu.
+	* Çek listesinde durumların enum türkçeleştirmesi yapıldı.
+	* Düzenleme izni için tahsilat/tediye fişinde detay satırındaki çek ve senetlerin finansal işlemlerde kullanılıp kullanılmadığı kontrolü eklendi.
+	* Çek ve senet işlemlerinin account_txn kayıtlarında silme fonkisyonları eklendi.
+	* Linklerde yanlış yönlendirmeler düzenlendi..
+	* Tahsilat ve tediye fişlerinde çek/senet için cari hareket (finance_txn) tablosuna kayıt yapılması sağlandı.
+	* Firma çeki oluşturma popup ında banka, banka şubesi, keşide yeri gibi alanlar zorunlu hale getirildi.
+	
+31.01.2009
+	* Şablonda (irsaliyeli_satis_faturasi) düzeltme yapıldı.
+	* Çek/senet kasa hareketlerinin history tablosuna kaydetmeme hatası düzeltildi.
+	* Kasa hareket raporu yeni dokümanların düzenlemesi yapıldı.
+	* Finans menüsüne yeni linkler eklendi.
+	* Çek/senet oluşturma ve arama popuplarında düzenleme yapıldı.
+	* Veri tabanına import edildikten sonra kayıt ekleme hatası giderildi. Hibernate_Sequences tablosuna insert kodları eklendi.
+		(Yeni depo, vergi tanıtımlarının hatası düzeltilmiş oldu.)
+	* Eklenen entity lerin lisans alanı düzenlendi.
+	* Çek - senet banka tahsilat düzenlemeleri yapıldı. 
+	* Banka - Cari sınıfında transient anotasyon embeddable olarak düzeltildi.
+	* merkez bankası kurlarını alırken tarih girilmesi gerekmiyor..
+	* kasa hareket fişi moneyset düzenlemesi..
+	* id lerin generationType ları auto'dan table çevrildi.
+	* Seri numaralarına max 3 karakter limiti konuldu. 
+	* Kullanıcı e-postasına denetim eklendi.
+	* Sistem ayarları, seri numaraları sayfasından fon yönetimi ile ilgili alanlar kaldırıldı.
+
+30.01.2009
+	* Çek ve senet bölümleri ile ilgili bir çok düzenleme ve ek yapıldı
+		...
+		- Finance, bank ve account txn üzerinde düzenlemeler yapıldı.
+		- Yeni çek senet bordroları için döküman tipi eklendi
+		- Çek/ senet hareket iptali ve durum değişikliği ekranlarında gereksiz olan durum seçenekleri kaldırıldı.
+	* Çek ve senet bordroları ile ilgili entityler eklendi.
+	* Çek tarihçe (ChequeHistory) tablosundan txn tablo bağlantıları kaldırıldı.
+	* Şablonlarda müşterinin kişi/şirket olma durumu doğru kontrol edilir oldu. (VN-TCKN için)
+	* depo adresi yoksa (null) yeni adres nesnesi oluşturuyor artık
+	
+29.01.2009
+	* import sql de depo tanımlama sql inde eksik alanlar eklendi. 
+		(önceki haliyle address sınıfının alanları null olduğu için hata veriyordu.)
+	* Kur gösterim de ikon yokmuş, IE6 da bozuktu. İkon eklendi, metin düzeltildi.
+	
+28.01.2009
+	* Rapor jasper dosyalarında kriter düzenlemeleri yapıldı.
+	
+27.01.2009
+	* Cari hareket raporunun yerel döviz kriterine göre çalışmasındaki hata düzeltidi.
+	* Arama kriterlerinde metin ve benze arama düzenlemeleri (string, ilike çevrimleri) yapıldı.
+	* Cari bilgilerinin şehir bağlantısı düzenlendi. 
+		(ManyToOne annotation ı unutulduğundan foreign key, id olarak değil hash lenmiş olarak görünüyordu, düzeltildi.)
+	* Kurlar sayfasındaki tablonun kolon genişlikleri düzenlendi.
+	
+26.01.2009
+	* Şablon dosyalarda (satış irsaliyesi) düzenleme yapıldı.
+	* TCMB kur alışlarına ve kur tablosuna efektif alış ve satış alanları eklendi.
+	* Yönetim sayfasında sadece kullanıcı eklerken kullanıcı adı kontrolü yap.
+	
+23.01.2009
+	* Yönetim sayfasında Kullanıcı adı zaten kayıtlı ise kayıt yapma. 
+	* Şablon dosyalarda (satış ve irsaliyeli satış faturaları) localValue düzenlemesi yapıldı.
+	* Kasa ve cari durum raorlarında toplam düzenlemeleri
+	* Satış faturası yazdırma ve düzenleme ile ilgili sorun giderildi.
+	* Çek arama ekranına müşteri/firma çeki filtresi eklendi
+	* Faturalarda vergi tutarının yerel değeri veritabanına yazdırılıyor artık.
+	* İrsaliye önizlemede döviz tipi görünür yapıldı.
+	* Fatura önizlemede döviz tipi düzeltmesi.
+	* Paranın yazıya çevrilmesinde yuvarlama hatası düzeltildi.
+	* Çek sahibinin linki çek bilgisi yerine cari bilgisine yönlendirildi.
+	* Banka hareket raporunda isimlendirme ve dip toplam hatası düzeltildi.
+	* Cari hareket raporunda isimlendirme ve dip toplam hatası düzeltildi.
+	
+22.01.2009
+	* Faturayı kaydettiktn sonra view ekranına geçiş yapıldı.
+	* Yönetici kullanıcının şifresini değiştirmek zorunda kalmasın, kullanıcı yönetimi sayfasında zorunluluktan çıkarıldı.	
+	* Eski mesaj bilgileri temizleniyor, giriş yapmışken eskiden kalan şifre hatalı mesajı görünmüyor artık.
+	
+20.01.2009
+	* Çek - senet hareket iptal sayfasındaki hata düzeltildi
+	
+19.01.2009
+	* Aktif popup penceresini ESC tuşu ile kapatma desteği eklendi.
+
+16.01.2009
+	* Döviz çifti ekleme sorunu giderildi.
+	* Döviz tanımı ekleme sorunu giderildi.
+	* Ülke tanımındaki sorun giderildi.
+
+15.01.2009
+	* Vergi eklemedeki hata düzeltildi.
+	* Yönetim > Sistem Bilgileri düzenlemenin çalışmaması düzeltildi.
+	* Çek / Senet eklemede para giriş alanlarına maskeleme eklendi.
+	* Cari Durum Raporu bölümünde cari arama sorunu düzeltildi.

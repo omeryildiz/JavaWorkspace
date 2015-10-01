@@ -1,0 +1,207 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="admin"/>
+            <ui:param name="curpage" value="user"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/admin/user.xhtml">
+                <h:outputText value="#{messages['module.caption.Role']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{roleHome.createNew()}" rendered="#{s:hasPermission('role', 'insert')}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['role.action.Add']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Role']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                
+                		<r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{roleList}"
+                                 
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['role.caption.List']}"/>
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{roleHome.edit(cty)}">
+                                <h:outputText value="#{cty.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{roleHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['role.hint.EmptyList']}" rendered="#{userList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/shield.gif" alt="#{messages['role.img.Form']}"/>
+                            <h:outputText value="#{messages['role.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        
+                        <s:div>
+                            
+                            
+                            <s:decorate template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['role.label.Name']}"/></ui:define>
+                                <h:inputText value="#{role.name}" styleClass="small" required="true">
+                                	<f:validateLength maximum="10"/>
+                                </h:inputText>
+                            </s:decorate>
+                            
+                        </s:div>
+                        
+                        <s:div>
+                            
+                            <s:decorate template="/layout/edit.xhtml" >
+                                <ui:define name="label"><h:outputText value="#{messages['role.label.Info']}"/></ui:define>
+                                <h:inputText value="#{role.info}" styleClass="large" required="false"/>
+                            </s:decorate>
+                        </s:div>
+                        
+                    </h:panelGrid>
+
+                    <script type="text/javascript">
+                        jQuery(document).ready(function() {
+                            expandTable.init("permissionTable");
+                            initRoleTable();
+                        });
+                    </script>
+
+                    <table id="permissionTable" class="rich-table">
+                        <thead class="rich-table-thead">
+                            <tr class="rich-table-header">
+                                <th class="rich-table-headercell">#{messages['role.label.RightTable']}</th>
+                                <th class="rich-table-headercell"><input id="r:s" type="checkbox" class="checkAll"/> #{messages['role.label.Select']}</th>
+                                <th class="rich-table-headercell"><input id="r:i" type="checkbox" class="checkAll"/> #{messages['role.label.Insert']}</th>
+                                <th class="rich-table-headercell"><input id="r:u" type="checkbox" class="checkAll"/> #{messages['role.label.Update']}</th>
+                                <th class="rich-table-headercell"><input id="r:d" type="checkbox" class="checkAll"/> #{messages['role.label.Delete']}</th>
+                                <th class="rich-table-headercell"><input id="r:e" type="checkbox" class="checkAll"/> #{messages['role.label.Exec']}</th>
+                                <th class="rich-table-headercell">#{messages['role.label.Other']}</th>
+                            </tr>
+                        </thead>
+                        <a:repeat id="pgs" value="#{roleHome.uiModel}" var="pg" rowKeyVar="pgrk">
+                            <tbody>
+                                <tr class="rich-table-subheader rich-table-thead">
+                                    <td class="rich-table-subheadercell toggleCell">#{messages[ut:concat('permission.label.',pg.name)]}</td>
+                                    <td class="rich-table-subheadercell"><input id="g:s:#{pgrk}" type="checkbox" class="checkGroup ps"/> #{messages['role.label.Select']}</td>
+                                    <td class="rich-table-subheadercell"><input id="g:i:#{pgrk}" type="checkbox" class="checkGroup pi"/> #{messages['role.label.Insert']}</td>
+                                    <td class="rich-table-subheadercell"><input id="g:u:#{pgrk}" type="checkbox" class="checkGroup pu"/> #{messages['role.label.Update']}</td>
+                                    <td class="rich-table-subheadercell"><input id="g:d:#{pgrk}" type="checkbox" class="checkGroup pd"/> #{messages['role.label.Delete']}</td>
+                                    <td class="rich-table-subheadercell"><input id="g:e:#{pgrk}" type="checkbox" class="checkGroup pe"/> #{messages['role.label.Exec']}</td>
+                                    <td class="rich-table-subheadercell">#{messages['role.label.Other']}</td>
+                                </tr>
+                                <a:repeat id="pds" value="#{pg.permissions}" var="pd" rowKeyVar="pdrk">
+                                    <tr class="rich-table-row child">
+                                        <td class="rich-table-cell">#{messages[ut:concat('permission.label.',pd.definition.target)]}</td>
+                                        <td class="rich-table-cell"><h:selectBooleanCheckbox id="s" value="#{pd.select}" rendered="#{pd.definition.hasSelectAction()}" styleClass="checkOne ps gs#{pgrk}"/> </td>
+                                        <td class="rich-table-cell"><h:selectBooleanCheckbox id="i" value="#{pd.insert}" rendered="#{pd.definition.hasInsertAction()}" styleClass="checkOne pi gi#{pgrk}"/></td>
+                                        <td class="rich-table-cell"><h:selectBooleanCheckbox id="u" value="#{pd.update}" rendered="#{pd.definition.hasUpdateAction()}" styleClass="checkOne pu gu#{pgrk}"/></td>
+                                        <td class="rich-table-cell"><h:selectBooleanCheckbox id="d" value="#{pd.delete}" rendered="#{pd.definition.hasDeleteAction()}" styleClass="checkOne pd gd#{pgrk}"/></td>
+                                        <td class="rich-table-cell"><h:selectBooleanCheckbox id="e" value="#{pd.exec}" rendered="#{pd.definition.hasExecAction()}" styleClass="checkOne pe ge#{pgrk}"/></td>
+                                        <td class="rich-table-cell">
+                                            <s:fragment rendered="#{not empty pd.otherActionList()}">
+                                            <span class="oatoggler" style="border-bottom: 1px solid gray">
+                                                <input id="oa:#{pgrk}:#{pdrk}" type="checkbox" class="checkOther"/>
+                                                <label for="oa:#{pgrk}:#{pdrk}" class="checkboxLabel"> #{messages['role.label.OtherRights']}</label>
+                                            </span>
+
+                                            <table id="oat:#{pgrk}:#{pdrk}" class="oatable">
+                                            <a:repeat value="#{pd.otherActionList()}" var="oa" rowKeyVar="oark" id="oa">
+                                                <tr><td>
+                                                <h:selectBooleanCheckbox id="o" value="#{pd.otherActions[oa]}" styleClass="checkOne po go#{pgrk}#{pdrk}"/>
+                                                </td><td>
+                                                <h:outputLabel for="o" value="#{messages[ut:concat('permission.label.',oa)]}"/>
+                                                </td></tr>
+                                            </a:repeat>
+                                            </table>
+                                            </s:fragment>
+                                        </td>
+                                    </tr>
+                                </a:repeat>
+                            </tbody>
+                        </a:repeat>
+                    </table>
+
+                    <div class="actionButtons">
+                        <h:commandButton id="saveAndNew" 
+                                         value="#{messages['general.button.SaveAndNew']}" 
+                                         action="#{roleHome.saveAndNew()}"
+                                         rendered="#{s:hasPermission('role', 'update')}"
+                                         styleClass="button"/>  
+                        
+                        <h:commandButton id="save" 
+                                         value="#{messages['general.button.Save']}" 
+                                         action="#{roleHome.save()}"
+                                         rendered="#{s:hasPermission('role', 'insert')}"
+                                         styleClass="button"/>  
+
+						<s:button id="delete" 
+                                  value="#{messages['general.button.Delete']}" 
+                                  action="#{roleHome.delete()}"
+                                  rendered="#{not empty user.id and s:hasPermission('role', 'delete')}"
+                                  onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                                  styleClass="button"/>
+                        
+                        <s:button id="done" 
+                                  value="#{messages['general.button.Close']}"
+                                  action="#{roleHome.close()}"
+                                  styleClass="button"/>
+                        
+                    </div>
+                    
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>
+

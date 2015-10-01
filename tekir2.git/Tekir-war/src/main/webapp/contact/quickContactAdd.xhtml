@@ -1,0 +1,220 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+
+	<h:form id="form">
+        <input type="hidden" id="retcontact" value="" />
+
+		<a:region>
+
+		<s:div id="messagesDiv">
+			<ui:include src="/layout/messages.xhtml" />
+		</s:div>
+		
+		<s:div id="contactAddDiv">
+			<h:panelGrid columns="3" >
+				<s:div id="popDiv">
+					<s:decorate template="/layout/edit.xhtml">
+                           <ui:define name="label"><h:outputText value="#{messages['contact.label.ContactType']}"/></ui:define>
+						<h:selectOneRadio id="corp"
+							value="#{quickContactAddHome.contact.person}"
+							title="Select one" border="0" styleClass="radio">
+							<f:selectItem id="corp1" itemLabel="Kişi" itemValue="true" />
+							<f:selectItem id="corp2" itemLabel="Şirket" itemValue="false" />
+							<a:support ajaxSingle="true" reRender="owner, owner2"
+								event="onchange" />
+						</h:selectOneRadio>
+					</s:decorate>
+                       
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.Code']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contact.code}"
+							styleClass="small" required="true" />
+					</s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.Name']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contact.name}"
+							styleClass="large" required="true" />
+					</s:decorate>
+
+					<a:outputPanel id="owner">
+					<s:decorate template="/layout/edit.xhtml" rendered="#{quickContactAddHome.contact.person}">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.Midname']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contact.midname}"
+							styleClass="large" required="false" />
+					</s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml" rendered="#{quickContactAddHome.contact.person}">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.Surname']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contact.surname}"
+							styleClass="large" required="#{quickContactAddHome.contact.person}" />
+					</s:decorate>
+					
+					<s:decorate template="/layout/edit.xhtml" rendered="#{quickContactAddHome.contact.person eq false}">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.quick.Company']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contact.company}"
+							styleClass="large" required="true"/>
+					</s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml" rendered="#{quickContactAddHome.contact.person eq false}">
+						<ui:define name="label">
+							<h:outputText
+								value="#{messages['contact.label.Representative']}" />
+						</ui:define>
+						<h:inputText
+							value="#{quickContactAddHome.contact.representative}"
+							styleClass="large" />
+					</s:decorate>
+					</a:outputPanel>							
+				</s:div>
+
+				<s:div>
+					<a:outputPanel id="owner2">
+					<s:decorate template="/layout/edit.xhtml" rendered="#{quickContactAddHome.contact.person eq true}">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.SSN']}" />
+						</ui:define>
+						<ui:remove>FIXME: Zorunlu giris kontrolu opsiyonlardan ayarlanir olacak</ui:remove>
+						<h:inputText value="#{quickContactAddHome.contact.ssn}"
+							styleClass="middle" required="false"/>
+					</s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml" rendered="#{quickContactAddHome.contact.person eq false}">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.TaxOffice']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contact.taxOffice}"
+							styleClass="middle" required="true"/>
+					</s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml" rendered="#{quickContactAddHome.contact.person eq false}">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.TaxNumber']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contact.taxNumber}"
+							styleClass="middle" required="true"/>
+					</s:decorate>
+					
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.label.Phone']}" />
+						</ui:define>
+						<h:inputText value="#{quickContactAddHome.contactPhone.phone.countryCode}" 
+							style="width:30px;" alt="phone_area"/>
+						<h:outputText value="-" style="padding-left:5px;padding-right:5px;"/>
+						<h:inputText value="#{quickContactAddHome.contactPhone.phone.fullNumber}" 
+							styleClass="phone" style="width:122px"/>
+					</s:decorate>
+					</a:outputPanel>
+				</s:div>
+				<s:div>					
+					
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['contact.caption.Address']}" />
+						</ui:define>
+						<h:inputTextarea
+							value="#{quickContactAddHome.contactAddress.address.street}"
+							styleClass="middle" rows="2" />
+					</s:decorate>
+					
+					<a:region renderRegionOnly="true">
+
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['address.label.Country']}" />
+						</ui:define>
+						<h:selectOneMenu id="countryPop"
+							value="#{quickContactAddHome.contactAddress.address.country}"
+							styleClass="middle" required="true">
+							<s:selectItems value="#{generalSuggestion.countryList}"
+								var="acc" label="#{acc.name}"
+								noSelectionLabel="#{messages['general.value.SelectOne']}"
+								hideNoSelectionLabel="false" 
+								itemValue="#{acc.name}"/>
+							<a:support event="onchange" reRender="cityPop,provincePop" ajaxSingle="true" status="commonAjaxStatus"/>
+						</h:selectOneMenu>
+					</s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['address.label.City']}" />
+						</ui:define>
+						<h:selectOneMenu id="cityPop"
+							value="#{quickContactAddHome.contactAddress.city}"
+							styleClass="middle">
+							<s:convertEntity />
+							<s:selectItems value="#{generalSuggestion.getCityList(quickContactAddHome.contactAddress.address.country)}"
+								var="acc" label="#{acc.name}"
+								noSelectionLabel="#{messages['general.value.SelectOne']}"
+								hideNoSelectionLabel="true" />
+							<a:support event="onchange" reRender="provincePop"
+								ajaxSingle="true" />
+						</h:selectOneMenu>
+					</s:decorate>
+
+					<s:div id="provincePop">
+						<s:decorate template="/layout/edit.xhtml" 
+							rendered="#{quickContactAddHome.contactAddress.address.country eq messages['country.label.Turkey']}" >
+							<ui:define name="label"  >
+								<h:outputText value="#{messages['address.label.Province']}" />
+							</ui:define>					
+							<h:selectOneMenu id="province" value="#{quickContactAddHome.contactAddress.province}" 
+								styleClass="middle" required="false" >
+								<s:convertEntity />
+								<s:selectItems value="#{generalSuggestion.getProvinceList(quickContactAddHome.contactAddress.city)}"
+									var="it" label="#{it.name}" 
+									noSelectionLabel="#{messages['general.value.None']}"
+									hideNoSelectionLabel="false" />
+							</h:selectOneMenu>
+						</s:decorate>
+					</s:div>
+
+					</a:region>
+					
+					<s:decorate template="/layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages['address.label.Zip']}" />
+						</ui:define>
+						<h:inputText
+							value="#{quickContactAddHome.contactAddress.address.zip}"
+							styleClass="middle zipcode"/>
+					</s:decorate>
+
+				</s:div>
+			</h:panelGrid>
+		
+			<div class="actionButtons">
+				<a:commandButton id="save"
+					value="#{messages['general.button.Ok']}"
+					action="#{quickContactAddHome.saveContactFromPopup()}" styleClass="button"
+					oncomplete="if (!#{quickContactAddHome.facesMessagesHasErrorMessages()}){ closeQuickContactAdd('[#{quickContactAddHome.contact.code}] #{quickContactAddHome.contact.name}');};setMasks();" 
+					reRender="messagesDiv,contactAddDiv,${reRenderIds}" limitToList="true"/>
+				<a:commandButton id="cancel" immediate="true"
+					value="#{messages['general.button.Cancel']}"
+					action="#{quickContactAddHome.closeContact()}" styleClass="button"
+					oncomplete="closeQuickContactAdd('')" />
+			</div>
+		</s:div>
+		
+		</a:region>		
+
+	</h:form>
+
+</ui:composition>

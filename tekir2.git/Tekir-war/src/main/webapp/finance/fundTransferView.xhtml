@@ -1,0 +1,265 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewAccount"/>
+            <ui:param name="cursubitem" value="newFundTransferView"/>
+        </ui:include>
+    </ui:define>
+
+	   <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/fundTransferBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.FundTransferBrowse']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/finance/fundTransfer.xhtml" propagation="none" rendered="#{s:hasPermission('fundTransfer', 'insert')}">
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['fundTransfer.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+
+
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.FundTransfer']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif"
+							alt="#{messages['fundTransfer.img.Form']}" />
+						<h:outputText value="#{messages['fundTransfer.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<table>
+							<tr>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['fundTransfer.label.Serial']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{fundTransfer.serial eq null}" />
+										<h:outputText value="#{fundTransfer.serial}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['fundTransfer.label.Reference']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{fundTransfer.reference eq null}" />
+										<h:outputText value="#{fundTransfer.reference}" />
+									</s:decorate>
+
+                                    <s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['fundTransfer.label.Code']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{fundTransfer.code eq null}" />
+										<h:outputText value="#{fundTransfer.code}" />
+									</s:decorate>
+
+								</s:div></td>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['fundTransfer.label.Info']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{fundTransfer.info eq null}" />
+										<h:outputText value="#{fundTransfer.info}"
+											styleClass="exlarge" rows="6" />
+									</s:decorate>
+
+								</s:div></td>
+							</tr>
+						</table>
+					</s:fragment>
+
+					<s:fragment>
+						<table>
+						<tr>
+
+								<s:div>
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['fundTransfer.label.Date']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{fundTransfer.date eq null}" />
+										<h:outputText value="#{fundTransfer.date}">
+											<s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+										</h:outputText>
+									</s:decorate>
+
+									
+
+								</s:div>
+						</tr>
+						
+						</table>
+					</s:fragment>
+
+				</h:panelGrid>
+
+				<r:dataTable id="its" var="item" value="#{fundTransfer.items}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0">
+
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineCode']}" />
+							</r:column>
+                            <r:column>
+                                <h:outputText value="#{messages['fundTransfer.label.FromAccount']}" />
+                            </r:column>
+                            <r:column>
+                                <h:outputText value="#{messages['fundTransfer.label.ToAccount']}" />
+                            </r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineInfo']}" />
+							</r:column>
+
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Amount']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Currency']}" />
+							</r:column>
+
+						</r:columnGroup>
+					</f:facet>
+
+					<r:column style="width:41px; border:0">
+						<h:outputText value="#{item.lineCode}" />
+					</r:column>
+
+                    <r:column style="width:151px; border:0">
+                        <s:decorate>
+                            <h:outputText value="#{item.fromAccount.code}">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.accountList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                            </h:outputText>
+                        </s:decorate>
+                    </r:column>
+                    <r:column style="width:151px; border:0">
+                        <s:decorate>
+                            <h:outputText value="#{item.toAccount.code}">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.accountList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                            </h:outputText>
+                        </s:decorate>
+                    </r:column>
+					<r:column style="width:201px; border:0">
+						<h:outputText value="#{item.info}" />
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.amount.value}"
+							styleClass="amountField" >
+							<f:convertNumber pattern="#,##0.00"/>
+						</h:outputText>
+
+					</r:column>
+
+					<r:column  style="width:41px; border:0">
+						<h:outputText value="#{item.amount.currency}"
+							styleClass="ccyField" />
+					</r:column>
+
+				</r:dataTable>
+
+
+                    <h:panelGrid columns="4" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+                        <s:div style="margin-right:4px;">
+
+                            <r:dataTable id="ccyRates"
+                                         var="item"
+                                         value="#{fundTransfer.currencyRates}"
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['fundTransfer.caption.CcyRates']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.currencyPair.caption}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.ask}" styleClass="tiny"/>
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+
+                        <s:div style="margin-left:4px;">
+                            <r:panel>
+                                <f:facet name="header">
+
+                                    <s:div>
+                                        <h:outputText value="#{messages['fundTransfer.caption.GrandTotal']}" />
+                                    </s:div>
+                                </f:facet>
+
+                                <h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+
+                                    <h:outputText value="#{messages['fundTransfer.label.TotalAmount']} :" />
+                                    <h:outputText value="#{fundTransfer.totalAmount}" />
+                                </h:panelGrid>
+                            </r:panel>
+                        </s:div>
+                    </h:panelGrid>
+
+			</r:panel>
+
+
+
+
+                <div class="actionButtons">
+
+<ui:remove>
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{fundTransferHome.print()}" styleClass="button" />
+</ui:remove>
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{fundTransferHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{fundTransferHome.close()}" styleClass="button" />
+			</div>
+
+
+            
+		</h:form>
+    </ui:define>
+
+</ui:composition>

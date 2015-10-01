@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cari_durum" pageWidth="1133" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1073" leftMargin="30" rightMargin="30" topMargin="0" bottomMargin="0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.1000000000000005"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/home/rustem/NetBeansProjects/tekir/view/jasper/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pCode" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pName" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="pCategory" class="java.lang.Long" isForPrompting="false"/>
+	<parameter name="pBDate" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="pEDate" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="pActive" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="pComType" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pType" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pEx1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pEx2" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pOrg" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pDocCode" class="java.lang.String"/>
+	<parameter name="pDocu" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pWorkBunchId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pProcessType" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pConId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pProductLabel" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select cn.code, cn.FULLNAME as cari, cn.person, cn.company, ft.ccy, sum(ft.ccyval * case when ft.finance_action = 1 then -1 else 1 end ) as toplamdoviz,
+sum(ft.lcyval * case when ft.finance_action = 1 then -1 else 1 end ) as toplamytl,
+  coalesce( crr.ASK, 1) as ytlask, ft.finance_action
+from FINANCE_TXN ft
+inner join CONTACT cn on cn.id = ft.contact_id
+left outer join CONTACT_CATEGORY cat on cat.id = cn.CONTACT_CATEGORY_ID
+left outer join CURRENCIES cur on cur.code = ft.ccy
+left outer join CURRENCY_PAIR cpr on cpr.HARD_CURRENCY_ID = cur.id
+left outer join CURRENCY_RATE crr on crr.CURRENCY_PAIR = cpr.id
+where  ( ($P{pActive} is null) or (ft.ISACTIVE = $P{pActive}))
+and ( ($P{pCode} is null) or (lower(cn.code) like concat('%', lower($P{pCode}) ,'%') ))
+and ( ($P{pName} is null) or (lower(cn.name) like concat('%', lower($P{pName}) ,'%' )))
+and ( ( $P{pCategory} is null ) or ( cat.id = $P{pCategory} ) )
+and ( ($P{pBDate} is null) or (ft.TXN_DATE  >= $P{pBDate}))
+and ( ($P{pEDate} is null) or (ft.TXN_DATE  <= $P{pEDate} ))
+and ( ( crr.RATE_DATE = current_date ) or ( crr.RATE_DATE is null ) )
+and ( ( $P{pComType} is null ) or ( cn.PERSON = $P{pComType} ) )
+and ( ($P{pDocCode} is null) or (lower(ft.code) like concat('%', lower($P{pDocCode}) ,'%') ))
+and ( ( $P{pDocu} = 0  ) or ( ft.DOCUMENT_TYPE = $P{pDocu} ) )
+and ( ( $P{pProcessType} is null ) or ( ft.PROCESS_TYPE = $P{pProcessType} ) )
+and (($P{pType} is null) or ($P{pType} like 'customerType' && cn.CUSTOMER_TYPE = TRUE)
+or ($P{pType} like 'providerType' && cn.PROVIDER_TYPE = TRUE)
+or ($P{pType} like 'agentType' && cn.AGENT_TYPE = TRUE)
+or ($P{pType} like 'personnelType' && cn.PERSONNEL_TYPE = TRUE)
+or ($P{pType} like 'branchType' && cn.BRANCH_TYPE = TRUE)
+or ($P{pType} like 'contactType' && cn.CONTACT_TYPE = TRUE))
+and ( ( $P{pEx1} is null ) or ( cn.EXCODE1 = $P{pEx1} ) )
+and ( ( $P{pEx2} is null ) or ( cn.EXCODE2 = $P{pEx2} ) )
+and ( ( $P{pOrg} is null ) or ( cn.ORGANIZATION_ID = $P{pOrg} ) )
+and ( ( $P{pConId} is null ) or ( cn.ID = $P{pConId} ) )
+and ( ( $P{pWorkBunchId} is null ) or ( ft.WORK_BUNCH_ID = $P{pWorkBunchId} ) )
+group by cn.code, cn.FULLNAME, ft.ccy, crr.ask, ft.finance_action
+order by cn.code, ft.ccy]]>
+	</queryString>
+	<field name="code" class="java.lang.String"/>
+	<field name="cari" class="java.lang.String"/>
+	<field name="person" class="java.lang.Boolean"/>
+	<field name="company" class="java.lang.String"/>
+	<field name="ccy" class="java.lang.String"/>
+	<field name="toplamdoviz" class="java.math.BigDecimal"/>
+	<field name="toplamytl" class="java.math.BigDecimal"/>
+	<field name="ytlask" class="java.math.BigDecimal"/>
+	<field name="finance_action" class="java.lang.Integer"/>
+	<variable name="sumBorc" class="java.lang.Double" resetType="Group" resetGroup="CCY">
+		<variableExpression><![CDATA[new Double(($F{finance_action}.intValue() == 0 ) ? ( $V{sumBorc}.doubleValue() + $F{toplamdoviz}.doubleValue() ) : $V{sumBorc}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="sumAlacak" class="java.lang.Double" resetType="Group" resetGroup="CCY">
+		<variableExpression><![CDATA[new Double(($F{finance_action}.intValue() == 1 ) ? ( $V{sumAlacak}.doubleValue() + $F{toplamdoviz}.doubleValue() ) : $V{sumAlacak}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="tryBorc" class="java.lang.Double" resetType="Group" resetGroup="CCY">
+		<variableExpression><![CDATA[new Double( ( $F{finance_action}.intValue() == 0 ) ? $V{sumBorc}.doubleValue() * $F{ytlask}.doubleValue() : $V{tryBorc}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="tryAlacak" class="java.lang.Double" resetType="Group" resetGroup="CCY">
+		<variableExpression><![CDATA[new Double(($F{finance_action}.intValue() == 1 ) ? $V{sumAlacak}.doubleValue() * $F{ytlask}.doubleValue() : $V{tryAlacak}.doubleValue() )]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<group name="CARI">
+		<groupExpression><![CDATA[$F{cari}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch"/>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="CCY">
+		<groupExpression><![CDATA[$F{ccy}]]></groupExpression>
+		<groupHeader>
+			<band splitType="Stretch"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="16" splitType="Stretch">
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField" stretchType="RelativeToBandHeight" x="100" y="0" width="140" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" isBold="false" pdfFontName="Helvetica" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{person}.equals( Boolean.TRUE ) ? ($F{cari}) : $F{company}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField" stretchType="RelativeToBandHeight" x="240" y="0" width="100" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ccy}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-4" stretchType="RelativeToBandHeight" x="340" y="0" width="100" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{sumBorc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-5" stretchType="RelativeToBandHeight" x="440" y="0" width="100" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{sumAlacak}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-6" stretchType="RelativeToBandHeight" x="540" y="0" width="100" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[new Double($V{sumBorc}.doubleValue() + $V{sumAlacak}.doubleValue())]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-7" stretchType="RelativeToBandHeight" x="640" y="0" width="100" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{ytlask}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-8" stretchType="RelativeToBandHeight" x="740" y="0" width="100" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{tryBorc}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-9" stretchType="RelativeToBandHeight" x="840" y="0" width="100" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{tryAlacak}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField-10" stretchType="RelativeToBandHeight" x="940" y="0" width="100" height="16"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[new Double($V{tryBorc}.doubleValue() + $V{tryAlacak}.doubleValue())]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement key="textField" stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{code}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText" x="240" y="0" width="400" height="30"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="14" isBold="true" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[CARİ DURUM RAPORU]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement key="textField" x="640" y="0" width="100" height="30"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="9" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText" x="100" y="30" width="140" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[CARİ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" x="240" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[DÖVİZ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-1" x="340" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[BORÇ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-2" x="440" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[ALACAK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="540" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[BAKİYE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" x="640" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[KUR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-5" x="740" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[TRL BORÇ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" x="840" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[TRL ALACAK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-7" x="940" y="30" width="100" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[TRL BAKİYE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" x="0" y="30" width="100" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Lucida Sans" size="10" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1254"/>
+				</textElement>
+				<text><![CDATA[CARİ KODU]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="13" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" mode="Transparent" x="0" y="0" width="240" height="13" forecolor="#666666"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Lucida Sans" size="7" isBold="true" isItalic="false" pdfEncoding="Cp1254"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{pProductLabel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

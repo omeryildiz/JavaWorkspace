@@ -1,0 +1,33 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:a="http://richfaces.org/a4j"
+                >
+
+
+    <a:repeat value="#{column}" var="dashlet">
+        <li class="widget" id="#{dashlet}">
+
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/dashlets/#{dashlet}.png" rendered="#{dashletRegistery.hasCapability( dashlet, 'hasIcon' )}" />
+                        <h:outputText value="#{messages[ut:concat( 'dashlet.caption.',  dashlet )]}" />
+                    </s:fragment>
+                </f:facet>
+                <div id="#{dashlet}_view" >
+                    <h:panelGrid columns="1">
+                        <h:graphicImage url="/img/ajax-load-mini.gif" />
+                    </h:panelGrid>
+                </div>
+            </r:panel>
+        </li>
+    </a:repeat>
+
+</ui:composition>

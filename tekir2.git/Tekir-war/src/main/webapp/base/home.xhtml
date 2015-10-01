@@ -1,0 +1,77 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/dashboardTemplate.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="home"/>
+            <ui:param name="curpage" value="home"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:remove>
+    <ui:define name="rightBar">
+
+        <h:form style="display:inline">
+            <a:commandLink action="#{dashboard.editLayout()}"
+                           oncomplete="Richfaces.showModalPanel('dashboard_layout')"
+                           ajaxSingle="true"
+                           reRender="dash_layout">
+                <h:graphicImage url="/img/wrench_orange.gif" />
+            </a:commandLink>
+        </h:form>
+
+        <ui:remove>
+            <a href="#" onclick="Richfaces.showModalPanel('documentpanel')">
+                <h:graphicImage url="/img/page_white_add.png"
+                                alt="#{messages['workOrder.img.Form']}" />
+                <h:outputText value="#{messages['module.label.NewDocument']}" />
+            </a>
+        </ui:remove>
+
+    </ui:define>
+    </ui:remove>
+    
+    <ui:define name="body">
+
+
+        <ul class="dash-tabpanel">
+            <li class="dash-tab" style="float: right">
+                <s:link view="/dashboard/dashboardEditor.xhtml" propagation="none">
+                    <h:graphicImage url="/img/dashboard/hammer-screwdriver.png" title="Dashboard Düzenle"/>
+
+                </s:link>
+            </li>
+            <a:repeat value="#{dashboardManager.data.tabs}" var="tab" rowKeyVar="rowKey">
+                <li class="dash-tab #{dashboardManager.dashboard.name eq tab.name ? 'dash-tab-selected' : ''}">
+                    <s:link view="/base/home.xhtml" propagation="none">
+                        <f:param name="tab" value="#{rowKey}" />
+                        #{tab.name}
+                    </s:link>
+                </li>
+            </a:repeat>
+
+        </ul>
+
+        <ui:include src="/layout/messages.xhtml" />
+
+        <ui:include src="/dashboard/layout#{dashboardManager.dashboard.layoutIndex}.xhtml" />
+
+        <ui:remove>
+        <h1>
+            <h:outputText value="#{systemProperties.properties['branding.title']}"/>
+            #{systemProperties.properties['application.version']}
+        </h1>
+        </ui:remove>
+
+    </ui:define> 
+
+</ui:composition>

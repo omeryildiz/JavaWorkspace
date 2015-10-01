@@ -1,0 +1,598 @@
+<ul xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:r="http://richfaces.ajax4jsf.org/rich"
+    xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <li class="#{curpage eq 'financeNew' ? 'current' : '' }">
+        <a href="#"><h:outputText value="#{messages['general.button.New']}" /></a>
+        <ul>
+            <li class="#{curitem eq 'financeNewAccount' ? 'current' : '' }">
+                <a href="#">Kasa İşlemi</a>
+                <ul>
+                    <li class="#{cursubitem eq 'newCollection' ? 'current' : '' }">
+                        <s:link view="/finance/collection.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['collection.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'newPayment' ? 'current' : '' }">
+                        <s:link view="/finance/payment.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['payment.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'newNoteCollection' ? 'current' : '' }">
+                        <s:link view="/finance/debitCreditNoteCollection.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['debitCreditNoteCollection.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'newNotePayment' ? 'current' : '' }">
+                        <s:link view="/finance/debitCreditNotePayment.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['debitCreditNotePayment.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'newVirement' ? 'current' : '' }">
+                        <s:link view="/finance/debitCreditVirement.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['debitCreditVirement.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'newFundTransfer' ? 'current' : '' }">
+                        <s:link view="/finance/fundTransfer.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['fundTransfer.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <ui:remove>
+	                    <li class="#{cursubitem eq 'newExpenseNote' ? 'current' : '' }">
+	                        <s:link view="/finance/expenseNote.xhtml" propagation="none">
+	                            <f:param name="eid" value="0"/>
+	                            <h:graphicImage url="/img/add.gif" />
+	                            <h:outputText value="#{messages['expenseNote.action.Add']}" />
+	                        </s:link>
+	                    </li>
+                    </ui:remove>
+                </ul>
+            </li>
+            <li class="#{curitem eq 'financeNewInvoice' ? 'current' : '' }">
+                <a href="#">Fatura İşlemi</a>
+                <ul>
+                    <li class="#{cursubitem eq 'purchaseInvoice' ? 'current' : '' }">
+                        <s:link view="/finance/newpurchaseInvoice.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['purchaseInvoice.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'purchaseShipmentInvoice' ? 'current' : '' }">
+                        <s:link view="/finance/newpurchaseShipmentInvoice.xhtml" propagation="none">
+                            <f:param name="it" value="1"/>
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['purchaseInvoice.action.AddShipmentInvoice']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'purchaseReturnInvoice' ? 'current' : '' }">
+                        <s:link view="/finance/purchaseReturnInvoice.xhtml">
+                            <f:param name="it" value="2"/>
+                            <f:param name="at" value="0"/>
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['purchaseInvoice.action.AddPurchaseReturnInvoice']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'saleInvoice' ? 'current' : '' }">
+                        <s:link view="/finance/newsaleInvoice.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['saleInvoice.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'saleShipmentInvoice' ? 'current' : '' }">
+                        <s:link view="/finance/newsaleShipmentInvoice.xhtml" propagation="none">
+                            <f:param name="it" value="1"/>
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['saleInvoice.action.AddShipmentInvoice']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'saleReturnInvoice' ? 'current' : '' }">
+                        <s:link view="/finance/saleReturnInvoice.xhtml">
+                            <f:param name="it" value="2"/>
+                            <f:param name="at" value="0"/>
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['saleInvoice.action.AddSaleReturnInvoice']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'retailSaleInvoice' ? 'current' : '' }">
+                        <s:link view="/finance/retailSaleInvoice.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['retailSaleInvoice.action.Add']}" />
+                        </s:link>
+                    </li>
+                </ul>
+            </li>
+            <li class="#{curitem eq 'financeNewTransfer' ? 'current' : '' }">
+                <a href="#">Para Transfer İşlemi</a>
+                <ul>
+                    <li class="#{cursubitem eq 'bankToContactTransfer' ? 'current' : '' }">
+                        <s:link view="/finance/bankToContactTransfer.xhtml" propagation="none">
+                            <f:param name="eid" value="0" />
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['bankToContactTransfer.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'contactToBankTransfer' ? 'current' : '' }">
+                        <s:link view="/finance/contactToBankTransfer.xhtml" propagation="none">
+                            <f:param name="eid" value="0" />
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['contactToBankTransfer.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'bankToBankTransfer' ? 'current' : '' }">
+                        <s:link view="/finance/bankToBankTransfer.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['bankToBankTransfer.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'bankToAccountTransfer' ? 'current' : '' }">
+                        <s:link view="/finance/bankToAccountTransfer.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['bankToAccountTransfer.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'accountToBankTransfer' ? 'current' : '' }">
+                        <s:link view="/finance/accountToBankTransfer.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['accountToBankTransfer.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'foreignExchange' ? 'current' : '' }">
+                        <s:link view="/finance/foreignExchange.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['foreignExchange.action.Add']}" />
+                        </s:link>
+                    </li>
+
+                </ul>
+            </li>
+            <li class="#{curitem eq 'financeNewCheque' ? 'current' : '' }">
+                <a href="#">Çek İşlemi</a>
+                <ul>
+                    <li class="#{cursubitem eq 'chequeStub' ? 'current' : '' }">
+                        <s:link view="/finance/chequeStub.xhtml" propagation="none">
+                            <f:param name="eid" value="0" />
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeStub.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'chequeFromContactPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/chequeFromContactPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeFromContactPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'chequeToContactPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/chequeToContactPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeToContactPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'chequeToBankAssurancePayroll' ? 'current' : '' }">
+                        <s:link view="/finance/chequeToBankAssurancePayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeToBankAssurancePayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'chequeToBankPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/chequeToBankPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeToBankPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'chequeCollectedAtBankPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/chequeCollectedAtBankPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeCollectedAtBankPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'chequeToAccountCollectionPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/chequeToAccountCollectionPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeToAccountCollectionPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'chequeToAccountPaymentPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/chequeToAccountPaymentPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['chequeToAccountPaymentPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                </ul>
+            </li>
+            <li class="#{curitem eq 'financeNewPromissory' ? 'current' : '' }">
+                <a href="#">Senet İşlemi</a>
+                <ul>
+                    <li class="#{cursubitem eq 'promissoryFromContactPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/promissoryFromContactPayroll.xhtml"  propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['promissoryFromContactPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'promissoryToContactPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/promissoryToContactPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['promissoryToContactPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'promissoryToBankAssurancePayroll' ? 'current' : '' }">
+                        <s:link view="/finance/promissoryToBankAssurancePayroll.xhtml"  propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['promissoryToBankAssurancePayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'promissoryToBankPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/promissoryToBankPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['promissoryToBankPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'promissoryCollectedAtBankPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/promissoryCollectedAtBankPayroll.xhtml" propagation="none">
+                            <f:param name="eid" value="0"/>
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['promissoryCollectionAtBankPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'promissoryToAccountCollectionPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/promissoryToAccountCollectionPayroll.xhtml"
+                                propagation="begin">
+                            <f:param name="eid" value="0" />
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['promissoryToAccountCollectionPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                    <li class="#{cursubitem eq 'promissoryToAccountPaymentPayroll' ? 'current' : '' }">
+                        <s:link view="/finance/promissoryToAccountPaymentPayroll.xhtml"
+                                propagation="begin">
+                            <f:param name="eid" value="0" />
+                            <h:graphicImage url="/img/add.gif" />
+                            <h:outputText value="#{messages['promissoryToAccountPaymentPayroll.action.Add']}" />
+                        </s:link>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'financeEdit' ? 'current' : '' }">
+        <a href="#">Düzenle</a>
+        <ul>
+            <li class="#{curitem eq 'chequeChangeStatus' ? 'current' : '' }">
+                <s:link view="/finance/chequeChangeStatus.xhtml"
+                        propagation="begin">
+                    <f:param name="eid" value="0" />
+                    <h:graphicImage url="/img/edit1.gif" />
+                    <h:outputText value="#{messages['module.caption.ChequeChangeStatus']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeChangeLastStatus' ? 'current' : '' }">
+                <s:link view="/finance/chequeChangeLastStatus.xhtml"
+                        propagation="begin">
+                    <f:param name="eid" value="0" />
+                    <h:graphicImage url="/img/edit1.gif" />
+                    <h:outputText value="#{messages['module.caption.ChequeChangeLastStatus']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'promissoryChangeStatus' ? 'current' : '' }">
+                <s:link view="/finance/promissoryChangeStatus.xhtml"
+                        propagation="begin">
+                    <f:param name="eid" value="0" />
+                    <h:graphicImage url="/img/edit1.gif" />
+                    <h:outputText value="#{messages['module.caption.PromissoryChangeStatus']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'promissoryChangeLastStatus' ? 'current' : '' }">
+                <s:link view="/finance/promissoryChangeLastStatus.xhtml"
+                        propagation="begin">
+                    <f:param name="eid" value="0" />
+                    <h:graphicImage url="/img/edit1.gif" />
+                    <h:outputText value="#{messages['module.caption.PromissoryChangeLastStatus']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'financeAccount' ? 'current' : '' }">
+        <a href="#">Kasa İşlemleri</a>
+        <ul>
+            <li class="#{curitem eq 'collectionBrowse' ? 'current' : '' }">
+                <s:link view="/finance/collectionBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.CollectionBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'paymentBrowse' ? 'current' : '' }">
+                <s:link view="/finance/paymentBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PaymentBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'debitCreditNoteCollectionBrowse' ? 'current' : '' }">
+                <s:link view="/finance/debitCreditNoteCollectionBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.DebitCreditNoteCollectionBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'debitCreditNotePaymentBrowse' ? 'current' : '' }">
+                <s:link view="/finance/debitCreditNotePaymentBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.DebitCreditNotePaymentBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'debitCreditVirementBrowse' ? 'current' : '' }">
+                <s:link view="/finance/debitCreditVirementBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.DebitCreditVirementBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'fundTransferBrowse' ? 'current' : '' }">
+                <s:link view="/finance/fundTransferBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.FundTransferBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'expenseNoteBrowse' ? 'current' : '' }">
+                <s:link view="/finance/expenseNoteBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ExpenseNoteBrowse']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'financeInvoice' ? 'current' : '' }">
+        <a href="#">Fatura İşlemleri</a>
+        <ul>
+            <li class="#{curitem eq 'purchaseInvoiceBrowse' ? 'current' : '' }">
+                <s:link view="/finance/newpurchaseInvoiceBrowse.xhtml" propagation="none">
+                	<f:param name="exid" value="0"/>
+                    <h:graphicImage url="/img/script_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PurchaseInvoiceBrowse']}" />
+                </s:link>
+            </li>
+
+            <li  class="#{curitem eq 'saleInvoiceBrowse' ? 'current' : '' }">
+                <s:link view="/finance/newsaleInvoiceBrowse.xhtml" propagation="none">
+                	<f:param name="exid" value="0"/>
+                    <h:graphicImage url="/img/script_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.SaleInvoiceBrowse']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'financeTransfer' ? 'current' : '' }">
+        <a href="#">Para Transferleri</a>
+        <ul>
+            <li class="#{curitem eq 'bankToContactTransferBrowse' ? 'current' : '' }">
+                <s:link view="/finance/bankToContactTransferBrowse.xhtml" propagationBegin="true">
+                    <h:graphicImage url="/img/arrow_switch.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.BankToContactTransferBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'contactToBankTransferBrowse' ? 'current' : '' }">
+                <s:link view="/finance/contactToBankTransferBrowse.xhtml" propagationBegin="true">
+                    <h:graphicImage url="/img/arrow_switch.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ContactToBankTransferBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'bankToBankTransferBrowse' ? 'current' : '' }">
+                <s:link view="/finance/bankToBankTransferBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/arrow_switch.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.BankToBankTransferBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'bankToAccountTransferBrowse' ? 'current' : '' }">
+                <s:link view="/finance/bankToAccountTransferBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/arrow_switch.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.BankToAccountTransferBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'accountToBankTransferBrowse' ? 'current' : '' }">
+                <s:link view="/finance/accountToBankTransferBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/arrow_switch.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.AccountToBankTransferBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'foreignExchangeBrowse' ? 'current' : '' }">
+                <s:link view="/finance/foreignExchangeBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/arrow_switch.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ForeignExchangeBrowse']}" />
+                </s:link>
+            </li>
+
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'financeCheck' ? 'current' : '' }">
+        <a href="#">Çek İşlemleri</a>
+        <ul>
+        	<li class="#{curitem eq 'chequeStubBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeStubBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeStubBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeFromContactPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeFromContactPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeFromContactPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeToContactPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeToContactPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeToContactPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeToBankAssurancePayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeToBankAssurancePayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeToBankAssurancePayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeToBankPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeToBankPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeToBankPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeCollectedAtBankPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeCollectedAtBankPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeCollectionAtBankPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeToAccountCollectionPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeToAccountCollectionPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeToAccountCollectionPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeToAccountPaymentPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeToAccountPaymentPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeToAccountPaymentPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'chequeToBankPaymentPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/chequeToBankPaymentPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.ChequeToBankPaymentPayrollBrowse']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'financePromissory' ? 'current' : '' }">
+        <a href="#">Senet İşlemleri</a>
+        <ul>
+            <li class="#{curitem eq 'promissoryBrowse' ? 'current' : '' }">
+                <s:link view="/finance/promissoryBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PromissoryBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'promissoryFromContactPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/promissoryFromContactPayrollBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PromissoryFromContactPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'promissoryToContactPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/promissoryToContactPayrollBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PromissoryToContactPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'promissoryToBankAssurancePayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/promissoryToBankAssurancePayrollBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PromissoryToBankAssurancePayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'promissoryToBankPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/promissoryToBankPayrollBrowse.xhtml"  propagation="none">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PromissoryToBankPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'promissoryCollectedAtBankPayrollBrowse' ? 'current' : '' }">
+                <s:link view="/finance/promissoryCollectedAtBankPayrollBrowse.xhtml" propagation="none">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.PromissoryCollectionAtBankPayrollBrowse']}" />
+                </s:link>
+            </li>
+            <li>
+                <s:link view="/finance/promissoryToAccountCollectionPayrollBrowse.xhtml">
+                    <h:graphicImage url="/img/coins_add.gif"
+                                    alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.PromissoryToAccountCollectionPayrollBrowse']}" />
+                </s:link>
+            </li>
+
+            <li>
+                <s:link view="/finance/promissoryToAccountPaymentPayrollBrowse.xhtml">
+                    <h:graphicImage url="/img/coins_delete.gif"
+                                    alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.PromissoryToAccountPaymentPayrollBrowse']}" />
+                </s:link>
+            </li>
+
+            <li>
+                <s:link view="/finance/promissoryToBankPaymentPayrollBrowse.xhtml">
+                    <h:graphicImage url="/img/coins_delete.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText
+                        value="#{messages['module.caption.PromissoryToBankPaymentPayrollBrowse']}" />
+                </s:link>
+            </li>
+        </ul>
+    </li>
+
+    <li class="#{curpage eq 'financeOther' ? 'current' : '' }">
+        <a href="#">Diğer İşlemler</a>
+        <ul>
+            <li class="#{curitem eq 'foundationRefunding' ? 'current' : '' }">
+                <s:link view="/finance/foundationRefunding.xhtml"  propagation="begin">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.FoundationRefunding']}" />
+                </s:link>
+            </li>
+            <li class="#{curitem eq 'creditCardPosCommission' ? 'current' : '' }">
+                <s:link view="/finance/creditCardPosCommission.xhtml"  propagation="begin">
+                    <h:graphicImage url="/img/coins_add.gif" alt="#{messages['currency.img.Currency']}" />
+                    <h:outputText value="#{messages['module.caption.CreditCardPosCommissionReport']}" />
+                </s:link>
+            </li>
+
+        </ul>
+    </li>
+
+
+</ul>

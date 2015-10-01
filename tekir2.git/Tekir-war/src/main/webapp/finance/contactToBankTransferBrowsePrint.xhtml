@@ -1,0 +1,70 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+    
+    
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.ContactToBankTransferBrowse']}" /></h1>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <r:dataTable id="browseList" 
+                     var="contactToBankTransfer"
+                     value="#{contactToBankTransferBrowse.entityList}" >
+            <f:facet name="header">
+                <h:panelGroup>
+                    <h:outputText value="#{messages['general.label.Results']}"/>
+                </h:panelGroup>
+            </f:facet>
+            <r:column styleClass="serialField">
+                <f:facet name="header"><h:outputText value="#{messages['contactToBankTransfer.label.Serial']}"/></f:facet>
+                
+                <h:outputText value="#{contactToBankTransfer.serial}"/>
+                
+            </r:column>
+            <r:column styleClass="serialField">
+                <f:facet name="header"><h:outputText value="#{messages['contactToBankTransfer.label.Reference']}" /></f:facet>
+                
+                <h:outputText value="#{contactToBankTransfer.reference}"/>
+                
+            </r:column>
+            
+            
+            <r:column styleClass="dateField">
+                <f:facet name="header"><h:outputText value="#{messages['contactToBankTransfer.label.Date']}" /></f:facet>
+                <h:outputText value="#{contactToBankTransfer.date}">
+                    <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                </h:outputText>
+            </r:column>
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['contactToBankTransfer.label.FromBankAccount']}" /></f:facet>
+                <h:outputText value="#{contactToBankTransfer.contact.name}" />
+            </r:column>
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['contactToBankTransfer.label.ToBankAccount']}" /></f:facet>
+                <h:outputText value="#{contactToBankTransfer.bankAccount.name}" />
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header"><h:outputText value="#{messages['contactToBankTransfer.label.Code']}" /></f:facet>
+                <h:outputText value="#{contactToBankTransfer.code}" />
+                
+            </r:column>
+            
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contactToBankTransfer.label.Info']}" /></f:facet>
+                <h:outputText value="#{contactToBankTransfer.info}"/>
+            </r:column>
+            
+        </r:dataTable>
+        
+    </ui:define> 
+</ui:composition>

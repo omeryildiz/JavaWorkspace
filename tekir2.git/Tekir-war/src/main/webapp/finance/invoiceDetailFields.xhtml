@@ -1,0 +1,565 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<s:div id="discountPopupDiv">
+		<ui:include src="/stock/popup/discountPopup.xhtml"/>
+	</s:div>
+	<s:div id="expensePopupDiv">
+		<ui:include src="/stock/popup/expensePopup.xhtml"/>
+	</s:div>
+	<s:div id="discountExpenseAdditionPopupDiv">
+		<ui:include src="/stock/popup/discountExpenseAdditionPopup.xhtml"/>
+	</s:div>
+
+	<ui:include src="/contact/contactSelectPopup.xhtml" />
+    <ui:include src="/stock/productSelectPopup.xhtml" />
+
+    <r:jQuery name="hede" timing="onJScall" query="get()" />
+    <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+
+	<a:region>
+		<s:div style="overflow: auto;width:935px;" id="itsDiv">
+
+			<r:dataTable id="its" var="item" value="#{currentEntity.items}"
+				rowKeyVar="rowKey" styleClass="detailTable"
+				rendered="#{not currentHome.showMiniTable}">
+				<f:facet name="header">
+					<r:columnGroup>
+						<r:column styleClass="actionColumn" colspan="1">
+							<a:commandLink action="#{currentHome.toggleMiniTable()}"
+								ajaxSingle="true" reRender="itsDiv,itsMiniDiv"
+								oncomplete="setMasks();">
+								<h:graphicImage url="/img/arrow.gif" title="#{messages['general.label.ToggleMiniTable']}" />
+							</a:commandLink>
+						</r:column>
+						<r:column colspan="18">
+							<h:outputText value="#{messages['general.label.Details']}" />
+						</r:column>
+						<r:column colspan="2">
+							<div class="imagePadded3px">
+								<a:commandLink reRender="its"
+									action="#{currentHome.createNewDetail()}" accesskey="N"
+									oncomplete="focusLastRow(); setMasks();"
+									status="commonAjaxStatus">
+									<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+								</a:commandLink> 
+								
+								<a:commandLink
+									action="#{currentHome.createDocumentDiscountLine()}"
+									reRender="discountPopupDiv" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('discountPopup');setMasks();">
+									<h:graphicImage url="/img/money_delete.png"
+										title="#{messages['general.label.NewDocumentDiscountLine']}"
+										rendered="#{s:hasPermission('saleInvoice', 'documentDiscount')}" />
+								</a:commandLink> 
+								
+								<a:commandLink
+									action="#{currentHome.createDocumentExpenseLine()}"
+									reRender="expensePopupDiv" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('expensePopup');setMasks();">
+									<h:graphicImage url="/img/money_add.png"
+										title="#{messages['general.button.NewDocumentExpenseLine']}"
+										rendered="#{s:hasPermission('saleInvoice', 'documentExpense')}" />
+								</a:commandLink> 
+
+								<a:commandLink
+									action="#{currentHome.createDiscountAdditionLine()}"
+									reRender="discountExpenseAdditionPopupDiv"
+									status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('discountExpenseAdditionPopup');setMasks();">
+									<h:graphicImage url="/img/money_delete_doc.png"
+										title="#{messages['general.button.NewDiscountAdditionLine']}"
+										rendered="#{s:hasPermission('saleInvoice', 'discountAddition')}" />
+								</a:commandLink> 
+								
+								<a:commandLink action="#{currentHome.createExpenseAdditionLine()}"
+									reRender="discountExpenseAdditionPopupDiv" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('discountExpenseAdditionPopup');setMasks();">
+									<h:graphicImage url="/img/money_add_doc.png"
+										title="#{messages['general.button.NewExpenseAdditionLine']}"
+										rendered="#{s:hasPermission('saleInvoice', 'expenseAddition')}" />
+								</a:commandLink>
+							</div>
+						</r:column>
+
+						<r:column breakBefore="true" rowspan="2">
+							<h:graphicImage url="/img/information.gif" />
+						</r:column>
+						<r:column styleClass="codeField" rowspan="2">
+							<h:outputText value="#{messages['purchaseOrder.label.LineCode']}" />
+						</r:column>
+						<r:column styleClass="codeField" rowspan="2">
+							<h:outputText value="#{messages['purchaseShipment.label.Barcode']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['purchaseOrder.label.Product']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['purchaseOrder.label.LineInfo']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['purchaseOrder.label.Quantity']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['purchaseOrder.label.Unit']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['general.label.ForeignUnitPrice']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['purchaseOrder.label.Currency']}" />
+						</r:column>
+
+						<r:column colspan="12">
+							<h:outputText value="#{messages['general.label.Document']}" />
+						</r:column>
+
+						<r:column breakBefore="true">
+							<h:outputText value="#{messages['purchaseOrder.label.UnitPrice']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['purchaseOrder.label.Amount']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.LineDiscount']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.DocumentDiscount']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.TaxBase']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.TaxTotalAmount']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.LineExpense']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.DocumentExpense']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.SaleTotal']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.CostTotal']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['purchaseOrder.label.Currency']}" />
+						</r:column>
+						<r:column styleClass="actionColumn">
+							<h:outputText value="" />
+						</r:column>
+					</r:columnGroup>
+
+				</f:facet>
+
+				<r:column>
+					<h:graphicImage url="/img/package.gif" rendered="#{item.productType eq 'Product'}" />
+					<h:graphicImage url="/img/brick.gif" rendered="#{item.productType eq 'Service'}" />
+					<h:graphicImage url="/img/minus.gif" rendered="#{item.productType eq 'Discount'}" />
+					<h:graphicImage url="/img/plus.gif" rendered="#{item.productType eq 'Expense'}" />
+					<h:outputText value="DI" rendered="#{item.productType eq 'DocumentDiscount'}" />
+					<h:outputText value="DM" rendered="#{item.productType eq 'DocumentExpense'}" />
+					<h:outputText value="KI" rendered="#{item.productType eq 'DiscountAddition'}" />
+					<h:outputText value="KM" rendered="#{item.productType eq 'ExpenseAddition'}" />
+					<h:outputText value="CI" rendered="#{item.productType eq 'ContactDiscount'}" />
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.lineCode}" styleClass="codeField" />
+				</r:column>
+
+				<r:column>
+					<h:inputText id="code" value="#{item.barcode}"
+						onkeypress="return isEnterCode(event);"
+						styleClass="codeField utdff barcodeWidth">
+						<a:jsFunction name="msjs"
+							action="#{currentHome.selectProductWithBarcode(rowKey)}"
+							reRender="its,messagesDiv" ajaxSingle="false"
+							oncomplete="setMasks();focusLastRow();" />
+					</h:inputText>
+				</r:column>
+
+				<r:column id="productColumn">
+					<s:fragment>
+						<div style="width: 190px;">
+							<h:inputText id="product"
+								value="#{item.product}" styleClass="middle" required="false"
+								onblur="document.getElementById('#{r:clientId('selectProductLink1')}').click()"
+								converter="productCaptionConverter" /> 
+							<a href="javascript:productSelectPopup( 'form:its:#{rowKey}:product' )">
+								<h:graphicImage url="/img/selectBox.gif" /> 
+							</a>
+						</div>
+						<r:suggestionbox for="product" nothingLabel="Sonuç Yok"
+							rules="all" suggestionAction="#{stockSuggestion.suggestProduct}"
+							var="it" fetchValue="#{it.caption}"
+							onselect="document.getElementById('#{r:clientId('selectProductLink1')}').click()">
+							<h:column>
+								<h:outputText value="#{it.code}" />
+							</h:column>
+							<h:column>
+								<h:outputText value="#{it.name}" />
+							</h:column>
+						</r:suggestionbox>
+					</s:fragment>
+					<a:commandLink id="selectProductLink1"
+						action="#{currentHome.selectProduct(rowKey)}"
+						eventsQueue="productQueue" oncomplete="setMasks();"
+						ignoreDupResponses="true" reRender="its,summary" />
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.info}" style="width:120px;" />
+				</r:column>
+
+				<r:column>
+					<h:inputText id="quantity" value="#{item.quantity.value}" styleClass="quantityFieldTiny" alt="decimal" converter="doubleConverter"
+						onblur="calcAmount(#{rowKey});" disabled="#{not item.isTypeOf('Product','Service','Unknown')}" />
+				</r:column>
+
+				<r:column>
+					<h:outputText id="unit" value="#{item.product.unit}" />
+				</r:column>
+
+				<r:column>
+					<h:inputText id="foreignUnitPrice" value="#{item.foreignUnitPrice.value}" styleClass="amountFieldTiny"
+						alt="#{item.product.hasLowerPriceThanCent ? 'decimal_sixscale' : 'decimal'}"
+						converter="#{item.product.hasLowerPriceThanCent ? bigDecimalSixScaleConverter : bigDecimalConverter }"
+						disabled="#{not item.isTypeOf('Product','Service','Unknown')}">
+						<a:support event="onblur" action="#{currentHome.calculateUnitPrice(rowKey)}" ajaxSingle="true" reRender="unitPrice,amount,summary"
+							oncomplete="setMasks();" />
+					</h:inputText>
+				</r:column>
+
+				<r:column>
+					<h:selectOneMenu value="#{item.foreignUnitPrice.currency}" styleClass="ccyField">
+						<s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}"
+							noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true" />
+						<a:support event="onblur" action="#{currentHome.calculateUnitPrice(rowKey)}" ajaxSingle="true" reRender="unitPrice,amount,summary"
+							oncomplete="setMasks();" />
+					</h:selectOneMenu>
+				</r:column>
+
+				<r:column>
+					<h:inputText id="unitPrice" value="#{item.taxExcludedUnitPrice.value}" styleClass="amountFieldTiny"
+						alt="#{item.product.hasLowerPriceThanCent ? 'decimal_sixscale' : 'decimal'}"
+						converter="#{item.product.hasLowerPriceThanCent ? bigDecimalSixScaleConverter : bigDecimalConverter }"
+						disabled="#{not item.isTypeOf('Product','Service','Unknown')}">
+						<a:support event="onblur" action="#{currentHome.calculateForeignUnitPrice(rowKey)}" ajaxSingle="true" reRender="foreignUnitPrice,summary"
+							oncomplete="setMasks();calcAmount(#{rowKey});" />
+					</h:inputText>
+				</r:column>
+
+				<r:column>
+					<h:inputText id="amount" value="#{item.taxExcludedAmount.value}" styleClass="amountField" alt="decimal" converter="bigDecimalConverter"
+						onblur="calcPrice(#{rowKey});" disabled="#{not item.isTypeOf('Product','Service','Unknown')}" />
+				</r:column>
+
+				<r:column>
+					<s:div styleClass="amountFieldTotal">
+						<h:inputText id="lineDiscount" value="#{item.lineDiscountString()}" styleClass="amountFieldTotal" disabled="true"
+							rendered="#{item.productType.name() eq 'Discount'}" />
+					</s:div>
+				</r:column>
+
+				<r:column>
+					<s:div styleClass="amountFieldTotal">
+						<h:inputText id="docDiscount" value="#{item.lineDiscountString()}" styleClass="amountFieldTotal" disabled="true"
+							rendered="#{item.isTypeOf('DocumentDiscount','DiscountAddition')}" />
+					</s:div>
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.beforeTax.value}" disabled="true" styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.taxTotalAmount.value}" disabled="true" styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+				</r:column>
+
+				<r:column>
+					<s:div styleClass="amountFieldTotal">
+						<h:inputText id="lineExpense" value="#{item.lineExpenseString()}" styleClass="amountFieldTotal" disabled="true"
+							rendered="#{item.productType eq 'Expense'}" />
+					</s:div>
+				</r:column>
+
+				<r:column>
+					<s:div styleClass="amountFieldTotal">
+						<h:inputText id="docExpense" value="#{item.lineExpenseString()}" styleClass="amountFieldTotal" disabled="true"
+							rendered="#{item.isTypeOf('DocumentExpense','ExpenseAddition')}" />
+					</s:div>
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.totalAmount.value}" styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.grandTotal.value}" styleClass="amountField" alt="decimal" converter="bigDecimalConverter" />
+				</r:column>
+
+				<r:column style="width:60px;">
+					<div style="padding-top: 2px;"><h:outputText value="#{item.taxExcludedAmount.currency}" style="font-size:12px;padding-left:4px;" /></div>
+				</r:column>
+
+				<r:column style="width: 110px;">
+					<s:div styleClass="imagePadded2px" style="width:60px;">
+						<a:commandLink reRender="its" action="#{currentHome.deleteLine(rowKey)}" status="commonAjaxStatus" ajaxSingle="true"
+							oncomplete="setMasks();" rendered="#{not (item.isDiscountOrDocumentDiscountOrContactDiscount() and item.referenceDocumentId ne null)}">
+							<h:graphicImage url="/img/delete.gif" title="#{messages['general.button.DeleteLine']}" />
+						</a:commandLink>
+
+						<a:commandLink action="#{currentHome.createDiscountLine(rowKey)}" reRender="discountPopupDiv"
+							oncomplete="Richfaces.showModalPanel('discountPopup');setMasks();"
+							rendered="#{item.productType eq 'Product' or item.productType eq 'Service'}">
+							<h:graphicImage url="/img/money_delete.png" title="#{messages['general.button.NewDiscountLine']}" />
+						</a:commandLink>
+
+						<a:commandLink action="#{currentHome.createExpenseLine(rowKey)}" reRender="expensePopupDiv"
+							oncomplete="Richfaces.showModalPanel('expensePopup');setMasks();"
+							rendered="#{item.productType eq 'Product' or item.productType eq 'Service'}">
+							<h:graphicImage url="/img/money_add.png" title="#{messages['general.button.NewExpenseLine']}" />
+						</a:commandLink>
+					</s:div>
+				</r:column>
+
+			</r:dataTable>
+
+		</s:div>
+
+
+		<s:div id="itsMiniDiv">
+			<r:dataTable id="itsMini" var="item" value="#{currentEntity.items}" rowKeyVar="rowKey" styleClass="detailTable"
+				onRowMouseOver="this.style.backgroundColor='#F8F8F8'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+				rendered="#{currentHome.showMiniTable}">
+				<f:facet name="header">
+					<r:columnGroup>
+						<r:column styleClass="actionColumn" colspan="1">
+							<a:commandLink action="#{currentHome.toggleMiniTable()}" ajaxSingle="true" reRender="itsDiv,itsMiniDiv" oncomplete="setMasks();">
+								<h:graphicImage url="/img/arrow.gif" title="#{messages['general.label.ToggleMiniTable']}" />
+							</a:commandLink>
+						</r:column>
+						<r:column colspan="9">
+							<h:outputText value="#{messages['general.label.Details']}" />
+						</r:column>
+						<r:column colspan="2">
+							<div class="imagePadded3px">
+								<a:commandLink reRender="itsMini" action="#{currentHome.createNewDetail()}" accesskey="N"
+									oncomplete="focusLastRow(); setMasks();" status="commonAjaxStatus">
+									<h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}" />
+								</a:commandLink> 
+								<a:commandLink action="#{currentHome.createDocumentDiscountLine()}" reRender="discountPopupDiv" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('discountPopup');setMasks();">
+									<h:graphicImage url="/img/money_delete.png" title="#{messages['general.label.NewDocumentDiscountLine']}" />
+								</a:commandLink> 
+								<a:commandLink action="#{currentHome.createDocumentExpenseLine()}" reRender="expensePopupDiv" status="commonAjaxStatus"
+									oncomplete="Richfaces.showModalPanel('expensePopup');setMasks();">
+									<h:graphicImage url="/img/money_add.png" title="#{messages['general.button.NewDocumentExpenseLine']}" />
+								</a:commandLink> 
+								<a:commandLink action="#{currentHome.createDiscountAdditionLine()}" reRender="discountExpenseAdditionPopupDiv"
+									status="commonAjaxStatus" oncomplete="Richfaces.showModalPanel('discountExpenseAdditionPopup');setMasks();">
+									<h:graphicImage url="/img/money_delete_doc.png" title="#{messages['general.button.NewDiscountAdditionLine']}" />
+								</a:commandLink> 
+								<a:commandLink action="#{currentHome.createExpenseAdditionLine()}" reRender="discountExpenseAdditionPopupDiv"
+									status="commonAjaxStatus" oncomplete="Richfaces.showModalPanel('discountExpenseAdditionPopup');setMasks();">
+									<h:graphicImage url="/img/money_add_doc.png" title="#{messages['general.button.NewExpenseAdditionLine']}" />
+								</a:commandLink>
+							</div>
+						</r:column>
+
+						<r:column breakBefore="true" rowspan="2">
+							<h:graphicImage url="/img/information.gif" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['purchaseShipment.label.Barcode']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['saleOrder.label.Product']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['saleOrder.label.Quantity']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['saleOrder.label.Unit']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['general.label.ForeignUnitPrice']}" />
+						</r:column>
+						<r:column rowspan="2">
+							<h:outputText value="#{messages['purchaseOrder.label.Currency']}" />
+						</r:column>
+
+						<r:column colspan="5">
+							<h:outputText value="#{messages['general.label.Document']}" />
+						</r:column>
+
+						<r:column breakBefore="true">
+							<h:outputText value="#{messages['saleOrder.label.UnitPrice']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['saleOrder.label.Amount']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['general.label.SaleTotal']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="#{messages['saleOrder.label.Currency']}" />
+						</r:column>
+						<r:column>
+							<h:outputText value="" />
+						</r:column>
+					</r:columnGroup>
+
+				</f:facet>
+
+				<r:column>
+					<h:graphicImage url="/img/package.gif" rendered="#{item.productType eq 'Product'}" />
+					<h:graphicImage url="/img/brick.gif" rendered="#{item.productType eq 'Service'}" />
+					<h:graphicImage url="/img/minus.gif" rendered="#{item.productType eq 'Discount'}" />
+					<h:graphicImage url="/img/plus.gif" rendered="#{item.productType eq 'Expense'}" />
+					<h:outputText value="KI" rendered="#{item.productType eq 'DiscountAddition'}" />
+					<h:outputText value="KM" rendered="#{item.productType eq 'ExpenseAddition'}" />
+					<h:outputText value="DI" rendered="#{item.productType eq 'DocumentDiscount'}" />
+					<h:outputText value="DM" rendered="#{item.productType eq 'DocumentExpense'}" />
+					<h:outputText value="CI" rendered="#{item.productType eq 'ContactDiscount'}" />
+				</r:column>
+
+				<r:column>
+					<h:inputText id="code" value="#{item.barcode}" onkeypress="return isEnterCode(event);" styleClass="utdff barcodeWidth">
+						<a:jsFunction name="msjs" action="#{currentHome.selectProductWithBarcode(rowKey)}" reRender="itsMini" ajaxSingle="false"
+							oncomplete="focusLastRow();setMasks();" />
+					</h:inputText>
+				</r:column>
+
+				<r:column>
+					<s:fragment>
+						<div class="productWidth">
+							<h:inputText id="product" value="#{item.product}" styleClass="smallX"
+								onblur="document.getElementById('#{r:clientId('selectProductLink2')}').click();" converter="productCaptionConverter" /> 
+							<a href="javascript:productSelectPopup( 'form:itsMini:#{rowKey}:product' )"> 
+								<h:graphicImage url="/img/selectBox.gif" /> 
+							</a>
+						</div>
+
+						<r:suggestionbox id="productSuggest" for="product" rules="all" suggestionAction="#{stockSuggestion.suggestProduct}" var="it"
+							fetchValue="#{it.caption}" eventsQueue="productQueue" onselect="document.getElementById('#{r:clientId('selectProductLink2')}').click()"
+							ignoreDupResponses="true">
+							<h:column>
+								<h:outputText value="#{it.code}" />
+							</h:column>
+							<h:column>
+								<h:outputText value="#{it.name}" />
+							</h:column>
+							<h:column>
+								<h:outputText value="#{it.unit}" />
+							</h:column>
+
+							<a:ajaxListener type="org.ajax4jsf.ajax.ForceRender" />
+						</r:suggestionbox>
+					</s:fragment>
+
+					<a:commandLink id="selectProductLink2" action="#{currentHome.selectProduct(rowKey)}" eventsQueue="productQueue"
+						oncomplete="setMasks();" ignoreDupResponses="true" reRender="itsMini,summary" />
+				</r:column>
+
+				<r:column>
+					<h:inputText id="quantity" value="#{item.quantity.value}" styleClass="quantityFieldTiny" onblur="calcAmount(#{rowKey});" alt="decimal"
+						converter="doubleConverter" disabled="#{not item.isTypeOf('Product','Service','Unknown')}" />
+				</r:column>
+
+				<r:column>
+					<h:outputText id="unit" value="#{item.product.unit}" />
+				</r:column>
+
+				<r:column>
+					<h:inputText id="foreignUnitPrice" value="#{item.foreignUnitPrice.value}" styleClass="amountFieldTiny"
+						alt="#{item.product.hasLowerPriceThanCent ? 'decimal_sixscale' : 'decimal'}"
+						converter="#{item.product.hasLowerPriceThanCent ? bigDecimalSixScaleConverter : bigDecimalConverter }"
+						disabled="#{not item.isTypeOf('Product','Service','Unknown')}">
+						<a:support event="onblur" action="#{currentHome.calculateUnitPrice(rowKey)}" ajaxSingle="true" reRender="unitPrice,amount,summary"
+							oncomplete="setMasks();calcAmount(#{rowKey});" />
+					</h:inputText>
+				</r:column>
+
+				<r:column>
+					<h:selectOneMenu value="#{item.foreignUnitPrice.currency}" styleClass="ccyField">
+						<s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}"
+							noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true" />
+						<a:support event="onblur" action="#{currentHome.calculateUnitPrice(rowKey)}" ajaxSingle="true" reRender="unitPrice,amount,summary"
+							oncomplete="setMasks();calcAmount(#{rowKey});" />
+					</h:selectOneMenu>
+				</r:column>
+
+				<r:column>
+					<h:inputText id="unitPrice" value="#{item.taxExcludedUnitPrice.value}" styleClass="amountFieldTiny"
+						alt="#{item.product.hasLowerPriceThanCent ? 'decimal_sixscale' : 'decimal'}"
+						converter="#{item.product.hasLowerPriceThanCent ? bigDecimalSixScaleConverter : bigDecimalConverter }"
+						disabled="#{not item.isTypeOf('Product','Service','Unknown')}">
+						<a:support event="onblur" action="#{currentHome.calculateForeignUnitPrice(rowKey)}" ajaxSingle="true"
+							reRender="foreignUnitPrice,summary" oncomplete="setMasks();calcAmount(#{rowKey});" />
+
+					</h:inputText>
+				</r:column>
+
+				<r:column>
+					<h:inputText id="amount" value="#{item.taxExcludedAmount.value}" styleClass="amountField" onblur="calcPrice(#{rowKey});" alt="decimal"
+						converter="bigDecimalConverter" disabled="#{not item.isTypeOf('Product','Service','Unknown')}" />
+				</r:column>
+
+				<r:column>
+					<h:inputText value="#{item.totalAmount.value}" styleClass="amountField" alt="decimal" converter="bigDecimalConverter"
+						rendered="#{item.isTypeOf('Product','Service')}" />
+
+					<h:inputText value="#{item.totalAmountRelatedToProductType()}" styleClass="amountField" alt="decimal"
+						rendered="#{not item.isTypeOf('Product','Service')}" disabled="true" />
+				</r:column>
+
+				<r:column style="width:60px;">
+					<div style="padding-top: 2px;"><h:outputText value="#{item.taxExcludedAmount.currency}" style="font-size:12px;padding-left:4px;" /></div>
+				</r:column>
+
+				<r:column style="width: 110px;">
+					<s:div styleClass="imagePadded2px">
+						<a:commandLink reRender="itsMini" action="#{currentHome.deleteLine(rowKey)}" status="commonAjaxStatus" ajaxSingle="true"
+							oncomplete="setMasks();" rendered="#{not (item.isDiscountOrDocumentDiscountOrContactDiscount() and item.referenceDocumentId ne null)}">
+							<h:graphicImage url="/img/delete.gif" title="#{messages['general.button.DeleteLine']}" />
+						</a:commandLink>
+
+						<a:commandLink action="#{currentHome.createDiscountLine(rowKey)}" reRender="discountPopupDiv"
+							oncomplete="Richfaces.showModalPanel('discountPopup');setMasks();"
+							rendered="#{item.productType eq 'Product' or item.productType eq 'Service'}">
+							<h:graphicImage url="/img/money_delete.png" title="#{messages['general.button.NewDiscountLine']}" />
+						</a:commandLink>
+
+						<a:commandLink action="#{currentHome.createExpenseLine(rowKey)}" reRender="expensePopupDiv"
+							oncomplete="Richfaces.showModalPanel('expensePopup');setMasks();"
+							rendered="#{item.productType eq 'Product' or item.productType eq 'Service'}">
+							<h:graphicImage url="/img/money_add.png" title="#{messages['general.button.NewExpenseLine']}" />
+						</a:commandLink>
+					</s:div>
+				</r:column>
+
+			</r:dataTable>
+		</s:div>
+
+		<ui:include src="/finance/footerSummaryList.xhtml">
+			<ui:param name="showCalculateButton" value="true" />
+		</ui:include>
+		
+		<ui:include src="/finance/paymentPlanEditBase.xhtml"/>
+
+		<s:fragment rendered="#{currentEntity.documentType eq 'SaleShipmentInvoice'}">
+			<ui:include src="/stock/paymentTableEditBase.xhtml"/>
+		</s:fragment>
+	</a:region>
+
+</ui:composition>

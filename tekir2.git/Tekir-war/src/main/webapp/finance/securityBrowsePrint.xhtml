@@ -1,0 +1,78 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+    
+    
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.securityBrowse']}" /></h1>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <r:dataTable id="browseList" 
+                     var="security"
+                     value="#{securityBrowse.entityList}" >
+            <f:facet name="header">
+                <h:panelGroup>
+                    <h:outputText value="#{messages['general.label.Results']}"/>
+                </h:panelGroup>
+            </f:facet>
+            <r:column styleClass="serialField">
+                <f:facet name="header"><h:outputText value="#{messages['security.label.Isin']}"/></f:facet>
+                
+                <h:outputText value="#{security.isin}"/>
+                
+            </r:column>
+            <r:column styleClass="codeField">
+                <f:facet name="header"><h:outputText value="#{messages['security.label.Code']}" /></f:facet>
+                <h:outputText value="#{security.code}" />
+            </r:column>
+            <r:column styleClass="dateField">
+                <f:facet name="header"><h:outputText value="#{messages['security.label.IssueDate']}" /></f:facet>
+                <h:outputText value="#{security.issueDate}">
+                    <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                </h:outputText>
+            </r:column>
+            <r:column styleClass="dateField">
+                <f:facet name="header"><h:outputText value="#{messages['security.label.MaturityDate']}" /></f:facet>
+                <h:outputText value="#{security.maturityDate}">
+                    <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                </h:outputText>
+            </r:column>
+            <r:column>
+            	<f:facet name="header"><h:outputText value="#{messages['security.label.SecurityType']}" /></f:facet>
+            	<h:outputText value="#{messages['security.type.DiscountBond']}" rendered="#{security.securityType eq 'DiscountBond'}"/>
+                <h:outputText value="#{messages['security.type.CouponBond']}" rendered="#{security.securityType eq 'CouponBond'}"/>
+                <h:outputText value="#{messages['security.type.IndexedBond']}" rendered="#{security.securityType eq 'IndexedBond'}"/>
+                <h:outputText value="#{messages['security.type.EuroBond']}" rendered="#{security.securityType eq 'EuroBond'}"/>
+            </r:column>
+            <r:column>
+            	<f:facet name="header"><h:outputText value="#{messages['security.label.CouponCount']}" /></f:facet>
+            	<h:outputText value="#{security.couponCount}"/>
+            </r:column>
+            <r:column>
+              	<f:facet name="header"><h:outputText value="#{messages['security.label.Rate']}" /></f:facet>
+                <h:outputText value="#{security.rate}" />
+            </r:column>
+            <r:column>
+              	<f:facet name="header"><h:outputText value="#{messages['security.label.Unit']}" /></f:facet>
+                <h:outputText value="#{security.unit}" />
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['security.label.Info']}" /></f:facet>
+                <h:outputText value="#{security.info}"/>
+            </r:column>
+
+		</r:dataTable>
+        
+    </ui:define> 
+</ui:composition>
+            

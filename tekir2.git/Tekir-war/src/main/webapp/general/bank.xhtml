@@ -1,0 +1,157 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="bankMenu"/>
+            <ui:param name="curitem" value="bank"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+                <s:link view="/general/bank.xhtml" rendered="#{s:hasPermission('bank', 'select')}" >
+                    <h:outputText value="#{messages['module.caption.Bank']}"/>
+                </s:link>
+            </div>
+            
+            <div class="toolgroup-left">
+                <s:link action="#{bankHome.createNew()}" rendered="#{s:hasPermission('bank', 'insert')}"  propagation="begin">
+                    <h:graphicImage url="/img/add.gif" /> 
+                    <h:outputText value="#{messages['bank.action.Add']}"/>
+                </s:link>
+            </div>
+            
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Bank']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{bankList}" 
+                                 rendered="#{s:hasPermission('bank', 'update')}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'"
+                                 rows="20">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['bank.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{bankHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code} - #{cty.name}-#{cty.bankCode}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{bankHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="curlist"/>          
+                        </f:facet>
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['bank.hint.EmptyList']}" rendered="#{bankList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/house.gif" alt="#{messages['bank.img.World']}"/> 
+                            <h:outputText value="#{messages['bank.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bank.label.Code']}"/></ui:define>
+                            <h:inputText value="#{bank.code}" styleClass="small" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bank.label.Name']}"/></ui:define>
+                            <h:inputText value="#{bank.name}" styleClass="large" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['bank.label.BankCode']}"/></ui:define>
+                            <h:inputText value="#{bank.bankCode}" styleClass="small" required="true"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.SwiftCode']}"/></ui:define>
+                            <h:inputText value="#{bank.swiftCode}" styleClass="small" required="true"/>
+                        </s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['currencyRate.label.WorkBegin']}" />
+							</ui:define>
+							<r:calendar value="#{bank.workBegin}" enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['currencyRate.label.WorkEnd']}" />
+							</ui:define>
+							<r:calendar value="#{bank.workEnd}" enableManualInput="true"
+								datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['city.label.Weight']}" />
+							</ui:define>
+							<h:inputText value="#{bank.weight}" styleClass="small" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bank.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{bank.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['bank.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                        
+						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['bank.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{bank.info}" styleClass="exlarge" rows="4"/>
+                        </s:decorate>
+
+                    </h:panelGrid> 
+   
+					<ut:actionButtons home="#{bankHome}" entity="#{bank}" permission="bank" />
+
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>
+ 

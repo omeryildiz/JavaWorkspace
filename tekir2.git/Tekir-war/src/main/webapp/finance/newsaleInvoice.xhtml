@@ -1,0 +1,188 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewInvoice"/>
+            <ui:param name="cursubitem" value="saleInvoice"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/newsaleInvoiceBrowse.xhtml" propagation="none" rendered="#{s:hasPermission('saleInvoice', 'select')}">
+                <h:outputText value="#{messages['module.caption.SaleInvoiceBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/newsaleInvoice.xhtml" rendered="#{s:hasPermission('saleInvoice', 'update')}">
+                <h:outputText value="#{messages['module.caption.SaleInvoice']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{saleInvoiceHome.createNew()}" rendered="#{s:hasPermission('saleInvoice', 'insert')}" >
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['saleInvoice.action.Add']}"/>
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1>
+        <h:outputText value="#{saleInvoice.proformaDocument ? messages['module.caption.SaleProformaInvoice']
+        												  : messages['module.caption.SaleInvoice']}" />
+        </h1>
+
+        <ui:include src="/finance/popup/limitationWarningPopup.xhtml" >
+        	<ui:param name="currentHome" value="${saleInvoiceHome}" />
+        </ui:include>
+        
+        <s:div id="messagesDiv">
+	        <ui:include src="/layout/messages.xhtml"/>
+        </s:div>
+	    <s:div id="quickContactDiv">
+	        <ui:include src="/contact/quickContactAddPopup.xhtml" />
+		</s:div>
+                
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <s:div id="orderSelectPopupDiv">
+			<ui:include src="/finance/popup/orderSelectPopup.xhtml" >
+				<ui:param name="currentHome" value="${saleInvoiceHome}" />
+		        <ui:param name="currentEntity" value="${saleInvoice}" />
+			</ui:include>
+		</s:div>
+
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/script_delete.gif" alt="#{messages['saleInvoice.img.Form']}"/> 
+                        <h:outputText value="#{saleInvoice.proformaDocument ? messages['module.caption.SaleProformaInvoice']
+                        												  : messages['saleInvoice.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+				<ui:include src="/finance/invoiceMasterFields.xhtml">
+		        	<ui:param name="currentHome" value="${saleInvoiceHome}" />
+		        	<ui:param name="currentEntity" value="${saleInvoice}" />
+				</ui:include>                
+                
+                <ui:remove>
+                	//FIXME burasi gecici olarak generic olmaktan cikti normalde /finance/invoiceMasterFields.xhtml bunun icindeydi.
+                </ui:remove>
+                
+                
+             	<s:decorate>
+               		<a:region> 
+                       <r:dataTable id="orders" style="width:310px; float:right"
+                                    var="item"
+                                    value="#{saleInvoice.orderLinks}" 
+                                    rowKeyVar="rowKey"
+                                    styleClass="detailTable">
+                           <f:facet name="header">
+                               <r:columnGroup>
+                                   <r:column colspan="3">
+                                       <h:outputText value="#{messages['general.label.Orders']}" />
+                                   </r:column>
+                                   <r:column styleClass="actionColumn">
+                                       <a:commandLink reRender="orderSelectPopupDiv" 
+                                       	oncomplete="Richfaces.showModalPanel('orderSelect')" 
+                                       	action="#{saleInvoiceHome.findOrders()}" >
+                                           <h:graphicImage url="/img/add.gif" title="#{messages['general.label.AddOrder']}"/> 
+                                       </a:commandLink>
+                                   </r:column >
+                                   <r:column breakBefore="true">
+                                   	<h:outputText value="#{messages['general.label.Serial']}" />
+                                   </r:column>
+                                   <r:column >
+                                   	<h:outputText value="#{messages['general.label.Reference']}" />
+                                   </r:column>
+                                   <r:column >
+                                   	<h:outputText value="#{messages['general.label.Date']}" />
+                                   </r:column>
+                                   <r:column />
+                               </r:columnGroup>
+                               
+                           </f:facet>
+                           <r:column>
+                               <h:outputText value="#{item.orderNote.serial}" />
+                           </r:column>
+                           <r:column>
+                               <h:outputText value="#{item.orderNote.reference}" />
+                           </r:column>
+                           <r:column>
+                               <h:outputText value="#{item.orderNote.date}">
+                               	<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+                               </h:outputText>
+                           </r:column>
+                           <r:column styleClass="actionColumn">
+                               <a:commandLink reRender="orders,itsDiv,itsMiniDiv" 
+                               	action="#{saleInvoiceHome.removeOrderNote(rowKey)}" >
+                                   <h:graphicImage url="/img/delete.gif" /> 
+                               </a:commandLink>
+                           </r:column>
+                       </r:dataTable>
+					</a:region>
+                </s:decorate>
+                
+                <r:spacer height="70" ></r:spacer>
+                	
+	                
+                
+                
+				<ui:include src="/finance/invoiceDetailFields.xhtml">
+		        	<ui:param name="currentHome" value="${saleInvoiceHome}" />
+		        	<ui:param name="currentEntity" value="${saleInvoice}" />
+				</ui:include>
+			</r:panel>
+            
+            <div class="actionButtons">
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{saleInvoiceHome.save()}"
+                                 styleClass="button checkRequired"
+                                 style="#{saleInvoiceHome.hasWarningOrRequiredLimitation() ? 'display:none':''}"/>  
+                
+				<a:commandButton id="warn" action="#{saleInvoiceHome.makeEntityValidations()}"
+	                oncomplete="if (#{saleInvoiceHome.limitationMessages.messages.size ne 0}) 
+	                				{Richfaces.showModalPanel('limitationWarningPopup')} 
+	                				else 
+	                				{ document.getElementById('form:save').click()}" reRender="limitationWarningPopup"
+	                styleClass="button"
+	                rendered="#{saleInvoiceHome.hasWarningOrRequiredLimitation()}"
+	                value="#{messages['general.button.Save']}">
+	            </a:commandButton>
+
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{saleInvoiceHome.delete()}"
+                          rendered="#{not empty saleInvoice.id and s:hasPermission('saleInvoice', 'delete')}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{saleInvoiceHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+
+        </h:form>
+    </ui:define> 
+</ui:composition>

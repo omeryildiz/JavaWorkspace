@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/dashlet.xhtml">
+
+<ui:define name="view">
+    <ui:remove>
+        FIXME: Burası aslında çok dilli olarak implemente edilmeli...
+        Hatta uygulamaya göre hangi dosyayı yükleyeceğini de seçebilmeli. Anahtar : SystemProperties...
+    </ui:remove>
+    <div>
+    <p>
+        Tekir Ticari Otomasyon ve Ön Muhasebe Uygulaması, LGPL ile yayınlanan,  platform bağımsız, sunucu bağımsız, tarayıcı bağımsız ve donanım bağımsız “özgür” bir iş platformudur.
+    </p>
+
+    <s:fragment rendered="#{optionManager.getOption('company.Name').value eq 'Tekir Ticari Otomasyon'}">
+
+        <h2>Yapılması Gerekenler</h2>
+        <p>Uygulamanın yeni kullanıcısı olarak ilk adımda <s:link view="/admin/systemProperties.xhtml" propagation="begin">
+            <h:outputText value=" #{messages['module.caption.SystemProperties']}"/>
+        </s:link>'ından şirket bilgilerinizi girmelisiniz. </p>
+        <p>Ardından <s:link view="/admin/user.xhtml" propagation="begin">
+            <h:outputText value=" #{messages['module.caption.User']}"/>
+        </s:link>'nden sistem yöneticisi parolasını değiştirmeli ve yeni kullanıcı hesaplarınızı açmalısınız.</p>
+
+        <h2>Lisans</h2>
+        <p>Tekir Ticari Otomasyon ve Ön Muhasebe Uygulaması,
+            <a href="http://www.fsf.org/licensing/licenses/lgpl.html">GNU LESSER GENERAL PUBLIC LICENSE ( LGPL )</a>
+							çerçevesinde dağıtılmakta
+							olup, bu yazılımın kullanımından kaynaklanabilecek her türlü zarar
+							ve bilgi kaybından Özgür Yazılım A.Ş.
+							sorumlu tutulamaz.</p>
+
+    </s:fragment>
+
+    <h2>Tekir Durakları</h2>
+    <div>
+        <dl>
+            <dt><a href="http://www.tekir.com.tr" target="_blank">www.tekir.com.tr</a></dt>
+            <dd>Tekir ile ilgili her türlü bilgiye ulaşabileceğiniz, kullanıcı topluluğu sitesidir.</dd>
+            <dt><a href="http://hata.tekir.com.tr" target="_blank">hata.tekir.com.tr</a></dt>
+            <dd>Tekir ile ilgili her türlü hata ve geliştirme önerisini bu adrese bildirerek Tekir uygulama bileşenlerinin gelişimine katkıda bulunun.</dd>
+        </dl>
+    </div>
+
+    <h2>Destek</h2>
+    <p>
+        Tekir için profesyonel iş ortamında; Linux sunucu ve dağıtık istemcilere dayanan bir ağ mimarisinde, veritabanı ve ağ güvenliği sağlanmış, veri yedekleme süreçlerini de içeren bir yapıda kullanımı önerilmektedir.
+    </p>
+    <p>
+        <br/>
+        Tekir'in profesyonel ortamda kurulumu, kullanımı ya da iş süreçlerine yönelik destek hizmetlerine ihtiyaç duyuyorsanız, <a href="http://destek.tekir.com.tr" target="_blank">destek.tekir.com.tr</a> adresini ziyaret edebilirsiniz.
+    </p>
+
+    <h2>Tekir Teknolojileri</h2>
+    <p>
+        Tekir, özgür yazılım ürünleri kullanılarak geliştirilmiştir. Tabanında Java teknolojileri bulunmaktadır.
+    </p>
+    <p>Tekir gelişiminde ve içerisinde kullanılan teknoloji ve ürünlerin tam listesine <a href="http://www.tekir.com.tr" target="_blank">www.tekir.com.tr</a> sayfalarından ulaşabilirsiniz.</p>
+
+    <center>
+                                <a href="http://www.tekir.com.tr" target="_blank"><h:graphicImage value="/img/tekir.png" /></a>
+                                <a href="http://www.ozguryazilim.com.tr" target="_blank"><h:graphicImage value="/img/oy.logo.128.png" /></a>
+    </center>
+    </div>
+</ui:define>
+</ui:composition>

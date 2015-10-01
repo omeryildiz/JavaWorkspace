@@ -1,0 +1,164 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="contactReport"/>
+            <ui:param name="curitem" value="extractAccountReport"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/report/extractAccountReport.xhtml">
+                <h:outputText value="#{messages['module.caption.ExtractAccountReport']}" rendered="#{s:hasPermission('extractAccountReport', 'select')}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/finance/financeTxnReport.xhtml" rendered="#{s:hasPermission('financeTxnReport', 'select')}" >
+                <h:graphicImage url="/img/report.gif" alt="#{messages['currency.img.Currency']}"/> 
+                <h:outputText value="#{messages['module.caption.FinanceTxnReport']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ExtractAccountReport']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header">
+                	<h:outputText value="#{messages['general.label.Filter']}" />
+                </f:facet>
+                
+                <h:outputText value="#{messages['extractAccountReport.label.WhySelectCurrency']}"/>
+                <h:panelGrid columns="3">
+                <s:fragment>
+                
+		            <a:region id="ss" renderRegionOnly="true">
+	                    <s:decorate id="sdc" template="/layout/edit.xhtml" >
+	                        <ui:define name="label"><h:outputText value="#{messages['extractAccountReport.label.Contact']}"/></ui:define>
+	
+	                        <h:inputText id="contact" value="#{extractAccountReport.filterModel.contact}" styleClass="middle" required="true">
+	                            <f:converter converterId="contactCaptionConverter"/>
+	                            <a:support event="onblur" reRender="ss"/>
+	                        </h:inputText>
+	
+	                        <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+	                            <h:graphicImage url="/img/selectBox.gif" />
+	                        </a>
+	
+	                        <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+	                    </s:decorate>
+                    </a:region>
+                    
+                    <a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['general.label.FollowUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{extractAccountReport.filterModel.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                
+                </s:fragment>
+                <s:fragment>	
+                	
+                	<s:decorate template="/layout/edit.xhtml" >
+		                <ui:define name="label"><h:outputText value="#{messages['general.label.DocumentCode']}"/></ui:define>
+		                <h:inputText value="#{extractAccountReport.filterModel.financeTxnCode}" styleClass="middle" />
+		            </s:decorate>
+					<s:decorate template="/layout/edit.xhtml">
+                    	<ui:define name="label">
+                        	<h:outputText value="#{messages['extractAccountReport.label.Currency']}" />
+                        </ui:define>
+	                    <h:selectOneMenu value="#{extractAccountReport.filterModel.currency}"
+							styleClass="middle" required="false">
+							<s:selectItems value="#{generalSuggestion.currencyList}"
+								var="acc" label="#{acc.code}"
+								noSelectionLabel="#{messages['general.value.None']}"
+								hideNoSelectionLabel="false" />
+						</h:selectOneMenu>
+                    </s:decorate>
+                    
+                </s:fragment>
+                <s:fragment>
+                    <s:decorate template="/layout/edit.xhtml">
+                        <ui:define name="label">
+                        	<h:outputText value="#{messages['extractAccountReport.label.BeginDate']}" />
+                        </ui:define>
+                        <r:calendar value="#{extractAccountReport.filterModel.beginDate}" enableManualInput="true"
+                                    datePattern="#{messages['general.format.Date']}" required="true"/>
+                    </s:decorate>
+
+					<s:decorate template="/layout/edit.xhtml">
+                        <ui:define name="label">
+                        	<h:outputText value="#{messages['extractAccountReport.label.EndDate']}" />
+                        </ui:define>
+                        <r:calendar value="#{extractAccountReport.filterModel.endDate}" enableManualInput="true"
+                                    datePattern="#{messages['general.format.Date']}" required="true"/>
+                    </s:decorate>
+				</s:fragment>                    
+                </h:panelGrid>
+                
+                <s:div styleClass="actionButtons">
+                    
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{extractAccountReport.pdf()}"
+                                     rendered="#{s:hasPermission('extractAccountReport', 'pdf')}"
+                                     styleClass="button"/>
+                    
+                </s:div>
+            </r:panel>
+            
+         
+        </h:form>
+        
+    </ui:define> 
+
+</ui:composition>

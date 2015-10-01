@@ -1,0 +1,579 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewInvoice"/>
+            <ui:param name="cursubitem" value="purchaseInvoice"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/purchaseInvoiceBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PurchaseInvoiceBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/purchaseInvoice.xhtml">
+                <h:outputText value="#{messages['module.caption.PurchaseInvoice']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{purchaseInvoiceHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['purchaseInvoice.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PurchaseInvoice']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        <ui:include src="/stock/productSelectPopup.xhtml" />
+        
+        <ui:remove>
+            <r:modalPanel  id="mp" minHeight="500" minWidth="450" 
+                           height="500" width="520" zindex="100">
+                <f:facet name="header">
+                    <h:outputText value="Stok Seçim" />
+                </f:facet>
+                <f:facet name="controls">
+                    <h:graphicImage value="/img/exit.gif" style="cursor:pointer" onclick="Richfaces.hideModalPanel('mp')" />
+                </f:facet>
+                
+                <a:include viewId="/finance/productSelect.xhtml" />
+                
+                <a href="javascript:Richfaces.hideModalPanel('mp')">hide this panel</a>:
+            </r:modalPanel>
+        </ui:remove>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/script_add.gif" alt="#{messages['purchaseInvoice.img.Form']}"/> 
+                        <h:outputText value="#{messages['purchaseInvoice.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:inputText value="#{purchaseInvoice.serial}" styleClass="middle" 
+                            	required="true" accesskey="Q" 
+                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Reference']}"/></ui:define>
+                            <h:inputText value="#{purchaseInvoice.reference}" styleClass="middle" required="false"/>
+                        </s:decorate>
+                        
+                        
+                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Contact']}"/></ui:define>
+                            <h:inputText id="contact" value="#{purchaseInvoice.contact}" styleClass="middle" required="true">
+                                <f:converter converterId="contactCaptionConverter"/>
+                            </h:inputText>
+                            
+                            <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            
+                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestProvider}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                        </s:decorate>
+                        
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Warehouse']}"/></ui:define>
+                            <h:selectOneMenu value="#{purchaseInvoice.warehouse}" styleClass="middle" required="true">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.warehouseList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                        
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Code']}"/></ui:define>
+                            <h:inputText value="#{purchaseInvoice.code}" styleClass="middle" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Date']}"/></ui:define>
+                            <r:calendar value="#{purchaseInvoice.date}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.ShippingDate']}"/></ui:define>
+                            <r:calendar value="#{purchaseInvoice.shippingDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+		                    <ui:define name="label"><h:outputText value="#{messages['general.label.Time']}"/></ui:define>
+		                    <h:inputText value="#{purchaseInvoice.time}" required="true">
+			                   	<s:convertDateTime  pattern="#{messages['general.format.Time']}" />
+							</h:inputText>
+				      	</s:decorate>
+                        
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Info']}"/></ui:define>
+                            <h:inputText value="#{purchaseInvoice.info}" styleClass="exlarge" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['invoice.label.Info1']}"/></ui:define>
+                            <h:inputText value="#{purchaseInvoice.info1}" styleClass="exlarge" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['invoice.label.Info2']}"/></ui:define>
+                            <h:inputText value="#{purchaseInvoice.info2}" styleClass="exlarge" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{purchaseInvoice.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['purchaseInvoice.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </s:div>
+                </h:panelGrid>
+                
+                <r:jQuery name="hede" timing="onJScall" query="get()" />
+                
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                
+                <a:region>
+                    <r:dataTable id="its" 
+                                 var="item"
+                                 value="#{purchaseInvoiceHome.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="10">
+                                    <h:outputText value="#{messages['purchaseInvoice.caption.Details']}" />
+                                </r:column>
+                                <r:column colspan="2">
+                                    <div>
+                                    	<a:commandLink reRender="its,ccyRates,ccyTotals,taxTotal,grandTotal" action="#{purchaseInvoiceHome.createNewShipmentLine()}" 
+	                                    	accesskey="S" oncomplete="focusLastRow(); setMasks();">
+	                                        <h:graphicImage url="/img/package_add.gif" title="#{messages['invoice.button.NewProductLine']}"/> 
+	                                    </a:commandLink>
+                                        
+                                        <ui:remove>
+                                        	<a:commandLink reRender="its,ccyRates,ccyTotals,taxTotal,grandTotal" action="#{purchaseInvoiceHome.createNewServiceLine()}" 
+	                                        	accesskey="H" oncomplete="focusLastRow(); setMasks();">
+	                                            <h:graphicImage url="/img/brick_add.gif" title="#{messages['invoice.button.NewServiceLine']}"/> 
+	                                        </a:commandLink>
+                                        
+                                            <a:commandLink reRender="its" action="#{purchaseInvoiceHome.createNewDiscountLine()}" >
+                                                <h:graphicImage url="/img/minus.gif" /> 
+                                            </a:commandLink>
+                                            
+                                            <a:commandLink reRender="its" action="#{purchaseInvoiceHome.createNewExpenseLine()}" >
+                                                <h:graphicImage url="/img/plus.gif" /> 
+                                            </a:commandLink>
+                                        </ui:remove>
+                                    </div>
+                                </r:column>
+                                
+                                <r:column breakBefore="true" >
+                                    <ui:remove>
+                                        <h:outputText value="#{messages['purchaseInvoice.label.Type']}" />
+                                    </ui:remove>
+                                    <h:graphicImage url="/img/information.gif" /> 
+                                </r:column>
+                                <r:column styleClass="codeField" colspan="2">
+                                    <h:outputText value="#{messages['purchaseInvoice.label.LineCode']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Product']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.LineInfo']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Quantity']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Unit']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.UnitPrice']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Amount']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['saleInvoice.label.TaxExcludedTotal']}" />
+                                </r:column>
+                                <ui:remove>
+                                    <r:column>
+                                        <h:outputText value="#{messages['purchaseInvoice.label.TaxRate']}" />
+                                    </r:column>
+                                    <r:column>
+                                        <h:outputText value="#{messages['purchaseInvoice.label.TaxAmount']}" />
+                                    </r:column>
+                                </ui:remove>
+                                <r:column>
+                                    <h:outputText value="#{messages['purchaseInvoice.label.Currency']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="" />
+                                </r:column>
+                            </r:columnGroup>
+                            
+                        </f:facet>
+                        <r:column rowspan="#{item.discounts.size + 1}" styleClass="InvRow#{ut:oddEven(rowKey)}">
+                            <ui:remove>
+                                <h:outputText  value="#{item.type}" styleClass="codeField" />
+                            </ui:remove>
+                            <h:graphicImage url="/img/brick.gif" rendered="#{item.type eq 'ServiceItem'}"/> 
+                            <h:graphicImage url="/img/package.gif" rendered="#{item.type eq 'InvoiceShipmentItem'}"/> 
+                            <h:graphicImage url="/img/package.gif" rendered="#{item.type eq 'ShipmentItem'}"/> 
+                            <s:fragment rendered="#{item.type eq 'InvoiceDiscount'}">
+                                <h:graphicImage url="/img/minus.gif" rendered="#{item.discount.discount}"/> 
+                                <h:graphicImage url="/img/plus.gif" rendered="#{not item.discount.discount}"/> 
+                            </s:fragment>
+                        </r:column>
+                        
+                        <r:column colspan="2" styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:inputText  id="code" value="#{item.lineCode}" styleClass="codeField utdff" />
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            
+                            <s:fragment rendered="#{item.type eq 'ServiceItem'}">
+                                <div style="width:190px;">
+                                    <h:inputText id="service" value="#{item.service}" styleClass="middle" requried="true">
+                                        <f:converter converterId="productCaptionConverter"/>
+                                        <a:support event="onblur" actionListener="#{purchaseInvoiceHome.selectLine(rowKey)}" reRender="unit,taxRate,taxIncluded" ajaxSingle="true"/>
+                                    </h:inputText>
+                                    <a href="javascript:productSelectPopup( 'form:its:#{rowKey}:service' )">
+                                        <h:graphicImage url="/img/selectBox.gif" /> 
+                                    </a>
+                                </div> 
+                                <r:suggestionbox for="service" nothingLabel="Sonuç Yok" rules="all"  ajaxSingle="true" suggestionAction="#{stockSuggestion.suggestIsService}" var="it" fetchValue="#{it.caption}"
+                                                 selfRendered="true">
+                                    <h:column>
+                                        <h:outputText value="#{it.code}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <h:outputText value="#{it.name}"/>
+                                    </h:column>
+                                </r:suggestionbox>
+                            </s:fragment>
+                            
+                            
+                            
+                            <s:fragment rendered="#{item.type ne 'ServiceItem'}">
+                                <div style="width:190px;">
+                                    <h:inputText id="product" value="#{item.product}" styleClass="middle" requried="true">
+                                        <f:converter converterId="productCaptionConverter"/>
+                                        <a:support event="onblur" actionListener="#{purchaseInvoiceHome.selectLine(rowKey)}" reRender="unit,taxRate,taxIncluded" ajaxSingle="true"/>
+                                    </h:inputText>
+                                    <a href="javascript:productSelectPopup( 'form:its:#{rowKey}:product' )">
+                                        <h:graphicImage url="/img/selectBox.gif" /> 
+                                    </a>
+                                </div>
+                                <r:suggestionbox for="product" nothingLabel="Sonuç Yok" rules="all"  ajaxSingle="true" suggestionAction="#{stockSuggestion.suggestProduct}" var="it" fetchValue="#{it.caption}"
+                                                 reRender="unit,taxRate,taxIncluded" selfRendered="true">
+                                    <h:column>
+                                        <h:outputText value="#{it.code}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <h:outputText value="#{it.name}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <h:outputText value="#{it.unit}"/>
+                                    </h:column>
+                                </r:suggestionbox>
+                            </s:fragment>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <s:div>    
+                                <h:inputText  value="#{item.info}" style="width:140px;" />
+                            </s:div>
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            
+                            <h:inputText  id="quantity" styleClass="tiny" value="#{item.quantity.value}" onblur="calcAmount(#{rowKey});" converter="doubleConverter" alt="decimal" />
+                            
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:outputText id="unit" value="#{item.quantity.unit}" />
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            
+                            <h:inputText  id="unitPrice" styleClass="tiny" value="#{item.unitPrice.value}" onblur="calcAmount(#{rowKey});" converter="bigDecimalConverter" alt="decimal" />
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:inputText  id="amount" value="#{item.amount.value}" styleClass="amountField" onblur="calcPrice(#{rowKey});" converter="bigDecimalConverter" alt="decimal" />
+                        </r:column>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <h:inputText id="taxExcludedTotal" value="#{item.taxExcludedTotalAmount.value}" disabled="true" styleClass="amountField" converter="bigDecimalConverter"/>
+                            <s:div id="taxRate" styleClass="hidden"><h:outputText value="#{item.taxRate}" /></s:div>
+                            <s:div id="taxIncluded" styleClass="hidden"><h:outputText rendered="#{item.type ne 'ServiceItem'}" 
+                            	value="#{item.product.taxIncluded}" /><h:outputText rendered="#{item.type eq 'ServiceItem'}"
+                            	value="#{item.service.taxIncluded}" /></s:div>
+                        </r:column>
+                        
+                        <ui:remove>
+                            <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                <h:inputText  id="taxRate" value="#{item.taxRate}" styleClass="amountField" onblur="calcPrice(#{rowKey});"/>
+                            </r:column>
+                            
+                            <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                <h:inputText  id="taxAmount" value="#{item.taxAmount.value}" styleClass="amountField" onblur="calcPrice(#{rowKey});"/>
+                            </r:column>
+                        </ui:remove>
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                            <s:decorate>
+                                <h:selectOneMenu value="#{item.amount.currency}" styleClass="ccyField">
+                                    <s:selectItems value="#{generalSuggestion.currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                                </h:selectOneMenu> 
+                                
+                            </s:decorate>
+                        </r:column>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <r:column styleClass="codeField InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}" colspan="2">
+                            <h:inputText value="#{item.discount.code}" styleClass="codeField"/>
+                        </r:column>
+                        <r:column colspan="5" styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:inputText value="#{item.discount.info}" />
+                        </r:column>
+                        <r:column styleClass="amountField InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:inputText value="#{item.discount.rate}" styleClass="amountField"/>
+                        </r:column>
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}" rendered="#{item.type eq 'InvoiceDiscount'}">
+                            <h:selectOneMenu value="#{item.discount.currency}" styleClass="ccyField">
+                                <s:selectItems value="#{currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="Yüzde" hideNoSelectionLabel="false"/>
+                            </h:selectOneMenu> 
+                        </r:column>
+                        
+                        
+                        
+                        <r:column styleClass="InvRow#{ut:oddEven(rowKey)}">
+                            <ui:remove>
+                                <a:commandLink reRender="its" action="#{purchaseInvoiceHome.createNewSubDiscountLine(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                    <h:graphicImage url="/img/delete1.gif" /> 
+                                </a:commandLink>
+                                
+                                
+                                <a:commandLink reRender="its" action="#{purchaseInvoiceHome.createNewSubExpenseLine(rowKey)}" rendered="#{item.type ne 'InvoiceDiscount'}">
+                                    <h:graphicImage url="/img/add.gif" /> 
+                                </a:commandLink>
+                            </ui:remove>    
+                            
+                            <a:commandLink reRender="its" action="#{purchaseInvoiceHome.deleteLine(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" /> 
+                            </a:commandLink>
+                            
+                        </r:column>
+                        
+                        <ui:remove>
+                            
+                            <r:subTable var="sit" value="#{item.discounts}">
+                                <r:column styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <h:graphicImage url="/img/minus.gif" rendered="#{sit.discount}"/> 
+                                    <h:graphicImage url="/img/plus.gif" rendered="#{not sit.discount}"/> 
+                                </r:column>
+                                <r:column styleClass="codeField InvRow#{ut:oddEven(rowKey)}">
+                                    <h:inputText value="#{sit.code}" styleClass="codeField"/>
+                                </r:column>
+                                <r:column colspan="5" styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <h:inputText value="#{sit.info}" />
+                                </r:column>
+                                <r:column styleClass="amountField InvRow#{ut:oddEven(rowKey)}">
+                                    <h:inputText value="#{sit.rate}" styleClass="amountField"/>
+                                </r:column>
+                                <r:column styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <h:selectOneMenu value="#{sit.currency}" styleClass="ccyField">
+                                        <s:selectItems value="#{currencyList}" var="ccy" label="#{ccy.code}" noSelectionLabel="Yüzde" hideNoSelectionLabel="false"/>
+                                    </h:selectOneMenu> 
+                                </r:column>
+                                <r:column  styleClass="InvRow#{ut:oddEven(rowKey)}">
+                                    <a:commandLink reRender="its" action="#{purchaseInvoiceHome.deleteLine(rowKey)}" >
+                                        <h:graphicImage url="/img/delete.gif" /> 
+                                    </a:commandLink>
+                                </r:column>
+                            </r:subTable>
+                            
+                        </ui:remove>
+                    </r:dataTable>
+                    
+                    <h:panelGrid columns="4" cellspacing="0" cellpadding="0" border="0" style="margin-top:4px;">
+                        <s:div style="margin-right:4px;">
+                            
+                            <r:dataTable id="ccyRates"
+                                         var="item"
+                                         value="#{purchaseInvoice.currencyRates}" 
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['purchaseInvoice.caption.CcyRates']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.currencyPair.caption}" />
+                                </r:column>
+                                <r:column>
+                                    <h:inputText value="#{item.ask}" styleClass="tiny"/>
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+                        <s:div style="margin-left:4px;margin-right:4px;">
+                            
+                            <r:dataTable id="ccyTotals"
+                                         var="item"
+                                         value="#{purchaseInvoice.currencySummaries}" 
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['purchaseInvoice.caption.CcySummary']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.amount}" />
+                                </r:column>
+                                <r:column>
+                               		<h:outputText value="#{item.amount.localAmount}" converter="bigDecimalConverter" />
+                                    	
+                                    <h:outputText value=" #{currencyManager.getLocaleCurrency()}" />
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+                        
+                        <s:div style="margin-left:4px;margin-right:4px;">
+                            <r:dataTable id="taxTotal"
+                                         var="item"
+                                         value="#{purchaseInvoice.taxSummaries}" 
+                                         rowKeyVar="rowKey"
+                                         styleClass="detailTable">
+                                <f:facet name="header">
+                                    <h:outputText value="#{messages['purchaseInvoice.caption.TaxSummary']}" />
+                                </f:facet>
+                                <r:column>
+                                    <h:outputText value="#{item.tax.name}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.rate}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{item.amount}" />
+                                </r:column>
+                            </r:dataTable>
+                        </s:div>
+                        
+                        <s:div style="margin-left:4px;">
+                            <r:panel>
+                                <f:facet name="header">
+                                    
+                                    <s:div>
+                                        <s:div style="float:right;">
+                                            <a:commandLink reRender="its,ccyRates,ccyTotals,taxTotal,grandTotal" action="#{purchaseInvoiceHome.recalculate()}" accesskey="C" oncomplete="focusLastRow(); setMasks();">
+                                                <h:graphicImage url="/img/reload.gif" /> 
+                                                <h:outputText value="#{messages['general.button.Calculate']}" />
+                                            </a:commandLink>
+                                        </s:div>
+                                        
+                                        <h:outputText value="#{messages['purchaseInvoice.caption.GrandTotal']}" />
+                                    </s:div>
+                                </f:facet>
+                                
+                                <h:panelGrid id="grandTotal" columns="2" columnClasses="propkey,propvalView">
+                                    <h:outputText value="#{messages['purchaseInvoice.label.BeforeTax']} :" />
+                                    <h:outputText value="#{purchaseInvoice.beforeTax}" />
+                                    
+                                    <h:outputText value="#{messages['purchaseInvoice.label.TaxTotal']} :" />
+                                    <h:outputText value="#{purchaseInvoice.totalTax}" />
+                                    
+                                    <h:outputText value="#{messages['purchaseInvoice.label.InvoiceTotal']} :" />
+                                    <h:outputText value="#{purchaseInvoice.invoiceTotal}" />
+                                </h:panelGrid>
+                            </r:panel>
+                        </s:div>
+                    </h:panelGrid>
+                </a:region>
+                
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{purchaseInvoiceHome.save()}"
+                                 styleClass="button checkRequired"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{purchaseInvoiceHome.delete()}"
+                          rendered="#{not empty purchaseInvoice.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{purchaseInvoiceHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

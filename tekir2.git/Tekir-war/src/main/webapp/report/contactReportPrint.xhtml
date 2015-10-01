@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/#{parameters.requestParameters['media'][0]}Base.xhtml">
+
+
+    <ui:define name="header">
+        <h1> <h:outputText value="#{messages['module.caption.ContactReport']}" /></h1>
+    </ui:define>
+
+    <ui:define name="body">
+
+
+        <r:dataTable id="browseList"
+                     var="contact"
+                     value="#{generalSuggestion.contactList}">
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Code']}"/></f:facet>
+                <h:outputText value="#{contact.code}"/>
+            </r:column>
+            <r:column>
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Name']}" /></f:facet>
+                <h:outputText value="#{contact.fullname}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Company']}" /></f:facet>
+                <h:outputText value="#{contact.company}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Representative']}" /></f:facet>
+                <h:outputText value="#{contact.representative}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Title']}" /></f:facet>
+                <h:outputText value="#{contact.title}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Type']}" /></f:facet>
+                <h:outputText value="#{messages['contact.type.Customer']}" rendered="#{contact.customerType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Provider']}" rendered="#{contact.providerType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Agent']}" rendered="#{contact.agentType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Personnel']}" rendered="#{contact.personnelType eq true}"/>
+                <h:outputText value="#{messages['contact.type.Branch']}" rendered="#{contact.branchType eq true}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Organization']}" /></f:facet>
+                <h:outputText value="#{contact.organization.code}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Category']}" /></f:facet>
+                <h:outputText value="#{contact.category.code}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Code1']}" /></f:facet>
+                <h:outputText value="#{contact.exCode1}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Code2']}" /></f:facet>
+                <h:outputText value="#{contact.exCode2}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.ContactType']}" /></f:facet>
+                <h:outputText value="Kişi" rendered="#{contact.person eq true}"/>
+                <h:outputText value="Şirket" rendered="#{contact.person eq false}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Visibility']}" /></f:facet>
+                <h:outputText value="#{messages['contact.label.Everyone']}" rendered ="#{contact.isPublic eq true}"/>
+                <h:outputText value="#{messages['contact.label.Region']}" rendered ="#{contact.isPublic eq false}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.SSN']}" /></f:facet>
+                <h:outputText value="#{contact.ssn}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.PassportNumber']}" /></f:facet>
+                <h:outputText value="#{contact.passportNo}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.TaxOffice']}" /></f:facet>
+                <h:outputText value="#{contact.taxOffice}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.TaxNumber']}" /></f:facet>
+                <h:outputText value="#{contact.taxNumber}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Info']}" /></f:facet>
+                <h:outputText value="#{contact.info}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Status']}" /></f:facet>
+                <h:outputText value="Evet" rendered="#{contact.active eq true}"/>
+                <h:outputText value="Hayır" rendered="#{contact.active eq false}"/>
+            </r:column>
+
+
+
+
+
+            <ui:remove>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Phone1']}" /></f:facet>
+                <h:outputText value="#{contact.phone1}"/>
+            </r:column>
+            <r:column >
+                <f:facet name="header"><h:outputText value="#{messages['contact.label.Mobile']}" /></f:facet>
+                <h:outputText value="#{contact.phoneMobile}"/>
+            </r:column>
+            </ui:remove>
+        </r:dataTable>
+
+
+    </ui:define>
+</ui:composition>

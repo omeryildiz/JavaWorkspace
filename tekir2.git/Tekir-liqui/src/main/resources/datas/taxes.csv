@@ -1,0 +1,14 @@
+ID,CODE,NAME,ISACTIVE,INFO,TYPE,SYSTEM,is_transport_tax
+1,KDV1,KDV %1,TRUE,KDV oranı,0,TRUE,FALSE
+2,KDV8,KDV %8,TRUE,KDV oranı,0,TRUE,FALSE
+3,KDV18,KDV %18,TRUE,KDV oranı,0,TRUE,FALSE
+4,KDV24,KDV %24,TRUE,KDV oranı,0,TRUE,FALSE
+5,KDV0,KDV %0,TRUE,KDV oranı,0,TRUE,FALSE
+6,OIV5,ÖİV %5,TRUE,Telekom data,2,TRUE,FALSE
+7,OIV15,ÖİV %15,TRUE,Telekom,2,TRUE,FALSE
+8,OIV25,ÖİV %25,TRUE,Telekom konuşma,2,TRUE,FALSE
+9,STP0,STP %0,TRUE,Serbest meslek makbuzu birey için,3,TRUE,FALSE
+10,STP10,STP %10,TRUE,Danışmanlık,3,TRUE,FALSE
+11,STP17,STP %17,TRUE,Telif işlemleri / yazılım geliştirme,3,TRUE,FALSE
+12,STP20,STP %20,TRUE,Serbest meslek makbuzu avukat vb. firma için,3,TRUE,FALSE
+13,STP22,STP %22,TRUE,Diğer işler / temizlik / parttime,3,TRUE,FALSE

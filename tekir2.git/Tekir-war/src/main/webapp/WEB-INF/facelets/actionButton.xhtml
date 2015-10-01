@@ -1,0 +1,34 @@
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
+                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                 xmlns:h="http://java.sun.com/jsf/html"
+                 xmlns:f="http://java.sun.com/jsf/core"
+                 xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                 xmlns:c="http://java.sun.com/jstl/core"
+                 xmlns:s="http://jboss.com/products/seam/taglib">
+
+    <s:fragment rendered="#{type eq 'saveAndNew'}">
+        <h:commandButton id="saveAndNew"
+                         value="#{messages['general.button.SaveAndNew']}"
+                         action="#{action}"
+                         rendered="#{s:hasPermission( permission, 'insert') and s:hasPermission( permission, 'update')}"
+                         styleClass="button"/>
+    </s:fragment>
+
+    <s:fragment rendered="#{type eq 'save'}">
+        <h:commandButton id="save"
+                         value="#{messages['general.button.Save']}"
+                         action="#{action}" styleClass="button"
+                         rendered="#{(not empty entity.id and s:hasPermission(permission, 'update')) or (empty entity.id and s:hasPermission(permission, 'insert'))}"
+                         onclick="#{onclick}"/>
+    </s:fragment>
+    <s:fragment rendered="#{type eq 'delete'}">
+        <s:button id="delete" value="#{messages['general.button.Delete']}"
+                  action="#{action}" rendered="#{not empty entity.id and s:hasPermission(permission, 'delete')}"
+                  onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                  styleClass="button" />
+    </s:fragment>
+    <s:fragment rendered="#{type eq 'done'}">
+        <s:button id="done" value="#{messages['general.button.Close']}"
+                  action="#{action}" styleClass="button" />
+    </s:fragment>
+</ui:composition>

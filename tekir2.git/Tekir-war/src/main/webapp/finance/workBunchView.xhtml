@@ -1,0 +1,418 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="cursubitem" value="newAccountCreditNoteView"/>
+        </ui:include>
+    </ui:define>
+
+	   <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/workBunchBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.FollowUp']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/finance/workBunch.xhtml" propagation="none" rendered="#{s:hasPermission('workBunch', 'insert')}">
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['followUp.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+
+	<ui:define name="body">
+
+		<h1><h:outputText value="#{messages['module.caption.FollowUpView']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif" />
+						<h:outputText value="#{messages['followUp.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				
+				<h:panelGrid columns="3">
+
+							<s:div>
+
+								<s:decorate template="/layout/edit.xhtml">
+									<h:outputText value="#{messages['general.label.Code']} : " styleClass="boldLabel" />
+									<h:outputText value="#{messages['general.value.None']}" rendered="#{workBunch.code eq null}" />
+									<h:outputText value="#{workBunch.code}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/edit.xhtml">
+									<h:outputText value="#{messages['followUp.label.Name']} : " styleClass="boldLabel" />
+									<h:outputText value="#{messages['general.value.None']}" rendered="#{workBunch.name eq null}" />
+									<h:outputText value="#{workBunch.name}" />
+								</s:decorate>
+                                
+                                <s:decorate template="/layout/edit.xhtml">
+									<h:outputText value="#{messages['general.label.Contact']} : " styleClass="boldLabel" />
+									<h:outputText value="#{messages['general.value.None']}" rendered="#{workBunch.contact eq null}" />
+									<h:outputText value="#{workBunch.contact}" styleClass="middle" >
+										<f:converter converterId="contactCaptionConverter" />
+									</h:outputText>
+								</s:decorate>
+
+							</s:div>
+							
+							<s:div>
+                                <s:decorate template="/layout/edit.xhtml">
+									<h:outputText value="#{messages['general.label.StartDate']} : " styleClass="boldLabel" />
+									<h:outputText value="#{messages['general.value.None']}" rendered="#{workBunch.beginDate eq null}" />
+									<h:outputText value="#{workBunch.beginDate}">
+										<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+									</h:outputText>
+								</s:decorate>
+                                
+                                <s:decorate template="/layout/edit.xhtml">
+									<h:outputText value="#{messages['general.label.EndDate']} : " styleClass="boldLabel" />
+									<h:outputText value="#{messages['general.value.None']}" rendered="#{workBunch.endDate eq null}" />
+									<h:outputText value="#{workBunch.endDate}">
+										<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+									</h:outputText>
+								</s:decorate>
+                                
+                                <s:decorate template="/layout/edit.xhtml">
+									<h:outputText value="#{messages['followUp.label.Status']} : " styleClass="boldLabel" />
+									<h:outputText value="#{messages['general.value.None']}" rendered="#{workBunch.workBunchStatus eq null}" />
+									<h:outputText value="#{messages[ut:concat('workBunch.status.', workBunch.workBunchStatus)]}" styleClass="middle" />
+								</s:decorate>
+							</s:div>
+
+							<s:div>
+								<s:decorate template="/layout/edit.xhtml">
+									<h:outputText value="#{messages['followUp.label.Info']} : " styleClass="boldLabel" />
+									<h:outputText value="#{messages['general.value.None']}" rendered="#{workBunch.info eq null}" />
+									<h:outputText value="#{workBunch.info}" styleClass="exlarge" rows="6" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/edit.xhtml">
+								    <h:outputText value="#{messages['followUp.label.Status']} : " styleClass="boldLabel" />
+								    <h:outputText value="#{messages['general.label.Active']}" rendered="#{workBunch.active}" />
+								    <h:outputText value="#{messages['general.label.Passive']}"  rendered="#{!workBunch.active}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/edit.xhtml">
+								</s:decorate>
+							</s:div>
+		
+				</h:panelGrid>
+			</r:panel>
+
+            <div class="actionButtons">
+				<s:button id="edit" value="#{messages['general.button.EditDesc']}"
+					action="#{workBunchHome.edit()}" styleClass="button" />
+
+				<s:button id="done" value="#{messages['general.button.Close']}"
+					action="#{workBunchHome.close()}" styleClass="button" />
+			</div>
+
+				<r:spacer height="10"/>            
+				<r:dataTable id="wBunchDataTable" var="item" value="#{workBunchHome.workBunchHistory(workBunch.id)}" rows="10" >
+					<f:facet name="header">
+		                <h:panelGroup>
+		                    <h:outputText value="#{messages['followUp.label.History']}"/>
+		                </h:panelGroup>
+					</f:facet>
+
+					<r:column>
+		                <f:facet name="header"><h:outputText value="#{messages['financeTxnReport.label.DocumentType']}" /></f:facet>
+						<h:outputText value="#{messages[ ut:concat( 'general.value.DocumentType.' ,item.documentType)]}" />
+					</r:column>
+					<r:column styleClass="serialField">
+		                <f:facet name="header"><h:outputText value="#{messages['financeTxnReport.label.Serial']}" /></f:facet>
+<ui:remove>newsaleInvoiceBrowse.xhtml</ui:remove>					
+                            <s:link view="/finance/newsaleShipmentInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{item.documentType eq 'SaleInvoice' and item.tradeAction eq 'Sale'}">
+                                <f:param name="eid" value="#{item.docId}"/>
+			                    <f:param name="it" value="1"/>
+			                    <f:param name="at" value="1"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/finance/newsaleInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{item.documentType eq 'SaleShipmentInvoice' and item.tradeAction eq 'Sale'}">
+			                    <f:param name="it" value="0"/>
+			                    <f:param name="at" value="1"/>
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/finance/newsaleInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{item.documentType eq 'SaleProformaInvoice'}">
+			                    <f:param name="at" value="1"/>
+			                    <f:param name="it" value="3"/>
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/finance/purchaseReturnInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{item.tradeAction eq 'PurchseReturn'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/finance/retailSaleInvoiceView.xhtml" propagation="begin"
+                                rendered="#{item.documentType eq 'RetailSaleShipmentInvoice' and item.tradeAction eq 'Sale'}">
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+<ui:remove>newsaleInvoiceBrowse.xhtml</ui:remove>					
+                            
+                            
+<ui:remove>newpurchaseInvoiceBrowse.xhtml</ui:remove>                            
+                            <s:link view="/finance/newpurchaseInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{item.documentType eq 'PurchaseShipmentInvoice' and item.tradeAction eq 'Purchase'}">
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/finance/newpurchaseInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{item.documentType eq 'PurchaseInvoice' and item.tradeAction eq 'Purchase'}" >
+                                <f:param name="it" value="1"/>
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/finance/saleReturnInvoiceView.xhtml"
+                            	rendered="#{item.tradeAction eq 'SaleReturn' and item.documentType eq 'PurchaseShipmentInvoice'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/finance/retailSaleReturnInvoiceView.xhtml"
+                            	rendered="#{item.tradeAction eq 'SaleReturn' and item.documentType eq 'RetailSaleReturnInvoice'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{item.docId}"/>
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+<ui:remove>newpurchaseInvoiceBrowse.xhtml</ui:remove>                            
+                            
+
+<ui:remove>productTxnReport.xhtml</ui:remove>
+                            <s:link view="/stock/newpurchaseShipmentView.xhtml" rendered="#{item.documentType eq 'PurchaseShipmentNote' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/stock/newsaleShipmentView.xhtml" rendered="#{item.documentType eq 'SaleShipmentNote' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/stock/productTransferView.xhtml" rendered="#{item.documentType eq 'ProductTransfer' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/stock/productVirementView.xhtml" rendered="#{item.documentType eq 'ProductVirement' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}"/>
+                            </s:link>
+                            <s:link view="/stock/newsaleOrderView.xhtml" rendered="#{item.documentType eq 'SaleOrder' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+                            <s:link view="/finance/expenseNote.xhtml" rendered="#{item.documentType eq 'ExpenseNote' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+                            <s:link view="/finance/returnExpenseNote.xhtml" rendered="#{item.documentType eq 'ReturnExpenseNote' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/stock/countNoteEntryView.xhtml" rendered="#{item.documentType eq 'CountNote' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+<ui:remove>productTxnReport.xhtml</ui:remove>
+
+
+<ui:remove>financeTxnReport.xhtml</ui:remove>
+			                <s:link view="/finance/collectionView.xhtml" rendered="#{item.documentType eq 'Collection' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/paymentView.xhtml" rendered="#{item.documentType eq 'Payment' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/debitCreditVirementView.xhtml" rendered="#{item.documentType eq 'DebitCreditVirement' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+<ui:remove>			                
+			                <s:link view="/finance/newpurchaseInvoiceView.xhtml" rendered="#{item.documentType eq 'PurchaseInvoice'}" propagation="begin">
+			                    <f:param name="it" value="0" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/newsaleInvoiceView.xhtml" rendered="#{item.documentType eq 'SaleInvoice' }" propagation="begin">
+			                    <f:param name="it" value="0" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/newsaleShipmentInvoiceView.xhtml" rendered="#{item.documentType eq 'SaleShipmentInvoice' }" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/newpurchaseShipmentInvoiceView.xhtml" rendered="#{item.documentType eq 'PurchaseShipmentInvoice'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+</ui:remove>
+			                <s:link view="/finance/transportShipmentInvoiceView.xhtml" rendered="#{item.documentType eq 'TransportShipmentInvoice'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/bankToContactTransferView.xhtml" rendered="#{item.documentType eq 'BankToContactTransfer' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/contactToBankTransferView.xhtml" rendered="#{item.documentType eq 'ContactToBankTransfer' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/transportInvoiceView.xhtml" rendered="#{item.documentType eq 'TransportInvoice'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/chequeToContactPayrollView.xhtml" rendered="#{item.documentType eq 'ChequePaymentPayroll'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/chequeFromContactPayrollView.xhtml" rendered="#{item.documentType eq 'ChequeFromContactPayroll'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/promissoryToContactPayrollView.xhtml" rendered="#{item.documentType eq 'PromissoryPaymentPayroll'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/promissoryFromContactPayrollView.xhtml" rendered="#{item.documentType eq 'PromissoryFromContactPayroll'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/debitCreditNotePaymentView.xhtml" rendered="#{item.documentType eq 'DebitCreditNotePayment'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+			                <s:link view="/finance/debitCreditNoteCollectionView.xhtml" rendered="#{item.documentType eq 'DebitCreditNoteCollection'}" propagation="begin">
+			                    <f:param name="it" value="1" />
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+<ui:remove>			                
+			                <s:link view="/finance/retailSaleInvoiceView.xhtml" rendered="#{item.documentType eq 'RetailSaleShipmentInvoice' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+                            <s:link view="/stock/newsaleOrderView.xhtml" rendered="#{item.documentType eq 'SaleOrder' }" propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+                            <s:link view="/finance/expenseNote.xhtml" rendered="#{item.documentType eq 'ExpenseNote' }" 
+                            	propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+                            <s:link view="/finance/returnExpenseNote.xhtml" rendered="#{item.documentType eq 'ReturnExpenseNote' }" 
+                            	propagation="begin">
+			                    <f:param name="eid" value="#{item.docId}" />
+			                    <h:outputText value="#{item.serial}" />
+			                </s:link>
+</ui:remove>
+<ui:remove>financeTxnReport.xhtml</ui:remove>
+
+
+<ui:remove>bankTxnReport.xhtml</ui:remove>
+                            <s:link view="/finance/bankToBankTransferView.xhtml" rendered="#{item.documentType eq 'BankToBankTransfer' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+<ui:remove>
+                            <s:link view="/finance/bankToContactTransferView.xhtml" rendered="#{item.documentType eq 'BankToContactTransfer' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+                            <s:link view="/finance/contactToBankTransferView.xhtml" rendered="#{item.documentType eq 'ContactToBankTransfer' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+</ui:remove>
+                            <s:link view="/finance/accountToBankTransferView.xhtml" rendered="#{item.documentType eq 'AccountToBankTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+                            <s:link view="/finance/bankToAccountTransferView.xhtml" rendered="#{item.documentType eq 'BankToAccountTransfer'}" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+                            <s:link view="/finance/depositAccount.xhtml" rendered="#{item.documentType eq 'DepositAccount'}" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+                            <s:link view="/finance/chequeCollectedAtBankPayrollView.xhtml" rendered="#{item.documentType eq 'ChequeCollectedAtBankPayroll' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+                            <s:link view="/finance/promissoryCollectedAtBankPayrollView.xhtml" rendered="#{item.documentType eq 'PromissoryCollectedAtBankPayroll' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+                            <s:link view="/finance/foreignExchange.xhtml" rendered="#{item.documentType eq 'ForeignExchange' }" propagation="begin">
+                                <f:param name="eid" value="#{item.docId}" />
+                                <h:outputText value="#{item.serial}" />
+                            </s:link>
+<ui:remove>bankTxnReport.xhtml</ui:remove>
+
+					</r:column>
+					<r:column>
+		                <f:facet name="header"><h:outputText value="#{messages['financeTxnReport.label.Reference']}" /></f:facet>
+						<h:outputText value="#{item.reference}" />
+					</r:column>
+					<r:column>
+		                <f:facet name="header"><h:outputText value="#{messages['financeTxnReport.label.Date']}" /></f:facet>
+						<h:outputText value="#{item.date}">
+							<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+						</h:outputText>
+					</r:column>
+					<r:column>
+		                <f:facet name="header"><h:outputText value="#{messages['financeTxnReport.label.Code']}" /></f:facet>
+						<h:outputText value="#{item.code}" />
+					</r:column>
+					<r:column>
+		                <f:facet name="header"><h:outputText value="#{messages['financeTxnReport.label.Info']}" /></f:facet>
+						<h:outputText value="#{item.info}" />
+					</r:column>
+		            <f:facet name="footer">
+		                <r:datascroller for="wBunchDataTable" maxPages="20" />
+		            </f:facet>
+				</r:dataTable>
+		</h:form>
+				
+				
+    </ui:define>
+
+</ui:composition>

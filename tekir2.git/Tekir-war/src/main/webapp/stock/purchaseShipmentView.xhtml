@@ -1,0 +1,296 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:ut="http://utech.com/jsf/comps" template="/layout/template.xhtml">
+
+	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="stock"/>
+            <ui:param name="curpage" value="stocknew"/>
+            <ui:param name="curitem" value="purchaseShipment"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/purchaseShipmentBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.PurchaseShipmentBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/stock/purchaseShipment.xhtml">
+                <h:outputText value="#{messages['module.caption.PurchaseShipment']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/stock/purchaseShipment.xhtml"   rendered="#{s:hasPermission('purchaseShipment', 'insert')}"
+                action="#{purchaseShipmentHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['purchaseShipment.action.Add']}" />
+            </s:link>
+        </div>
+
+    </ui:define>
+
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.PurchaseShipment']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+					<s:fragment>
+						<h:graphicImage url="/img/script_delete.gif"
+							alt="#{messages['purchaseShipment.img.Form']}" />
+						<h:outputText value="#{messages['purchaseShipment.caption.Form']}" />
+					</s:fragment>
+				</f:facet>
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<table>
+							<tr>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseShipment.label.Serial']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.serial eq null}" />
+										<h:outputText value="#{purchaseShipment.serial}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseShipment.label.Reference']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.reference eq null}" />
+										<h:outputText value="#{purchaseShipment.reference}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<ui:define name="label">
+											<h:outputText
+												value="#{messages['purchaseShipment.label.Contact']} : " />
+										</ui:define>
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.contact eq null}" />
+										<h:outputText value="#{purchaseShipment.contact.caption}" />
+										<br />
+										<h:outputText value="#{purchaseShipment.contact.company}"
+											rendered="#{purchaseShipment.contact.company ne null}" />
+										<br />
+										<h:outputText value="#{purchaseShipment.contact.defaultAddress.address.street}"
+											rendered="#{purchaseShipment.contact.defaultAddress.address.street ne null}" />
+										<br />
+										<h:outputText value="#{purchaseShipment.contact.defaultAddress.address.zip}"
+											rendered="#{purchaseShipment.contact.defaultAddress.address.zip ne null}" />
+										<br />
+										<h:outputText
+											value="#{purchaseShipment.contact.defaultAddress.province.name} / #{purchaseShipment.contact.defaultAddress.city.name}"
+											rendered="#{purchaseShipment.contact.defaultAddress.city.name ne null}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml"
+										rendered="#{purchaseShipment.contact.person eq false}">
+										<h:outputText
+											value="#{messages['purchaseShipment.label.TaxOfficeAndNumber']} : "
+											styleClass="boldLabel" />
+										<br />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.contact.taxOffice eq null}" />
+										<h:outputText
+											value="#{purchaseShipment.contact.taxOffice} / #{purchaseShipment.contact.taxNumber}"
+											rendered="#{purchaseShipment.contact.taxOffice ne '' or purchaseShipment.contact.taxNumber ne ''}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml"
+										rendered="#{purchaseShipment.contact.person eq true}">
+										<h:outputText value="#{messages['purchaseShipment.label.Ssn']} : "
+											styleClass="boldLabel" />
+										<br />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.contact.ssn eq null}" />
+										<h:outputText value="#{purchaseShipment.contact.ssn}" />
+									</s:decorate>
+
+								</s:div></td>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseShipment.label.Code']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.code eq null}" />
+										<h:outputText value="#{purchaseShipment.code}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseShipment.label.Info']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.info eq null}" />
+										<h:outputText value="#{purchaseShipment.info}"
+											styleClass="exlarge" rows="6" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseShipment.label.Warehouse']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.warehouse eq null}" />
+										<h:outputText value="#{purchaseShipment.warehouse.code}" />
+									</s:decorate>
+
+								</s:div></td>
+							</tr>
+						</table>
+					</s:fragment>
+
+					<s:fragment>
+						<table>
+						<tr>
+
+								<s:div>
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['purchaseShipment.label.Date']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{purchaseShipment.date eq null}" />
+										<h:outputText value="#{purchaseShipment.date}">
+											<s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+										</h:outputText>
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml" >
+				                    	<h:outputText value="#{messages['general.label.Time']} : "
+				                            styleClass="boldLabel"/>
+				                            <h:outputText value="#{purchaseShipment.time}" required="true">
+				                            	<s:convertDateTime  pattern="#{messages['general.format.Time']}" />
+										</h:outputText>
+				                   </s:decorate>
+
+								</s:div>
+						</tr>
+						
+						</table>
+					</s:fragment>
+
+				</h:panelGrid>
+
+				<r:dataTable id="its" var="item" value="#{purchaseShipment.items}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0">
+
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineCode']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Product']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineInfo']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Quantity']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Unit']}" />
+							</r:column>
+							<r:column>
+								<h:outputText
+									value="#{messages['purchaseShipment.label.UnitPrice']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Amount']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Currency']}" />
+							</r:column>
+
+						</r:columnGroup>
+					</f:facet>
+
+					<r:column style="width:101px; border:0" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.lineCode}" />
+					</r:column>
+
+					<r:column style="width:401px; border:0" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.product.caption}" />
+					</r:column>
+
+					<r:column style="width:201px; border:0" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.info}" />
+					</r:column>
+
+					<r:column style="width:150px; border:0" styleClass="amountField" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.quantity.value}"
+							styleClass="amountField" />
+					</r:column>
+
+					<r:column style="width:110px; border:0" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.quantity.unit}" />
+					</r:column>
+
+
+					<r:column style="border:0" styleClass="amountField" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.unitPrice.value}"
+							styleClass="amountField utdff" >
+							<f:convertNumber pattern="#,##0.00"/>
+						</h:outputText>
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.amount.value}"
+							styleClass="amountField" >
+							<f:convertNumber pattern="#,##0.00"/>
+						</h:outputText>
+
+					</r:column>
+
+                    <r:column style="border:0" styleClass="amountField" rendered="#{item.product.productType}">
+						<h:outputText value="#{item.amount.currency}"
+							styleClass="ccyField" />
+					</r:column>
+
+				</r:dataTable>
+
+                            </r:panel>
+
+			<div class="actionButtons">
+
+<ui:remove>
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{purchaseShipmentHome.print()}" styleClass="button" />
+</ui:remove>
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{purchaseShipmentHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{purchaseShipmentHome.close()}" styleClass="button" />
+			</div>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

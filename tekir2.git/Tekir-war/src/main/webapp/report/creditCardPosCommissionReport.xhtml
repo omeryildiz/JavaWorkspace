@@ -1,0 +1,116 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="report"/>
+            <ui:param name="curpage" value="exports"/>
+            <ui:param name="curitem" value="creditCardPosCommissionReport"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+
+        <div class="pathgroup">
+            <s:link view="/report/creditCardPosCommissionReport.xhtml">
+                <h:outputText value="#{messages['module.caption.CreditCardPosCommissionReport']}" rendered="#{s:hasPermission('creditCardPosCommission', 'select')}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.CreditCardPosCommissionReport']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                <h:panelGrid columns="2">
+
+                    <s:div>
+
+						<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['posCommision.label.Pos']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="posBox"
+                                                 value="#{creditCardPosCommissionReport.filterModel.pos}"
+                                                 required="false"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.posList}"
+                                                   var="item"
+                                                   label="#{item.code} #{item.name} #{item.bank.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+
+
+						<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['posCommision.label.Bank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBox"
+                                                 value="#{creditCardPosCommissionReport.filterModel.bank}"
+                                                 required="false"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+
+                    </s:div>
+
+                    <s:div>
+                    	<s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.BeginDate']}" /></ui:define>
+                    		<r:calendar value="#{creditCardPosCommissionReport.filterModel.beginDate}" enableManualInput="true" 
+                    					datePattern="#{messages['general.format.Date']}"/>
+                    	</s:decorate>
+                    	<s:decorate template="/layout/edit.xhtml">
+                    		<ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.EndDate']}"/></ui:define>
+                    		<r:calendar value="#{creditCardPosCommissionReport.filterModel.endDate}" enableManualInput="true" 
+                    					datePattern="#{messages['general.format.Date']}"/>
+                    	</s:decorate>
+                    </s:div>
+                </h:panelGrid>
+                <div class="actionButtons">
+
+					
+					<h:commandButton id="pdf"
+                                     value="#{messages['general.button.PDF']}"
+                                     action="#{creditCardPosCommissionReport.pdf()}"
+                                     rendered="#{s:hasPermission('creditCardPosCommission', 'pdf')}"
+                                     styleClass="button"/>
+                    <h:commandButton id="xls"
+                                     value="#{messages['general.label.XLS']}"
+                                     action="#{creditCardPosCommissionReport.xls()}"
+                                     rendered="#{s:hasPermission('creditCardPosCommission', 'xls')}"
+                                     styleClass="button"/>
+
+					
+
+                </div>
+            </r:panel>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

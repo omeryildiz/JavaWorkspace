@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+    
+    <ui:include src="/layout/messages.xhtml"/>
+    
+    <h:form id="form" >
+     <input type="hidden" id="retpoint" value="" />
+                    
+              <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['collection.img.Form']}"/> 
+                        <h:outputText value="#{messages['promissory.caption.customerPromissory.Form']}" />
+                    </s:fragment>
+                </f:facet>
+              <a:region immediate="true" ajaxSingle="true" renderRegionOnly="true">
+                <h:panelGrid columns="3">
+                    <s:div id="popDiv">
+                        
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.ReferenceNumber']}"/></ui:define>
+                            <h:inputText value="#{promissory.serialNo}" styleClass="middle" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryNumber']}"/></ui:define>
+                            <h:inputText value="#{promissory.referenceNo}" styleClass="middle" required="true">
+                            </h:inputText>
+                        </s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryOwner']}"/></ui:define>
+                            <h:inputText value="#{promissory.promissorynoteOwner}" styleClass="middle" required="true"/>
+                        </s:decorate>
+                                                
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryAmount']}"/></ui:define>
+                            <h:inputText value="#{promissory.money.value}" onfocus="setMasks();" alt="decimal" converter="bigDecimalConverter"  styleClass="middle" style="text-align: right;" required="true"/>
+                        </s:decorate>
+                        
+
+                     </s:div>
+                     <s:div>   
+                     
+                     	<s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryDate']}"/></ui:define>
+                            <r:calendar value="#{promissory.maturityDate}" enableManualInput="true" required="true" 
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PaymentPlace']}"/></ui:define>
+                            <h:inputText id="paymentPlace" value="#{promissory.paymentPlace}" styleClass="middle" required="true" />
+                        </s:decorate>
+
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.IssueDate']}"/></ui:define>
+                            <r:calendar value="#{promissory.issueDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.CardDate']}"/></ui:define>
+                            <r:calendar value="#{promissory.entryDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                    </s:div>
+           
+                    <s:div>
+                       <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{promissory.info}" styleClass="large" rows="6"/>
+                        </s:decorate>
+               
+                    </s:div>
+                </h:panelGrid>
+                </a:region>
+            </r:panel>
+            
+            
+            <div class="actionButtons">
+            
+            	   <a:commandButton id="save" 
+                                 value="#{messages['general.button.Ok']}" 
+                                 action="#{promissoryPopupHome.close()}"
+                                 styleClass="button" reRender="its"
+                                 oncomplete="closeCustomerPromissoryAddSelect()"/>
+                   <a:commandButton id="cancel" immediate="true"
+                                 value="#{messages['general.button.Cancel']}" 
+                                 action="#{promissoryPopupHome.cancel()}"
+                                 styleClass="button"
+                                 oncomplete="closeCustomerPromissoryAddSelect()"/> 
+                                 
+      		 </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+    
+    
+</ui:composition>

@@ -1,0 +1,325 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeInvoice" rendered="#{purchaseInvoiceBrowse.exid eq 0}"/>
+            <ui:param name="curitem" value="purchaseInvoiceBrowse" rendered="#{purchaseInvoiceBrowse.exid eq 0}"/>
+            <ui:param name="curpage" value="exports" rendered="#{purchaseInvoiceBrowse.exid eq 1}"/>
+            <ui:param name="curitem" value="purchaseInvoiceReport" rendered="#{purchaseInvoiceBrowse.exid eq 1}"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/newpurchaseInvoiceBrowse.xhtml" propagation="none" rendered="#{s:hasPermission('purchaseInvoice', 'select')}" >
+                <h:outputText value="#{messages['module.caption.PurchaseInvoiceBrowse']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link view="/finance/newpurchaseInvoice.xhtml" rendered="#{s:hasPermission('purchaseInvoice', 'insert')}" >
+                <f:param name="eid" value="0"/>
+                <f:param name="at" value="1"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['purchaseInvoice.action.Add']}" />
+            </s:link>
+            <s:link view="/finance/newpurchaseShipmentInvoice.xhtml" rendered="#{s:hasPermission('purchaseShipmentInvoice', 'insert')}">
+                <f:param name="it" value="1"/>
+                <f:param name="at" value="1"/>
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['purchaseInvoice.action.AddShipmentInvoice']}" />
+            </s:link>
+            <s:link view="/finance/saleReturnInvoice.xhtml" rendered="#{s:hasPermission('saleReturnInvoice', 'insert')}">
+                <f:param name="it" value="2"/>
+                <f:param name="at" value="0"/>
+                <f:param name="eid" value="0"/>
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['saleInvoice.action.AddSaleReturnInvoice']}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/finance/purchaseInvoiceBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/finance/purchaseInvoiceBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PurchaseInvoiceBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        <ui:include src="/finance/popup/workBunchSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Serial']}" /></ui:define>
+                            <h:inputText value="#{purchaseInvoiceBrowse.filterModel.serial}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Reference']}" /></ui:define>
+                            <h:inputText value="#{purchaseInvoiceBrowse.filterModel.reference}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.Code']}" /></ui:define>
+                            <h:inputText value="#{purchaseInvoiceBrowse.filterModel.code}" styleClass="middle"/>
+                        </s:decorate>
+
+						<a:region id="regFollowUp">
+	                        <s:decorate id="flwup" template="/layout/edit.xhtml">
+	                            <ui:define name="label">
+	                            	<h:outputText value="#{messages['saleInvoice.label.followUp']}"/>
+	                            </ui:define>
+	
+	                            <h:inputText id="followUpTxt" value="#{purchaseInvoiceBrowse.filterModel.workBunch}" styleClass="middle" 
+	                            	style="float:left" converter="workBunchCaptionConverter"/>
+	                            
+	                            <a href="javascript:workBunchSelectPopup( 'form:flwup:followUpTxt' )" style="float:left">
+	                                <h:graphicImage url="/img/selectBox.gif" /> 
+	                            </a>
+	                            
+	                            <r:suggestionbox for="followUpTxt" rules="all" ajaxSingle="true"
+									suggestionAction="#{workBunchSuggestion.suggestWorkBunch}" var="fitem"
+									fetchValue="#{fitem.caption}">
+									<h:column>
+										<h:outputText value="#{fitem.code}" />
+									</h:column>
+									<h:column>
+										<h:outputText value="#{fitem.name}"/>
+										<h:outputText value=" "/>
+										<h:outputText value="(#{messages[ ut:concat( 'workBunch.status.' ,fitem.workBunchStatus)]})" />
+									</h:column>
+								</r:suggestionbox>
+							</s:decorate>
+						</a:region>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contactToBankTransfer.label.ContactCode']}" /></ui:define>
+                            <h:inputText value="#{purchaseInvoiceBrowse.filterModel.contactCode}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['contactToBankTransfer.label.ContactName']}" /></ui:define>
+                            <h:inputText value="#{purchaseInvoiceBrowse.filterModel.contactName}" styleClass="middle"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['general.label.ShowReturned']}" />
+                            </ui:define>
+							<h:selectOneMenu value="#{purchaseInvoiceBrowse.filterModel.returned}" 
+								disabled="#{purchaseInvoiceBrowse.onlyReturned}">
+								<f:selectItem itemValue="" itemLabel="#{messages['general.value.All']}"/>
+								<f:selectItem itemValue="true" itemLabel="#{messages['general.label.yes']}"/>
+								<f:selectItem itemValue="false" itemLabel="#{messages['general.label.no']}"/>
+							</h:selectOneMenu>
+                        </s:decorate>
+                    </s:fragment>
+
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{purchaseInvoiceBrowse.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['purchaseInvoice.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{purchaseInvoiceBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.Info']}" /></ui:define>
+                            <h:inputText value="#{purchaseInvoiceBrowse.filterModel.info}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                    </s:fragment>
+                </h:panelGrid>
+                
+                
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{purchaseInvoiceBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+                      <h:commandButton id="pdf"
+                                     value="#{messages['general.button.PDF']}"
+                                     action="#{purchaseInvoiceBrowse.pdf()}"
+                                     rendered="#{purchaseInvoiceBrowse.exid eq 1 and s:hasPermission('purchaseInvoice', 'pdf')}" 
+                                     styleClass="button"/>
+                      <h:commandButton id="xls"
+                    					action="#{purchaseInvoiceBrowse.xls()}"
+                    					rendered="#{purchaseInvoiceBrowse.exid eq 1 and s:hasPermission('purchaseInvoice', 'xls')}" 
+                    					value="#{messages['general.label.XLS']}" 
+                    					styleClass="button"/>                                                
+
+                </s:div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="purchInv"
+                                 value="#{purchaseInvoiceBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty purchaseInvoiceBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.Serial']}"/></f:facet>
+                            
+                            <s:link view="/finance/newpurchaseInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{purchInv.documentType eq 'PurchaseShipmentInvoice' and purchInv.tradeAction eq 'Purchase'}">
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.serial}"/>
+                            </s:link>
+                            
+                            <s:link view="/finance/newpurchaseInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{purchInv.documentType eq 'PurchaseInvoice' and purchInv.tradeAction eq 'Purchase'}" >
+                                <f:param name="it" value="1"/>
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.serial}"/>
+                            </s:link>
+
+                            <s:link view="/finance/saleReturnInvoiceView.xhtml"
+                            	rendered="#{purchInv.tradeAction eq 'SaleReturn' and purchInv.documentType eq 'PurchaseShipmentInvoice'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.serial}"/>
+                            </s:link>
+
+                            <s:link view="/finance/retailSaleReturnInvoiceView.xhtml"
+                            	rendered="#{purchInv.tradeAction eq 'SaleReturn' and purchInv.documentType eq 'RetailSaleReturnInvoice'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.serial}"/>
+                            </s:link>
+                        </r:column>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.Reference']}" /></f:facet>
+    
+                            <s:link view="/finance/newpurchaseInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{purchInv.documentType eq 'PurchaseShipmentInvoice' and purchInv.tradeAction eq 'Purchase'}">
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.reference}"/>
+                            </s:link>
+                            
+                            <s:link view="/finance/newpurchaseInvoiceView.xhtml" propagation="begin"
+                            	rendered="#{purchInv.documentType eq 'PurchaseInvoice' and purchInv.tradeAction eq 'Purchase'}">
+                                <f:param name="it" value="1"/>
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.reference}"/>
+                            </s:link>
+
+                             <s:link view="/finance/saleReturnInvoiceView.xhtml"
+                            	rendered="#{purchInv.tradeAction eq 'SaleReturn' and purchInv.documentType eq 'PurchaseShipmentInvoice'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.reference}"/>
+                            </s:link>                            
+
+                             <s:link view="/finance/retailSaleReturnInvoiceView.xhtml"
+                            	rendered="#{purchInv.tradeAction eq 'SaleReturn' and purchInv.documentType eq 'RetailSaleReturnInvoice'}">
+			                    <f:param name="at" value="0"/>
+                                <f:param name="eid" value="#{purchInv.id}"/>
+                                <h:outputText value="#{purchInv.reference}"/>
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.Date']}" /></f:facet>
+                            <h:outputText value="#{purchInv.date}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.Contact']}" /></f:facet>
+                            <h:outputText value="#{purchInv.contact.caption}" rendered="#{purchInv.contact.person eq true}" />
+                            <h:outputText value="[#{purchInv.contact.code}] #{purchInv.contact.company}" rendered="#{purchInv.contact.person eq false}" />
+                        </r:column>
+                        <r:column styleClass="codeField">
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.Code']}" /></f:facet>
+                            <h:outputText value="#{purchInv.code}" />
+                            
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.Info']}" /></f:facet>
+                            <h:outputText value="#{purchInv.info}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.BeforeTax']}" /></f:facet>
+                            <h:outputText value="#{purchInv.totalBeforeTax.value}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.TaxTotal']}" /></f:facet>
+                            <h:outputText value="#{purchInv.totalTax.value}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="numberColumn">
+                            <f:facet name="header"><h:outputText value="#{messages['purchaseInvoice.label.InvoiceTotal']}" /></f:facet>
+                            <h:outputText value="#{purchInv.grandTotal.value}"/>
+                        </r:column>
+                        
+                        <r:column styleClass="tiny">
+                            <f:facet name="header"><h:outputText value="#{messages['saleInvoice.label.Currency']}" /></f:facet>
+                            <h:outputText value="#{purchInv.grandTotal.currency}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty purchaseInvoiceBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

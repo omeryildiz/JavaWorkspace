@@ -1,0 +1,18 @@
+ID,LAUNCH_KEY,LINK,PAGE_NAME
+0,A,/base/home.seam,Ana sayfa
+1,YS,/stock/product.seam?eid=0,Yeni Stok Kartı
+2,YC,/contact/contact.seam?eid=0,Yeni Cari Kartı
+3,YAI,/stock/newpurchaseShipment.seam?eid=0,Yeni Alış İrsaliyesi
+4,YAF,/finance/purchaseShipmentInvoice.seam?it=1&eid=0,Yeni Alış Faturası
+5,YAIF,/finance/purchaseInvoice.seam?eid=0,Yeni Alış İrs.Fatura
+6,YSI,/stock/saleShipment.seam?eid=0,Yeni Satış İrsaliyesi
+7,YSF,/finance/saleShipmentInvoice.seam?it=1&eid=0,Yeni Satış Faturası
+8,YSIF,/finance/saleInvoice.seam?eid=0,Yeni Satış İrs.Fatura
+9,YSP,/finance/retailSaleInvoice.seam?eid=0,Yeni Satış Per.Fatura
+10,LS,/stock/productBrowse.seam,Stok Listesi
+11,LC,/contact/contactBrowse.seam,Cari Listesi
+12,LAI,/stock/purchaseShipmentBrowse.seam,Alış İrs. Listesi
+13,LAF,/finance/purchaseInvoiceBrowse.seam,Alış Fat. Listesi
+14,LSI,/stock/saleShipmentBrowse.seam,Satış İrs. Listesi
+15,LSF,/finance/saleInvoiceBrowse.seam,Satış Fat. Listesi
+16,LSP,/finance/retailSaleInvoiceBrowse.seam,Satış Per.Fat. Listesi

@@ -1,0 +1,44 @@
+<div id="header"  class="headerwrap"
+     xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+    
+    
+    <div class="left">
+        <div style="width: 600px; margin:8px;">
+            <table>
+                <tr>
+                    <td rowspan="2" style="width:80px;">
+                        
+                        <s:link view="/base/home.seam">
+                            <h:graphicImage value="/img/company.logo.gif" title="Ana Sayfa" style="height:64px" rendered="#{logoManager.useDefaultLogo}"/>
+                            <s:graphicImage value="#{logoManager.logo}" rendered="#{not logoManager.useDefaultLogo}">
+                                <s:transformImageSize height="64" maintainRatio="true"/>
+                            </s:graphicImage>
+                        </s:link>
+                        
+                    </td>
+                    <td >
+                        <span class="sitecompany"><h:outputText value="#{systemProperties.properties['branding.title']}"/></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="siteuser"><h:outputText value="#{activeUser.fullName}" /></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="right">
+        
+    </div>
+    
+    
+    <ui:insert name="menu" />
+    
+</div>
+

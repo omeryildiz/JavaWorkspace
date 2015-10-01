@@ -1,0 +1,281 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="stock"/>
+            <ui:param name="curpage" value="stocknew"/>
+            <ui:param name="curitem" value="productVirement"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/stock/productVirementBrowse.xhtml" propagation="none" rendered="#{s:hasPermission('productVirement', 'select')}">
+                <h:outputText value="#{messages['module.caption.ProductVirementBrowse']}" />
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/stock/productVirement.xhtml" rendered="#{s:hasPermission('productVirement', 'update')}" >
+                <h:outputText value="#{messages['module.caption.ProductVirement']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+        	<s:link action="#{productVirementHome.createNew()}" rendered="#{s:hasPermission('productVirement', 'insert')}" >	
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['productVirement.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ProductVirement']}" /></h1>
+
+
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/stock/productSelectPopup.xhtml" />
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/arrow_switch.gif" alt="#{messages['contact.img.Form']}"/> 
+                        <h:outputText value="#{messages['productVirement.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="3">
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['productVirement.label.Serial']}" accesskey="Q"/></ui:define>
+                            <h:inputText value="#{productVirement.serial}" styleClass="middle" 
+                            	required="true" accesskey="Q" 
+                            	disabled="#{not generalOptionPane.getOption('SERIALNUMBER_ISEDITABLE').asBoolean}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['productVirement.label.Reference']}"/></ui:define>
+                            <h:inputText value="#{productVirement.reference}" styleClass="middle" required="false"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['productVirement.label.Warehouse']}"/></ui:define>
+                            <h:selectOneMenu value="#{productVirement.warehouse}" styleClass="middle" required="true">
+                                <s:convertEntity />
+                                <s:selectItems value="#{generalSuggestion.warehouseList}" var="acc" label="#{acc.code}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="true"/>
+                            </h:selectOneMenu> 
+                        </s:decorate>
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['productVirement.label.Code']}"/></ui:define>
+                            <h:inputText value="#{productVirement.code}" styleClass="middle" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['productVirement.label.Date']}"/></ui:define>
+                            <r:calendar value="#{productVirement.date}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productVirement.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{productVirement.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['productVirement.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </s:div>
+                    
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['productVirement.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{productVirement.info}" styleClass="exlarge" rows="2"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.Deliverer']}"/></ui:define>
+                            <h:inputText value="#{productVirement.deliverer}" styleClass="middle" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['general.label.Recepient']}"/></ui:define>
+                            <h:inputText value="#{productVirement.recepient}" styleClass="middle" />
+                        </s:decorate>
+                    </s:div>
+                </h:panelGrid>
+                
+                <script type="text/javascript" src="../js/tekir_calculate2.js"></script>
+                
+                <a:region>
+                    <r:dataTable id="its" 
+                                 var="item"
+                                 value="#{productVirement.items}" 
+                                 rowKeyVar="rowKey"
+                                 styleClass="detailTable"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column colspan="6">
+                                    <h:outputText value="#{messages['productVirement.caption.Details']}" />
+                                </r:column>
+                                <r:column style="width:16px;">
+                                    <div>
+                                        <a:commandLink reRender="its" action="#{productVirementHome.createNewLine()}" 
+                                        	oncomplete="focusLastRow(); setMasks();" accesskey="N">
+                                            <h:graphicImage url="/img/add.gif" title="#{messages['general.button.NewDetail']}"/> 
+                                        </a:commandLink>
+                                    </div>
+                                </r:column>                                
+                                
+                                <r:column breakBefore="true" >
+                                    <h:outputText value="#{messages['productVirement.label.LineCode']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['productVirement.label.FromProduct']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['productVirement.label.ToProduct']}" />
+                                </r:column>
+                                <r:column style="width:240px;">
+                                    <h:outputText value="#{messages['productVirement.label.Info']}" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="#{messages['productVirement.label.Quantity.Value']}" />
+                                </r:column>
+                                <r:column >
+                                    <h:outputText value="#{messages['productVirement.label.Quantity.Unit']}"  styleClass="small" />
+                                </r:column>
+                                <r:column>
+                                    <h:outputText value="" />
+                                </r:column>
+                            </r:columnGroup>
+                            
+                        </f:facet>
+                        
+                        <r:column>
+                            <s:decorate>
+                                <h:inputText value="#{item.lineCode}" styleClass="codeField utdff" />
+                            </s:decorate>
+                        </r:column>
+                        
+ 						<r:column>
+                            <h:inputText id="fromProduct" value="#{item.fromProduct}" style="width:160px;" requried="true">
+                                <f:converter converterId="productCaptionConverter"/>
+                                <a:support event="onblur" actionListener="#{productVirementHome.selectFromProduct(rowKey)}" reRender="unit" ajaxSingle="true"/>
+                            </h:inputText>
+                            <a href="javascript:productSelectPopup( 'form:its:#{rowKey}:fromProduct' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            <r:suggestionbox for="fromProduct" nothingLabel="Sonuç Yok" rules="all"  ajaxSingle="true" suggestionAction="#{stockSuggestion.suggestIsProduct}" var="it" fetchValue="#{it.caption}"
+                                             reRender="unit" selfRendered="true">
+                                <h:column>
+                                    <h:outputText value="#{it.code}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.name}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.unit}"/>
+                                </h:column>
+                            </r:suggestionbox>
+                        </r:column>
+                            
+ 						<r:column>
+                            <h:inputText id="toProduct" value="#{item.toProduct}" style="width:160px;" requried="true">
+                                <f:converter converterId="productCaptionConverter"/>
+                                <a:support event="onblur" actionListener="#{productVirementHome.selectToProduct(rowKey)}" reRender="unit" ajaxSingle="true"/>
+                            </h:inputText>
+                            <a href="javascript:productSelectPopup( 'form:its:#{rowKey}:toProduct' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            <r:suggestionbox for="toProduct" nothingLabel="Sonuç Yok" rules="all"  ajaxSingle="true" suggestionAction="#{stockSuggestion.suggestIsProduct}" var="it" fetchValue="#{it.caption}"
+                                             reRender="unit" selfRendered="true">
+                                <h:column>
+                                    <h:outputText value="#{it.code}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.name}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{it.unit}"/>
+                                </h:column>
+                            </r:suggestionbox>
+                        </r:column>
+                      
+                        
+                        <r:column>
+                            <s:decorate>    
+                                <h:inputText value="#{item.info}" style="width:240px;" />
+                            </s:decorate>
+                        </r:column>
+                        
+                        <r:column  style="width:100px;">
+                            <s:decorate>
+                                <h:inputText value="#{item.quantity.value}" styleClass="quantityField" 
+                                	alt="decimal" converter="doubleConverter" />
+                            </s:decorate>
+                        </r:column>
+                        
+                        <r:column>
+                            <s:decorate>
+                               <h:outputText id="unit" value="#{item.quantity.unit}" styleClass="small"/>
+                            </s:decorate>
+                        </r:column>
+                        
+                        <r:column>
+                            <a:commandLink reRender="its" action="#{productVirementHome.deleteLine(rowKey)}" >
+                                <h:graphicImage url="/img/delete.gif" /> 
+                            </a:commandLink>
+                        </r:column>
+                        
+                    </r:dataTable>
+                </a:region>
+                
+            </r:panel>
+            
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{productVirementHome.save()}"
+                                 rendered="#{s:hasPermission('productVirement', 'insert')}" 
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{productVirementHome.delete()}"
+                          rendered="#{not empty productVirement.id and s:hasPermission('productVirement', 'delete')}" 
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{productVirementHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

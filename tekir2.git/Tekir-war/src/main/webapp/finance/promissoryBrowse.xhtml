@@ -1,0 +1,258 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="promissory"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/promissoryBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.PromissoryBrowse']}" rendered="#{s:hasPermission('promissory', 'select')}"/>
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="rightBar">
+        <s:link view="/finance/promissoryBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/finance/promissoryBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.PromissoryBrowse']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:fragment>
+                    
+                    	 <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryNumber']}" /></ui:define>
+                            <h:inputText value="#{promissoryBrowse.filterModel.referenceNo}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.Contact']}"/></ui:define>
+                            
+                            <h:inputText id="contact" value="#{promissoryBrowse.filterModel.contact}" styleClass="middle" required="false">
+                                <f:converter converterId="contactCaptionConverter"/>
+                            </h:inputText>
+                            
+                            <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            
+                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                        </s:decorate>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryOwner']}" /></ui:define>
+                            <h:inputText value="#{promissoryBrowse.filterModel.promissorynoteOwner}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['promissory.label.IssueBeginDate']}" /></ui:define>
+                        	<r:calendar value="#{promissoryBrowse.filterModel.issueBeginDate}" enableManualInput="true" datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['promissory.label.IssueEndDate']}" /></ui:define>
+                        	<r:calendar value="#{promissoryBrowse.filterModel.issueEndDate}" enableManualInput="true" datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                    </s:fragment>
+                    
+                    <s:fragment>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{promissoryBrowse.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{promissoryBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+	                        <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryType']}"/></ui:define>
+	                        <h:selectOneMenu value="#{promissoryBrowse.filterModel.clientPromissoryNote}" styleClass="middle">
+                                    <f:selectItem itemValue="" itemLabel="Hepsi"/>
+	                            <f:selectItem itemValue="true" itemLabel="Müşteri Senedi"/>
+							  	<f:selectItem itemValue="false" itemLabel="Firma Senedi" />
+	                        </h:selectOneMenu> 
+	                    </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.Position']}"/></ui:define>
+                            
+                            <h:selectOneMenu value="#{promissoryBrowse.filterModel.lastStatus}"
+                                             styleClass="middle">
+                                <s:selectItems value="#{promissoryBrowse.lastStatus}" var="status" label="#{messages[ut:concat('cheque.label.status.', status)]}"  
+                                noSelectionLabel="#{messages['general.value.None']}" 
+                                hideNoSelectionLabel="false"/>
+                                <s:convertEnum />
+                            </h:selectOneMenu> 
+                            
+                        </s:decorate>
+
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{promissoryBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>  
+                    <ui:remove>
+                    <h:commandButton id="pdf" 
+                                     value="#{messages['general.button.PDF']}" 
+                                     action="#{promissoryBrowse.pdf()}"
+                                     styleClass="button"/>
+                    
+                    <h:commandButton id="detailedPdf" 
+                                     value="#{messages['general.button.DetailedPDF']}" 
+                                     action="#{promissoryBrowse.detailedPdf()}"
+                                     styleClass="button"/>
+                    </ui:remove>
+                </div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="promissory"
+                                 value="#{promissoryBrowse.entityList}" 
+                                 rows="20"
+                                 rendered="#{not empty promissoryBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.PromissoryNumber']}"/></f:facet>
+                            
+                            <s:link view="/finance/promissoryView.xhtml">
+                                <f:param name="eid" value="#{promissory.id}"/>
+                                <h:outputText value="#{promissory.referenceNo}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.ReferenceNumber']}"/></f:facet>
+                            
+                            <s:link view="/finance/promissoryView.xhtml">
+                                <f:param name="eid" value="#{promissory.id}"/>
+                                <h:outputText value="#{promissory.serialNo}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.PromissoryOwner']}"/></f:facet>
+                            
+                            <s:link view="/finance/promissoryView.xhtml">
+                                <f:param name="eid" value="#{promissory.id}"/>
+                                <h:outputText value="#{promissory.promissorynoteOwner}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="dateField">
+                        	<f:facet name="header"><h:outputText value="#{messages['promissory.label.IssueDate']}"/></f:facet>
+                        	<h:outputText value="#{promissory.issueDate}">
+                        		<s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                        	</h:outputText>	
+                        </r:column>
+                        
+                         <r:column styleClass="amountField">
+                        	<f:facet name="header"><h:outputText value="#{messages['promissory.label.Amount']}" /></f:facet>
+                        	<h:outputText value="#{promissory.money}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.Contact']}" /></f:facet>
+                            <h:outputText value="#{promissory.contact.caption}" />
+                        </r:column>
+                        
+                        <r:column>
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.PaymentPlace']}" /></f:facet>
+                            <h:outputText value="#{promissory.paymentPlace}" />
+                        </r:column>
+                        
+                        <r:column styleClass="dateField">
+                        	<f:facet name="header"><h:outputText value="#{messages['general.label.MaturityDate']}" /></f:facet>
+                        	<h:outputText value="#{promissory.maturityDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.PreviousStatus']}" /></f:facet>
+                            <h:outputText value="#{promissory.previousStatus}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.LastStatus']}" /></f:facet>
+                            <h:outputText value="#{promissory.lastStatus}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.Info']}" /></f:facet>
+                            <h:outputText value="#{promissory.info}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                </s:div>
+                
+                <r:panel id="msg" rendered="#{empty promissoryBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+            
+            
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:r="http://richfaces.ajax4jsf.org/rich"
+      xmlns:s="http://jboss.com/products/seam/taglib">
+    <head>    
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Tekir - Yardım</title>
+        <link href="../stylesheet/theme.css" rel="stylesheet" type="text/css" />
+        <!--[if IE]>
+            <link href="../stylesheet/themeie.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+        <link href="../stylesheet/print.css" rel="stylesheet" type="text/css" media="print"/>
+        <script type="text/javascript" src="../layout/tekir.js" />
+    </head>
+    
+    <body class="help-body">
+        
+        <div id="help">
+            <div class="toolgroup-right">
+                <ui:insert name="rightBar"/>
+                <s:link view="/help/help.xhtml">
+                    <f:param name="topic" value="#{conversation.viewId}"/>
+                    <h:graphicImage url="/img/help.gif" />
+                </s:link>
+            </div>
+            <ui:insert name="body"/>
+        </div>
+        
+        <div class="footer">
+            <p style="border-top:1px solid #cccccc;">Tekir Ticari Otomasyon #{systemProperties.properties['application.version']} -  Bir <a href="http://www.ozguryazilim.com.tr" target="_blank">Özgür Yazılım A.Ş.</a> Ürünüdür</p>
+        </div>
+    </body>
+</html>

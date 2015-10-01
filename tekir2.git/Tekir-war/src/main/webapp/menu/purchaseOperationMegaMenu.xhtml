@@ -1,0 +1,106 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich"
+     xmlns:ut="http://utech.com/jsf/comps"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<table>
+		<tr>
+			<td class="menuNewColumn">
+				<table>
+					<tr>
+						<td>
+				            <h3><h:outputText value="#{messages['general.button.New']}" /></h3>
+				            <ul id="list-content">
+				                <ut:newMenuItem view="/stock/newpurchaseOrder.xhtml" 
+				                	img="/img/add.gif" text="#{messages['menu.purchaseOperation.new.PurchaseOrder']}" 
+				                	disabled="true" styleClass="disabled"/>
+
+				                <ut:newMenuItem view="/stock/newpurchaseShipment.xhtml" 
+				                	img="/img/add.gif" text="#{messages['menu.purchaseOperation.new.PurchaseShipment']}"  disabled="#{not s:hasPermission('purchaseShipment', 'insert')}"/>
+
+				                <ut:newMenuItem view="/finance/newpurchaseShipmentInvoice.xhtml" 
+				                	text="#{messages['menu.purchaseOperation.new.PurchaseInvoice']}" img="/img/add.gif" 
+				                	param1="it" param1value="1"
+				                	param2="at" param2value="1"
+				                	disabled="#{not s:hasPermission('purchaseShipmentInvoice', 'insert')}"/>
+
+				                <ut:newMenuItem view="/finance/newpurchaseInvoice.xhtml" 
+				                	text="#{messages['menu.purchaseOperation.new.PurchaseShipmentInvoice']}" img="/img/add.gif" 
+				                	param1="it" param1value="0"
+				                	param2="at" param2value="1"
+				                	disabled="#{not s:hasPermission('purchaseInvoice', 'insert')}"/>
+
+				                <ut:newMenuItem view="/finance/purchaseReturnInvoice.xhtml" 
+				                	text="#{messages['menu.purchaseOperation.new.PurchaseReturnInvoice']}" img="/img/add.gif" 
+				                	param1="it" param1value="2" 
+				                	param2="at" param2value="0"
+				                	disabled="#{not s:hasPermission('purchaseReturnInvoice', 'insert')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td>
+							<h3>#{messages['menu.purchaseOperation.label.Tender']}</h3>
+							<ul id="list-content">
+				                <ut:browseMenuItem view="/stock/purchaseOrderBrowse.xhtml" img="/img/notebook-share.png" 
+				                	text="#{messages['module.caption.TenderBrowse']}" disabled="true"
+				                	styleClass="disabled"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.Order']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/newpurchaseOrderBrowse.xhtml" img="/img/notebook-arrow.png" 
+				                	text="#{messages['module.caption.PurchaseOrderBrowse']}" disabled="true"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.Shipment']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/newpurchaseShipmentBrowse.xhtml" img="/img/lorry.gif" text="#{messages['module.caption.PurchaseShipmentBrowse']}" disabled="#{not s:hasPermission('purchaseShipment', 'select')}"/>
+				            </ul>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.Invoice']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/newpurchaseInvoiceBrowse.xhtml" 
+				                	text="#{messages['module.caption.PurchaseInvoiceBrowse']}" 
+				                	img="/img/script_add.gif" param1="exid" param1value="0"
+				                	param2="onlyReturn" param2value="false"
+				                	disabled="#{not s:hasPermission('purchaseInvoice', 'select')}"/>
+   				                <ut:browseMenuItem view="/finance/expenseNoteBrowse.xhtml" text="#{messages['menu.accountBank.browse.ExpenseNoteBrowse']}" img="/img/coins.gif" disabled="#{not s:hasPermission('expenseNote', 'select')}"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.ReturnInvoice']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/newsaleInvoiceBrowse.xhtml" 
+				                	text="#{messages['menu.purchaseOperation.browse.ReturnPurchaseInvoiceBrowse']}" 
+				                	img="/img/script_delete.gif" param1="exid" param1value="0"
+				                	param2="onlyReturn" param2value="true"
+				                	disabled="#{not s:hasPermission('saleInvoice', 'select')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+</div>
+
+

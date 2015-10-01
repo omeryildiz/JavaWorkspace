@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax">
+
+	<h:form id="warnForm">
+
+		<div style="overflow: auto;height:260px;padding-left:20px;">
+			<ui:repeat value="#{currentHome.limitationMessages.messages}" var="item">
+				<div>
+					<h6>
+						<h:outputText value="#{item.controlType  eq 'Required' ? messages['general.label.CorrectWarnings'] : messages['general.label.IgnoreWarnings'] }" />
+					</h6>							            
+				</div>
+				<div class="limitationPopupLine #{item.controlType eq 'Required' ? 'stopIcon' : 'warningIcon'}">
+					<ul>
+					<ui:repeat value="#{item.messages}" var="mesg">
+						<li style="font-size: 12px;">#{mesg}</li>
+					</ui:repeat>			
+					</ul>
+				</div>
+			</ui:repeat>
+		</div>
+		<br/>
+		<br/>
+		<div align="center">
+			<s:fragment rendered="#{currentHome.isCheckingRequired()}">
+				<input type="button" onclick="Richfaces.hideModalPanel('limitationWarningPopup')"
+					class="button" value="#{messages['general.button.Ok']}" />                
+			</s:fragment>
+			
+			<s:fragment rendered="#{not currentHome.isCheckingRequired()}">
+				<input type="button" onclick="document.getElementById('form:save').click()"
+					class="button" value="#{messages['general.label.Continue']}" />                
+
+				<input type="button" onclick="Richfaces.hideModalPanel('limitationWarningPopup')"
+					class="button" value="#{messages['general.label.Cancel']}" />                
+			</s:fragment>
+
+		</div>
+	</h:form>
+</ui:composition>

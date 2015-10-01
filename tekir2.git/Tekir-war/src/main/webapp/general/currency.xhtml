@@ -1,0 +1,141 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="currencyMenu"/>
+            <ui:param name="curitem" value="currency"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/currency.xhtml">
+                <h:outputText value="#{messages['module.caption.Currency']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{currencyHome.createNew()}" rendered="#{s:hasPermission('currency', 'insert')}" propagation="begin">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['currency.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+    
+    <ui:define name="body">
+        <h1><h:outputText value="#{messages['module.caption.Currency']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{currencyList}" 
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['currency.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                        	<f:facet name="header">
+                        		<ui:remove>
+                        		<r:inplaceInput defaultLabel="#{messages['general.value.All']}" 
+                								showControls="true"/>
+                				</ui:remove>
+                        	</f:facet>
+                            <s:link action="#{currencyHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code} - #{cty.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{currencyHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    <h:outputText value="#{messages['currency.hint.EmptyList']}" rendered="#{currencyList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/money_euro.gif" alt="#{messages['currency.img.Currency']}"/> 
+                            <h:outputText value="#{messages['currency.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['currency.label.Code']}"/></ui:define>
+                            <h:inputText value="#{currency.code}" styleClass="small utff" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['currency.label.Name']}"/></ui:define>
+                            <h:inputText value="#{currency.name}" styleClass="large" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['currency.label.DecimalCode']}"/></ui:define>
+                            <h:inputText value="#{currency.decimalCode}" styleClass="small utff" required="false"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['currency.label.Pip']}"/></ui:define>
+                            <h:inputText value="#{currency.pip}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['currency.label.Country']}"/></ui:define>
+                            <h:inputText id="country" value="#{currency.country}" styleClass="middle"/>
+                            
+                            <r:suggestionbox for="country" suggestionAction="#{generalSuggestion.suggestCountry}" var="item" fetchValue="#{item.name}">
+                                <h:column>
+                                    <h:outputText value="#{item.code}"/>
+                                </h:column>
+                                <h:column>
+                                    <h:outputText value="#{item.name}"/>
+                                </h:column>
+                            </r:suggestionbox>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['currency.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{currency.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['currency.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                    </h:panelGrid>    
+                    
+                    <ut:actionButtons home="#{currencyHome}" entity="#{currency}" permission="currency" />
+                    
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

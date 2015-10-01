@@ -1,0 +1,85 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        
+        
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="home"/>
+            <ui:param name="curpage" value="about"/>
+        </ui:include>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="login">
+            
+            <r:spacer height="50" />
+            
+            <table style="width:auto;margin-left:auto;margin-right:auto;">
+                
+                <tr>
+                    <td style="vertical-align:middle;">
+                        <h:graphicImage value="/img/password.png" title="Parola" />
+                    </td>
+                    <td style="vertical-align:middle;">
+                        <s:div>
+                            <p>#{messages['general.label.PleaseEnterUserNameAndPassword']}</p>
+                            
+                            <div class="dialog">
+                                <h:panelGrid columns="1" >
+                                    
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label">
+                                        	<h:outputText value="#{messages['general.label.UserName']}" />
+                                        </ui:define>
+                                        <h:inputText id="username" value="#{identity.username}"/>
+                                    </s:decorate>
+                                    
+                                    <s:decorate template="/layout/edit.xhtml" >
+                                        <ui:define name="label">
+                                        	<h:outputText value="#{messages['general.label.Password']}" />
+                                        </ui:define>
+                                        <h:inputSecret id="password" value="#{identity.password}"/>
+                                    </s:decorate>
+                                    
+                                    <h:commandButton value="#{messages['general.label.Login']}" 
+                                    	action="#{identity.login}" styleClass="button" 
+                                    	style="margin:5px;"/>
+                                </h:panelGrid>
+                                
+                            </div>
+                        </s:div>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <r:spacer height="100" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="vertical-align:bottom;text-align: center;">
+                        
+                        <h:graphicImage value="/img/oy.logo.128.png" title="Özgür Yazılım A.Ş." />
+                    </td>
+                </tr>
+                
+            </table>
+            
+            
+            
+        </h:form>    
+        
+    </ui:define> 
+</ui:composition>

@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:r="http://richfaces.ajax4jsf.org/rich"
+	xmlns:a="https://ajax4jsf.dev.java.net/ajax" xmlns:ut="http://ut.com/jsf/comps">
+
+	<s:div id="messageDiv">
+		<ui:include src="/layout/messages.xhtml" />
+	</s:div>
+
+	<ui:include src="/contact/contactSelectPopup.xhtml" />
+
+	<h:form id="selectform">
+		<a:region>
+			<r:panel id="chequeSelectPanel">
+				<f:facet name="header">
+					<h:outputText value="#{messages['selectbox.contact.Filter']}" />
+				</f:facet>
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<ut:contact value="#{docMatchBrowse.filterModel.contact}" styleClass="middle" rendered="#{not docMatchBrowse.filterModel.disableContactSelect}"/>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Serial']}" />
+							</ui:define>
+							<h:inputText value="#{docMatchBrowse.filterModel.serial}" styleClass="middle" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.Reference']}" />
+							</ui:define>
+							<h:inputText value="#{docMatchBrowse.filterModel.reference}" styleClass="middle" />
+						</s:decorate>
+					</s:fragment>
+
+					<s:fragment>
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.StartDate']}" />
+							</ui:define>
+							<r:calendar value="#{docMatchBrowse.filterModel.beginDate}" datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+
+						<s:decorate template="/layout/edit.xhtml">
+							<ui:define name="label">
+								<h:outputText value="#{messages['general.label.EndDate']}" />
+							</ui:define>
+							<r:calendar value="#{docMatchBrowse.filterModel.endDate}" datePattern="#{messages['general.format.Date']}" />
+						</s:decorate>
+					</s:fragment>
+				</h:panelGrid>
+
+				<div>
+					<a:commandButton id="select_search" value="#{messages['general.button.Search']}" 
+						action="#{docMatchBrowse.search()}" styleClass="button" reRender="selectList,messageDiv" /> 
+
+					<a:commandButton onclick="Richfaces.hideModalPanel('docMatchSelectPopup')"
+						styleClass="button" value="#{messages['general.button.Close']}" />
+				</div>
+
+			</r:panel>
+
+			<s:div id="selectList" style="padding:1px;">
+				<r:dataTable id="browseList" styleClass="entitylist" var="item" value="#{docMatchBrowse.entityList}" rowKeyVar="rowKey" rows="6">
+					<f:facet name="header">
+						<h:panelGroup>
+							<h:outputText value="#{messages['general.label.Results']}" />
+						</h:panelGroup>
+					</f:facet>
+					<r:column styleClass="serialField">
+						<f:facet name="header">
+							<h:outputText value="#{messages['general.label.Serial']}" />
+						</f:facet>
+						<a:commandLink action="#{currentHome.selectMatch(item)}" value="#{item.serial}" ajaxSingle="true" reRender="matches"
+							oncomplete="Richfaces.hideModalPanel('docMatchSelectPopup');setMasks();" />
+					</r:column>
+
+					<r:column styleClass="serialField">
+						<f:facet name="header">
+							<h:outputText value="#{messages['cheque.label.ReferenceNumber']}" />
+						</f:facet>
+						<h:outputText value="#{item.reference}" />
+					</r:column>
+
+					<r:column>
+						<f:facet name="header">
+							<h:outputText value="#{messages['general.label.Date']}" />
+						</f:facet>
+						<h:outputText value="#{item.date}">
+							<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+						</h:outputText>
+					</r:column>
+
+					<r:column>
+						<f:facet name="header">
+							<h:outputText value="#{messages['general.label.Contact']}" />
+						</f:facet>
+						<h:outputText value="#{item.caption}" />
+					</r:column>
+
+					<r:column>
+						<f:facet name="header">
+							<h:outputText value="#{messages['general.label.DocumentTotal']}" />
+						</f:facet>
+						<h:outputText value="#{item.value}" alt="decimal" converter="bigDecimalConverter" />
+					</r:column>
+
+					<r:column>
+						<f:facet name="header">
+							<h:outputText value="#{messages['docmatch.label.UsedAmount']}" />
+						</f:facet>
+						<h:outputText value="#{item.usedAmount}" alt="decimal" converter="bigDecimalConverter" />
+					</r:column>
+
+					<f:facet name="footer">
+						<r:datascroller for="browseList" renderIfSinglePage="false" />
+					</f:facet>
+				</r:dataTable>
+			</s:div>
+		</a:region>
+	</h:form>
+
+</ui:composition>

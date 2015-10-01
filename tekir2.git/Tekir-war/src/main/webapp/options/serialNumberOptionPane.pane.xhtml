@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+				xmlns:ut="http://utech.com/jsf/comps"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+
+    <h:form id="serialNumberOptionPaneForm">
+
+        <r:dataTable id="serialNumberList" var="snOpt" value="#{serialNumberOptionPane.optionList}" 
+	        onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+	        onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+	
+			<r:column>
+                <f:facet name="header">
+					<h:outputText value="#{messages['optionEditor.label.DocType']}"/>
+                </f:facet>
+               	<h:outputText value="#{messages[ut:concat('optionEditor.', snOpt.option.key)]}"/>
+			</r:column> 	
+			<r:column>
+                <f:facet name="header">
+                	<h:outputText value="#{messages['optionEditor.label.Serial']}"/>
+                </f:facet>
+				<h:inputText value="#{snOpt.option.asString}"/>
+			</r:column> 	
+			<r:column>
+                <f:facet name="header">
+                	<h:outputText value="#{messages['optionEditor.label.Sequence']}"/>
+                </f:facet>
+				<h:inputText value="#{snOpt.sequence}" style="text-align:right"/>
+			</r:column> 	
+		</r:dataTable>
+
+        <s:div styleClass="actionButtons">
+
+            <a:commandButton id="save"
+                             value="#{messages['general.button.Save']}"
+                             action="#{serialNumberOptionPane.save()}"
+                             reRender="serialNumberOptionPaneForm"
+                             styleClass="button"/>
+
+            <s:button id="done"
+                      value="#{messages['general.button.Close']}"
+                      action="#{serialNumberOptionPane.cancel()}"
+                      styleClass="button"/>
+
+        </s:div>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,228 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="parameterMenu"/>
+            <ui:param name="curitem" value="posCommisionBrowse"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/general/general.xhtml">
+                <h:outputText value="#{messages['module.caption.General']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/general/posCommisionBrowse.xhtml">
+                <h:outputText value="#{messages['module.caption.PosCommisionBrowse']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link action="#{posCommisionHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['posCommision.action.Add']}" />
+            </s:link>
+        </div>
+    </ui:define>
+<ui:remove>
+    <ui:define name="rightBar">
+        <s:link view="/stock/purchaseShipmentBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="xls" />
+            <h:graphicImage url="/img/xls.gif" />
+        </s:link>
+        <s:link view="/stock/purchaseShipmentBrowsePrint.xhtml" target="_blank" >
+            <f:param name="media" value="printer" />
+            <h:graphicImage url="/img/print.gif" />
+        </s:link>
+    </ui:define>
+</ui:remove>
+    <ui:define name="body">
+
+        <h1><h:outputText value="#{messages['module.caption.PosCommisionBrowse']}" /></h1>
+
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+
+                <h:panelGrid columns="3">
+
+                    <s:fragment>
+
+                           <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['posCommision.label.Pos']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="posBox"
+                                                 value="#{posCommisionBrowse.filterModel.pos}"
+                                                 required="false"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.posList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+
+                        <a:region>
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['posCommision.label.Bank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBox"
+                                                 value="#{posCommisionBrowse.filterModel.bank}"
+                                                 required="false"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankBranchBox, bankAccountBox" action="#{posCommisionBrowse.clearBankAccount()}" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['posCommision.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBranchBox"
+                                                 value="#{posCommisionBrowse.filterModel.bankBranch}"
+                                                 required="false"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankBranches( posCommisionBrowse.filterModel.bank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['posCommision.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankAccountBox"
+                                                 value="#{posCommisionBrowse.filterModel.bankAccount}"
+                                                 required="false"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(posCommisionBrowse.filterModel.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo} - #{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+                       
+                    </s:fragment>
+                    <s:fragment>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['posCommision.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{posCommisionBrowse.filterModel.startDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['posCommision.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{posCommisionBrowse.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                    </s:fragment>
+                </h:panelGrid>
+
+                <s:div styleClass="actionButtons">
+                    <a:commandButton id="search"
+                                     value="#{messages['general.button.Search']}"
+                                     action="#{posCommisionBrowse.search()}"
+                                     styleClass="button"
+                                     reRender="results"/>
+                </s:div>
+            </r:panel>
+
+            <a:outputPanel id="results">
+
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList"
+                                 var="posCommision"
+                                 value="#{posCommisionBrowse.entityList}"
+                                 rows="20"
+                                 rendered="#{not empty posCommisionBrowse.entityList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['posCommision.label.Pos']}"/></f:facet>
+                            <s:link view="/general/posCommision.xhtml">
+                                <f:param name="eid" value="#{posCommision.id}" />
+                                <h:outputText value="#{posCommision.pos.name}"/>
+                            </s:link>
+                        </r:column>
+
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['posCommision.label.Bank']}"/></f:facet>
+                                <h:outputText value="#{posCommision.bank.name}"/>
+                        </r:column>
+
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['posCommision.label.BankBranch']}" /></f:facet>
+                                <h:outputText value="#{posCommision.bankBranch.name}"/>
+                        </r:column>
+
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['posCommision.label.BankAccount']}" /></f:facet>
+                                <h:outputText value="#{posCommision.bankAccount.accountNo} - #{posCommision.bankAccount.currency}"/>
+                        </r:column>
+<ui:remove>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['posCommision.label.Valor']}" /></f:facet>
+                                <h:outputText value="#{posCommision.valor}"/>
+                        </r:column>
+</ui:remove>
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['posCommision.label.BeginDate']}" /></f:facet>
+                            <h:outputText value="#{posCommision.startDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+
+                        <r:column styleClass="dateField">
+                            <f:facet name="header"><h:outputText value="#{messages['posCommision.label.EndDate']}" /></f:facet>
+                            <h:outputText value="#{posCommision.endDate}">
+                                <s:convertDateTime pattern="#{messages['general.format.Date']}"/>
+                            </h:outputText>
+                        </r:column>
+                    </r:dataTable>
+                </s:div>
+
+                <r:panel id="msg" rendered="#{empty posCommisionBrowse.entityList}" styleClass="message">
+                    <h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                </r:panel>
+            </a:outputPanel>
+        </h:form>
+    </ui:define>    
+</ui:composition>

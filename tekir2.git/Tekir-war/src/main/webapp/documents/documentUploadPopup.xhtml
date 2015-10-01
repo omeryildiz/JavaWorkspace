@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich">
+		
+	    <r:modalPanel id="documentpanel" minHeight="300" minWidth="515" height="425" width="515" >
+		<f:facet name="header">
+	            <s:fragment>
+	                <h:graphicImage url="/img/page_white.png" alt="#{messages['document.img.Form']}"/>
+	                <h:outputText value="#{messages['document.caption.Form']}" />
+	            </s:fragment>
+	        </f:facet>
+	
+	        <f:facet name="controls">
+	            <s:fragment>
+	                <h:graphicImage value="/img/cross.gif" style="cursor:pointer" id="hidelink_documentpanel" />
+	                <r:componentControl for="documentpanel" attachTo="hidelink_documentpanel" operation="hide" event="onclick" />
+	            </s:fragment>
+	        </f:facet>
+	    <r:panel id="saveFile">
+	    <h:form id="documentUploadForm"  enctype="multipart/form-data">
+	    <r:panel>    
+	        <h:panelGrid columns="2">
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Title']}"/></ui:define>
+                            <h:inputText value="#{document.title}" styleClass="small" required="true" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['document.label.DocType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{document.docType}" styleClass="small" >
+                            <s:convertEnum />
+                            <s:selectItems value="#{documentHome.docType}" var="acc" label="#{messages[ut:concat( 'documentAdd.label.docType.',acc)]}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                        </h:selectOneMenu>
+                        </s:decorate>
+                    </s:div>
+
+                    <s:div>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Active']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="Active" value="#{document.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['general.value.Active']}" for="Active" styleClass="checkboxLabel" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Info']}"/></ui:define>
+                            <h:inputTextarea id="fldInfo" value="#{document.info}" rows="4" cols="28"/>
+                        </s:decorate>
+                    </s:div>
+
+                </h:panelGrid>
+		
+                <r:spacer width="1" height="15" title="Here is a spacer..."/>
+	        
+			</r:panel>	
+	        <s:div id="docpanel">
+	            <r:fileUpload listWidth="470" listHeight="100"
+	                fileUploadListener="#{documentHome.fileUploadListener}"
+	                addControlLabel="#{messages['general.button.Add']}"
+	                clearAllControlLabel="#{messages['general.button.CleanAll']}"
+	                clearControlLabel="#{messages['general.button.Clean']}"
+	                stopEntryControlLabel="#{messages['general.button.Stop']}"
+	                uploadControlLabel="#{messages['general.button.Load']}"
+	                doneLabel="#{messages['general.button.Ok']}"
+	                immediateUpload="true"
+	                maxFilesQuantity="1" 
+	                allowFlash="true">
+	            </r:fileUpload>
+	        </s:div>
+
+            <div class="actionButtons">
+                <a:commandButton id="save" styleClass="button" value="#{messages['general.button.Ok']}"
+                oncomplete="closeDocumentDiaog();" reRender="doclistarea" />
+            </div>
+            </h:form>
+			</r:panel>	
+	    </r:modalPanel>
+	
+	
+</ui:composition>

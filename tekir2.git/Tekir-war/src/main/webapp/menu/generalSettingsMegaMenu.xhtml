@@ -1,0 +1,97 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich"
+     xmlns:ut="http://utech.com/jsf/comps"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<table>
+		<tr>
+			<td class="menuNewColumn">
+				<table>
+					<tr>
+						<td>
+				            <h3><h:outputText value="#{messages['general.button.New']}" /></h3>
+				            <ul id="list-content">
+				
+				                <ut:newMenuItem view="/contact/contact.xhtml" img="/img/add.gif" text="#{messages['menu.generalSettings.new.Contact']}" disabled="#{not s:hasPermission('contact', 'insert')}" />
+				                <ut:newMenuItem view="/stock/product.xhtml" img="/img/add.gif" text="#{messages['menu.generalSettings.new.Product']}"  disabled="#{not s:hasPermission('product', 'insert')}"/>
+				                <ut:newMenuItem view="/contact/service.xhtml" img="/img/add.gif" text="#{messages['menu.generalSettings.new.Service']}"  disabled="#{not s:hasPermission('service', 'insert')}"/>
+				                <ut:newMenuItem view="/stock/expense.xhtml" img="/img/add.gif" text="#{messages['menu.generalSettings.new.Expense']}" param1="type" param1value="Expense"  disabled="#{not s:hasPermission('expense', 'insert')}"/>
+				                <ut:newMenuItem view="/stock/discount.xhtml" img="/img/add.gif" text="#{messages['menu.generalSettings.new.Discount']}" param1="type" param1value="Discount" disabled="#{not s:hasPermission('discount', 'insert')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td>
+				            <h3>#{messages['menu.generalSettings.label.Currency']}</h3>
+				            <ul id="list-content">
+				                <ut:paramMenuItem view="/general/currencyRate.xhtml" img="/img/money_euro.gif" text="#{messages['menu.generalSettings.browse.CurrencyRate']}"  disabled="#{not s:hasPermission('currencyRate', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/currency.xhtml" img="/img/money_euro.gif" text="#{messages['menu.generalSettings.browse.Currency']}"  disabled="#{not s:hasPermission('currency', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/currencyPair.xhtml" img="/img/money_euro.gif" text="#{messages['menu.generalSettings.browse.CurrencyPair']}"  disabled="#{not s:hasPermission('currencyPair', 'insert')}" />
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.generalSettings.label.Contact']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/contact/contactBrowse.xhtml" img="/img/vcard.gif" text="#{messages['menu.generalSettings.browse.ContactBrowse']}" param1="exid" param1value="0" disabled="#{not s:hasPermission('contact', 'select')}"/>
+				                <ut:paramMenuItem view="/contact/contactCategory.xhtml" img="/img/folder.gif" text="#{messages['menu.generalSettings.browse.ContactCategory']}"  disabled="#{not s:hasPermission('contactCategory', 'select')}"/>
+				            
+				            </ul>
+						</td>
+						
+						<td>
+				            <h3>#{messages['menu.generalSettings.label.ProductService']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/productBrowse.xhtml" img="/img/package.gif" text="#{messages['menu.generalSettings.browse.ProductBrowse']}" param1="exid" param1value="0" disabled="#{not s:hasPermission('product', 'select')}"/>
+				                <ut:paramMenuItem view="/stock/productCategory.xhtml" img="/img/folder.gif" text="#{messages['menu.generalSettings.browse.ProductCategory']}"  disabled="#{not s:hasPermission('productBrowse', 'select')}"/>
+				            </ul>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+				            <h3>#{messages['menu.generalSettings.label.Bank']}</h3>
+				            <ul id="list-content">
+				                <ut:paramMenuItem view="/general/bank.xhtml" img="/img/bank.png" text="#{messages['menu.generalSettings.browse.Bank']}"  disabled="#{not s:hasPermission('bank', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/bankBranch.xhtml" img="/img/bank.png" text="#{messages['menu.generalSettings.browse.BankBranch']}"  disabled="#{not s:hasPermission('bankBranch', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/bankAccount.xhtml" img="/img/money_euro.gif" text="#{messages['menu.generalSettings.browse.BankAccount']}"  disabled="#{not s:hasPermission('bankAccount', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/bankCard.xhtml" img="/img/credit-card.png" text="#{messages['menu.generalSettings.browse.BankCard']}"  disabled="#{not s:hasPermission('bankCard', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/pos.xhtml" img="/img/pda.png" text="#{messages['menu.generalSettings.browse.Pos']}"  disabled="#{not s:hasPermission('pos', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/paymentContractBrowse.xhtml" img="/img/script-stamp.png" text="#{messages['menu.generalSettings.browse.PaymentContractBrowse']}"  disabled="#{not s:hasPermission('paymentContract', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/paymentCommission.xhtml" img="/img/plugin.gif" text="#{messages['menu.generalSettings.browse.PaymentCommision']}"  disabled="#{not s:hasPermission('paymentCommission', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/paymentActionType.xhtml" img="/img/plugin.gif" text="#{messages['menu.generalSettings.browse.PaymentActionType']}" disabled="#{not s:hasPermission('paymentActionType', 'insert')}" />
+				                <ut:paramMenuItem view="/finance/taxReturnType.xhtml" img="/img/plugin.gif" text="#{messages['menu.generalSettings.browse.taxReturnType']}" disabled="#{not s:hasPermission('taxReturnType', 'insert')}" />
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.generalSettings.label.Parameter']}</h3>
+				            <ul id="list-content">
+				                <ut:paramMenuItem view="/general/account.xhtml" img="/img/vault.png" text="#{messages['menu.generalSettings.browse.Account']}"  disabled="#{not s:hasPermission('account', 'insert')}"/>
+				                <ut:paramMenuItem view="/general/warehouse.xhtml" img="/img/store.png" text="#{messages['menu.generalSettings.browse.Warehouse']}"  disabled="#{not s:hasPermission('warehouse', 'insert')}"/>
+				                <ut:browseMenuItem view="/finance/workBunchBrowse.xhtml" text="#{messages['menu.generalSettings.browse.FollowUp']}" img="/img/arrow-circle.png" disabled="#{not s:hasPermission('workBunch', 'select')}"/>
+				                
+				                
+							</ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.generalSettings.label.ExpenseDiscount']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/expenseDiscBrowse.xhtml" img="/img/brick.gif" text="#{messages['menu.generalSettings.browse.ExpenseDiscBrowse']}" disabled="#{not s:hasPermission('expense', 'select')}" />
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>

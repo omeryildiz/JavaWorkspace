@@ -1,0 +1,72 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich"
+     xmlns:ut="http://utech.com/jsf/comps"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<table>
+		<tr>
+			<td class="menuNewColumn">
+				<table>
+					<tr>
+						<td>
+				            <h3>#{messages['general.button.New']}</h3>
+				            <ul id="list-content">
+				                <ut:newMenuItem view="/stock/productTransfer.xhtml" img="/img/add.gif" text="#{messages['menu.stock.new.ProductTransfer']}" 
+				                disabled="#{not s:hasPermission('productTransfer', 'insert')}"/>
+				                <ut:newMenuItem view="/stock/productVirement.xhtml" img="/img/add.gif" text="#{messages['menu.stock.new.ProductVirement']}" 
+				                disabled="#{not s:hasPermission('productVirement', 'insert')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td>
+				            <h3>#{messages['menu.stock.label.TransferNote']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/productTransferBrowse.xhtml" img="/img/lorry.gif" text="#{messages['module.caption.ProductTransferBrowse']}" 
+				                disabled="#{not s:hasPermission('productTransfer', 'select')}"/>
+				                <ut:browseMenuItem view="/stock/productVirementBrowse.xhtml" img="/img/lorry.gif" text="#{messages['module.caption.ProductVirementBrowse']}" 
+				                disabled="#{not s:hasPermission('productVirement', 'select')}"/>
+				            </ul>
+						</td>
+						<td>
+				            <h3>#{messages['menu.stock.label.Parameter']}</h3>
+				            <ul id="list-content">
+				                <ut:paramMenuItem view="/general/priceList.xhtml" img="/img/plugin.gif" text="#{messages['priceList.caption.Form']}" 
+				                disabled="#{not s:hasPermission('priceList', 'select')}"/>
+				                <ut:paramMenuItem view="/general/priceItemBrowse.xhtml" img="/img/plugin.gif" text="#{messages['module.caption.PriceItemBrowse']}" 
+				                disabled="#{not s:hasPermission('priceItem', 'select')}"/>
+				                <ut:paramMenuItem view="/general/productGroup.xhtml" img="/img/plugin.gif" text="#{messages['productGroup.caption.Form']}" 
+				                disabled="#{not s:hasPermission('productGroup', 'select')}"/>
+				            </ul>
+						</td>
+						<td>
+				            <h3>#{messages['menu.stock.label.Other']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/barcodePrintBrowse.xhtml" img="/img/barcode.png" text="#{messages['general.label.BarcodeSpool']}" 
+				                disabled="#{not s:hasPermission('barcodePrint', 'select')}"/>
+				            </ul>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/countNoteDefinitionBrowse.xhtml" img="/img/counter-reset.png" 
+				                	text="#{messages['module.caption.CountNoteDefinitionBrowse']}" 
+				                	disabled="#{not s:hasPermission('countNoteDefinition', 'select')}"/>
+				            </ul>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/countNoteEntryBrowse.xhtml" img="/img/counter-count-up.png" 
+				                	text="#{messages['module.caption.CountNoteEntryBrowse']}" 
+				                	disabled="#{not s:hasPermission('countNote', 'select')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>

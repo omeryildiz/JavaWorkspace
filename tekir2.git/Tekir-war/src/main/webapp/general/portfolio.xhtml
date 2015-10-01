@@ -1,0 +1,209 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="general"/>
+            <ui:param name="curpage" value="portfolio"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+                <s:link view="/general/general.xhtml" propagation="none">
+                    <h:outputText value="#{messages['module.caption.General']}"/>
+                </s:link>
+                <h:outputText value=" » "/>
+                <s:link view="/general/portfolio.xhtml">
+                    <h:outputText value="#{messages['module.caption.Portfolio']}"/>
+                </s:link>
+            </div>
+            
+            <div class="toolgroup-left">
+                <s:link action="#{portfolioHome.createNew()}">
+                    <h:graphicImage url="/img/add.gif" /> 
+                    <h:outputText value="#{messages['portfolio.action.Add']}" />
+                </s:link>
+            </div>
+            
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Portfolio']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            <h:panelGrid columns="2" columnClasses="paramlist,paramform">
+                <s:fragment>
+                    <r:dataTable id="curlist" 
+                                 var="cty"
+                                 value="#{portfolioList}" 
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <r:columnGroup>
+                                <r:column>
+                                    <h:outputText value="#{messages['portfolio.caption.List']}"/>    
+                                </r:column>
+                                <r:column styleClass="actionColumn">
+                                    <h:graphicImage url="/img/exec.gif" alt="#{messages['general.img.Exec']}" />
+                                </r:column>
+                            </r:columnGroup>
+                        </f:facet>
+                        <r:column>
+                            <s:link action="#{portfolioHome.edit(cty)}">
+                                <h:graphicImage url="/img/NOTACT.gif" title="#{messages['general.button.NoActDesc']}" rendered="#{not cty.active}"/>
+                                <h:outputText value="#{cty.code} - #{cty.name}" />
+                            </s:link>
+                        </r:column>
+                        
+                        <r:column styleClass="actionColumn">
+                            <s:link action="#{portfolioHome.edit(cty)}">
+                                <h:graphicImage url="/img/edit.gif" alt="#{messages['general.img.Edit']}" title="#{messages['general.button.EditDesc']}"/>
+                            </s:link>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    
+                    <h:outputText value="#{messages['portfolio.hint.EmptyList']}" rendered="#{portfolioList.size eq 0}" styleClass="info"/>
+                </s:fragment>
+                
+                
+                <r:panel>
+                    <f:facet name="header">
+                        <s:fragment>
+                            <h:graphicImage url="/img/award_star_bronze_3.gif" alt="#{messages['portfolio.img.Form']}"/> 
+                            <h:outputText value="#{messages['portfolio.caption.Form']}" />
+                        </s:fragment>
+                    </f:facet>
+                    
+                    <h:panelGrid columns="2">
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['portfolio.label.Code']}"/></ui:define>
+                            <h:inputText value="#{portfolio.code}" styleClass="small" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['portfolio.label.Name']}"/></ui:define>
+                            <h:inputText value="#{portfolio.name}" styleClass="large" required="true"/>
+                        </s:decorate>
+                        
+                        <a:region immediate="true" ajaxSingle="true">
+							<s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['portfolio.label.Bank']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBox"
+                                                 value="#{portfolio.bank}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.bankList}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankBranchBox, bankAccountBox, bankAccountCurrency" action="#{portfolioHome.clearBankAccount()}" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['portfolio.label.BankBranch']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankBranchBox"
+                                                 value="#{portfolio.bankBranch}"
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankBranches(portfolio.bank)}"
+                                                   var="item"
+                                                   label="#{item.name}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountBox" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                            
+                            <s:decorate template="/layout/edit.xhtml">
+                                <ui:define name="label">
+                                    <h:outputText value="#{messages['portfolio.label.BankAccount']}"/>
+                                </ui:define>
+                                <h:selectOneMenu id="bankAccountBox"
+                                                 value="#{portfolio.bankAccount}"
+                                                 required="true"                                                 
+                                                 styleClass="middle">
+                                    <s:convertEntity/>
+                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(portfolio.bankBranch)}"
+                                                   var="item"
+                                                   label="#{item.accountNo}- #{item.name}-#{item.currency}"
+                                                   noSelectionLabel="#{messages['general.value.None']}"
+                                                   hideNoSelectionLabel="false" />
+                                    <a:support event="onchange" reRender="bankAccountCurrency" ajaxSingle="true"/>
+                                </h:selectOneMenu>
+                            </s:decorate>
+                        </a:region>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['portfolio.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{portfolio.info}" styleClass="exlarge" rows="4"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['portfolio.label.Status']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="active" value="#{portfolio.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['portfolio.label.Active']}" for="active" styleClass="checkboxLabel" />
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['portfolio.label.Blocked']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="blocked" value="#{portfolio.blocked}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['portfolio.label.IsBlocked']}" for="blocked" styleClass="checkboxLabel" />
+                        </s:decorate>
+                        
+                        
+                    </h:panelGrid>    
+                    
+                    
+                    
+                    <div class="actionButtons">
+                        
+                        <h:commandButton id="saveAndNew" 
+                                         value="#{messages['general.button.SaveAndNew']}" 
+                                         action="#{portfolioHome.saveAndNew()}"
+                                         styleClass="button"/>  
+                        
+                        <h:commandButton id="save" 
+                                         value="#{messages['general.button.Save']}" 
+                                         action="#{portfolioHome.save()}"
+                                         styleClass="button"/>  
+                        
+                        
+                        <s:button id="delete" 
+                                  value="#{messages['general.button.Delete']}" 
+                                  action="#{portfolioHome.delete()}"
+                                  rendered="#{not empty portfolio.id}"
+                                  onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                                  styleClass="button"/>
+                        
+                        <s:button id="done" 
+                                  value="#{messages['general.button.Close']}"
+                                  action="#{portfolioHome.close()}"
+                                  styleClass="button"/>
+                        
+                    </div>
+                    
+                </r:panel>
+                
+            </h:panelGrid>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

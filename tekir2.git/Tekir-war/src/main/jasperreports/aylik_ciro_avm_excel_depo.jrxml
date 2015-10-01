@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="aylik_ciro_avm_excel" pageWidth="1642" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1582" leftMargin="30" rightMargin="30" topMargin="0" bottomMargin="0">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="default" isDefault="true" isBlankWhenNull="true" fontName="Lucida Sans" fontSize="9" pdfEncoding="Cp1254"/>
+	<parameter name="pBDate" class="java.util.Date"/>
+	<parameter name="pEDate" class="java.util.Date"/>
+	<parameter name="pWorkBunchId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pOrganizationId" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[new Long(0)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select  distinct ti.TXNDATE as tarih,
+(select
+    sum(ptd.AMOUNT_LCYVAL )
+    from TEKIR_INVOICE ti1
+    left outer join PAYMENT_TABLE pt on pt.ID = ti1.PAYMENT_TABLE_ID
+    left outer join PAYMENT_TABLE_DETAIL ptd on ptd.OWNER_ID = pt.ID
+    where ptd.PAYMENT_TYPE = 0
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.TRADE_ACTION=1 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as pesin,
+
+(select
+    sum(ptd.AMOUNT_LCYVAL )
+    from TEKIR_INVOICE ti1
+    left outer join PAYMENT_TABLE pt on pt.ID = ti1.PAYMENT_TABLE_ID
+    left outer join PAYMENT_TABLE_DETAIL ptd on ptd.OWNER_ID = pt.ID
+    where ptd.PAYMENT_TYPE = 0
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.TRADE_ACTION=3 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as pesin_iade,
+
+(select
+    sum(ptd.AMOUNT_LCYVAL )
+    from TEKIR_INVOICE ti1
+    left outer join PAYMENT_TABLE pt on pt.ID = ti1.PAYMENT_TABLE_ID
+    left outer join PAYMENT_TABLE_DETAIL ptd on ptd.OWNER_ID = pt.ID
+    where ptd.PAYMENT_TYPE = 3
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.TRADE_ACTION=1 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as kredi_karti,
+
+(select
+    sum(ptd.AMOUNT_LCYVAL )
+    from TEKIR_INVOICE ti1
+    left outer join PAYMENT_TABLE pt on pt.ID = ti1.PAYMENT_TABLE_ID
+    left outer join PAYMENT_TABLE_DETAIL ptd on ptd.OWNER_ID = pt.ID
+    where ptd.PAYMENT_TYPE = 3
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.TRADE_ACTION=3 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as kredi_karti_iade,
+
+(select sum(ti1.TOTAL_DISCOUNT_LCYVAL+ti1.TOTAL_DOCUMENT_DISCOUNT_LCYVAL)
+    from TEKIR_INVOICE ti1
+    where
+    (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as iskonto_tutari,
+
+(select sum(tid.QUANTITY)
+    from TEKIR_INVOICE ti1
+    inner join TEKIR_INVOICE_DETAIL tid on tid.OWNER_ID = ti1.ID
+    where
+    (ti1.TRADE_ACTION=1 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as satis_miktari,
+
+(select sum(tid.QUANTITY)
+    from TEKIR_INVOICE ti1
+    inner join TEKIR_INVOICE_DETAIL tid on tid.OWNER_ID = ti1.ID
+    where
+    (ti1.TRADE_ACTION=3 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as iade_miktari,
+
+(select sum(tid.TAX_EXCLUDED_TOTAL_LCYVAL)
+    from TEKIR_INVOICE ti1
+    inner join TEKIR_INVOICE_DETAIL tid on tid.OWNER_ID = ti1.ID
+    where
+    (ti1.TRADE_ACTION=1 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as toplam_kdv_matrahi,
+
+(select sum(tid.TAX_TOTAL_AMOUNT_LCYVAL)
+    from TEKIR_INVOICE ti1
+    inner join TEKIR_INVOICE_DETAIL tid on tid.OWNER_ID = ti1.ID
+    where
+    (ti1.TRADE_ACTION=1 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as toplam_kdv,
+
+(select sum(tid.TOTAL_AMOUNT_LCYVAL)
+    from TEKIR_INVOICE ti1
+    inner join TEKIR_INVOICE_DETAIL tid on tid.OWNER_ID = ti1.ID
+    where
+    (ti1.TRADE_ACTION=1 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as net_tutar,
+
+(select sum(ptd.AMOUNT_LCYVAL)
+    from TEKIR_ORDER_NOTE to1
+    left outer join PAYMENT_TABLE pa on pa.ID=to1.PAYMENT_TABLE_ID
+    left outer join PAYMENT_TABLE_DETAIL ptd on ptd.OWNER_ID = pa.ID
+    where
+    (to1.TRADE_ACTION=1 )
+    and (to1.DOCUMENT_TYPE_ID=70)
+    and (to1.ISACTIVE = true)
+    and (to1.TXNDATE=ti.TXNDATE)
+    and (to1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (to1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as pesinat,
+
+(select count(distinct ti1.ID)
+    from TEKIR_INVOICE ti1
+    left outer join PAYMENT_TABLE pa on pa.ID=ti1.PAYMENT_TABLE_ID
+    left outer join PAYMENT_TABLE_DETAIL ptd on ptd.OWNER_ID = pa.ID
+    where
+    (ti1.TRADE_ACTION=1 )
+    and (ti1.DOCUMENT_TYPE_ID=4 or ti1.DOCUMENT_TYPE_ID=5 or ti1.DOCUMENT_TYPE_ID=6 or ti1.DOCUMENT_TYPE_ID=69)
+    and (ti1.ISACTIVE = true)
+    and (ti1.TXNDATE=ti.TXNDATE)
+    and (ti1.WAREHOUSE_ID=ti.WAREHOUSE_ID)
+    and (ti1.WORKBUNCH_ID=ti.WORKBUNCH_ID or $P{pWorkBunchId} = 0 )
+) as fis_sayisi
+
+from TEKIR_INVOICE ti
+inner join CONTACT cn on cn.ID=ti.CONTACT_ID
+inner join WAREHOUSE w on w.ID = ti.WAREHOUSE_ID
+inner join ORGANIZATION org on org.ID= w.ORGANIZATION_ID
+left outer join PAYMENT_TABLE pa on pa.ID=ti.PAYMENT_TABLE_ID
+left outer join PAYMENT_TABLE_DETAIL ptd on ptd.OWNER_ID = pa.ID
+where
+(ti.TRADE_ACTION=1 or ti.TRADE_ACTION=3 )
+and (ti.DOCUMENT_TYPE_ID=4 or ti.DOCUMENT_TYPE_ID=5 or ti.DOCUMENT_TYPE_ID=6 or ti.DOCUMENT_TYPE_ID=69)
+and (ti.ISACTIVE = true)
+and (($P{pBDate} is null) or (ti.TXNDATE>= $P{pBDate}))
+and (($P{pEDate} is null) or (ti.TXNDATE<= $P{pEDate}))
+and (($P{pOrganizationId} = 0) or (org.ID = $P{pOrganizationId}))
+and (($P{pWorkBunchId} = 0) or (ti.WORKBUNCH_ID = $P{pWorkBunchId}))
+
+order by ti.TXNDATE , ti.SERIAL asc]]>
+	</queryString>
+	<field name="tarih" class="java.sql.Date"/>
+	<field name="pesin" class="java.math.BigDecimal"/>
+	<field name="pesin_iade" class="java.math.BigDecimal"/>
+	<field name="kredi_karti" class="java.math.BigDecimal"/>
+	<field name="kredi_karti_iade" class="java.math.BigDecimal"/>
+	<field name="iskonto_tutarı" class="java.math.BigDecimal"/>
+	<field name="satis_miktari" class="java.lang.Double"/>
+	<field name="iade_miktari" class="java.lang.Double"/>
+	<field name="toplam_kdv_matrahi" class="java.math.BigDecimal"/>
+	<field name="toplam_kdv" class="java.math.BigDecimal"/>
+	<field name="net_tutar" class="java.math.BigDecimal"/>
+	<field name="pesinat" class="java.math.BigDecimal"/>
+	<field name="fis_sayisi" class="java.lang.Long"/>
+	<background>
+		<band splitType="Prevent"/>
+	</background>
+	<title>
+		<band height="37" splitType="Prevent">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField" style="default" isPrintRepeatedValues="false" x="701" y="0" width="115" height="21" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField-1" style="default" isPrintRepeatedValues="false" x="271" y="0" width="430" height="21" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" TARİH ARALIĞINDAKİ AYLIK CİRO LİSTESİ"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText" style="default" x="0" y="21" width="62" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[TARİH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" style="default" x="62" y="21" width="105" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[PEŞİN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" style="default" x="167" y="21" width="104" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[PEŞİN İADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" style="default" x="465" y="21" width="122" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[İSKONTO TUTARI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" style="default" x="587" y="21" width="114" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[SATIŞ MİKTARI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText" style="default" x="701" y="21" width="115" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[İADE MİKTARI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-1" style="default" x="358" y="21" width="107" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[KREDİ KARTI İADE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" style="default" x="816" y="21" width="125" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[NET SATIŞ MİKTARI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" style="default" x="941" y="21" width="114" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[TOPLAM KDV MATRAHI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" style="default" x="1055" y="21" width="134" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[TOPLAM KDV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" style="default" x="1189" y="21" width="75" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[NET TUTAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" style="default" x="1264" y="21" width="116" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[PEŞİNAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-27" style="default" x="1380" y="21" width="101" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[FİŞ SAYISI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-28" style="default" x="271" y="21" width="87" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[KREDİ KARTI]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-30" style="default" isPrintRepeatedValues="false" x="167" y="0" width="104" height="21" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{pEDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-31" style="default" isPrintRepeatedValues="false" x="62" y="0" width="105" height="21" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{pBDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-29" style="default" x="1481" y="21" width="101" height="16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[MÜŞTERİ SAYISI]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Prevent"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Prevent"/>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement key="textField" style="default" x="0" y="0" width="62" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{tarih}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" style="default" x="62" y="0" width="105" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{pesin}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" style="default" x="167" y="0" width="104" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{pesin_iade}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" style="default" x="465" y="0" width="122" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{iskonto_tutarı}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" style="default" x="701" y="0" width="115" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{iade_miktari}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-2" style="default" x="358" y="0" width="107" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{kredi_karti_iade}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-3" style="default" x="587" y="0" width="114" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{satis_miktari}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-5" style="default" x="816" y="0" width="125" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[new Double(($F{satis_miktari}== null && $F{iade_miktari}== null) ? 0.0 : ($F{satis_miktari}!= null && $F{iade_miktari}== null) ? $F{satis_miktari}.doubleValue() : ($F{satis_miktari}== null && $F{iade_miktari}!= null) ? $F{iade_miktari}.doubleValue()*-1 : $F{satis_miktari}.doubleValue()-$F{iade_miktari}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-7" style="default" x="941" y="0" width="114" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{toplam_kdv_matrahi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-9" style="default" x="1055" y="0" width="134" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{toplam_kdv}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-10" style="default" x="1189" y="0" width="75" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{net_tutar}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-11" style="default" x="1264" y="0" width="116" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{pesinat}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-28" style="default" x="1380" y="0" width="101" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{fis_sayisi}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-29" style="default" x="271" y="0" width="87" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{kredi_karti}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-32" style="default" x="1481" y="0" width="101" height="16" forecolor="#000000"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Prevent"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Prevent"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Prevent"/>
+	</summary>
+</jasperReport>

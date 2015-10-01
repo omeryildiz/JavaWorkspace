@@ -1,0 +1,37 @@
+<ui:composition 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:r="http://richfaces.ajax4jsf.org/rich" 
+	xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<s:decorate template="/layout/edit.xhtml" rendered="#{rendered ne null ? rendered : true}">
+		<ui:define name="label">
+			<h:outputText value="#{messages[label ne null ? label : 'general.label.Contact']}" />
+		</ui:define>
+
+		<h:inputText id="contactField" value="#{value}" 
+			styleClass="#{styleClass ne null ? styleClass : 'middle'}" 
+			required="#{required ne null ? required : false}"
+			converter="contactCaptionConverter">
+			<ui:remove>
+				//FIXME: Bu satir ne ise yariyor. 
+				<a:support event="onblur" reRender="contactField" ajaxSingle="true"/>
+			</ui:remove>
+		</h:inputText>
+
+		<a href="javascript:contactSelectPopup( '#{r:clientId('contactField')}' )">
+			<h:graphicImage url="/img/selectBox.gif" />
+		</a>
+
+		<r:suggestionbox for="contactField" rules="all" ajaxSingle="true" 
+			suggestionAction="#{contactSuggestion.suggestContact}" 
+			var="citem" fetchValue="#{citem.caption}">
+			<ui:include src="/contact/contactSuggestionView.xhtml" />
+		</r:suggestionbox>
+	</s:decorate>
+
+</ui:composition>

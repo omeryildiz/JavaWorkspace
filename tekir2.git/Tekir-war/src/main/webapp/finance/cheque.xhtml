@@ -1,0 +1,224 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="cheque"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/chequeBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.ChequeBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/cheque.xhtml">
+                <h:outputText value="#{messages['module.caption.Cheque']}"/>
+            </s:link>
+        </div>
+        
+        <div class="toolgroup-left">
+            <s:link action="#{chequeHome.createNew()}">
+                <h:graphicImage url="/img/add.gif" /> 
+                <h:outputText value="#{messages['cheque.action.Add']}" />
+            </s:link>
+        </div>
+        
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.Cheque']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        
+        <h:form id="form" >
+            
+            <r:panel>
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['collection.img.Form']}"/> 
+                        <h:outputText value="#{messages['cheque.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+                
+                <h:panelGrid columns="2">
+                    <a:region immediate="true" ajaxSingle="true">
+                    <s:div>
+                        
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ReferenceNumber']}"/></ui:define>
+                            <h:inputText value="#{cheque.referenceNo}" styleClass="middle" required="true"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeDate']}"/></ui:define>
+                            <r:calendar value="#{cheque.maturityDate}" enableManualInput="true" required="true" 
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeAmount']}"/></ui:define>
+                            <h:inputText value="#{cheque.money.value}" styleClass="middle" style="text-align: right;" required="true"/>
+                        </s:decorate>
+                        
+						<s:decorate template="/layout/edit.xhtml">
+                        	<ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeStub']}"/></ui:define>
+                        	<h:selectOneMenu value="#{chequeHome.chequeStub}">
+                            <s:convertEntity />
+                        	<s:selectItems value="#{generalSuggestion.chequeStubList}"  
+                        	noSelectionLabel="#{messages['general.value.None']}"
+                        	hideNoSelectionLabel="false"
+                        	var="item" label="#{item.code}"></s:selectItems> 
+                        	<a:support event="onchange" reRender="bankBranch, bankName, account, paymentPlace" 
+                                   action="#{chequeHome.setChequeFromChequeStub()}" ajaxSingle="true"/>
+                        	</h:selectOneMenu>
+                                   
+                        </s:decorate>
+                        
+                        <s:decorate id="bankName" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Bank']}"/></ui:define>
+                            <h:inputText  id="bankName" value="#{cheque.bankName}" styleClass="middle" required="false"/>
+                        </s:decorate>
+                        
+                         <s:decorate id="bankBranch" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Branch']}"/></ui:define>
+                            <h:inputText  value="#{cheque.bankBranch}" styleClass="middle" required="false"/>
+                        </s:decorate>
+                        
+                        <s:decorate id="account" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Account']}"/></ui:define>
+                            <h:inputText  value="#{cheque.accountNo}" styleClass="middle" required="false">
+                            </h:inputText>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeNumber']}"/></ui:define>
+                            <h:inputText value="#{cheque.serialNo}" styleClass="middle" required="false">
+                            </h:inputText>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeOwner']}"/></ui:define>
+                            <h:inputText value="#{cheque.chequeOwner}" styleClass="middle" required="true"/>
+                        </s:decorate>
+                        
+                           <s:decorate id="paymentPlace" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.PaymentPlace']}"/></ui:define>
+                            <h:inputText  value="#{cheque.paymentPlace}" styleClass="middle" required="false" />
+                        </s:decorate>
+                    </s:div>
+                    </a:region>
+                    <s:div>
+                         <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.CardDate']}"/></ui:define>
+                            <r:calendar value="#{cheque.entryDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Position']}"/></ui:define>
+                            
+                            <h:selectOneMenu value="#{cheque.lastStatus}" disabled="true"
+                                             styleClass="large">
+                                <s:selectItems value="#{chequeHome.chequeStatus}" var="status" label="#{messages[ut:concat('cheque.label.status.', status)]}" 
+                                noSelectionLabel="#{messages[ut:concat('cheque.label.status.', chequeHome.chequeStatus[0])]}" 
+                                hideNoSelectionLabel="false"/>
+                                <s:convertEnum />
+                            </h:selectOneMenu> 
+                            
+                        </s:decorate>
+                       
+                       <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Info']}"/></ui:define>
+                            <h:inputTextarea value="#{cheque.info}" styleClass="exlarge" rows="6"/>
+                        </s:decorate>
+                 <s:decorate template="/layout/edit.xhtml">
+                    <r:dataTable id="positionList" 
+                                 var="chequeHis"
+                                 value="#{generalSuggestion.getChequeHistory(cheque)}" 
+                                 rows="20"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['cheque.label.StatusList']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Date']}"/></f:facet>
+                                   <h:outputText value="#{chequeHis.date}"/>
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Cheque']}" /></f:facet>
+                            <h:outputText value="#{chequeHis.owner.serialNo}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Position']}" /></f:facet>
+                            <h:outputText value="#{chequeHis.status}"/>
+                        </r:column>
+                        
+                          <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.DocumentInfo']}" /></f:facet>
+                            <h:outputText value="#{chequeHis.info}"/>
+                        </r:column>
+                        
+                        <f:facet name="footer">
+                            <r:datascroller for="positionList" maxPages="20" />          
+                        </f:facet>
+                        
+                    </r:dataTable>
+                    </s:decorate>
+                    </s:div>
+                </h:panelGrid>
+                
+            </r:panel>
+            
+            <div class="actionButtons">
+                
+                
+                <h:commandButton id="save" 
+                                 value="#{messages['general.button.Save']}" 
+                                 action="#{chequeHome.save()}"
+                                 styleClass="button"/>  
+                
+                
+                <s:button id="delete" 
+                          value="#{messages['general.button.Delete']}" 
+                          action="#{chequeHome.delete()}"
+                          rendered="#{not empty cheque.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+                
+                <s:button id="done" 
+                          value="#{messages['general.button.Close']}"
+                          action="#{chequeHome.close()}"
+                          styleClass="button"/>
+                
+            </div>
+            
+            <ui:remove>
+                <a:log popup="false" level="ALL" style="width: 800px; height: 300px;"></a:log>
+            </ui:remove>
+        </h:form>
+        
+    </ui:define> 
+</ui:composition>

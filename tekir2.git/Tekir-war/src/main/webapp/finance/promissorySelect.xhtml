@@ -1,0 +1,168 @@
+ 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                xmlns:ut="http://utech.com/jsf/comps">
+    
+    <ui:include src="/layout/messages.xhtml"/>
+    <ui:include src="/contact/contactSelectPopup.xhtml" />
+    
+    <h:form id="selectform" >
+
+        <a:region>
+        <r:panel id="promissorySelectPanel">
+            <f:facet name="header">
+             	<h:outputText value="#{promissorySuggestion.clientPromissory eq true  ? messages['promissory.caption.Form.client'] : messages['promissory.caption.Form.firm']}"/>
+            </f:facet>
+            
+            <table id="promissoryCriteria" style="padding:0px;" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+
+						<s:decorate id="sdcm" template="/layout/edit.xhtml" >
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['collection.label.Contact']}"/>
+                            </ui:define>
+                            <h:inputText id="contact" value="#{promissorySuggestion.contact}" 
+                            	styleClass="middle">
+                                <f:converter converterId="contactCaptionConverter"/>
+                            </h:inputText>
+                            <ui:remove>
+                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                            </ui:remove>
+                            <a href="javascript:contactSelectPopup('#{r:clientId('sdcm')}:contact')">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                            	<h:outputText value="#{messages['promissory.label.PromissoryNumber']}" />
+                            </ui:define>
+                            <h:inputText value="#{promissorySuggestion.referenceNo}" styleClass="middle"/>
+                        </s:decorate>
+                        
+  						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PaymentPlace']}" /></ui:define>
+                            <h:inputText value="#{promissorySuggestion.paymentPlace}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                    </td>
+                    <td>
+  						
+  						<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.MaturityBeginDate']}" /></ui:define>
+                            <r:calendar value="#{promissorySuggestion.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.MaturityEndDate']}" /></ui:define>
+                            <r:calendar value="#{promissorySuggestion.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['promissory.label.PromissoryOwner']}"/></ui:define>
+                            <h:inputText value="#{promissorySuggestion.promissorynoteOwner}" styleClass="middle"/>
+                        </s:decorate>
+                                                
+                    </td>
+                    <td style="vertical-align:bottom;padding-bottom:4px;padding-top:4px;width:70px;">
+                        
+	                    <a:commandLink id="select_search" value="#{messages['general.button.Search']}"
+	                                   action="#{promissorySuggestion.selectPromissoryList()}"
+	                                   styleClass="button" reRender="selectList">  
+	                    </a:commandLink>
+                        
+                    </td>
+                </tr>
+            </table>
+        </r:panel>
+        
+        <s:div id="selectList" >
+            <r:dataTable var="item"
+            			 id="browseList"
+                         value="#{promissorySuggestion.promissoryList}" 
+                         rowKeyVar="rowKey"
+                         rows="5"
+                         onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                         onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                <f:facet name="header">
+                    <h:panelGroup>
+                        <h:outputText value="#{messages['general.label.Results']}"/>
+                    </h:panelGroup>
+                </f:facet>
+               
+                <r:column>
+                        <f:facet name="header"><h:outputText value="#{messages['promissory.label.PromissoryNumber']}"/></f:facet>
+                        	<a:commandLink action="#{promissorySuggestion.selectedPromissory(rowKey)}" 
+                			oncomplete="Richfaces.hideModalPanel('promissorySelectPop')" reRender="its">
+                			<h:outputText value="#{item.referenceNo}"/>
+                		</a:commandLink>
+                     
+                </r:column>
+                
+                <r:column>
+                        <f:facet name="header"><h:outputText value="#{messages['promissory.label.ReferenceNumber']}"/></f:facet>
+                        	<a:commandLink action="#{promissorySuggestion.selectedPromissory(rowKey)}" 
+                			oncomplete="Richfaces.hideModalPanel('promissorySelectPop')" reRender="its">
+                			<h:outputText value="#{item.serialNo}"/>
+                		</a:commandLink>
+                     
+                </r:column>
+                
+                 <r:column >
+						<f:facet name="header"><h:outputText value="#{messages['promissory.label.PromissoryOwner']}"/></f:facet>
+                    		<a:commandLink action="#{promissorySuggestion.selectedPromissory(rowKey)}" 
+                    			oncomplete="Richfaces.hideModalPanel('promissorySelectPop')" reRender="its">
+                    			<h:outputText value="#{item.promissorynoteOwner}"/>
+                    		</a:commandLink>
+                		</r:column>
+                		
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['promissory.label.Contact']}" /></f:facet>
+                            <h:outputText value="#{item.contact.caption}" />
+                        </r:column>
+                        
+                        <r:column>
+                	    	<f:facet name="header"><h:outputText value="#{messages['promissory.label.PromissoryAmount']}"/></f:facet>
+                    	    <h:outputText value="#{item.money}"/>
+                		</r:column>
+                		
+                		<r:column>
+                    		<f:facet name="header"><h:outputText value="#{messages['promissory.label.LastStatus']}"/></f:facet>
+                        	<h:outputText value="#{item.lastStatus}"/>
+                		</r:column>
+                		
+                		 <r:column>
+                    		<f:facet name="header"><h:outputText value="#{messages['promissory.label.PreviousStatus']}"/></f:facet>
+                        	<h:outputText value="#{item.previousStatus}"/>
+                		</r:column>
+                		
+                		<r:column>
+		                	<f:facet name="header"><h:outputText value="#{messages['cheque.label.MaturityDate']}"/></f:facet>
+		                        <h:outputText value="#{item.maturityDate}">
+		                        	<s:convertDateTime pattern="#{messages['general.format.Date']}" />
+		                        </h:outputText>
+		                </r:column>
+                
+                        <f:facet name="footer">
+                            <r:datascroller for="browseList" maxPages="5" />          
+                        </f:facet>
+            </r:dataTable>
+            
+        </s:div>
+        </a:region>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,258 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+
+  	<ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="financeNew"/>
+            <ui:param name="curitem" value="financeNewAccount"/>
+            <ui:param name="cursubitem" value="newNotePayment"/>
+        </ui:include>
+    </ui:define>
+
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/debitCreditNotePaymentBrowse.xhtml" propagation="none">
+                <h:outputText value="#{messages['module.caption.DebitCreditNotePaymentBrowse']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/debitCreditNotePayment.xhtml">
+                <h:outputText value="#{messages['module.caption.DebitCreditNotePayment']}"/>
+            </s:link>
+        </div>
+
+        <div class="toolgroup-left">
+            <s:link view="/finance/debitCreditNotePayment.xhtml" action="#{debitCreditNotePaymentHome.createNew()}" rendered="#{s:hasPermission('debitCreditNotePayment', 'insert')}">
+                <h:graphicImage url="/img/add.gif" />
+                <h:outputText value="#{messages['debitCreditNotePayment.action.Add']}" />
+            </s:link>
+        </div>
+
+    </ui:define>
+
+
+	<ui:define name="body">
+
+		<h1><h:outputText
+			value="#{messages['module.caption.DebitCreditNotePayment']}" /></h1>
+
+		<ui:include src="/layout/messages.xhtml" />
+
+		<h:form id="form">
+
+			<r:panel>
+				<f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/coins_add.gif" alt="#{messages['debitCreditNotePayment.img.Form']}"/>
+                        <h:outputText value="#{messages['debitCreditNotePayment.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+				<h:panelGrid columns="2">
+					<s:fragment>
+						<table>
+							<tr>
+								<td><s:div>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditNote.label.Serial']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.serial eq null}" />
+										<h:outputText value="#{debitCreditNotePayment.serial}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditNote.label.Reference']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.reference eq null}" />
+										<h:outputText value="#{debitCreditNotePayment.reference}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<ui:define name="label">
+											<h:outputText
+												value="#{messages['debitCreditNote.label.Contact']} : " />
+										</ui:define>
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.contact eq null}" />
+										<h:outputText value="#{debitCreditNotePayment.contact.caption}" />
+										<br />
+										<h:outputText value="#{debitCreditNotePayment.contact.company}"
+											rendered="#{debitCreditNotePayment.contact.company ne null}" />
+										<br />
+										<h:outputText value="#{debitCreditNotePayment.contact.defaultAddress.address.street}"
+											rendered="#{debitCreditNotePayment.contact.defaultAddress.address.street ne null}" />
+										<br />
+										<h:outputText value="#{debitCreditNotePayment.contact.defaultAddress.address.zip}"
+											rendered="#{debitCreditNotePayment.contact.defaultAddress.address.zip ne null}" />
+										<br />
+										<h:outputText
+											value="#{debitCreditNotePayment.contact.defaultAddress.address.province} / #{debitCreditNotePayment.contact.defaultAddress.address.city}"
+											rendered="#{debitCreditNotePayment.contact.defaultAddress.address.city ne null}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml"
+										rendered="#{debitCreditNotePayment.contact.person eq false}">
+										<h:outputText
+											value="#{messages['debitCreditNote.label.TaxOfficeAndNumber']} : "
+											styleClass="boldLabel" />
+										<br />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.contact.taxOffice eq null}" />
+										<h:outputText
+											value="#{debitCreditNotePayment.contact.taxOffice} / #{debitCreditNotePayment.contact.taxNumber}"
+											rendered="#{debitCreditNotePayment.contact.taxOffice ne '' or debitCreditNotePayment.contact.taxNumber ne ''}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml"
+										rendered="#{debitCreditNotePayment.contact.person eq true}">
+										<h:outputText value="#{messages['debitCreditNote.label.Ssn']} : "
+											styleClass="boldLabel" />
+										<br />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.contact.ssn eq null}" />
+										<h:outputText value="#{debitCreditNotePayment.contact.ssn}" />
+									</s:decorate>
+
+								</s:div></td>
+								<td><s:div>
+
+									
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditNote.label.Info']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.info eq null}" />
+										<h:outputText value="#{debitCreditNotePayment.info}"
+											styleClass="exlarge" rows="6" />
+									</s:decorate>
+
+								</s:div></td>
+							</tr>
+						</table>
+					</s:fragment>
+
+					<s:fragment>
+						<table>
+						<tr>
+
+								<s:div>
+                                    <s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditNote.label.Code']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.code eq null}" />
+										<h:outputText value="#{debitCreditNotePayment.code}" />
+									</s:decorate>
+
+									<s:decorate template="/layout/edit.xhtml">
+										<h:outputText
+											value="#{messages['debitCreditNote.label.Date']} : "
+											styleClass="boldLabel" />
+										<h:outputText value="Yok"
+											rendered="#{debitCreditNotePayment.date eq null}" />
+										<h:outputText value="#{debitCreditNotePayment.date}">
+											<s:convertDateTime
+												pattern="#{messages['general.format.Date']}" />
+										</h:outputText>
+									</s:decorate>
+
+									
+
+								</s:div>
+						</tr>
+						
+						</table>
+					</s:fragment>
+
+				</h:panelGrid>
+
+				<r:dataTable id="its" var="item" value="#{debitCreditNotePayment.items}"
+					rowKeyVar="rowKey" styleClass="detailTable" style="border:0">
+
+					<f:facet name="header">
+						<r:columnGroup>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineCode']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.LineInfo']}" />
+							</r:column>
+
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Amount']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['purchaseShipment.label.Currency']}" />
+							</r:column>
+							<r:column>
+								<h:outputText value="#{messages['general.label.FollowUp']}" />
+							</r:column>
+
+						</r:columnGroup>
+					</f:facet>
+
+					<r:column style="width:101px; border:0">
+						<h:outputText value="#{item.lineCode}" />
+					</r:column>
+
+					<r:column style="width:201px; border:0">
+						<h:outputText value="#{item.info}" />
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.amount.value}"
+							styleClass="amountField" >
+							<f:convertNumber pattern="#,##0.00"/>
+						</h:outputText>
+
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.amount.currency}"
+							styleClass="ccyField" />
+					</r:column>
+
+					<r:column style="border:0" styleClass="amountField">
+						<h:outputText value="#{item.workBunch.code}"
+							styleClass="ccyField" />
+					</r:column>
+
+				</r:dataTable>
+
+			</r:panel>
+
+			<div class="actionButtons">
+
+<ui:remove>
+                <s:button id="print" value="#{messages['general.button.Print']}"
+				action="#{debitCreditNotePaymentHome.print()}" styleClass="button" />
+</ui:remove>
+
+				<s:button id="edit"
+				value="#{messages['general.button.EditDesc']}"
+				action="#{debitCreditNotePaymentHome.edit()}" styleClass="button" />
+
+				<s:button
+				id="done" value="#{messages['general.button.Close']}"
+				action="#{debitCreditNotePaymentHome.close()}" styleClass="button" />
+			</div>
+
+		</h:form>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                >
+
+
+    <ui:include src="/layout/messages.xhtml"/>
+    <r:panel id="saveFile">
+
+        <h:form id="form2" enctype="multipart/form-data">
+
+            <r:panel>
+
+                <f:facet name="header">
+                    <s:fragment>
+                        <h:graphicImage url="/img/vcard.gif" alt="#{messages['document.img.Form']}"/>
+                        <h:outputText value="#{messages['documentInfo.caption.Form']}" />
+                    </s:fragment>
+                </f:facet>
+
+
+                <h:panelGrid columns="2">
+                    <s:div>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Name']}"/></ui:define>
+                            <h:inputText value="#{document.name}" styleClass="normal" required="true" disabled="true"/>
+                        </s:decorate>
+
+
+                        <s:decorate template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Date']}"/></ui:define>
+                            <r:calendar value="#{document.updateDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+
+                    </s:div>
+
+                    <s:div>
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Title']}"/></ui:define>
+                            <h:inputText value="#{document.title}" styleClass="normal" required="true" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label">
+                                <h:outputText value="#{messages['document.label.DocType']}"/>
+                            </ui:define>
+                            <h:selectOneMenu value="#{document.docType}" styleClass="small" >
+                            <s:convertEnum />
+                            <s:selectItems value="#{documentHome.docType}" var="acc" label="#{messages[ut:concat( 'documentAdd.label.docType.',acc)]}" noSelectionLabel="#{messages['general.value.None']}" hideNoSelectionLabel="false"/>
+                        </h:selectOneMenu>
+                        </s:decorate>
+                    </s:div>
+
+                    <s:div>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Active']}"/></ui:define>
+                            <h:selectBooleanCheckbox id="Active" value="#{document.active}" styleClass="checkbox" />
+                            <h:outputLabel value="#{messages['general.value.Active']}" for="Active" styleClass="checkboxLabel" />
+                        </s:decorate>
+
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['document.label.Info']}"/></ui:define>
+                            <h:inputTextarea id="fldInfo" value="#{document.info}" rows="4" cols="75"/>
+                        </s:decorate>
+                    </s:div>
+
+                </h:panelGrid>
+
+                <r:spacer width="1" height="15" title="Here is a spacer..."/>
+
+            </r:panel>
+
+            <div class="actionButtons">
+                <a:commandButton id="save"
+                                 value="#{messages['general.button.Save']}"
+                                 action="#{documentHome.save()}"
+                                 oncomplete="javascript:closeDocumentInfo()"
+                                 reRender="doclistarea"
+                                 styleClass="button"/>
+
+
+                <s:button id="delete"
+                          value="#{messages['general.button.Delete']}"
+                          action="#{documentHome.delete()}"
+                          rendered="#{not empty document.id}"
+                          onclick="if ( !confirm('#{messages['general.message.confirm.Delete']}')) return false;"
+                          styleClass="button"/>
+
+                <s:button id="done"
+                          value="#{messages['general.button.Close']}"
+                          action="#{documentHome.close()}"
+                          styleClass="button"/>
+
+            </div>
+        </h:form>
+    </r:panel>
+
+</ui:composition>

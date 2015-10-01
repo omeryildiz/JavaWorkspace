@@ -1,0 +1,267 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:r="http://richfaces.ajax4jsf.org/rich"
+                xmlns:a="https://ajax4jsf.dev.java.net/ajax"
+                template="/layout/template.xhtml">
+    
+    <ui:define name="menu">
+        <ui:include src="/menu/menu.xhtml">
+            <ui:param name="curmodul" value="finance"/>
+            <ui:param name="curpage" value="chequePayment"/>
+        </ui:include>
+    </ui:define>
+    
+    <ui:define name="toolbar">
+        <div class="pathgroup">
+            <s:link view="/finance/finance.xhtml">
+                <h:outputText value="#{messages['module.caption.Finance']}"/>
+            </s:link>
+            <h:outputText value=" » "/>
+            <s:link view="/finance/chequePayment.xhtml">
+                <h:outputText value="#{messages['module.caption.ChequePayment']}"/>
+            </s:link>
+        </div>
+
+    </ui:define>
+    
+    <ui:define name="body">
+        
+        <h1><h:outputText value="#{messages['module.caption.ChequePayment']}" /></h1>
+        
+        <ui:include src="/layout/messages.xhtml"/>
+        <ui:include src="/contact/contactSelectPopup.xhtml" />
+        <ui:include src="/general/ajaxLoadingPopup.xhtml" />
+        
+        <h:form id="form" >
+            <r:panel style="margin:2px;">
+                <f:facet name="header"><h:outputText value="#{messages['general.label.Filter']}" /></f:facet>
+                
+                <h:panelGrid columns="2">
+                    
+                    <s:fragment>
+                    
+                    	 <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ReferenceNumber']}" /></ui:define>
+                            <h:inputText value="#{chequePayment.filterModel.referenceNo}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Bank']}" /></ui:define>
+                            <h:inputText value="#{chequePayment.filterModel.bankName}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Branch']}" /></ui:define>
+                            <h:inputText value="#{chequePayment.filterModel.bankBranch}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <a:region renderRegionOnly="true">
+                        <s:decorate id="sdc" template="/layout/edit.xhtml" >
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.Contact']}"/></ui:define>
+                            
+                            <h:inputText id="contact" value="#{chequePayment.filterModel.contact}" styleClass="middle" required="false">
+                                <f:converter converterId="contactCaptionConverter"/>
+                            </h:inputText>
+                            
+                            <a href="javascript:contactSelectPopup( 'form:sdc:contact' )">
+                                <h:graphicImage url="/img/selectBox.gif" /> 
+                            </a>
+                            
+                            <r:suggestionbox for="contact" rules="all" ajaxSingle="true"
+								suggestionAction="#{contactSuggestion.suggestContact}" var="citem"
+								fetchValue="#{citem.caption}">
+								<ui:include src="/contact/contactSuggestionView.xhtml" />
+							</r:suggestionbox>
+                        </s:decorate>
+                        
+                        </a:region>
+                    </s:fragment>
+                    <s:fragment>
+                    	<s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.ChequeOwner']}" /></ui:define>
+                            <h:inputText value="#{chequePayment.filterModel.chequeOwner}" styleClass="middle"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.BeginDate']}" /></ui:define>
+                            <r:calendar value="#{chequePayment.filterModel.beginDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+                        
+                        <s:decorate template="/layout/edit.xhtml">
+                            <ui:define name="label"><h:outputText value="#{messages['cheque.label.EndDate']}" /></ui:define>
+                            <r:calendar value="#{chequePayment.filterModel.endDate}" enableManualInput="true"
+                                        datePattern="#{messages['general.format.Date']}"/>
+                        </s:decorate>
+
+                    </s:fragment>
+                </h:panelGrid>
+                
+                <div class="actionButtons">
+                    <a:commandButton id="search" 
+                                     value="#{messages['general.button.Search']}" 
+                                     action="#{chequePayment.search()}"
+                                     styleClass="button" immediate="true"
+                                     reRender="results"/> 
+                                                      
+	                <s:button id="done" 
+	                          value="#{messages['general.button.Close']}"
+	                          action="#{chequePayment.close()}"
+	                          styleClass="button"/>
+                </div>
+            </r:panel>
+            
+            <a:outputPanel id="results">
+                
+                <s:div style="padding:1px;">
+                    <r:dataTable id="browseList" 
+                                 var="cheque"
+                                 value="#{chequePayment.chequeList}" 
+                                 rendered="#{not empty chequePayment.chequeList}"
+                                 onRowMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                 onRowMouseOut="this.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+                        <f:facet name="header">
+                            <h:panelGroup>
+                                <h:outputText value="#{messages['general.label.Results']}"/>
+                            </h:panelGroup>
+                        </f:facet>
+                        
+                        <r:column styleClass="actionColumn">
+                            <f:facet name="header">
+                            	<h:selectBooleanCheckbox id="checkAll" value="false" onchange="toggleCheckAll();" styleClass="checkbox" />
+							</f:facet>
+                            
+                            <h:selectBooleanCheckbox id="active" value="#{cheque.checked}" styleClass="checkbox" />
+                        </r:column>
+                        
+                        
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.ReferenceNumber']}"/></f:facet>
+                            
+                            <s:link view="/finance/chequeView.xhtml">
+                                <f:param name="eid" value="#{cheque.id}"/>
+                                <h:outputText value="#{cheque.referenceNo}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        <r:column styleClass="small">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.ChequeOwner']}"/></f:facet>
+                            
+                            <s:link view="/finance/chequeView.xhtml">
+                                <f:param name="eid" value="#{cheque.id}"/>
+                                <h:outputText value="#{cheque.chequeOwner}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        <r:column styleClass="serialField">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Bank']}" /></f:facet>
+                            
+                            <s:link view="/finance/chequeView.xhtml">
+                                <f:param name="eid" value="#{cheque.id}"/>
+                                <h:outputText value="#{cheque.bankName}"/>
+                            </s:link>
+                            
+                        </r:column>
+                        
+                        <r:column styleClass="amountField">
+                        	<f:facet name="header"><h:outputText value="#{messages['cheque.label.Amount']}" /></f:facet>
+                        	<h:outputText value="#{cheque.money}" />
+                        </r:column>
+                        
+                        <r:column styleClass="middle">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Contact']}" /></f:facet>
+                            <h:outputText value="#{cheque.contact.caption}" />
+                        </r:column>
+                        
+                        <r:column styleClass="middle">
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.LastStatus']}" /></f:facet>
+                            <h:outputText value="#{cheque.lastStatus}" />
+                        </r:column>
+                        
+                        <r:column >
+                            <f:facet name="header"><h:outputText value="#{messages['cheque.label.Info']}" /></f:facet>
+                            <h:outputText value="#{cheque.info}"/>
+                        </r:column>
+                        
+                    </r:dataTable>
+                    <r:panel id="msg" rendered="#{empty chequePayment.chequeList}" styleClass="message">
+                    	<h:outputText value="#{messages['general.message.browse.EmptyDesc']}" />
+                	</r:panel>
+                <r:panel style="margin:2px;" id="operationList" rendered="#{not empty chequePayment.chequeList}">
+                	<f:facet name="header"><h:outputText value="#{messages['cheque.label.Operation']}" /></f:facet>
+                <h:panelGrid columns="3">
+                        
+                        <s:div id="bank">
+                        	<a:region immediate="true" ajaxSingle="true">
+								<s:decorate template="/layout/edit.xhtml">
+	                                <ui:define name="label">
+	                                    <h:outputText value="#{messages['chequePayment.label.Bank']}"/>
+	                                </ui:define>
+	                                <h:selectOneMenu value="#{chequePayment.bank}"
+	                                                 styleClass="middle">
+	                                    <s:convertEntity/>
+	                                    <s:selectItems value="#{generalSuggestion.bankList}"
+	                                                   var="item"
+	                                                   label="#{item.name}"
+	                                                   noSelectionLabel="#{messages['general.value.None']}"
+	                                                   hideNoSelectionLabel="false" />
+	                                    <a:support event="onchange" reRender="bankBranchBox,bankAccountBox" ajaxSingle="true"/>
+	                                </h:selectOneMenu>
+	                            </s:decorate>
+	                            <s:decorate template="/layout/edit.xhtml">
+	                                <ui:define name="label">
+	                                    <h:outputText value="#{messages['chequePayment.label.BankBranch']}"/>
+	                                </ui:define>
+	                                <h:selectOneMenu id="bankBranchBox"
+	                                                 value="#{chequePayment.bankBranch}"
+	                                                 styleClass="middle">
+	                                    <s:convertEntity/>
+	                                    <s:selectItems value="#{generalSuggestion.getBankBranches(chequePayment.bank)}"
+	                                                   var="item"
+	                                                   label="#{item.name}"
+	                                                   noSelectionLabel="#{messages['general.value.None']}"
+	                                                   hideNoSelectionLabel="false" />
+	                                    <a:support event="onchange" reRender="bankAccountBox" ajaxSingle="true"/>
+	                                </h:selectOneMenu>
+	                            </s:decorate>
+	                            <s:decorate template="/layout/edit.xhtml">
+	                                <ui:define name="label">
+	                                    <h:outputText value="#{messages['chequePayment.label.BankAccount']}"/>
+	                                </ui:define>
+	                                <h:selectOneMenu id="bankAccountBox"
+	                                                 value="#{chequePayment.bankAccount}"
+	                                                 styleClass="middle" required="true">
+	                                    <s:convertEntity/>
+	                                    <s:selectItems value="#{generalSuggestion.getBankAccounts(chequePayment.bankBranch)}"
+	                                                   var="item"
+	                                                   label="#{item.accountNo}- #{item.name}-#{item.currency}"
+	                                                   noSelectionLabel="#{messages['general.value.None']}"
+	                                                   hideNoSelectionLabel="false" />
+	                                </h:selectOneMenu>
+	                            </s:decorate>
+                        	</a:region>
+                        </s:div>
+                
+           		</h:panelGrid>
+                    <div class="actionButtons">
+                
+		                <h:commandButton id="save" 
+		                                 value="#{messages['general.button.Save']}" 
+		                                 action="#{chequePayment.savePosition()}"
+		                                 styleClass="button"/>  
+		              
+           			 </div>
+           		</r:panel>
+               </s:div>
+                
+            </a:outputPanel>
+            
+        </h:form>
+
+    </ui:define> 
+</ui:composition>

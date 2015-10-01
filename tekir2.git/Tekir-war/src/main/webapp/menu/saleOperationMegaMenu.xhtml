@@ -1,0 +1,129 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich"
+     xmlns:ut="http://utech.com/jsf/comps"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<table>
+		<tr>
+			<td class="menuNewColumn">
+				<table>
+					<tr>
+						<td>
+				            <h3><h:outputText value="#{messages['general.button.New']}" /></h3>
+				            <ul id="list-content">
+				                <ut:newMenuItem view="/stock/newsaleOrder.xhtml" img="/img/add.gif" 
+				                	text="#{messages['menu.saleOperation.new.SaleOrder']}" 
+				                	disabled="#{not s:hasPermission('saleOrder', 'insert')}"/>
+
+				                <ut:newMenuItem view="/stock/newsaleShipment.xhtml" img="/img/add.gif" 
+				                	text="#{messages['menu.saleOperation.new.SaleShipment']}"
+				                	disabled="#{not s:hasPermission('saleShipment', 'insert')}" />
+
+				                <ut:newMenuItem view="/finance/newsaleShipmentInvoice.xhtml" 
+				                	text="#{messages['menu.saleOperation.new.SaleInvoice']}" img="/img/add.gif" 
+				                	param1="it" param1value="1"
+				                	param2="at" param2value="1"
+				                	disabled="#{not s:hasPermission('saleShipmentInvoice', 'insert')}"/>
+
+				                <ut:newMenuItem view="/finance/retailSaleInvoice.xhtml" 
+				                	text="#{messages['menu.saleOperation.new.RetailSaleInvoice']}" img="/img/add.gif" 
+				                	disabled="#{not s:hasPermission('retailSaleInvoice', 'insert')}"/>
+				                	
+				                <ut:newMenuItem view="/finance/newsaleInvoice.xhtml" 
+				                	text="#{messages['menu.saleOperation.new.SaleShipmentInvoice']}" img="/img/add.gif" 
+				                	param1="it" param1value="0"
+				                	param2="at" param2value="1"
+				                	disabled="#{not s:hasPermission('saleInvoice', 'insert')}"/>			                
+
+				                <ut:newMenuItem view="/finance/newsaleInvoice.xhtml"
+				                	text="#{messages['menu.saleOperation.new.SaleProformaInvoice']}" img="/img/add.gif" 
+				                	param1="at" param1value="1"
+				                	param2="it" param2value="3"
+				                	disabled="#{not s:hasPermission('saleInvoice', 'insert')}"
+				                	propagation="begin"/>
+				                	
+								<ut:newMenuItem view="/finance/saleReturnInvoice.xhtml" 
+				                	text="#{messages['menu.saleOperation.new.SaleReturnInvoice']}" img="/img/add.gif" 
+				                	param1="it" param1value="2" 
+				                	param2="at" param2value="0"
+				                	disabled="#{not s:hasPermission('saleReturnInvoice', 'insert')}"/>
+				                
+				                <ut:newMenuItem view="/finance/returnExpenseNote.xhtml" 
+				                	text="#{messages['menu.saleOperation.new.ReturnExpenseNote']}" img="/img/add.gif" 
+				                	param1="docType" param1value="ReturnExpenseNote" 
+				                	disabled="#{not s:hasPermission('returnExpenseNote', 'insert')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td>
+							<h3>#{messages['menu.purchaseOperation.label.Tender']}</h3>
+							<ul id="list-content">
+				                <ut:browseMenuItem view="/stock/saleOrderBrowse.xhtml" img="/img/notebook-share.png" 
+				                	text="#{messages['module.caption.TenderBrowse']}" disabled="true"
+				                	styleClass="disabled"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.Order']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/newsaleOrderBrowse.xhtml" img="/img/notebook-arrow.png" text="#{messages['module.caption.SaleOrderBrowse']}" 
+				                disabled="#{not s:hasPermission('saleOrder', 'select')}"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.Shipment']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/stock/newsaleShipmentBrowse.xhtml" img="/img/lorry.gif" text="#{messages['module.caption.SaleShipmentBrowse']}" 
+				                disabled="#{not s:hasPermission('saleShipment', 'select') }"/>
+				            </ul>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.Invoice']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/newsaleInvoiceBrowse.xhtml" 
+				                	text="#{messages['module.caption.SaleInvoiceBrowse']}" 
+				                	img="/img/script_add.gif" param1="exid" param1value="0"
+				                	param2="onlyReturn" param2value="false"
+				                	disabled="#{not (s:hasPermission('saleInvoice', 'select')
+				                				or s:hasPermission('retailSaleInvoice', 'select'))}"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.purchaseOperation.label.ReturnInvoice']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/newpurchaseInvoiceBrowse.xhtml" 
+				                	text="#{messages['menu.saleOperation.browse.ReturnSaleInvoiceBrowse']}" 
+				                	img="/img/script_delete.gif" param1="exid" param1value="0"
+				                	param2="onlyReturn" param2value="true"
+				                	disabled="#{not s:hasPermission('purchaseInvoice', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/expenseNoteBrowse.xhtml" 
+				                	text="#{messages['menu.saleOperation.browse.ReturnExpenseNoteBrowse']}" 
+				                	img="/img/coins_delete.gif" 
+				                	disabled="#{not s:hasPermission('expenseNote', 'select')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>	
+			</td>
+
+		</tr>
+	</table>
+			
+</div>
+
+

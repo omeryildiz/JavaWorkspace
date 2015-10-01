@@ -1,0 +1,84 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:r="http://richfaces.ajax4jsf.org/rich"
+     xmlns:ut="http://utech.com/jsf/comps"
+     xmlns:s="http://jboss.com/products/seam/taglib">
+
+	<table>
+		<tr>
+			<td class="menuNewColumn">
+				<table>
+					<tr>
+						<td>
+				            <h3>#{messages['general.button.New']}</h3>
+				            <ul id="list-content">
+				                <ut:newMenuItem view="/finance/chequeStub.xhtml" text="#{messages['menu.chequepromissory.new.ChequeStub']}" img="/img/add.gif" disabled="#{not s:hasPermission('chequeStub', 'insert')}" />
+				                <ut:newMenuItem view="/finance/chequeFromContactPayroll.xhtml" text="#{messages['menu.chequepromissory.new.ChequeFromContactPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('chequeFromContactPayroll', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/chequeToContactPayroll.xhtml" text="#{messages['menu.chequepromissory.new.ChequeToContactPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('chequeToContactPayroll', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/chequeToBankPayroll.xhtml" text="#{messages['menu.chequepromissory.new.ChequeToBankPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('chequeToBankPayroll', 'insrt')}"/>
+				                <ut:newMenuItem view="/finance/chequeCollectedAtBankPayroll.xhtml" text="#{messages['menu.chequepromissory.new.ChequeCollectedAtBankPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('chequeCollectedAtBankPayroll', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/chequeToAccountCollectionPayroll.xhtml" text="#{messages['menu.chequepromissory.new.ChequeToAccountCollectionPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('chequeCollectedAtBankPayroll', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/promissoryFromContactPayroll.xhtml" text="#{messages['menu.chequepromissory.new.PromissoryFromContactPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('promissoryFromContactPayroll', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/promissoryToContactPayroll.xhtml" text="#{messages['menu.chequepromissory.new.PromissoryToContactPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('promissoryToContactPayroll', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/promissoryToBankPayroll.xhtml" text="#{messages['menu.chequepromissory.new.PromissoryToBankPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('promissoryToBankPayroll', 'insert')}"/>
+				                <ut:newMenuItem view="/finance/promissoryCollectedAtBankPayroll.xhtml" text="#{messages['menu.chequepromissory.new.PromissoryCollectedAtBankPayroll']}" img="/img/add.gif"  disabled="#{not s:hasPermission('promissoryCollectedAtBankPayroll', 'insert')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+
+			<td>
+				<table>
+					<tr>
+						<td>
+				            <h3>#{messages['menu.chequepromissory.label.Cheque']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/chequeBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeBrowse']}" img="/img/coins.gif"  disabled="#{not s:hasPermission('cheque', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeStubBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeStubBrowse']}" img="/img/coins.gif"  disabled="#{not s:hasPermission('chequeStub', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeFromContactPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeFromContactPayrollBrowse']}" img="/img/coins_add.gif"  disabled="#{not s:hasPermission('chequeFromContactPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeToContactPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeToContactPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('chequeToContactPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeToBankAssurancePayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeToBankAssurancePayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('chequeToBankAssurancePayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeToBankPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeToBankPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('chequeToBankPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeCollectedAtBankPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeCollectedAtBankPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('chequeCollectedAtBankPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeToAccountCollectionPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeToAccountCollectionPayrollBrowse']}" img="/img/coins_add.gif"  disabled="#{not s:hasPermission('chequeToAccountCollectionPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeToAccountPaymentPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeToAccountPaymentPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('chequeToAccountPaymentPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/chequeToBankPaymentPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.ChequeToBankPaymentPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('chequeToBankPaymentPayroll', 'select')}"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.chequepromissory.label.Promissory']}</h3>
+				            <ul id="list-content">
+				                <ut:browseMenuItem view="/finance/promissoryBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryBrowse']}" img="/img/coins.gif"  disabled="#{not s:hasPermission('promissory', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryFromContactPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryFromContactPayrollBrowse']}" img="/img/coins_add.gif"  disabled="#{not s:hasPermission('promissoryFromContactPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryToContactPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryToContactPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('promissoryToContactPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryToBankAssurancePayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryToBankAssurancePayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('promissoryToBankAssurancePayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryToBankPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryToBankPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('promissoryToBankPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryCollectedAtBankPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryCollectedAtBankPayrollBrowse']}" img="/img/coins_add.gif"  disabled="#{not s:hasPermission('promissoryCollectedAtBankPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryToAccountCollectionPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryToAccountCollectionPayrollBrowse']}" img="/img/coins_add.gif"  disabled="#{not s:hasPermission('promissoryToAccountCollectionPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryToAccountPaymentPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryToAccountPaymentPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('promissoryToAccountPaymentPayroll', 'select')}"/>
+				                <ut:browseMenuItem view="/finance/promissoryToBankPaymentPayrollBrowse.xhtml" text="#{messages['menu.chequepromissory.browse.PromissoryToBankPaymentPayrollBrowse']}" img="/img/coins_delete.gif"  disabled="#{not s:hasPermission('foundationRefunding', 'select')}"/>
+				            </ul>
+						</td>
+
+						<td>
+				            <h3>#{messages['menu.chequepromissory.label.ChequeStatus']}</h3>
+				            <ul id="list-content">
+				                <ut:newMenuItem view="/finance/chequeChangeStatus.xhtml" text="#{messages['module.caption.ChequeChangeStatus']}" img="/img/edit1.gif"  disabled="#{not s:hasPermission('chequeChangeStatus', 'select')}"/>
+				                <ut:newMenuItem view="/finance/chequeChangeLastStatus.xhtml" text="#{messages['module.caption.ChequeChangeLastStatus']}" img="/img/edit1.gif"  disabled="#{not s:hasPermission('chequeChangeLastStatus', 'select')}"/>
+				            </ul>
+				            <h3>#{messages['menu.chequepromissory.label.PromissoryStatus']}</h3>
+				            <ul id="list-content">
+				                <ut:newMenuItem view="/finance/promissoryChangeStatus.xhtml" text="#{messages['module.caption.PromissoryChangeStatus']}" img="/img/edit1.gif"  disabled="#{not s:hasPermission('promissoryChangeStatus', 'select')}"/>
+				                <ut:newMenuItem view="/finance/promissoryChangeLastStatus.xhtml" text="#{messages['module.caption.PromissoryChangeLastStatus']}" img="/img/edit1.gif"  disabled="#{not s:hasPermission('promissoryChangeLastStatus', 'select')}"/>
+				            </ul>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>
