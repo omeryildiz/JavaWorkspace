@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.lang.reflect.Method"/>
-<fullyQualifiedTypeName name="com.mysql.jdbc.Field"/>
-<fullyQualifiedTypeName name="java.text.Format.Field"/>
-<fullyQualifiedTypeName name="java.lang.reflect.Field"/>
 <fullyQualifiedTypeName name="java.lang.reflect.Constructor"/>
 <fullyQualifiedTypeName name="java.lang.Exception"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.annotation.LogAnnotation"/>
@@ -41,7 +37,6 @@
 <fullyQualifiedTypeName name="org.hibernate.validator.constraints.Email"/>
 <fullyQualifiedTypeName name="javax.annotation.Generated"/>
 <fullyQualifiedTypeName name="javax.inject.Named"/>
-<fullyQualifiedTypeName name="javax.enterprise.context.SessionScoped"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.course.web.CustomerBean"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.course.entity.Customer"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.course.entity.Address"/>
@@ -60,4 +55,9 @@
 <fullyQualifiedTypeName name="tr.gov.tubitak.course.entity.Product"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="javax.persistence.ManyToMany"/>
+<fullyQualifiedTypeName name="javax.ejb.Stateful"/>
+<fullyQualifiedTypeName name="javax.enterprise.context.SessionScoped"/>
+<fullyQualifiedTypeName name="javax.persistence.PersistenceContextType"/>
+<fullyQualifiedTypeName name="java.lang.Boolean"/>
+<fullyQualifiedTypeName name="javax.persistence.Transient"/>
 </qualifiedTypeNameHistroy>

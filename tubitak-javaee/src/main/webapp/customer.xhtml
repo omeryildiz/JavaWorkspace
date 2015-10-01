@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<style type="text/css">
+			.ui-widget,.ui-widget .ui-widget {
+	    		font-size: 90% !important;
+			}
+		</style>
+		
+	</h:head>
+	
+	
+	<body>
+	
+		<p:panel header="Müşteri Yönetim Ekranı">
+		
+			<p:messages autoUpdate="true"/>
+		
+			<h:form id="updateForm">
+				<h:panelGrid columns="2">
+					Ad : <p:inputText value="#{customerBean.instance.name}"/>
+					Soyad : <p:inputText value="#{customerBean.instance.lastname}"/>
+					
+					<p:commandButton value="Kaydet" action="#{customerBean.save()}" update="@form :listForm" rendered="#{customerBean.instance.id == null}"/>
+					<p:commandButton value="Düzenle" action="#{customerBean.update()}" update="@form :listForm" rendered="#{customerBean.instance.id != null}"/>
+				</h:panelGrid> 
+			</h:form>
+			
+			<h:form id="listForm">
+				<p:dataTable value="#{customerBean.list}" var="cust">
+				
+					<p:column headerText="Sil">
+						<p:commandLink value="Sil" action="#{customerBean.remove(cust)}" update="@form" />
+					</p:column>
+					
+					<p:column headerText="Seç">
+						<p:commandLink value="Sec" action="#{customerBean.select(cust)}" update=":updateForm" />
+					</p:column>
+				
+					<p:column headerText="Id">
+						#{cust.id}
+					</p:column>
+					
+					<p:column headerText="Ad">
+						#{cust.name}
+					</p:column>
+					
+					<p:column headerText="Soyad">
+						#{cust.lastname}
+					</p:column>
+				
+				
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+

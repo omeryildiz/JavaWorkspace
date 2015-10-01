@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -20,6 +21,10 @@ public class Customer implements Serializable {
 	private Long id;
 	private String name;
 	private String surname;
+	
+	//Transient annotations'ı değişkeni veritabanında kalıcı hale getirmez. Geçici bir halde burada saklar.
+	@Transient
+	private Boolean checkStatus;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Address customerAddress = new Address();
@@ -76,6 +81,14 @@ public class Customer implements Serializable {
 
 	public void setProducts(List<Product> products) {
 		this.products = products;
+	}
+
+	public Boolean getCheckStatus() {
+		return checkStatus;
+	}
+
+	public void setCheckStatus(Boolean checkStatus) {
+		this.checkStatus = checkStatus;
 	}
 
 }

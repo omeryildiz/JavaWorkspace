@@ -13,17 +13,21 @@
 	Soyisim:<p:inputText value="#{customerBean.customer.surname}" />
 	Adres:<p:inputText value="#{customerBean.customer.customerAddress.text}" />
 	Şehir:<p:inputText value="#{customerBean.customer.customerAddress.city}" />
-	Ülke: <p:selectOneMenu id="country" value="#{customerBean.customer.country}" style="width:150px">
-                <f:selectItems value="#{customerBean.countryList}" var="country" itemValue="#{country}" itemLabel="#{country.name}" />
-                <f:converter converterId="entityConverter" />
-           </p:selectOneMenu>
-    Alacağı Ürünler: <p:selectManyCheckbox value="#{customerBean.customer.products}">
-    					<f:selectItems value="#{customerBean.productList}" var="product" itemValue="#{product}" itemLabel="#{product.name}"></f:selectItems>
-    					<f:converter converterId="entityConverter"></f:converter>
-    				</p:selectManyCheckbox>
+	Ülke: <p:selectOneMenu id="country"
+				value="#{customerBean.customer.country}" style="width:150px">
+				<f:selectItems value="#{customerBean.countryList}" var="country"
+					itemValue="#{country}" itemLabel="#{country.name}" />
+				<f:converter converterId="entityConverter" />
+			</p:selectOneMenu>
+    Alacağı Ürünler: <p:selectManyCheckbox
+				value="#{customerBean.customer.products}">
+				<f:selectItems value="#{customerBean.productList}" var="product"
+					itemValue="#{product}" itemLabel="#{product.name}"></f:selectItems>
+				<f:converter converterId="entityConverter"></f:converter>
+			</p:selectManyCheckbox>
 
-	
-	<h:commandButton action="#{customerBean.save()}" value="Kaydet" update="@form :listform" rendered="#{customerBean.customer.id == null}" />
+
+			<h:commandButton action="#{customerBean.save()}" value="Kaydet" update="@form :listform" rendered="#{customerBean.customer.id == null}" />
 	<h:commandButton action="#{customerBean.update()}" value="Düzenle" update="@form :listform" rendered="#{customerBean.customer.id != null}" />
 	</h:panelGrid>
 	</h:form>

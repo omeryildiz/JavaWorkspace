@@ -9,6 +9,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import tr.gov.tubitak.course.entity.Country;
 import tr.gov.tubitak.course.entity.Customer;

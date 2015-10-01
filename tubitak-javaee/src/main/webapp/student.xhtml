@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<style type="text/css">
+			.ui-widget,.ui-widget .ui-widget {
+	    		font-size: 90% !important;
+			}
+		</style>
+		
+	</h:head>
+	
+	
+	<body>
+	
+		<p:panel header="Öğrenci Kayıt Ekranı">
+			<h:form id="updateForm">
+				<h:panelGrid columns="2">
+					Ad : <p:inputText value="#{studentBean.student.name}" />
+					Soyad : <p:inputText value="#{studentBean.student.lastname}" />
+					Yas : <p:inputText value="#{studentBean.student.age}" />
+					
+					Cadde : <p:inputText value="#{studentBean.student.studentAddress.street}"/>
+					Semt : <p:inputText value="#{studentBean.student.studentAddress.town}"/>
+					Sehir : <p:inputText value="#{studentBean.student.studentAddress.city}"/>
+				
+					Fakülte : 	<p:selectOneMenu value="#{studentBean.student.faculty}">
+									<f:selectItems value="#{studentBean.facultyList}" var="faculty" itemValue="#{faculty}" itemLabel="#{faculty.name}"/>
+									<f:converter converterId="entityConverter"/>
+								</p:selectOneMenu>
+					Alacagi Dersler : 
+								<p:selectManyCheckbox value="#{studentBean.student.lessons}">
+								 	<f:selectItems value="#{studentBean.lessonList}" var="lesson" itemValue="#{lesson}" itemLabel="#{lesson.name}"/>
+									<f:converter converterId="entityConverter"/>
+								</p:selectManyCheckbox>
+				
+					<p:commandButton action="#{studentBean.save()}" value="Kaydet" update="@form :listForm" rendered="#{studentBean.student.id == null}"/>
+					<p:commandButton action="#{studentBean.update()}" value="Düzenle" update="@form :listForm" rendered="#{studentBean.student.id != null}"/>
+				 
+				</h:panelGrid> 
+			</h:form>
+			
+			<h:form id="listForm">
+				<p:dataTable value="#{studentBean.studentList}" var="st">
+				
+					<p:column headerText="Sil">
+						<p:commandLink value="Sil" action="#{studentBean.remove(st)}" update="@form"/>
+					</p:column>
+					
+					<p:column headerText="Seç">
+						<p:commandLink value="Seç" action="#{studentBean.select(st)}" update=":updateForm"/>
+					</p:column>
+					
+					
+					<p:column headerText="Id">
+						#{st.id}
+					</p:column>
+					
+					<p:column headerText="Ad">
+						#{st.name}
+					</p:column>
+				
+					<p:column headerText="Soyad">
+						#{st.lastname}
+					</p:column>
+				
+					<p:column headerText="Yas">
+						#{st.age}
+					</p:column>
+					
+					<p:column headerText="Cadde">
+						#{st.studentAddress.street}
+					</p:column>
+				
+					<p:column headerText="Semt">
+						#{st.studentAddress.town}
+					</p:column>
+				
+					<p:column headerText="Sehir">
+						#{st.studentAddress.city}
+					</p:column>
+					
+					<p:column headerText="Fakülte">
+						#{st.faculty.name}
+					</p:column>
+					
+					<p:column headerText="Aldığı Dersler">
+						<ui:repeat var="lesson" value="#{st.lessons}">
+							#{lesson.name}, 
+						</ui:repeat> 
+					</p:column>
+				
+				
+				
+				
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
