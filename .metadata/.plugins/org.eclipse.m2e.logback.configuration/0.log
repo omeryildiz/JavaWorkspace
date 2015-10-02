@@ -7028,3 +7028,196 @@ org.apache.maven.artifact.InvalidArtifactRTException: For artifact {null:Tekir:2
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55) [org.eclipse.core.jobs_3.7.0.v20150330-2103.jar:na]
 2015-10-01 15:19:48,304 [Worker-12] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
 2015-10-01 15:19:49,053 [Worker-12] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 0 sec
+2015-10-02 08:59:18,189 [Worker-0] ERROR o.e.m.c.i.p.r.ProjectRegistryManager - Failed to read Maven project: For artifact {null:Tekir:2.6.0-SNAPSHOT:pom}: The groupId cannot be empty.
+org.apache.maven.artifact.InvalidArtifactRTException: For artifact {null:Tekir:2.6.0-SNAPSHOT:pom}: The groupId cannot be empty.
+	at org.apache.maven.artifact.DefaultArtifact.validateIdentity(DefaultArtifact.java:130) ~[maven-artifact-3.3.3.jar:3.3.3]
+	at org.apache.maven.artifact.DefaultArtifact.<init>(DefaultArtifact.java:123) ~[maven-artifact-3.3.3.jar:3.3.3]
+	at org.apache.maven.bridge.MavenRepositorySystem.XcreateArtifact(MavenRepositorySystem.java:564) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.apache.maven.bridge.MavenRepositorySystem.XcreateArtifact(MavenRepositorySystem.java:524) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.apache.maven.bridge.MavenRepositorySystem.XcreateArtifact(MavenRepositorySystem.java:518) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.apache.maven.bridge.MavenRepositorySystem.XcreateArtifact(MavenRepositorySystem.java:476) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.apache.maven.bridge.MavenRepositorySystem.createArtifact(MavenRepositorySystem.java:79) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.apache.maven.project.DefaultProjectBuilder.initProject(DefaultProjectBuilder.java:704) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.apache.maven.project.DefaultProjectBuilder.build(DefaultProjectBuilder.java:176) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.apache.maven.project.DefaultProjectBuilder.build(DefaultProjectBuilder.java:119) ~[maven-core-3.3.3.jar:3.3.3]
+	at org.eclipse.m2e.core.internal.embedder.MavenImpl.readMavenProject(MavenImpl.java:636) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager$5.call(ProjectRegistryManager.java:815) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager$5.call(ProjectRegistryManager.java:1) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.executeBare(MavenExecutionContext.java:176) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:151) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.embedder.MavenExecutionContext.execute(MavenExecutionContext.java:99) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.execute(ProjectRegistryManager.java:956) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.readProjectWithDependencies(ProjectRegistryManager.java:811) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.project.registry.ProjectRegistryManager.create(ProjectRegistryManager.java:191) ~[org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.internal.project.registry.MavenProjectManager.create(MavenProjectManager.java:80) [org.eclipse.m2e.core_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.ui.internal.actions.SelectionUtil.getMavenProject(SelectionUtil.java:259) [org.eclipse.m2e.core.ui_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.editor.pom.MavenPomEditor.readMavenProject(MavenPomEditor.java:729) [org.eclipse.m2e.editor_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.editor.pom.MavenPomEditor$5.run(MavenPomEditor.java:1050) [org.eclipse.m2e.editor_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55) [org.eclipse.core.jobs_3.7.0.v20150330-2103.jar:na]
+2015-10-02 08:59:47,616 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2015-10-02 08:59:47,631 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2015-10-02 08:59:47,647 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2015-10-02 08:59:47,647 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2015-10-02 08:59:51,375 [Worker-6] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 08:59:51,438 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 08:59:51,453 [Worker-6] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 08:59:51,453 [Worker-6] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 08:59:55,213 [Worker-10] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 08:59:55,213 [Worker-10] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 08:59:55,213 [Worker-10] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 08:59:55,213 [Worker-10] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 08:59:56,414 [Worker-10] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2015-10-02 08:59:56,414 [Worker-10] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 2 resources
+2015-10-02 08:59:56,414 [Worker-10] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2015-10-02 08:59:56,414 [Worker-10] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2015-10-02 09:00:04,261 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2015-10-02 09:00:04,261 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2015-10-02 09:00:04,261 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2015-10-02 09:00:04,261 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:00:05,072 [Worker-9] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:00:05,103 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 2 resources
+2015-10-02 09:00:05,119 [Worker-9] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:00:05,119 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:00:05,743 [Worker-7] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:00:05,743 [Worker-7] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:00:05,759 [Worker-7] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:00:05,759 [Worker-7] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:54:39,682 [Worker-25] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:thrift-sample:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\thrift-sample\pom.xml.
+2015-10-02 09:54:40,152 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /thrift-sample/src/main/java
+2015-10-02 09:54:40,152 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /thrift-sample/src/main/resources
+2015-10-02 09:54:40,152 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /thrift-sample/src/test/java
+2015-10-02 09:54:40,152 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /thrift-sample/src/test/resources
+2015-10-02 09:54:42,862 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:54:42,862 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:54:42,862 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:54:42,862 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:58:31,458 [Worker-16] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:thrift-sample:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\thrift-sample\pom.xml.
+2015-10-02 09:58:32,813 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/thrift/libthrift/0.9.1/libthrift-0.9.1.pom
+2015-10-02 09:58:33,029 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/thrift/libthrift/0.9.1/libthrift-0.9.1.pom
+2015-10-02 09:58:33,254 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.pom
+2015-10-02 09:58:33,504 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.pom
+2015-10-02 09:58:33,731 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.5.8/slf4j-parent-1.5.8.pom
+2015-10-02 09:58:33,977 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.5.8/slf4j-parent-1.5.8.pom
+2015-10-02 09:58:34,314 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5.pom
+2015-10-02 09:58:34,567 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5.pom
+2015-10-02 09:58:34,907 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-client/4.2.5/httpcomponents-client-4.2.5.pom
+2015-10-02 09:58:35,077 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-client/4.2.5/httpcomponents-client-4.2.5.pom
+2015-10-02 09:58:35,331 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4.pom
+2015-10-02 09:58:35,465 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4.pom
+2015-10-02 09:58:35,709 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-core/4.2.4/httpcomponents-core-4.2.4.pom
+2015-10-02 09:58:36,215 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcomponents-core/4.2.4/httpcomponents-core-4.2.4.pom
+2015-10-02 09:58:36,743 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-log4j12/1.5.2/slf4j-log4j12-1.5.2.pom
+2015-10-02 09:58:36,929 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/slf4j/slf4j-log4j12/1.5.2/slf4j-log4j12-1.5.2.pom
+2015-10-02 09:58:37,126 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.5.2/slf4j-parent-1.5.2.pom
+2015-10-02 09:58:37,258 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/slf4j/slf4j-parent/1.5.2/slf4j-parent-1.5.2.pom
+2015-10-02 09:58:37,443 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.5.2/slf4j-api-1.5.2.pom
+2015-10-02 09:58:37,617 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.5.2/slf4j-api-1.5.2.pom
+2015-10-02 09:58:37,887 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/thrift/libthrift/0.9.1/libthrift-0.9.1.jar
+2015-10-02 09:58:38,829 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/thrift/libthrift/0.9.1/libthrift-0.9.1.jar
+2015-10-02 09:58:38,944 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5.jar
+2015-10-02 09:58:41,226 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5.jar
+2015-10-02 09:58:41,357 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4.jar
+2015-10-02 09:58:42,384 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4.jar
+2015-10-02 09:58:42,506 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar
+2015-10-02 09:58:42,773 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.5.8/slf4j-api-1.5.8.jar
+2015-10-02 09:58:42,908 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-log4j12/1.5.2/slf4j-log4j12-1.5.2.jar
+2015-10-02 09:58:43,033 [Worker-16] INFO  o.e.m.c.i.e.AbstractTransferListenerAdapter - Downloaded https://repo.maven.apache.org/maven2/org/slf4j/slf4j-log4j12/1.5.2/slf4j-log4j12-1.5.2.jar
+2015-10-02 09:58:44,376 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:58:44,379 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:58:44,381 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:58:44,382 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:58:46,608 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:58:46,630 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:58:46,632 [Worker-16] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:58:46,633 [Worker-16] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:58:57,867 [Worker-25] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2015-10-02 09:58:59,888 [Worker-25] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:thrift-sample:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\thrift-sample\pom.xml.
+2015-10-02 09:59:00,205 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /thrift-sample/src/main/java
+2015-10-02 09:59:00,215 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /thrift-sample/src/main/resources
+2015-10-02 09:59:00,215 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /thrift-sample/src/test/java
+2015-10-02 09:59:00,215 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /thrift-sample/src/test/resources
+2015-10-02 09:59:00,723 [Worker-25] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 2 sec
+2015-10-02 09:59:02,284 [Worker-9] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:59:02,331 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 09:59:02,341 [Worker-9] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 09:59:02,341 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:03:29,354 [Worker-9] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:Thriftping:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\Thriftping\pom.xml.
+2015-10-02 10:03:29,716 [Worker-9] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/main/java
+2015-10-02 10:03:29,716 [Worker-9] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/main/resources
+2015-10-02 10:03:29,726 [Worker-9] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/test/java
+2015-10-02 10:03:29,726 [Worker-9] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/test/resources
+2015-10-02 10:03:30,447 [Worker-29] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:03:30,448 [Worker-29] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:03:30,453 [Worker-29] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:03:30,462 [Worker-29] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:03:32,696 [Worker-16] ERROR o.e.m.c.u.i.w.MavenProjectWizardArchetypePage - Unable to read archetype catalog: http://repo1.maven.org/maven2/
+java.lang.NullPointerException: null
+	at org.eclipse.m2e.core.ui.internal.wizards.MavenProjectWizardArchetypePage.getArchetypesForCatalog(MavenProjectWizardArchetypePage.java:571) [org.eclipse.m2e.core.ui_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.ui.internal.wizards.MavenProjectWizardArchetypePage.getAllArchetypes(MavenProjectWizardArchetypePage.java:597) [org.eclipse.m2e.core.ui_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.ui.internal.wizards.MavenProjectWizardArchetypePage.getArchetypesForCatalog(MavenProjectWizardArchetypePage.java:562) [org.eclipse.m2e.core.ui_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.m2e.core.ui.internal.wizards.MavenProjectWizardArchetypePage$RetrievingArchetypesJob.run(MavenProjectWizardArchetypePage.java:1093) [org.eclipse.m2e.core.ui_1.6.1.20150625-2338.jar:na]
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55) [org.eclipse.core.jobs_3.7.0.v20150330-2103.jar:na]
+2015-10-02 10:04:07,598 [Worker-30] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:Thriftping:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\Thriftping\pom.xml.
+2015-10-02 10:04:08,085 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:08,085 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:04:08,095 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:08,095 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:04:09,451 [Worker-26] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:09,451 [Worker-26] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:04:09,461 [Worker-26] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:09,461 [Worker-26] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:04:19,177 [Worker-25] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2015-10-02 10:04:19,318 [Worker-25] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:Thriftping:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\Thriftping\pom.xml.
+2015-10-02 10:04:19,611 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/main/java
+2015-10-02 10:04:19,611 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/main/resources
+2015-10-02 10:04:19,611 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/test/java
+2015-10-02 10:04:19,611 [Worker-25] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/test/resources
+2015-10-02 10:04:19,861 [Worker-25] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 0 sec
+2015-10-02 10:04:20,153 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:20,153 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:04:20,153 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:20,153 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:04:39,017 [Worker-20] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:39,019 [Worker-20] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:04:39,019 [Worker-20] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:04:39,019 [Worker-20] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:05:01,076 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:05:01,079 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:05:01,082 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:05:01,083 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:05:07,108 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:05:07,108 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:05:07,108 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:05:07,118 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:05:38,799 [Worker-30] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2015-10-02 10:05:38,929 [Worker-30] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:Thriftping:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\Thriftping\pom.xml.
+2015-10-02 10:05:39,221 [Worker-30] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/main/java
+2015-10-02 10:05:39,221 [Worker-30] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/main/resources
+2015-10-02 10:05:39,221 [Worker-30] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/test/java
+2015-10-02 10:05:39,221 [Worker-30] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/test/resources
+2015-10-02 10:05:39,504 [Worker-30] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 0 sec
+2015-10-02 10:05:39,918 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:05:39,919 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:05:39,922 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:05:39,923 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:06:36,658 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:06:36,661 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:06:36,664 [Worker-30] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:06:36,665 [Worker-30] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:06:54,733 [Worker-30] INFO  o.e.m.i.launch.MavenLaunchDelegate - D:\egitim\JavaWorkspace\Thriftping
+2015-10-02 10:06:54,733 [Worker-30] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn  -B clean
+2015-10-02 10:07:00,342 [Worker-31] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:07:00,342 [Worker-31] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:07:00,352 [Worker-31] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:07:00,352 [Worker-31] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:07:07,142 [Worker-31] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update started
+2015-10-02 10:07:07,295 [Worker-31] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: org.omeryildiz:Thriftping:0.0.1-SNAPSHOT @ D:\egitim\JavaWorkspace\Thriftping\pom.xml.
+2015-10-02 10:07:07,746 [Worker-31] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/main/java
+2015-10-02 10:07:07,746 [Worker-31] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/main/resources
+2015-10-02 10:07:07,746 [Worker-31] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /Thriftping/src/test/java
+2015-10-02 10:07:07,746 [Worker-31] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /Thriftping/src/test/resources
+2015-10-02 10:07:08,028 [Worker-31] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Update completed: 0 sec
+2015-10-02 10:07:08,442 [Worker-9] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:07:08,442 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2015-10-02 10:07:08,442 [Worker-9] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (Cp1254 actually) to copy filtered resources, i.e. build is platform dependent!
+2015-10-02 10:07:08,442 [Worker-9] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource

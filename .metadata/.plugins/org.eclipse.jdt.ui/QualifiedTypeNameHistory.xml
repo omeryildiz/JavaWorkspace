@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.util.Collections"/>
-<fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.lambda.Java8Example"/>
-<fullyQualifiedTypeName name="java.util.function.Predicate"/>
-<fullyQualifiedTypeName name="java.lang.System"/>
-<fullyQualifiedTypeName name="java.util.function.Function"/>
-<fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.lambda.TestClosure"/>
-<fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.lambda.Java8Example.TestInterface"/>
-<fullyQualifiedTypeName name="java.lang.ThreadLocal"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.thread.ReverseCounterRunnable"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.thread.CounterThread"/>
 <fullyQualifiedTypeName name="tr.gov.tubitak.oneylul.thread.DatePrinterRunnable"/>
@@ -60,4 +52,12 @@
 <fullyQualifiedTypeName name="tr.gov.tubitak.course.service.FakulteService"/>
 <fullyQualifiedTypeName name="javax.persistence.Entity"/>
 <fullyQualifiedTypeName name="javax.persistence.ManyToOne"/>
+<fullyQualifiedTypeName name="org.apache.thrift.transport.TTransport"/>
+<fullyQualifiedTypeName name="org.apache.thrift.protocol.TProtocol"/>
+<fullyQualifiedTypeName name="org.apache.thrift.protocol.TBinaryProtocol"/>
+<fullyQualifiedTypeName name="ping.Invoke"/>
+<fullyQualifiedTypeName name="ping.Invoke.Client"/>
+<fullyQualifiedTypeName name="ping.Invoke.AsyncProcessor.ping"/>
+<fullyQualifiedTypeName name="org.slf4j.Logger"/>
+<fullyQualifiedTypeName name="org.apache.thrift.transport.TSocket"/>
 </qualifiedTypeNameHistroy>

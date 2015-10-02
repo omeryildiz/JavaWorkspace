@@ -7,6 +7,11 @@
 		<item value="390" key="DIALOG_X_ORIGIN"/>
 		<item value="129" key="DIALOG_Y_ORIGIN"/>
 	</section>
+	<section name="NewWizardAction">
+		<item value="org.eclipse.jdt.ui.wizards.JavaProjectWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+		</list>
+	</section>
 	<section name="org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog">
 		<item value="false" key="FilterByLocation"/>
 		<item value="true" key="ShowStatusLine"/>

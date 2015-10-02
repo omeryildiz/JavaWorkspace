@@ -30,12 +30,10 @@
 		</list>
 	</section>
 	<section name="NewWizardAction">
-		<item value="org.eclipse.jdt.ui.wizards.NewClassCreationWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<item value="org.eclipse.m2e.core.wizards.Maven2ProjectWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
-			<item value="org.jboss.tools.cdi.ui"/>
-			<item value="org.eclipse.jdt.ui.java"/>
-			<item value="org.eclipse.jpt.jaxb"/>
-			<item value="org.jboss.tools.jst.web"/>
+			<item value="org.jboss.ide.eclipse.ui.wizards"/>
+			<item value="org.eclipse.m2e"/>
 		</list>
 	</section>
 	<section name="ImportExportAction">
