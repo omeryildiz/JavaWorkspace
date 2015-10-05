@@ -1,0 +1,22 @@
+option java_outer_classname="SearchReq";
+
+message SearchRequest {
+  optional string query = 1;
+  optional int32 page_number = 2;
+  optional int32 result_per_page = 3;
+}
+
+message SearchResponse {
+  repeated Result result = 1;
+}
+
+message Result {
+  optional string url = 1;
+  optional string title = 2;
+  repeated string snippets = 3;
+}
+
+
+service SearchService {
+  rpc Search (SearchRequest) returns (SearchResponse);
+}
