@@ -2,12 +2,24 @@ package tr.gov.tubitak.course.service;
 
 import java.io.Serializable;
 
-import javax.ejb.Stateful;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
 
-@Stateful
+@Stateless
 public class CounterService implements Serializable{
 	
 	private Integer count = 0;
+	
+	@PostConstruct
+	public void init() {
+		System.out.println("Counter service olusturuldu");
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		System.out.println("Counter service yok edildi");
+	}
 
 	public Integer getCount() {
 		return count;
