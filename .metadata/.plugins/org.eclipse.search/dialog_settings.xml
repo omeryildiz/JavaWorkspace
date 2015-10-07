@@ -38,16 +38,16 @@
 		</list>
 	</section>
 	<section name="SearchDialog">
-		<item value="org.eclipse.search.internal.ui.text.TextSearchPage" key="PREVIOUS_PAGE"/>
+		<item value="org.eclipse.rse.internal.files.ui.search.searchPage" key="PREVIOUS_PAGE"/>
 	</section>
 	<section name="org.eclipse.jdt.ui.JavaSearchResultPage">
 		<item value="1000" key="org.eclipse.jdt.search.resultpage.limit"/>
 		<item value="TRUE" key="org.eclipse.jdt.search.resultpage.limit_enabled"/>
 	</section>
 	<section name="DialogBounds_SearchDialog">
-		<item value="654" key="DIALOG_WIDTH"/>
+		<item value="767" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="436" key="DIALOG_HEIGHT"/>
+		<item value="415" key="DIALOG_HEIGHT"/>
 		<item value="393" key="DIALOG_X_ORIGIN"/>
 		<item value="88" key="DIALOG_Y_ORIGIN"/>
 	</section>

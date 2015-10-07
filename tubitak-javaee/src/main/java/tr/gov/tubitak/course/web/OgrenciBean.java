@@ -1,5 +1,7 @@
 package tr.gov.tubitak.course.web;
 
+import java.io.Serializable;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -11,21 +13,18 @@ import tr.gov.tubitak.course.util.GenericService;
 
 @Named
 @SessionScoped
-public class OgrenciBean extends GenericBean<Ogrenci> {
+public class OgrenciBean extends GenericBean<Ogrenci> implements Serializable{
 
-	private static final long serialVersionUID = -6140175991234758351L;
-	@Inject
-	OgrenciService ogrenciService;
-
+	@Inject OgrenciService ogrenciService;
 	@Override
 	public GenericService<Ogrenci> getService() {
+		// TODO Auto-generated method stub
 		return ogrenciService;
 	}
 
 	@PostConstruct
 	@Override
-	public void init() {
+	public void init(){
 		super.init();
 	}
-
 }

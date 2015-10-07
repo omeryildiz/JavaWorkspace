@@ -13,18 +13,18 @@ import tr.gov.tubitak.course.util.GenericService;
 
 @Named
 @SessionScoped
-public class FakulteBean extends GenericBean<Fakulte> implements Serializable {
+public class FakulteBean extends GenericBean<Fakulte> implements Serializable{
 
-	private static final long serialVersionUID = 7018971744945257268L;
-	@Inject
-	FakulteService fakulteService;
-
+	@Inject FakulteService fakulteService;
+	
 	@Override
 	public GenericService<Fakulte> getService() {
+		// TODO Auto-generated method stub
 		return fakulteService;
 	}
 	
 	@PostConstruct
+	@Override
 	public void init(){
 		super.init();
 	}

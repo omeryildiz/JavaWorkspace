@@ -20,7 +20,7 @@ public class StudentListBean implements Serializable {
 
 	private List<Student> studentList;
 
-	@PersistenceContext(type = PersistenceContextType.EXTENDED)
+	@PersistenceContext(type = PersistenceContextType.EXTENDED, unitName ="primary")
 	EntityManager entityManager;
 
 	@PostConstruct

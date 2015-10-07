@@ -7,9 +7,7 @@ import javax.persistence.Entity;
 import org.hibernate.envers.Audited;
 
 import tr.gov.tubitak.course.util.BaseEntity;
-
 @Entity
-@Audited
 public class City extends BaseEntity implements Serializable {
 
 	private Integer population;	

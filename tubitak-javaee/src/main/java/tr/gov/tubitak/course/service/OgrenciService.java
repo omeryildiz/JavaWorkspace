@@ -7,17 +7,14 @@ import tr.gov.tubitak.course.dao.OgrenciDAO;
 import tr.gov.tubitak.course.entity.Ogrenci;
 import tr.gov.tubitak.course.util.GenericDAO;
 import tr.gov.tubitak.course.util.GenericService;
-
 @Stateful
 public class OgrenciService extends GenericService<Ogrenci> {
-	
-	@Inject OgrenciDAO ogrenciDao;
+	@Inject
+	OgrenciDAO ogrenciDao;
 
 	@Override
 	public GenericDAO<Ogrenci> getDao() {
-		
+		// TODO Auto-generated method stub
 		return ogrenciDao;
 	}
-	
-
 }

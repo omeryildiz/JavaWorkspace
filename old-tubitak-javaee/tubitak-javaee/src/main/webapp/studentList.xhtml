@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<style type="text/css">
+			.ui-widget,.ui-widget .ui-widget {
+	    		font-size: 90% !important;
+			}
+		</style>
+		
+	</h:head>
+
+	<h:head>
+	</h:head>
+	
+	<body>
+		<p:dataTable value="#{studentListBean.studentList}" var="st">
+		
+			<p:column>
+				#{st.name}
+			</p:column>
+			
+			<p:column>
+				#{st.lastname}
+			</p:column>
+			
+			<p:column>
+				#{st.faculty.name}
+			</p:column>
+			
+		</p:dataTable>
+		
+		<h:form>
+			<p:commandButton value="Öğrenci Bul" action="#{studentListBean.findStudent()}"/>
+		</h:form>
+		
+		
+	</body>
+</html>

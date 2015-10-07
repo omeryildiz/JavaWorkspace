@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
-	<item value="C:\Users\Administrator\.m2\repository\org\slf4j\jcl-over-slf4j\1.5.6" key="org.eclipse.jdt.ui.lastextjar"/>
+	<item value="C:\Users\Administrator\.m2\repository\org\apache\thrift\libthrift\0.9.1" key="org.eclipse.jdt.ui.lastextjar"/>
 	<item value="filter_imports;" key="filters_last_used"/>
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
 		<item value="false" key="updateQualifiedNames"/>
@@ -95,6 +95,7 @@
 		<item value="true" key="showtypes"/>
 	</section>
 	<section name="RenameInformationPopup">
+		<item value="2" key="snap_position"/>
 	</section>
 	<section name="ClasspathContainerSelectionPage">
 		<item value="0" key="index"/>

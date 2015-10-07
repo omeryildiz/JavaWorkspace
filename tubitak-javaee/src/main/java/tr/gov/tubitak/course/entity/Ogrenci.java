@@ -9,20 +9,17 @@ import tr.gov.tubitak.course.util.BaseEntity;
 
 @Entity
 public class Ogrenci extends BaseEntity implements Serializable {
-
-	private static final long serialVersionUID = 4331079198315914029L;
-
-	private String surname;
-
+	private String soyad;
+	
 	@ManyToOne
 	private Fakulte fakulte;
 
-	public String getSurname() {
-		return surname;
+	public String getSoyad() {
+		return soyad;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
+	public void setSoyad(String soyad) {
+		this.soyad = soyad;
 	}
 
 	public Fakulte getFakulte() {
@@ -32,5 +29,4 @@ public class Ogrenci extends BaseEntity implements Serializable {
 	public void setFakulte(Fakulte fakulte) {
 		this.fakulte = fakulte;
 	}
-
 }

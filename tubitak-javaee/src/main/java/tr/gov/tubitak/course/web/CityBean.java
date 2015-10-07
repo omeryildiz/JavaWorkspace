@@ -1,5 +1,7 @@
 package tr.gov.tubitak.course.web;
 
+import java.io.Serializable;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -11,7 +13,7 @@ import tr.gov.tubitak.course.util.GenericService;
 
 @Named
 @SessionScoped
-public class CityBean extends GenericBean<City>{
+public class CityBean extends GenericBean<City> implements Serializable{
 
 	@Inject CityService cityService;
 

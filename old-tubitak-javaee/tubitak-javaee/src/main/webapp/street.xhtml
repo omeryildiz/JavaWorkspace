@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<style type="text/css">
+			.ui-widget,.ui-widget .ui-widget {
+	    		font-size: 90% !important;
+			}
+		</style>
+		
+	</h:head>
+	
+	
+	<body>
+	
+		<p:panel header="Cadde Yönetim Ekranı">
+		
+			<p:messages autoUpdate="true"/>
+		
+			<h:form id="updateForm">
+				<h:panelGrid columns="2">
+					Ad : <p:inputText value="#{streetBean.instance.name}"/>
+					No : <p:inputText value="#{streetBean.instance.number}"/>
+					
+					<p:commandButton value="Kaydet" action="#{streetBean.save()}" update="@form :listForm" rendered="#{streetBean.instance.id == null}"/>
+					<p:commandButton value="Düzenle" action="#{streetBean.update()}" update="@form :listForm" rendered="#{streetBean.instance.id != null}"/>
+				</h:panelGrid> 
+			</h:form>
+			
+			<h:form id="listForm">
+				<p:dataTable value="#{streetBean.list}" var="street">
+				
+					<p:column headerText="Sil">
+						<p:commandLink value="Sil" action="#{streetBean.remove(street)}" update="@form" />
+					</p:column>
+					
+					<p:column headerText="Seç">
+						<p:commandLink value="Sec" action="#{streetBean.select(street)}" update=":updateForm" />
+					</p:column>
+				
+					<p:column headerText="Id">
+						#{street.id}
+					</p:column>
+					
+					<p:column headerText="Ad">
+						#{street.name}
+					</p:column>
+					
+					<p:column headerText="No">
+						#{street.number}
+					</p:column>
+				
+				
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+

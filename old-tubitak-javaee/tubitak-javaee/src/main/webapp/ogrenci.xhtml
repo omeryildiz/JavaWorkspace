@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<style type="text/css">
+			.ui-widget,.ui-widget .ui-widget {
+	    		font-size: 90% !important;
+			}
+		</style>
+		
+	</h:head>
+	
+	
+	<body>
+	
+		<p:panel header="Öğrenci Yönetim Ekranı">
+		
+			<p:messages autoUpdate="true"/>
+		
+			<h:form id="updateForm">
+				<h:panelGrid columns="2">
+					Ad : <p:inputText value="#{ogrenciBean.instance.name}"/>
+					Soyisim : <p:inputText value="#{ogrenciBean.instance.surname}"/>
+					Fakülte : 	<p:selectOneMenu value="#{ogrenciBean.instance.fakulte}">
+									<f:selectItems value="#{fakulteBean.list}" var="fakulte" itemValue="#{fakulte}" itemLabel="#{fakulte.name}"/>
+									<f:converter converterId="entityConverter"/>
+								</p:selectOneMenu>
+					
+					<p:commandButton value="Kaydet" action="#{ogrenciBean.save()}" update="@form :listForm" rendered="#{ogrenciBean.instance.id == null}"/>
+					<p:commandButton value="Düzenle" action="#{ogrenciBean.update()}" update="@form :listForm" rendered="#{ogrenciBean.instance.id != null}"/>
+				</h:panelGrid> 
+			</h:form>
+			
+			<h:form id="listForm">
+				<p:dataTable value="#{ogrenciBean.list}" var="ogrenci">
+				
+					<p:column headerText="Sil">
+						<p:commandLink value="Sil" action="#{ogrenciBean.remove(ogrenci)}" update="@form" />
+					</p:column>
+					
+					<p:column headerText="Seç">
+						<p:commandLink value="Sec" action="#{ogrenciBean.select(ogrenci)}" update=":updateForm" />
+					</p:column>
+				
+					<p:column headerText="Id">
+						#{ogrenci.id}
+					</p:column>
+					
+					<p:column headerText="Ad">
+						#{ogrenci.name}
+					</p:column>
+					
+					<p:column headerText="Soyad">
+						#{ogrenci.surname}
+					</p:column>
+
+					<p:column headerText="Fakülte">
+						#{ogrenci.fakulte.name}
+					</p:column>
+
+			</p:dataTable>
+			</h:form>
+		</p:panel>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+

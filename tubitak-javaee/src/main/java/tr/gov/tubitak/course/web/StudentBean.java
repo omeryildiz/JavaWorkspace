@@ -13,9 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
-import tr.gov.tubitak.course.entity.Address;
 import tr.gov.tubitak.course.entity.Faculty;
-import tr.gov.tubitak.course.entity.Gender;
 import tr.gov.tubitak.course.entity.Lesson;
 import tr.gov.tubitak.course.entity.Student;
 
@@ -26,7 +24,7 @@ public class StudentBean implements Serializable{
  
 	private Student student = new Student(); 
 	
-	@PersistenceContext(type = PersistenceContextType.EXTENDED)
+	@PersistenceContext(type = PersistenceContextType.EXTENDED, unitName="primary")
 	EntityManager entityManager;
 	private List<Student> studentList;
 	private List<Faculty> facultyList;
