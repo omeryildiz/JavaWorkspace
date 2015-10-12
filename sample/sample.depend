@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1444685236 source:e:\apachethriftcpp\sample\main.cpp
+	<iostream>
+	<string.h>
+
+1444688147 source:e:\tubitak_java_calismalari\javaworkspace\javaworkspace\sample\main.cpp
+	<iostream>
+	<string.h>
+
