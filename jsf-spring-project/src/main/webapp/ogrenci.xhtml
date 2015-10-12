@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<style type="text/css">
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+
+
+<body>
+
+	<p:panel header="Öğrenci Yönetim Ekranı">
+
+		<p:messages autoUpdate="true" />
+
+		<h:form id="updateForm">
+			<h:panelGrid columns="2">
+					Ad : <p:inputText value="#{ogrenciBean.ogrenci.name}" />
+					Soyad : <p:inputText value="#{ogrenciBean.ogrenci.lastname}" />
+				<p:commandButton value="Kaydet" action="#{ogrenciBean.save()}"
+					update="@form :listForm"
+					rendered="#{ogrenciBean.ogrenci.id == null}" />
+				<p:commandButton value="Düzenle" action="#{ogrenciBean.update()}"
+					update="@form :listForm"
+					rendered="#{ogrenciBean.ogrenci.id != null}" />
+			</h:panelGrid>
+		</h:form>
+
+		<h:form id="listForm">
+			<p:dataTable value="#{ogrenciBean.list}" var="ogr">
+
+				<p:column headerText="Sil">
+					<p:commandLink value="Sil" action="#{ogrenciBean.remove(ogr)}"
+						update="@form" />
+				</p:column>
+
+				<p:column headerText="Seç">
+					<p:commandLink value="Sec" action="#{ogrenciBean.select(ogr)}"
+						update=":updateForm" />
+				</p:column>
+
+				<p:column headerText="Id">
+						#{ogr.id}
+					</p:column>
+
+				<p:column headerText="Ad">
+						#{ogr.name}
+					</p:column>
+
+				<p:column headerText="Soyadı">
+						#{ogr.lastname}
+					</p:column>
+
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
