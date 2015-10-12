@@ -3,6 +3,7 @@ package sha1;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -29,6 +30,7 @@ public class Run {
 		Integer port = 1453;
 		TTransport transport;
 		transport = new TSocket(ipAddress, port);
+		//transport = new TFramedTransport(transport); for non-block server
 		try {
 			transport.open();
 		} catch (TTransportException e) {
