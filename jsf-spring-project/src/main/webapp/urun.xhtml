@@ -29,8 +29,8 @@
 									<f:converter converterId="entityConverter"/>
 								</p:selectOneMenu>
 					Ozellikler : 
-								<p:selectManyCheckbox value="#{urunBean.instance.ozellikler}">
-								 	<f:selectItems value="#{urunBean.ozelliklerList}" var="ozellik" itemValue="#{ozellik}" itemLabel="#{ozellik.id}"/>
+								<p:selectManyCheckbox value="#{urunBean.instance.ozelliklers}">
+								 	<f:selectItems value="#{urunBean.ozelliklerList}" var="ozellik" itemValue="#{ozellik}" itemLabel="#{ozellik.name}"/>
 									<f:converter converterId="entityConverter"/>
 								</p:selectManyCheckbox>
 				
@@ -72,8 +72,8 @@
 						#{urun.kategori.name}
 					</p:column>
 					
-					<p:column headerText="özellikler">
-						<ui:repeat var="ozellik" value="#{urun.ozelliks}">
+					<p:column headerText="Özellikler">
+						<ui:repeat var="ozellik" value="#{urun.ozelliklers}">
 							#{ozellik.name}, 
 						</ui:repeat> 
 					</p:column>

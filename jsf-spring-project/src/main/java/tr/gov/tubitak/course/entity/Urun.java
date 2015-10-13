@@ -1,6 +1,7 @@
 package tr.gov.tubitak.course.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -26,7 +27,7 @@ public class Urun implements Serializable {
 	private Kategori kategori;
 
 	@ManyToMany
-	private List<Ozellikler> ozellikler;
+	private List<Ozellikler> ozelliklers = new ArrayList<Ozellikler>();
 
 	public Long getId() {
 		return id;
@@ -60,13 +61,6 @@ public class Urun implements Serializable {
 		this.kategori = kategori;
 	}
 
-	public List<Ozellikler> getOzellikler() {
-		return ozellikler;
-	}
-
-	public void setOzellikler(List<Ozellikler> ozellikler) {
-		this.ozellikler = ozellikler;
-	}
 
 	public String getName() {
 		return name;
@@ -74,6 +68,14 @@ public class Urun implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<Ozellikler> getOzelliklers() {
+		return ozelliklers;
+	}
+
+	public void setOzelliklers(List<Ozellikler> ozelliklers) {
+		this.ozelliklers = ozelliklers;
 	}
 
 }

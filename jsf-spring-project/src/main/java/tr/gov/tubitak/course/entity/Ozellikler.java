@@ -20,7 +20,7 @@ public class Ozellikler implements Serializable {
 	private Long id;
 	private String name;
 
-	@ManyToMany( mappedBy = "ozellikler")
+	@ManyToMany( mappedBy = "ozelliklers")
 	private List<Urun> urun = new ArrayList<Urun>();
 
 	public Long getId() {

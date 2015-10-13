@@ -19,9 +19,6 @@ public class Kategori implements Serializable {
 	private Long id;
 	private String name;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "kategori")
-	private List<Urun> urun = new ArrayList<Urun>();
-
 	public Long getId() {
 		return id;
 	}
@@ -38,11 +35,4 @@ public class Kategori implements Serializable {
 		this.name = name;
 	}
 
-	public List<Urun> getUrun() {
-		return urun;
-	}
-
-	public void setUrun(List<Urun> urun) {
-		this.urun = urun;
-	}
 }

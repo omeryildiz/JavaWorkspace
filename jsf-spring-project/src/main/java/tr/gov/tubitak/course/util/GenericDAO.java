@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class GenericDAO<E> extends BaseBean<E> implements Serializable{
 	
 	private static final long serialVersionUID = -4740585103917128293L;
-	@PersistenceContext
+	@PersistenceContext(type=PersistenceContextType.EXTENDED)
 	EntityManager entityManager;
 
 	@Transactional
