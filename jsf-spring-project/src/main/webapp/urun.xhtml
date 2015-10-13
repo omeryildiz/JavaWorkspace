@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<style type="text/css">
+			.ui-widget,.ui-widget .ui-widget {
+	    		font-size: 90% !important;
+			}
+		</style>
+		
+	</h:head>
+	
+	
+	<body>
+	
+		<p:panel header="Urun Kayıt Ekranı">
+			<h:form id="updateForm">
+				<h:panelGrid columns="2">
+					Ad : <p:inputText value="#{urunBean.instance.name}" />
+					Fiyat : <p:inputText value="#{urunBean.instance.fiyat}" />
+					Stok : <p:inputText value="#{urunBean.instance.stok}" />
+				
+					Kategori : 	<p:selectOneMenu value="#{urunBean.instance.kategori}">
+									<f:selectItems value="#{urunBean.kategoriList}" var="kat" itemValue="#{kat}" itemLabel="#{kat.name}"/>
+									<f:converter converterId="entityConverter"/>
+								</p:selectOneMenu>
+					Ozellikler : 
+								<p:selectManyCheckbox value="#{urunBean.instance.ozellikler}">
+								 	<f:selectItems value="#{urunBean.ozelliklerList}" var="ozellik" itemValue="#{ozellik}" itemLabel="#{ozellik.id}"/>
+									<f:converter converterId="entityConverter"/>
+								</p:selectManyCheckbox>
+				
+					<p:commandButton action="#{urunBean.save()}" value="Kaydet" update="@form :listForm" rendered="#{urunBean.instance.id == null}"/>
+					<p:commandButton action="#{urunBean.update()}" value="Düzenle" update="@form :listForm" rendered="#{urunBean.instance.id != null}"/>
+				 
+				</h:panelGrid> 
+			</h:form>
+			
+			<h:form id="listForm">
+				<p:dataTable value="#{urunBean.list}" var="urun">
+				
+					<p:column headerText="Sil">
+						<p:commandLink value="Sil" action="#{urunBean.remove(urun)}" update="@form"/>
+					</p:column>
+					
+					<p:column headerText="Seç">
+						<p:commandLink value="Seç" action="#{urunBean.select(urun)}" update=":updateForm"/>
+					</p:column>
+					
+					
+					<p:column headerText="Id">
+						#{urun.id}
+					</p:column>
+					
+					<p:column headerText="İsim">
+						#{urun.name}
+					</p:column>
+				
+					<p:column headerText="Fiyat">
+						#{urun.fiyat}
+					</p:column>
+				
+					<p:column headerText="Stok">
+						#{urun.stok}
+					</p:column>
+					
+					<p:column headerText="Kategori">
+						#{urun.kategori.name}
+					</p:column>
+					
+					<p:column headerText="özellikler">
+						<ui:repeat var="ozellik" value="#{urun.ozelliks}">
+							#{ozellik.name}, 
+						</ui:repeat> 
+					</p:column>
+				
+				
+				
+				
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
